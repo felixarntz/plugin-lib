@@ -35,6 +35,7 @@ before_script:
 - cp -r "tests/phpunit/data/sample-plugin" "/tmp/wordpress/src/wp-content/plugins/sample-plugin"
 - rm -rf "tests/phpunit/data/sample-plugin"
 - cd ..
+- mkdir -p "/tmp/wordpress/src/wp-content/plugins/sample-plugin/vendor/felixarntz"
 - cp -r "$PLUGIN_LIB_DIR" "/tmp/wordpress/src/wp-content/plugins/sample-plugin/vendor/felixarntz/plugin-lib"
 - cd /tmp/wordpress/
 - cp wp-tests-config-sample.php wp-tests-config.php
