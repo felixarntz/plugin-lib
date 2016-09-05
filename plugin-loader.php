@@ -75,7 +75,7 @@ final class Leaves_And_Love_Plugin_Loader {
 			return false;
 		}
 
-		self::bootstrap_instance( self::$instances[ $class_name ] );
+		self::bootstrap_instance( self::$instances[ $class_name ], $main_file );
 
 		return true;
 	}
@@ -163,9 +163,10 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * @access private
 	 * @static
 	 *
-	 * @param Leaves_And_Love_Plugin $instance The plugin instance.
+	 * @param Leaves_And_Love_Plugin $instance  The plugin instance.
+	 * @param string                 $main_file Path to the plugin's main file.
 	 */
-	private static function bootstrap_instance( $instance ) {
+	private static function bootstrap_instance( $instance, $main_file ) {
 		$instance->load();
 
 		add_action( 'plugins_loaded', array( $instance, 'start' ) );
