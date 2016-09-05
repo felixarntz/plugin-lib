@@ -1,0 +1,40 @@
+{
+  "name": "felixarntz/plugin-lib",
+  "description": "Reusable library for all kinds of WordPress plugins.",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "library"
+  ],
+  "homepage": "https://leaves-and-love.net",
+  "authors": [
+    {
+      "name": "Felix Arntz",
+      "email": "felix-arntz@leaves-and-love.net",
+      "homepage": "https://leaves-and-love.net",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "felix-arntz@leaves-and-love.net",
+    "issues": "https://github.com/felixarntz/plugin-lib/issues"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "require": {
+    "composer/installers": "~1.0"
+  },
+  "require-dev": {
+    "codeclimate/php-test-reporter": "dev-master",
+    "phpmd/phpmd": "*",
+    "wp-coding-standards/wpcs": "*",
+    "sebastian/phpcpd": "*"
+  },
+  "scripts":     {
+    "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs",
+    "post-update-cmd":  "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs"
+  }
+}
