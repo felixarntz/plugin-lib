@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use WP_Error;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 
 /**
