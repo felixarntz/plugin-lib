@@ -94,4 +94,19 @@ class Tests_Meta extends Unit_Test_Case {
 		$result = $this->meta->exists( 'element', $this->element_id, 'test_key' );
 		$this->assertTrue( $result );
 	}
+
+	public function test_delete_all() {
+		$id = 34;
+
+		$this->meta->update( 'element', $id, 'key1', 'value1' );
+		$this->meta->update( 'element', $id, 'key2', 'value2' );
+		$this->meta->update( 'element', $id, 'key3', 'value3' );
+		$this->meta->update( 'element', $id, 'key4', 'value4' );
+
+		$result = $this->meta->delete_all( 'element', $id );
+		$this->assertTrue( $result );
+
+		$result = $this->meta->get( 'element', $id );
+		$this->assertEmpty( $result );
+	}
 }

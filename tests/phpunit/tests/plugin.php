@@ -20,11 +20,23 @@ class Tests_Plugin extends Unit_Test_Case {
 	public function test__call() {
 		$this->assertInstanceOf( 'Leaves_And_Love\Plugin_Lib\Options', $this->plugin_instance->options() );
 
+		$this->assertFalse( $this->plugin_instance->get_deactivation_hook() );
+
 		$this->assertNull( $this->plugin_instance->main_file() );
+	}
+
+	public function test_load() {
+		$this->plugin_instance->load();
+		$this->plugin_instance->load();
+
+		$this->assertEquals( 1, did_action( 'sp_loaded' ) );
 	}
 
 	public function test_start() {
 		$this->plugin_instance->start();
+		$this->plugin_instance->start();
+
+		$this->assertEquals( 1, did_action( 'sp_started' ) );
 
 		$this->assertEquals( 10, has_filter( 'populate_network_meta', array( $this->plugin_instance->options(), 'migrate_to_network' ) ) );
 	}

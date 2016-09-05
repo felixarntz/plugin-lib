@@ -31,6 +31,9 @@ class Tests_Plugin_Loader extends Unit_Test_Case {
 		$result = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' );
 		$this->assertInstanceOf( 'SP_Main', $result );
 
+		$result = Leaves_And_Love_Plugin_Loader::get( 'WP_Error' );
+		$this->assertNull( $result );
+
 		require_once dirname( dirname( __FILE__ ) ) . '/data/yet-another-sample-class.php';
 
 		Leaves_And_Love_Plugin_Loader::load( 'Yet_Another_Sample_Class', __FILE__ );
