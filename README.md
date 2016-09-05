@@ -6,6 +6,10 @@
 
 # Plugin Library
 
-Reusable library for all kinds of WordPress plugins. Requires PHP >= 5.4 and WordPress >= 4.5
+Reusable library for all kinds of WordPress plugins.
 
 **Warning: This readme is only a placeholder. Do not use this library yet as it is under heavy development.**
+
+## Requirements
+
+Requires PHP >= 5.4 and WordPress >= 4.5 - however it will fail gracefully on lower setups.
