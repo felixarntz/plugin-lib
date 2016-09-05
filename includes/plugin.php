@@ -332,8 +332,8 @@ abstract class Leaves_And_Love_Plugin {
 
 		$args = array_slice( func_get_args(), 1 );
 
-		$r = new ReflectionClass( $class_name );
-		return $r->newInstanceArgs( $args );
+		$generator = new ReflectionClass( $class_name );
+		return $generator->newInstanceArgs( $args );
 	}
 
 	/**

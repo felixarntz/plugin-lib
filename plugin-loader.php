@@ -75,24 +75,7 @@ final class Leaves_And_Love_Plugin_Loader {
 			return false;
 		}
 
-		self::$instances[ $class_name ]->load();
-
-		add_action( 'plugins_loaded', array( self::$instances[ $class_name ], 'start' ) );
-
-		$activation_hook = self::$instances[ $class_name ]->get_activation_hook();
-		if ( $activation_hook ) {
-			register_activation_hook( $main_file, $activation_hook );
-		}
-
-		$deactivation_hook = self::$instances[ $class_name ]->get_deactivation_hook();
-		if ( $deactivation_hook ) {
-			register_deactivation_hook( $main_file, $deactivation_hook );
-		}
-
-		$uninstall_hook = self::$instances[ $class_name ]->get_uninstall_hook();
-		if ( $uninstall_hook ) {
-			register_uninstall_hook( $main_file, $uninstall_hook );
-		}
+		self::bootstrap_instance( self::$instances[ $class_name ] );
 
 		return true;
 	}
@@ -169,6 +152,36 @@ final class Leaves_And_Love_Plugin_Loader {
 		}
 
 		require_once $path;
+	}
+
+	/**
+	 * Adds the necessary hooks to bootstrap a plugin instance.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @static
+	 *
+	 * @param Leaves_And_Love_Plugin $instance The plugin instance.
+	 */
+	private static function bootstrap_instance( $instance ) {
+		$instance->load();
+
+		add_action( 'plugins_loaded', array( $instance, 'start' ) );
+
+		$activation_hook = $instance->get_activation_hook();
+		if ( $activation_hook ) {
+			register_activation_hook( $main_file, $activation_hook );
+		}
+
+		$deactivation_hook = $instance->get_deactivation_hook();
+		if ( $deactivation_hook ) {
+			register_deactivation_hook( $main_file, $deactivation_hook );
+		}
+
+		$uninstall_hook = $instance->get_uninstall_hook();
+		if ( $uninstall_hook ) {
+			register_uninstall_hook( $main_file, $uninstall_hook );
+		}
 	}
 }
 

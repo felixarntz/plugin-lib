@@ -346,7 +346,7 @@ class DB extends Service {
 			foreach ( $network_ids as $network_id ) {
 				$versions = $this->options->get_for_all_sites( 'db_version', $network_id );
 
-				foreach ( $versions as $site_id => $version ) {
+				foreach ( array_keys( $versions ) as $site_id ) {
 					switch_to_blog( $site_id );
 					$this->uninstall_single();
 					restore_current_blog();
@@ -533,7 +533,7 @@ class DB extends Service {
 	 */
 	protected function create_format_from_data( $data ) {
 		$format = array();
-		foreach ( $data as $column_name => $value ) {
+		foreach ( $data as $value ) {
 			if ( is_integer( $value ) ) {
 				$format[] = '%d';
 			} elseif ( is_float( $value ) ) {
