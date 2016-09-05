@@ -132,6 +132,8 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * @static
 	 *
 	 * @param string $class_name The class to load.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public static function autoload( $class_name ) {
 		$parts = explode( '\\', $class_name );
