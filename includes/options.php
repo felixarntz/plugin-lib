@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Filters;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
 
 /**
@@ -20,8 +22,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
  * @since 1.0.0
  *
  * @method string get_prefix()
+ * @method void   add_hooks()
  */
 class Options extends Service {
+	use Filters;
+
 	/**
 	 * An array of options stored in network.
 	 *
@@ -264,12 +269,12 @@ class Options extends Service {
 	 * adds them to the network options array and removes the option from the single site.
 	 *
 	 * @since 1.0.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param array $network_options The array of network options to add to the network.
 	 * @return array The modified network options including the options to migrate.
 	 */
-	public function migrate_to_network( $network_options ) {
+	protected function migrate_to_network( $network_options ) {
 		// Only migrate when switching from single to multisite.
 		if ( is_multisite() ) {
 			return $network_options;
@@ -287,6 +292,16 @@ class Options extends Service {
 		}
 
 		return $network_options;
+	}
+
+	/**
+	 * Adds options hooks.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_hooks() {
+		$this->add_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10, 1 );
 	}
 }
 

@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Actions;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
@@ -18,9 +19,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  * @since 1.0.0
  *
  * @method string                             get_prefix()
+ * @method void                               add_hooks()
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
 class DB extends Service {
+	use Actions;
+
 	/**
 	 * WordPress database abstraction object.
 	 *
@@ -588,6 +592,16 @@ class DB extends Service {
 	 */
 	protected function table_to_db_table( $prefixed_table_name ) {
 		return $this->wpdb->$prefixed_table_name;
+	}
+
+	/**
+	 * Adds database hooks.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_hooks() {
+		$this->add_action( 'admin_init', array( $this, 'check' ), 10, 0 );
 	}
 }
 

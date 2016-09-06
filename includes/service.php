@@ -44,6 +44,15 @@ abstract class Service {
 	protected $services = array();
 
 	/**
+	 * Whether the hooks for this service have been added.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var bool
+	 */
+	private $hooks_added = false;
+
+	/**
 	 * Magic caller.
 	 *
 	 * Supports a `get_prefix()` method (if property has been set by the extending class)
@@ -61,14 +70,27 @@ abstract class Service {
 			if ( is_string( $this->prefix ) ) {
 				return $this->prefix;
 			}
-			return;
-		}
+		} elseif ( 'add_hooks' === $method ) {
+			if ( $this->hooks_added ) {
+				return;
+			}
 
-		if ( in_array( $method, $this->services, true ) && isset( $this->$method ) ) {
+			$this->add_hooks();
+
+			$this->hooks_added = true;
+		} elseif ( in_array( $method, $this->services, true ) && isset( $this->$method ) ) {
 			return $this->$method;
 		}
+	}
 
-		return;
+	/**
+	 * Adds all hooks for this service.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_hooks() {
+		// Empty method body.
 	}
 
 	/**
@@ -93,6 +115,20 @@ abstract class Service {
 	 */
 	protected function set_services( $services ) {
 		$this->services = $services;
+	}
+
+	/**
+	 * Adds included services to this service.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $services Property names that denote services.
+	 */
+	protected function add_services( $services ) {
+		$services = (array) $services;
+
+		$this->services = array_merge( $this->services, $services );
 	}
 }
 
