@@ -26,7 +26,7 @@ abstract class Service {
 	protected $prefix = false;
 
 	/**
-	 * Messages printed to the user.
+	 * Messages to print to the user.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -94,12 +94,12 @@ abstract class Service {
 	}
 
 	/**
-	 * Specifies the messages printed to the user.
+	 * Specifies the messages to print to the user.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param array $messages Messages printed to the user.
+	 * @param array $messages Messages to print to the user.
 	 */
 	protected function set_messages( $messages ) {
 		$this->messages = $messages;
