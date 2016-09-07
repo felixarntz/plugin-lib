@@ -15,6 +15,7 @@ class Tests_Options extends Unit_Test_Case {
 		parent::setUp();
 
 		$this->options = new Options( $this->prefix );
+		$this->options->add_hooks();
 		$this->options->store_in_network( array( 'db_version', 'great_global_value', 'some_global_value', 'global_deletable', 'another_global_value' ) );
 	}
 
