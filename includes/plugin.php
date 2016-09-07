@@ -313,6 +313,30 @@ abstract class Leaves_And_Love_Plugin {
 	}
 
 	/**
+	 * Instantiates a specific plugin class.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $class_name The class name, without basic namespace.
+	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
+	 *
+	 * @return mixed The plugin class instance.
+	 */
+	protected function instantiate_plugin_class( $class_name ) {
+		$class_name = $this->vendor_name . '\\' . $this->project_name . '\\' . $class_name;
+
+		if ( func_num_args() === 1 ) {
+			return new $class_name();
+		}
+
+		$args = array_slice( func_get_args(), 1 );
+
+		$generator = new ReflectionClass( $class_name );
+		return $generator->newInstanceArgs( $args );
+	}
+
+	/**
 	 * Instantiates a specific library class.
 	 *
 	 * @since 1.0.0
