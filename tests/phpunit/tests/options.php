@@ -163,6 +163,7 @@ class Tests_Options extends Unit_Test_Case {
 
 		if ( is_multisite() ) {
 			$result = $this->options->migrate_to_network( $base_options );
+			$result = apply_filters( 'populate_network_meta', $base_options, 2 );
 			$this->assertEquals( $base_options, $result );
 		} else {
 			$new_value = '23';
@@ -173,7 +174,7 @@ class Tests_Options extends Unit_Test_Case {
 			delete_option( $this->prefix . 'another_custom_global_value' );
 
 			$expected = array_merge( $base_options, array( $this->prefix . 'global_deletable' => array( 1 => $new_value ) ) );
-			$result = $this->options->migrate_to_network( $base_options );
+			$result = apply_filters( 'populate_network_meta', $base_options, 1 );
 			$this->assertEquals( $expected, $result );
 		}
 	}

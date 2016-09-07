@@ -31,6 +31,6 @@ class Yet_Another_Sample_Class extends Leaves_And_Love_Plugin {
 	}
 
 	protected function add_hooks() {
-		add_filter( 'populate_network_meta', array( $this->options, 'migrate_to_network' ), 10, 1 );
+
 	}
 }

@@ -37,8 +37,6 @@ class Tests_Plugin extends Unit_Test_Case {
 		$this->plugin_instance->start();
 
 		$this->assertEquals( 1, did_action( 'sp_started' ) );
-
-		$this->assertEquals( 10, has_filter( 'populate_network_meta', array( $this->plugin_instance->options(), 'migrate_to_network' ) ) );
 	}
 
 	public function test_path() {
