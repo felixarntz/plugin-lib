@@ -16,8 +16,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Template' ) ) :
  * The class includes a reusable template hierarchy that lets themes override each template.
  *
  * @since 1.0.0
+ *
+ * @method string get_prefix()
  */
-class Template {
+class Template extends Service {
 	/**
 	 * The default location for all templates.
 	 *
@@ -26,15 +28,6 @@ class Template {
 	 * @var string
 	 */
 	private $default_location;
-
-	/**
-	 * The theme subdirectory name to look for templates.
-	 *
-	 * @since 1.0.0
-	 * @access private
-	 * @var string
-	 */
-	private $theme_subdirectory;
 
 	/**
 	 * Custom template locations.
@@ -53,13 +46,12 @@ class Template {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $default_location   The default location for all templates.
-	 * @param string $theme_subdirectory The theme subdirectory name to look for templates. Must not
-	 *                                   contain trailing slashes.
+	 * @param string $prefix           The prefix for the theme subdirectory.
+	 * @param string $default_location The default location for all templates.
 	 */
-	public function __construct( $default_location, $theme_subdirectory ) {
+	public function __construct( $prefix, $default_location ) {
+		$this->prefix = $prefix;
 		$this->default_location = trailingslashit( $default_location );
-		$this->theme_subdirectory = $theme_subdirectory;
 	}
 
 	/**
@@ -124,13 +116,13 @@ class Template {
 		if ( STYLESHEETPATH !== TEMPLATEPATH ) {
 			array_unshift( $locations, array(
 				'priority' => -1,
-				'path'     => TEMPLATEPATH . '/' . $this->theme_subdirectory . '/',
+				'path'     => TEMPLATEPATH . '/' . $this->prefix . 'templates/',
 			) );
 		}
 
 		array_unshift( $locations, array(
 			'priority' => -2,
-			'path'     => STYLESHEETPATH . '/' . $this->theme_subdirectory . '/',
+			'path'     => STYLESHEETPATH . '/' . $this->prefix . 'templates/',
 		) );
 
 		array_push( $locations, array(

@@ -2,6 +2,7 @@
 
 class SP_Main extends Leaves_And_Love_Plugin {
 	protected $options;
+	protected $template;
 
 	/**
 	 * Loads the base properties of the class.
@@ -34,6 +35,7 @@ class SP_Main extends Leaves_And_Love_Plugin {
 
 	protected function instantiate_classes() {
 		$this->options = $this->instantiate_library_class( 'Options', $this->prefix );
+		$this->template = $this->instantiate_library_class( 'Template', $this->prefix, $this->path( 'templates/' ) );
 	}
 
 	protected function add_hooks() {
