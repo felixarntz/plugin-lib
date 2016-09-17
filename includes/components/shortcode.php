@@ -18,25 +18,96 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcode' ) ) :
  * @since 1.0.0
  */
 final class Shortcode {
+	/**
+	 * Shortcode tag.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var string
+	 */
 	private $tag;
 
+	/**
+	 * Hook to run for the shortcode.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var callable
+	 */
 	private $func;
 
+	/**
+	 * Additional arguments for this shortcode.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var array
+	 */
 	private $args;
 
+	/**
+	 * Shortcode manager instance.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var Leaves_And_Love\Plugin_Lib\Components\Shortcodes
+	 */
 	private $manager;
 
+	/**
+	 * Whether assets for this shortcode have been enqueued.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var bool
+	 */
+	private $enqueued = false;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string                                           $tag     Shortcode tag to be searched in content.
+	 * @param callable                                         $func    Hook to run when shortcode is found.
+	 * @param array|string                                     $args    {
+	 *     Array or string of additional shortcode arguments.
+	 *
+	 *     @type callable $enqueue_callback Function to enqueue scripts and stylesheets this shortcode requires.
+	 *                                      Default null.
+	 *     @type array    $defaults         Array of default attribute values. If passed, the shortcode attributes
+	 *                                      will be parsed with these before executing the callback hook so that
+	 *                                      you do not need to take care of that in the shortcode hook. Default
+	 *                                      false.
+	 *     @type bool     $cache            Whether to cache the output of this shortcode. Default false.
+	 *     @type int      $cache_expiration Time in seconds for which the shortcode should be cached. This only
+	 *                                      takes effect if $cache is true. Default is 86400 (one day).
+	 * }
+	 * @param Leaves_And_Love\Plugin_Lib\Components\Shortcodes $manager The shortcode manager instance.
+	 */
 	public function __construct( $tag, $func, $args, $manager ) {
 		$this->tag = $tag;
 		$this->func = $func;
 		$this->args = wp_parse_args( $args, array(
 			'enqueue_callback' => null,
+			'defaults'         => false,
 			'cache'            => false,
 			'cache_expiration' => DAY_IN_SECONDS,
 		) );
 		$this->manager = $manager;
 	}
 
+	/**
+	 * Runs the shortcode hook for given attributes and content.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array       $atts    Attributes to pass to the hook.
+	 * @param string|null $content Content wrapped by the shortcode, or null if a self-contained shortcode.
+	 * @return string The rendered shortcode output.
+	 */
 	public function run( $atts, $content ) {
 		$cache_key = false;
 
@@ -48,6 +119,10 @@ final class Shortcode {
 			}
 		}
 
+		if ( is_array( $this->args['defaults'] ) ) {
+			$atts = shortcode_atts( $this->args['defaults'], $atts, $this->tag );
+		}
+
 		$output = call_user_func( $this->func, $atts, $content, $this->tag, $this->manager->template() );
 
 		if ( $cache_key ) {
@@ -57,7 +132,21 @@ final class Shortcode {
 		return $output;
 	}
 
+	/**
+	 * Runs the enqueue callback if one exists.
+	 *
+	 * This method will ensure that the callback will only be called once per script lifetime.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
 	public function enqueue_assets() {
+		if ( $this->enqueued ) {
+			return;
+		}
+
+		$this->enqueued = true;
+
 		if ( ! $this->has_enqueue_callback() ) {
 			return;
 		}
@@ -65,10 +154,28 @@ final class Shortcode {
 		call_user_func( $this->args['enqueue_callback'] );
 	}
 
+	/**
+	 * Checks whether an enqueue callback exists for this shortcode.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return bool True if an enqueue callback exists, otherwise false.
+	 */
 	public function has_enqueue_callback() {
 		return null !== $this->args['enqueue_callback'] && is_callable( $this->args['enqueue_callback'] );
 	}
 
+	/**
+	 * Creates a cache key from given attributes and content input.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 *
+	 * @param array       $atts    Attributes passed to the shortcode hook.
+	 * @param string|null $content Content wrapped by the shortcode, or null if self-contained.
+	 * @return string The cache key created from the input.
+	 */
 	private function get_cache_key( $atts, $content ) {
 		if ( null !== $content ) {
 			$atts['__content'] = $content;
