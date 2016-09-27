@@ -222,6 +222,13 @@ abstract class Leaves_And_Love_Plugin {
 			return;
 		}
 
+		if ( ! $this->dependencies_loaded() ) {
+			$vendor_autoload = $this->path( 'vendor/autoload.php' );
+			if ( file_exists( $vendor_autoload ) ) {
+				require_once $vendor_autoload;
+			}
+		}
+
 		spl_autoload_register( array( $this, 'autoload' ) );
 
 		$this->instantiate_classes();
@@ -399,6 +406,22 @@ abstract class Leaves_And_Love_Plugin {
 	 * @access protected
 	 */
 	protected abstract function add_hooks();
+
+	/**
+	 * Checks whether the dependencies have been loaded.
+	 *
+	 * If this method returns false, the plugin will attempt to require the composer-generated
+	 * autoloader script. If your plugin uses additional dependencies, override this method with
+	 * a check whether these dependencies already exist.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return bool True if the dependencies are loaded, false otherwise.
+	 */
+	protected function dependencies_loaded() {
+		return true;
+	}
 }
 
 endif;
