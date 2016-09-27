@@ -12,4 +12,4 @@ Reusable library for all kinds of WordPress plugins.
 
 ## Requirements
 
-Requires PHP >= 5.4 and WordPress >= 4.5 - however it will fail gracefully on lower setups.
+Requires PHP >= 5.4 and WordPress >= 4.6 - however it will fail gracefully on lower setups.
