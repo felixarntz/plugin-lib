@@ -112,10 +112,10 @@ abstract class Model {
 				return true;
 			}
 
-			if ( $this->id ) {
+			if ( $this->primary_property_value() ) {
 				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-				$result = $this->manager->meta_exists( $this->id, $property );
+				$result = $this->manager->meta_exists( $this->primary_property_value(), $property );
 
 				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
@@ -152,10 +152,10 @@ abstract class Model {
 				return $this->pending_meta[ $property ];
 			}
 
-			if ( $this->id ) {
+			if ( $this->primary_property_value() ) {
 				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-				$meta = $this->manager->get_meta( $this->id, $property, true );
+				$meta = $this->manager->get_meta( $this->primary_property_value(), $property, true );
 
 				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
@@ -203,12 +203,12 @@ abstract class Model {
 		}
 
 		if ( method_exists( $this->manager, 'get_meta' ) ) {
-			if ( ! $this->id && null !== $value ) {
+			if ( ! $this->primary_property_value() && null !== $value ) {
 				$this->pending_meta[ $property ] = $value;
 			} else {
 				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-				$old_value = $this->manager->get_meta( $this->id, $property, true );
+				$old_value = $this->manager->get_meta( $this->primary_property_value(), $property, true );
 				if ( $value != $old_value ) {
 					$this->pending_meta[ $property ] = $value;
 				}
@@ -231,9 +231,9 @@ abstract class Model {
 	public function sync_upstream() {
 		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-		if ( ! $this->id ) {
-			$args = get_object_vars( $this );
-			$args = array_diff_key( $args, array_flip( $this->get_blacklist() ) );
+		if ( ! $this->primary_property_value() ) {
+			$args = $this->get_property_values();
+
 			unset( $args[ $this->get_primary_property() ] );
 
 			$result = $this->manager->add( $args );
@@ -242,16 +242,13 @@ abstract class Model {
 				return new WP_Error( 'db_insert_error', $this->manager->get_message( 'db_insert_error' ) );
 			}
 
-			$this->id = $result;
+			$this->primary_property_value( $result );
 
 			$this->manager->get( $this );
 		} elseif ( 0 < count( $this->pending_properties ) ) {
-			$args = array();
-			foreach ( $this->pending_properties as $property ) {
-				$args[ $property ] = $this->$property;
-			}
+			$args = $this->get_property_values( true );
 
-			$result = $this->manager->update( $this->id, $args );
+			$result = $this->manager->update( $this->primary_property_value(), $args );
 			if ( ! $result ) {
 				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 				return new WP_Error( 'db_update_error', $this->manager->get_message( 'db_update_error' ) );
@@ -265,13 +262,13 @@ abstract class Model {
 
 			foreach ( $pending_meta as $meta_key => $meta_value ) {
 				if ( null === $meta_value ) {
-					$result = $this->manager->delete_meta( $this->id, $meta_key );
+					$result = $this->manager->delete_meta( $this->primary_property_value(), $meta_key );
 					if ( ! $result ) {
 						method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 						return new WP_Error( 'meta_delete_error', sprintf( $this->manager->get_message( 'meta_delete_error' ), $meta_key ) );
 					}
 				} else {
-					$result = $this->manager->update_meta( $this->id, $meta_key, $meta_value );
+					$result = $this->manager->update_meta( $this->primary_property_value(), $meta_key, $meta_value );
 					if ( ! $result ) {
 						method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 						return new WP_Error( 'meta_update_error', sprintf( $this->manager->get_message( 'meta_update_error' ), $meta_key ) );
@@ -299,13 +296,13 @@ abstract class Model {
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
 	public function sync_downstream() {
-		if ( ! $this->id ) {
+		if ( ! $this->primary_property_value() ) {
 			return new WP_Error( 'db_fetch_error_missing_id', $this->manager->get_message( 'db_fetch_error_missing_id' ) );
 		}
 
 		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-		$result = $this->manager->fetch( $this->id );
+		$result = $this->manager->fetch( $this->primary_property_value() );
 		if ( ! $result ) {
 			method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 			return new WP_Error( 'db_fetch_error', $this->manager->get_message( 'db_fetch_error' ) );
@@ -333,22 +330,22 @@ abstract class Model {
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
 	public function delete() {
-		if ( ! $this->id ) {
+		if ( ! $this->primary_property_value() ) {
 			return new WP_Error( 'db_delete_error_missing_id', $this->manager->get_message( 'db_delete_error_missing_id' ) );
 		}
 
 		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-		$result = $this->manager->delete( $this->id );
+		$result = $this->manager->delete( $this->primary_property_value() );
 		if ( ! $result ) {
 			method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 			return new WP_Error( 'db_delete_error', $this->manager->get_message( 'db_delete_error' ) );
 		}
 
-		$this->id = 0;
+		$this->primary_property_value( 0 );
 
 		if ( method_exists( $this->manager, 'delete_all_meta' ) ) {
-			$result = $this->manager->delete_all_meta( $this->id );
+			$result = $this->manager->delete_all_meta( $this->primary_property_value() );
 			if ( ! $result ) {
 				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 				return new WP_Error( 'meta_delete_all_error', $this->manager->get_message( 'meta_delete_all_error' ) );
@@ -369,15 +366,14 @@ abstract class Model {
 	 * @return array Array including all information for the item.
 	 */
 	public function to_json() {
-		$data = get_object_vars( $this );
-		$data = array_diff_key( $data, array_flip( $this->get_blacklist() ) );
+		$data = $this->get_property_values();
 
 		if ( method_exists( $this->manager, 'get_meta' ) ) {
 			$meta = $this->pending_meta;
-			if ( $this->id ) {
+			if ( $this->primary_property_value() ) {
 				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
-				$_meta = $this->manager->get_meta( $this->id );
+				$_meta = $this->manager->get_meta( $this->primary_property_value() );
 
 				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
@@ -445,6 +441,47 @@ abstract class Model {
 		} else {
 			$this->$property = $value;
 		}
+	}
+
+	/**
+	 * Sets or gets the value of the primary property.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int|null $value Integer to set the value, null to retrieve it. Default null.
+	 * @return return int Current value of the primary property.
+	 */
+	protected function primary_property_value( $value = null ) {
+		$primary_property = $this->get_primary_property();
+
+		if ( is_int( $value ) ) {
+			$this->$primary_property = $value;
+		}
+
+		return $this->$primary_property;
+	}
+
+	/**
+	 * Returns all current values as $property => $value pairs.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param bool $pending_only Whether to only return pending properties. Default false.
+	 * @return array Array of $property => $value pairs.
+	 */
+	protected function get_property_values( $pending_only = false ) {
+		if ( $pending_only ) {
+			$args = array();
+			foreach ( $this->pending_properties as $property ) {
+				$args[ $property ] = $this->$property;
+			}
+
+			return $args;
+		}
+
+		return array_diff_key( get_object_vars( $this ), array_flip( $this->get_blacklist() ) );
 	}
 
 	/**
