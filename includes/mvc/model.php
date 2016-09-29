@@ -39,7 +39,7 @@ abstract class Model {
 	protected $pending_meta = array();
 
 	/**
-	 * The manager instance for the item.
+	 * The manager instance for the model.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -55,9 +55,9 @@ abstract class Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the item.
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model.
 	 * @param object|null                            $db_obj  Optional. The database object or
-	 *                                                        null for a new item.
+	 *                                                        null for a new instance.
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		$this->manager = $manager;
@@ -219,9 +219,9 @@ abstract class Model {
 	}
 
 	/**
-	 * Synchronizes the item with the database by storing the currently pending values.
+	 * Synchronizes the model with the database by storing the currently pending values.
 	 *
-	 * If the item is new (i.e. does not have an ID yet), it will be inserted to the database.
+	 * If the model is new (i.e. does not have an ID yet), it will be inserted to the database.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -285,10 +285,10 @@ abstract class Model {
 	}
 
 	/**
-	 * Synchronizes the item with the database by fetching the currently stored values.
+	 * Synchronizes the model with the database by fetching the currently stored values.
 	 *
-	 * If the item contains unsynchronized changes, these will be overridden. This method basically allows
-	 * to reset the item to the values stored in the database.
+	 * If the model contains unsynchronized changes, these will be overridden. This method basically allows
+	 * to reset the model to the values stored in the database.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -322,7 +322,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Deletes the item from the database.
+	 * Deletes the model from the database.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -358,12 +358,12 @@ abstract class Model {
 	}
 
 	/**
-	 * Returns an array representation of the item.
+	 * Returns an array representation of the model.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return array Array including all information for the item.
+	 * @return array Array including all information for the model.
 	 */
 	public function to_json() {
 		$data = $this->get_property_values();
@@ -396,7 +396,7 @@ abstract class Model {
 	}
 
 	/**
-	 * Sets the properties of the item to those of a database row object.
+	 * Sets the properties of the model to those of a database row object.
 	 *
 	 * @since 1.0.0
 	 * @access protected

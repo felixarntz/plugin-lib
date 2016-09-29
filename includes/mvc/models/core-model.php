@@ -47,9 +47,9 @@ abstract class Core_Model extends Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the item.
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model.
 	 * @param object|null                            $db_obj  Optional. The database object or
-	 *                                                        null for a new item.
+	 *                                                        null for a new instance.
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
@@ -160,7 +160,19 @@ abstract class Core_Model extends Model {
 	}
 
 	/**
-	 * Sets the properties of the item to those of a database row object.
+	 * Returns the original Core object for this model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return object WordPress Core object.
+	 */
+	public function get_original() {
+		return $this->original;
+	}
+
+	/**
+	 * Sets the properties of the model to those of a database row object.
 	 *
 	 * @since 1.0.0
 	 * @access protected
