@@ -1,6 +1,6 @@
 <?php
 /**
- * Post model class
+ * User model class
  *
  * @package LeavesAndLovePluginLib
  * @since 1.0.0
@@ -8,10 +8,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Models;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
-use WP_Post;
+use WP_User;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Post' ) ) :
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\User' ) ) :
 
 /**
  * Model class for a post
@@ -20,34 +19,19 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Post' ) ) :
  *
  * @since 1.0.0
  *
- * @property int    $author
- * @property string $date
- * @property string $date_gmt
- * @property string $content
- * @property string $title
- * @property string $excerpt
- * @property string $status
- * @property string $comment_status
- * @property string $ping_status
- * @property string $password
- * @property string $name
- * @property string $to_ping
- * @property string $pinged
- * @property string $modified
- * @property string $modified_gmt
- * @property string $content_filtered
- * @property int    $parent
- * @property string $guid
- * @property int    $menu_order
- * @property string $type
- * @property string $mime_type
+ * @property string $login
+ * @property string $pass
+ * @property string $nicename
+ * @property string $email
+ * @property string $url
+ * @property string $registered
+ * @property string $activation_key
+ * @property int    $status
+ * @property string $display_name
  *
  * @property-read int $id
- * @property-read int $comment_count
  */
-class Post extends Core_Model {
-	use Sitewide_Model;
-
+class User extends Core_Model {
 	/**
 	 * Constructor.
 	 *
@@ -57,13 +41,13 @@ class Post extends Core_Model {
 	 * @access public
 	 *
 	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model.
-	 * @param WP_Post|null                           $db_obj  Optional. The database object or
+	 * @param WP_User|null                           $db_obj  Optional. The database object or
 	 *                                                        null for a new instance.
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->redundant_prefix = 'post_';
+		$this->redundant_prefix = 'user_';
 	}
 
 	/**
@@ -132,7 +116,6 @@ class Post extends Core_Model {
 	public function __set( $property, $value ) {
 		$nowrite_properties = array(
 			'id',
-			'comment_count',
 		);
 
 		if ( in_array( $property, $nowrite_properties, true ) ) {
@@ -155,7 +138,7 @@ class Post extends Core_Model {
 	protected function get_blacklist() {
 		$blacklist = parent::get_blacklist();
 
-		// Do not permit access to the $filter property of WP_Post.
+		// Do not permit access to the $filter property of WP_User.
 		$blacklist[] = 'filter';
 
 		return $blacklist;
@@ -170,7 +153,29 @@ class Post extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Post( array() );
+		$db_obj = new \stdClass();
+		$db_obj->ID                   = 0;
+		$db_obj->user_login           = '';
+		$db_obj->user_pass            = '';
+		$db_obj->user_nicename        = '';
+		$db_obj->user_email           = '';
+		$db_obj->user_url             = '';
+		$db_obj->user_registered      = '';
+		$db_obj->user_activation_key  = '';
+		$db_obj->user_status          = 0;
+		$db_obj->display_name         = '';
+		// The following are actually meta keys, but need to be set on the object.
+		$db_obj->nickname             = '';
+		$db_obj->first_name           = '';
+		$db_obj->last_name            = '';
+		$db_obj->description          = '';
+		$db_obj->rich_editing         = '';
+		$db_obj->comment_shortcuts    = '';
+		$db_obj->admin_color          = '';
+		$db_obj->use_ssl              = '';
+		$db_obj->show_admin_bar_front = '';
+
+		$this->original = new WP_User( $db_obj );
 	}
 
 	/**
@@ -184,28 +189,25 @@ class Post extends Core_Model {
 	protected function get_db_fields() {
 		return array(
 			'ID',
-			'post_author',
-			'post_date',
-			'post_date_gmt',
-			'post_content',
-			'post_title',
-			'post_excerpt',
-			'post_status',
-			'comment_status',
-			'ping_status',
-			'post_password',
-			'post_name',
-			'to_ping',
-			'pinged',
-			'post_modified',
-			'post_modified_gmt',
-			'post_content_filtered',
-			'post_parent',
-			'guid',
-			'menu_order',
-			'post_type',
-			'post_mime_type',
-			'comment_count',
+			'user_login',
+			'user_pass',
+			'user_nicename',
+			'user_email',
+			'user_url',
+			'user_registered',
+			'user_activation_key',
+			'user_status',
+			'display_name',
+			// The following are actually meta keys, but need to be set on the object.
+			'nickname',
+			'first_name',
+			'last_name',
+			'description',
+			'rich_editing',
+			'comment_shortcuts',
+			'admin_color',
+			'use_ssl',
+			'show_admin_bar_front',
 		);
 	}
 }

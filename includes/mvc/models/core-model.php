@@ -71,13 +71,15 @@ abstract class Core_Model extends Model {
 	 * @return bool True if the property is set, false otherwise.
 	 */
 	public function __isset( $property ) {
-		if ( isset( $this->original->$property ) ) {
+		$db_fields = $this->get_db_fields();
+
+		if ( in_array( $property, $db_fields, true ) && isset( $this->original->$property ) ) {
 			return true;
 		}
 
 		if ( ! empty( $this->redundant_prefix ) && 0 !== strpos( $property, $this->redundant_prefix ) ) {
 			$prefixed_property = $this->redundant_prefix . $property;
-			if ( isset( $this->original->$prefixed_property ) ) {
+			if ( in_array( $prefixed_property, $db_fields, true ) && isset( $this->original->$prefixed_property ) ) {
 				return true;
 			}
 		}
@@ -97,13 +99,15 @@ abstract class Core_Model extends Model {
 	 * @return mixed Property value, or null if property is not set.
 	 */
 	public function __get( $property ) {
-		if ( isset( $this->original->$property ) ) {
+		$db_fields = $this->get_db_fields();
+
+		if ( in_array( $property, $db_fields, true ) && isset( $this->original->$property ) ) {
 			return $this->original->$property;
 		}
 
 		if ( ! empty( $this->redundant_prefix ) && 0 !== strpos( $property, $this->redundant_prefix ) ) {
 			$prefixed_property = $this->redundant_prefix . $property;
-			if ( isset( $this->original->$prefixed_property ) ) {
+			if ( in_array( $prefixed_property, $db_fields, true ) && isset( $this->original->$prefixed_property ) ) {
 				return $this->original->$prefixed_property;
 			}
 		}
@@ -127,7 +131,9 @@ abstract class Core_Model extends Model {
 			return;
 		}
 
-		if ( isset( $this->original->$property ) ) {
+		$db_fields = $this->get_db_fields();
+
+		if ( in_array( $property, $db_fields, true ) && isset( $this->original->$property ) ) {
 			$old = $this->original->$property;
 
 			$this->set_value_type_safe( $property, $value );
@@ -144,7 +150,7 @@ abstract class Core_Model extends Model {
 				return;
 			}
 
-			if ( isset( $this->original->$prefixed_property ) ) {
+			if ( in_array( $prefixed_property, $db_fields, true ) && isset( $this->original->$prefixed_property ) ) {
 				$old = $this->original->$prefixed_property;
 
 				$this->set_value_type_safe( $prefixed_property, $value );
@@ -180,20 +186,7 @@ abstract class Core_Model extends Model {
 	 * @param object $db_obj The database object.
 	 */
 	protected function set( $db_obj ) {
-		$blacklist = $this->get_blacklist();
-
-		$args = get_object_vars( $db_obj );
-		foreach ( $args as $property => $value ) {
-			if ( in_array( $property, $blacklist, true ) ) {
-				continue;
-			}
-
-			if ( ! isset( $this->original->$property ) ) {
-				continue;
-			}
-
-			$this->set_value_type_safe( $property, $value );
-		}
+		$this->original = $db_obj;
 	}
 
 	/**
@@ -259,7 +252,9 @@ abstract class Core_Model extends Model {
 			return $args;
 		}
 
-		return array_diff_key( get_object_vars( $this->original ), array_flip( $this->get_blacklist() ) );
+		$object_vars = is_callable( array( $this->original, 'to_array' ) ) ? call_user_func( array( $this->original, 'to_array' ) ) : get_object_vars( $this->original );
+
+		return array_diff_key( $object_vars, array_flip( $this->get_blacklist() ) );
 	}
 
 	/**
@@ -289,6 +284,16 @@ abstract class Core_Model extends Model {
 	 * @access protected
 	 */
 	protected abstract function set_default_object();
+
+	/**
+	 * Returns the names of all properties that are part of the database object.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Array of property names.
+	 */
+	protected abstract function get_db_fields();
 }
 
 endif;
