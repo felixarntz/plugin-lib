@@ -64,7 +64,7 @@ abstract class Query {
 	protected $request_args = array();
 
 	/**
-	 * SQL for database query.
+	 * SQL query clauses.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -80,7 +80,7 @@ abstract class Query {
 	);
 
 	/**
-	 * SQL for database query.
+	 * Query vars set by the user.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -89,7 +89,7 @@ abstract class Query {
 	protected $query_vars = array();
 
 	/**
-	 * SQL for database query.
+	 * Default values for query vars.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -98,7 +98,7 @@ abstract class Query {
 	protected $query_var_defaults = array();
 
 	/**
-	 * SQL for database query.
+	 * The results for the query.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -141,7 +141,6 @@ abstract class Query {
 		switch ( $property ) {
 			case 'request':
 			case 'request_args':
-			case 'sql_clauses':
 			case 'query_vars':
 			case 'query_var_defaults':
 			case 'results':
@@ -164,7 +163,6 @@ abstract class Query {
 		switch ( $property ) {
 			case 'request':
 			case 'request_args':
-			case 'sql_clauses':
 			case 'query_vars':
 			case 'query_var_defaults':
 			case 'results':
