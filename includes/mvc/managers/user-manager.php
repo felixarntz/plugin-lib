@@ -35,7 +35,7 @@ class User_Manager extends Core_Manager {
 	 */
 	public function __construct( $db, $cache, $messages, $meta = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\User';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Users_Collection';
+		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\User_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\User_Query';
 
 		$this->table_name     = 'users';

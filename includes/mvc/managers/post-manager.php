@@ -36,7 +36,7 @@ class Post_Manager extends Core_Manager {
 	 */
 	public function __construct( $db, $cache, $messages, $meta = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Post';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Posts_Collection';
+		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Post_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Post_Query';
 
 		$this->table_name     = 'posts';

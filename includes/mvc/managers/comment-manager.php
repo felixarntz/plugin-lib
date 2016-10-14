@@ -36,7 +36,7 @@ class Comment_Manager extends Core_Manager {
 	 */
 	public function __construct( $db, $cache, $messages, $meta = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comments_Collection';
+		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comment_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Comment_Query';
 
 		$this->table_name     = 'comments';

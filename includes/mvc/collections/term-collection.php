@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Collections;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Terms_Collection' ) ) :
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Term_Collection' ) ) :
 
 /**
  * Class for a terms collection
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Terms_Collectio
  *
  * @since 1.0.0
  */
-class Terms_Collection extends Core_Collection {
+class Term_Collection extends Core_Collection {
 
 }
 

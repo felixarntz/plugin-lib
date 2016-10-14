@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Collections;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Users_Collection' ) ) :
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\User_Collection' ) ) :
 
 /**
  * Class for a users collection
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Users_Collectio
  *
  * @since 1.0.0
  */
-class Users_Collection extends Core_Collection {
+class User_Collection extends Core_Collection {
 
 }
 

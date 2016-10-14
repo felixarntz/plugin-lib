@@ -28,7 +28,7 @@ class Comment_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of comment query arguments. See `WP_Comment_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Comments_Collection Collection of comments.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Comment_Collection Collection of comments.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +56,7 @@ class Comment_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Comments_Collection Results as a collection.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Comment_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->comments;

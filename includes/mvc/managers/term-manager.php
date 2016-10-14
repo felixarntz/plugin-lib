@@ -36,7 +36,7 @@ class Term_Manager extends Core_Manager {
 	 */
 	public function __construct( $db, $cache, $messages, $meta = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Term';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Terms_Collection';
+		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Term_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Term_Query';
 
 		$this->table_name     = 'terms';

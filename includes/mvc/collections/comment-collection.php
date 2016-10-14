@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Collections;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comments_Collection' ) ) :
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comment_Collection' ) ) :
 
 /**
  * Class for a comments collection
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comments_Collec
  *
  * @since 1.0.0
  */
-class Comments_Collection extends Core_Collection {
+class Comment_Collection extends Core_Collection {
 
 }
 

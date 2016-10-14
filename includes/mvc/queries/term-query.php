@@ -28,7 +28,7 @@ class Term_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of term query arguments. See `WP_Term_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Terms_Collection Collection of terms.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Term_Collection Collection of terms.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +56,7 @@ class Term_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Terms_Collection Results as a collection.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Term_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->terms;

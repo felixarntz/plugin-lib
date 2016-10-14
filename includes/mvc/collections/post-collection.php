@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Collections;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Posts_Collection' ) ) :
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Post_Collection' ) ) :
 
 /**
  * Class for a posts collection
@@ -17,7 +17,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Posts_Collectio
  *
  * @since 1.0.0
  */
-class Posts_Collection extends Core_Collection {
+class Post_Collection extends Core_Collection {
 
 }
 

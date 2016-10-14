@@ -28,7 +28,7 @@ class User_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of user query arguments. See `WP_User_Query::prepare_query()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Users_Collection Collection of users.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\User_Collection Collection of users.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) ) {
@@ -65,7 +65,7 @@ class User_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\Users_Collection Results as a collection.
+	 * @return Leaves_And_Love\Plugin_Lib\MVC\Collections\User_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->get_results();
