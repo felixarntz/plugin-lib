@@ -139,7 +139,7 @@ class Comment extends Core_Model {
 		}
 
 		if ( 'post_id' === $property ) {
-			$this->original->comment_post_ID = $value;
+			$this->set_value_type_safe( 'comment_post_ID', $value );
 			return;
 		}
 
