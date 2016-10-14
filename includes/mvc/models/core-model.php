@@ -254,7 +254,7 @@ abstract class Core_Model extends Model {
 
 		$object_vars = is_callable( array( $this->original, 'to_array' ) ) ? call_user_func( array( $this->original, 'to_array' ) ) : get_object_vars( $this->original );
 
-		return array_diff_key( $object_vars, array_flip( $this->get_blacklist() ) );
+		return array_intersect_key( $object_vars, array_flip( $this->get_db_fields() ) );
 	}
 
 	/**
