@@ -88,14 +88,6 @@ class Site extends Core_Model {
 			return true;
 		}
 
-		if ( 'name' === $property ) {
-			return true;
-		}
-
-		if ( in_array( $property, array( 'home', 'siteurl', 'post_count' ), true ) ) {
-			return true;
-		}
-
 		return parent::__isset( $property );
 	}
 
@@ -119,14 +111,6 @@ class Site extends Core_Model {
 			return (int) $this->original->site_id;
 		}
 
-		if ( 'name' === $property ) {
-			return $this->original->blogname;
-		}
-
-		if ( in_array( $property, array( 'home', 'siteurl', 'post_count' ), true ) ) {
-			return $this->original->$property;
-		}
-
 		return parent::__get( $property );
 	}
 
@@ -144,11 +128,6 @@ class Site extends Core_Model {
 	public function __set( $property, $value ) {
 		$nowrite_properties = array(
 			'id',
-			'name',
-			'blogname',
-			'home',
-			'siteurl',
-			'post_count',
 		);
 
 		if ( in_array( $property, $nowrite_properties, true ) ) {

@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Managers;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Site_Manager' ) ) :
 
 /**
@@ -18,6 +20,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Site_Manager' ) ) 
  * @since 1.0.0
  */
 class Site_Manager extends Core_Manager {
+	use Meta_Manager;
+
 	/**
 	 * Constructor.
 	 *
@@ -36,6 +40,7 @@ class Site_Manager extends Core_Manager {
 
 		$this->table_name     = 'blogs';
 		$this->cache_group    = 'sites';
+		$this->meta_type      = 'site';
 		$this->fetch_callback = 'get_site';
 
 		parent::__construct( $db, $cache, $messages, $meta );

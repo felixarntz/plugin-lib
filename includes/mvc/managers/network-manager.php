@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\MVC\Managers;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Network_Manager' ) ) :
 
 /**
@@ -19,6 +21,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Network_Manager' )
  * @since 1.0.0
  */
 class Network_Manager extends Core_Manager {
+	use Meta_Manager;
+
 	/**
 	 * Constructor.
 	 *
@@ -37,6 +41,7 @@ class Network_Manager extends Core_Manager {
 
 		$this->table_name     = 'site';
 		$this->cache_group    = 'networks';
+		$this->meta_type      = 'network';
 		$this->fetch_callback = 'get_network';
 
 		parent::__construct( $db, $cache, $messages, $meta );

@@ -74,7 +74,7 @@ class Network extends Core_Model {
 			return true;
 		}
 
-		if ( 'name' === $property ) {
+		if ( 'cookie_domain' === $property ) {
 			return true;
 		}
 
@@ -95,10 +95,6 @@ class Network extends Core_Model {
 	public function __get( $property ) {
 		if ( 'site_id' === $property ) {
 			return (int) $this->original->blog_id;
-		}
-
-		if ( 'name' === $property ) {
-			return $this->original->site_name;
 		}
 
 		if ( 'cookie_domain' === $property ) {
@@ -123,8 +119,6 @@ class Network extends Core_Model {
 		$nowrite_properties = array(
 			'id',
 			'cookie_domain',
-			'site_name',
-			'name',
 		);
 
 		if ( in_array( $property, $nowrite_properties, true ) ) {
