@@ -15,6 +15,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
  *
  * The class is a wrapper for the WordPress Metadata API.
  *
+ * In a multisite setup this class also supports site options and network options as if they were meta.
+ * The only difference between options and meta is that an option cannot have multiple values for one key,
+ * therefore the method parameters related to uniqueness of values are ignored when using them with a
+ * $meta_type of either 'site' or 'network'.
+ *
  * @since 1.0.0
  *
  * @method Leaves_And_Love\Plugin_Lib\DB db()
@@ -57,9 +62,17 @@ class Meta extends Service {
 	 *                           Whether the specified metadata key should be unique for the object.
 	 *                           If true, and the object already has a value for the specified metadata key,
 	 *                           no change will be made.
-	 * @return int|false The meta ID on success, false on failure.
+	 * @return int|bool The meta ID or true on success, false on failure.
 	 */
 	public function add( $meta_type, $object_id, $meta_key, $meta_value, $unique = false ) {
+		if ( is_multisite() ) {
+			if ( 'site' === $meta_type ) {
+				return add_blog_option( $object_id, $meta_key, $meta_value );
+			} elseif ( 'network' === $meta_type ) {
+				return add_network_option( $object_id, $meta_key, $meta_value );
+			}
+		}
+
 		if ( $this->is_prefixed_type( $meta_type ) ) {
 			$meta_type = $this->db->get_prefix() . $meta_type;
 		}
@@ -82,6 +95,14 @@ class Meta extends Service {
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update( $meta_type, $object_id, $meta_key, $meta_value, $prev_value = '' ) {
+		if ( is_multisite() ) {
+			if ( 'site' === $meta_type ) {
+				return update_blog_option( $object_id, $meta_key, $meta_value );
+			} elseif ( 'network' === $meta_type ) {
+				return update_network_option( $object_id, $meta_key, $meta_value );
+			}
+		}
+
 		if ( $this->is_prefixed_type( $meta_type ) ) {
 			$meta_type = $this->db->get_prefix() . $meta_type;
 		}
@@ -108,6 +129,14 @@ class Meta extends Service {
 	 * @return bool True on successful delete, false on failure.
 	 */
 	public function delete( $meta_type, $object_id, $meta_key, $meta_value = '', $delete_all = false ) {
+		if ( is_multisite() ) {
+			if ( 'site' === $meta_type ) {
+				return delete_blog_option( $object_id, $meta_key );
+			} elseif ( 'network' === $meta_type ) {
+				return delete_network_option( $object_id, $meta_key );
+			}
+		}
+
 		if ( $this->is_prefixed_type( $meta_type ) ) {
 			$meta_type = $this->db->get_prefix() . $meta_type;
 		}
@@ -130,6 +159,14 @@ class Meta extends Service {
 	 * @return mixed Single metadata value, or array of values.
 	 */
 	public function get( $meta_type, $object_id, $meta_key = '', $single = false ) {
+		if ( is_multisite() ) {
+			if ( 'site' === $meta_type ) {
+				return get_blog_option( $object_id, $meta_key );
+			} elseif ( 'network' === $meta_type ) {
+				return get_network_option( $object_id, $meta_key );
+			}
+		}
+
 		if ( $this->is_prefixed_type( $meta_type ) ) {
 			$meta_type = $this->db->get_prefix() . $meta_type;
 		}
@@ -158,6 +195,20 @@ class Meta extends Service {
 	 * @return bool True of the key is set, false if not.
 	 */
 	public function exists( $meta_type, $object_id, $meta_key ) {
+		if ( is_multisite() ) {
+			if ( 'site' === $meta_type ) {
+				if ( false === get_blog_option( $object_id, $meta_key ) ) {
+					return false;
+				}
+				return true;
+			} elseif ( 'network' === $meta_type ) {
+				if ( false === get_network_option( $object_id, $meta_key ) ) {
+					return false;
+				}
+				return true;
+			}
+		}
+
 		if ( $this->is_prefixed_type( $meta_type ) ) {
 			$meta_type = $this->db->get_prefix() . $meta_type;
 		}
