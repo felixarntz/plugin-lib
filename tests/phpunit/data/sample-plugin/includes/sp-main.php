@@ -18,7 +18,7 @@ class SP_Main extends Leaves_And_Love_Plugin {
 		$this->vendor_name = 'Leaves_And_Love';
 		$this->project_name = 'Sample_Plugin';
 		$this->minimum_php = '5.4';
-		$this->minimum_wp = '4.5';
+		$this->minimum_wp = '4.6';
 	}
 
 	protected function load_textdomain() {

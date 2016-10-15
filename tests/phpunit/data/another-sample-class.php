@@ -33,7 +33,7 @@ class Another_Sample_Class extends Leaves_And_Love_Plugin {
 		$this->vendor_name = 'Leaves_And_Love';
 		$this->project_name = 'Another_Sample_Class';
 		$this->minimum_php = '5.4';
-		$this->minimum_wp = '4.5';
+		$this->minimum_wp = '4.6';
 	}
 
 	protected function load_textdomain() {
