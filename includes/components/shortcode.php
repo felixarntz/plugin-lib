@@ -133,6 +133,18 @@ final class Shortcode {
 	}
 
 	/**
+	 * Returns the tag name of the shortcode.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Shortcode tag.
+	 */
+	public function get_tag() {
+		return $this->tag;
+	}
+
+	/**
 	 * Runs the enqueue callback if one exists.
 	 *
 	 * This method will ensure that the callback will only be called once per script lifetime.
