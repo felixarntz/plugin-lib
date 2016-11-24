@@ -99,14 +99,17 @@ abstract class Manager extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB    $db       The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache    The cache instance.
-	 * @param array                            $messages Messages printed to the user.
-	 * @param Leaves_And_Love\Plugin_Lib\Meta  $meta     The meta instance. Optional, but required for managers
-	 *                                                   with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\DB                     $db           The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache                  $cache        The cache instance.
+	 * @param array                                             $messages     Messages printed to the user.
+	 * @param Leaves_And_Love\Plugin_Lib\Meta                   $meta         The meta instance. Optional, but required
+	 *                                                                        for managers with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager $type_manager The type manager instance. Optional,
+	 *                                                                        but required for managers with types.
 	 */
-	public function __construct( $db, $cache, $messages, $meta = null ) {
+	public function __construct( $db, $cache, $messages, $meta = null, $type_manager = null ) {
 		$this->db = $db;
 		$this->cache = $cache;
 
@@ -115,6 +118,11 @@ abstract class Manager extends Service {
 		if ( property_exists( $this, 'meta' ) ) {
 			$this->meta = $meta;
 			$services[] = 'meta';
+		}
+
+		if ( property_exists( $this, 'type_manager' ) ) {
+			$this->type_manager = $type_manager;
+			$services[] = 'type_manager';
 		}
 
 		$this->set_services( $services );

@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\MVC\Models;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
 use WP_Term;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Term' ) ) :
@@ -33,7 +34,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Term' ) ) :
  * @property-read int $object_id
  */
 class Term extends Core_Model {
-	use Sitewide_Model;
+	use Sitewide_Model, Type_Model;
 
 	/**
 	 * Constructor.
@@ -50,21 +51,9 @@ class Term extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
+		$this->primary_property = 'term_id';
+		$this->type_property    = 'taxonomy';
 		$this->redundant_prefix = 'term_';
-	}
-
-	/**
-	 * Returns the name of the primary property that identifies the model.
-	 *
-	 * This is usually an integer ID denoting the database row.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return string Name of the primary property.
-	 */
-	public function get_primary_property() {
-		return 'term_id';
 	}
 
 	/**

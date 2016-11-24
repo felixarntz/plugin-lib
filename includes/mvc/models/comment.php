@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\MVC\Models;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
 use WP_Comment;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment' ) ) :
@@ -38,7 +39,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment' ) ) :
  * @property-read int $id
  */
 class Comment extends Core_Model {
-	use Sitewide_Model;
+	use Sitewide_Model, Type_Model;
 
 	/**
 	 * Constructor.
@@ -55,21 +56,9 @@ class Comment extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
+		$this->primary_property = 'comment_ID';
+		$this->type_property    = 'comment_type';
 		$this->redundant_prefix = 'comment_';
-	}
-
-	/**
-	 * Returns the name of the primary property that identifies the model.
-	 *
-	 * This is usually an integer ID denoting the database row.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return string Name of the primary property.
-	 */
-	public function get_primary_property() {
-		return 'comment_ID';
 	}
 
 	/**
