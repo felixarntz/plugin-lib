@@ -9,7 +9,6 @@
 namespace Leaves_And_Love\Plugin_Lib\MVC\Models;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
 use WP_Comment;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment' ) ) :
@@ -39,7 +38,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment' ) ) :
  * @property-read int $id
  */
 class Comment extends Core_Model {
-	use Sitewide_Model, Type_Model;
+	use Sitewide_Model;
 
 	/**
 	 * Constructor.
@@ -57,7 +56,6 @@ class Comment extends Core_Model {
 		parent::__construct( $manager, $db_obj );
 
 		$this->primary_property = 'comment_ID';
-		$this->type_property    = 'comment_type';
 		$this->redundant_prefix = 'comment_';
 	}
 

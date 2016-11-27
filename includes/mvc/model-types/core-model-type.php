@@ -1,40 +1,33 @@
 <?php
 /**
- * Model type class
+ * Model type class for a Core object
  *
  * @package LeavesAndLovePluginLib
  * @since 1.0.0
  */
 
-namespace Leaves_And_Love\Plugin_Lib\MVC;
+namespace Leaves_And_Love\Plugin_Lib\MVC\Model_Types;
 
-if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Model_Type' ) ) :
+use Leaves_And_Love\Plugin_Lib\MVC\Model_Type;
+
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Model_Types\Core_Model_Type' ) ) :
 
 /**
- * Base class for a model type
+ * Base class for a core model type
  *
- * This class represents a general model type.
+ * This class represents a general core model type.
  *
  * @since 1.0.0
  */
-abstract class Model_Type {
+abstract class Core_Model_Type extends Model_Type {
 	/**
-	 * Type slug.
+	 * The original Core object for this model type.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var string
+	 * @var object
 	 */
-	protected $slug;
-
-	/**
-	 * Type arguments.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $args = array();
+	protected $original;
 
 	/**
 	 * Constructor.
@@ -48,13 +41,12 @@ abstract class Model_Type {
 	 * @param array|object $args Optional. Type arguments. Default empty.
 	 */
 	public function __construct( $slug, $args = array() ) {
-		$this->slug = $slug;
-
 		if ( is_object( $args ) ) {
-			$args = get_object_vars( $args );
+			$this->original = $args;
+			$args = array();
 		}
 
-		$this->set_args( $args );
+		parent::__construct( $slug, $args );
 	}
 
 	/**
@@ -73,6 +65,10 @@ abstract class Model_Type {
 			return true;
 		}
 
+		if ( null !== $this->original ) {
+			return isset( $this->original->$property );
+		}
+
 		return isset( $this->args[ $property ] );
 	}
 
@@ -89,7 +85,19 @@ abstract class Model_Type {
 	 */
 	public function __get( $property ) {
 		if ( 'slug' === $property ) {
+			if ( null !== $this->original ) {
+				return $this->original->name;
+			}
+
 			return $this->slug;
+		}
+
+		if ( null !== $this->original ) {
+			if ( isset( $this->original->$property ) ) {
+				return $this->original->$property;
+			}
+
+			return null;
 		}
 
 		if ( isset( $this->args[ $property ] ) ) {
@@ -113,6 +121,15 @@ abstract class Model_Type {
 	public function __set( $property, $value ) {
 		if ( 'slug' === $property ) {
 			$this->slug = $value;
+
+			if ( null !== $this->original ) {
+				$this->original->name = $value;
+			}
+			return;
+		}
+
+		if ( null !== $this->original ) {
+			$this->original->$property = $value;
 			return;
 		}
 
@@ -128,19 +145,11 @@ abstract class Model_Type {
 	 * @return array Array including all model type information.
 	 */
 	public function to_json() {
-		return array_merge( array( 'slug' => $this->slug ), $this->args );
-	}
+		if ( null !== $this->original ) {
+			return array_merge( array( 'slug' => $this->slug ), get_object_vars( $this->original ) );
+		}
 
-	/**
-	 * Sets the type arguments and fills it with defaults.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param array $args Type arguments.
-	 */
-	protected function set_args( $args ) {
-		$this->args = wp_parse_args( $args, $this->get_defaults() );
+		return parent::to_json();
 	}
 
 	/**
@@ -151,7 +160,9 @@ abstract class Model_Type {
 	 *
 	 * @return array Default type arguments.
 	 */
-	protected abstract function get_defaults();
+	protected function get_defaults() {
+		return array();
+	}
 }
 
 endif;

@@ -10,7 +10,6 @@ namespace Leaves_And_Love\Plugin_Lib\MVC\Managers;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager;
 use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Comment_Manager' ) ) :
 
@@ -22,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Comment_Manager' )
  * @since 1.0.0
  */
 class Comment_Manager extends Core_Manager {
-	use Sitewide_Manager, Meta_Manager, Type_Manager;
+	use Sitewide_Manager, Meta_Manager;
 
 	/**
 	 * Constructor.
