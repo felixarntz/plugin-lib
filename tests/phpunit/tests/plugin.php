@@ -9,32 +9,32 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love_Plugin_Loader;
 
 class Tests_Plugin extends Unit_Test_Case {
-	protected $plugin_instance;
+	protected static $plugin_instance;
 
-	public function setUp() {
-		parent::setUp();
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
 
-		$this->plugin_instance = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' );
+		self::$plugin_instance = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' );
 	}
 
 	public function test__call() {
-		$this->assertInstanceOf( 'Leaves_And_Love\Plugin_Lib\Options', $this->plugin_instance->options() );
+		$this->assertInstanceOf( 'Leaves_And_Love\Plugin_Lib\Options', self::$plugin_instance->options() );
 
-		$this->assertFalse( $this->plugin_instance->get_deactivation_hook() );
+		$this->assertFalse( self::$plugin_instance->get_deactivation_hook() );
 
-		$this->assertNull( $this->plugin_instance->main_file() );
+		$this->assertNull( self::$plugin_instance->main_file() );
 	}
 
 	public function test_load() {
-		$this->plugin_instance->load();
-		$this->plugin_instance->load();
+		self::$plugin_instance->load();
+		self::$plugin_instance->load();
 
 		$this->assertEquals( 1, did_action( 'sp_loaded' ) );
 	}
 
 	public function test_start() {
-		$this->plugin_instance->start();
-		$this->plugin_instance->start();
+		self::$plugin_instance->start();
+		self::$plugin_instance->start();
 
 		$this->assertEquals( 1, did_action( 'sp_started' ) );
 	}
@@ -44,8 +44,8 @@ class Tests_Plugin extends Unit_Test_Case {
 
 		$expected = WP_PLUGIN_DIR . '/sample-plugin/' . $subpath;
 
-		$this->assertEquals( $expected, $this->plugin_instance->path( $subpath ) );
-		$this->assertEquals( $expected, $this->plugin_instance->path( '/' . $subpath ) );
+		$this->assertEquals( $expected, self::$plugin_instance->path( $subpath ) );
+		$this->assertEquals( $expected, self::$plugin_instance->path( '/' . $subpath ) );
 	}
 
 	public function test_url() {
@@ -53,7 +53,7 @@ class Tests_Plugin extends Unit_Test_Case {
 
 		$expected = WP_PLUGIN_URL . '/sample-plugin/' . $subpath;
 
-		$this->assertEquals( $expected, $this->plugin_instance->url( $subpath ) );
-		$this->assertEquals( $expected, $this->plugin_instance->url( '/' . $subpath ) );
+		$this->assertEquals( $expected, self::$plugin_instance->url( $subpath ) );
+		$this->assertEquals( $expected, self::$plugin_instance->url( '/' . $subpath ) );
 	}
 }

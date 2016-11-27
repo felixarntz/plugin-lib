@@ -12,33 +12,37 @@ use Leaves_And_Love\Plugin_Lib\Components\Shortcodes;
 use Leaves_And_Love\Plugin_Lib\Components\Shortcode;
 
 class Tests_Shortcode extends Unit_Test_Case {
-	protected $shortcodes;
-	protected $random_property;
+	protected static $prefix;
+	protected static $shortcodes;
+
+	protected $random_property = '';
 	protected $enqueue_count = 0;
 
-	public function setUp() {
-		parent::setUp();
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
 
-		$cache = new Cache( $this->prefix );
+		self::$prefix = 'lalpl_tests_shortcode_';
+
+		$cache = new Cache( self::$prefix );
 		$template = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template();
 
-		$this->shortcodes = new Shortcodes( $this->prefix, $cache, $template );
+		self::$shortcodes = new Shortcodes( self::$prefix, $cache, $template );
 	}
 
 	public function test_run() {
 		// Test basic shortcode.
-		$shortcode = new Shortcode( 'first_tag', array( $this, 'shortcode_hello_world' ), array(), $this->shortcodes );
+		$shortcode = new Shortcode( 'first_tag', array( $this, 'shortcode_hello_world' ), array(), self::$shortcodes );
 		$result = $shortcode->run( array(), null );
 		$this->assertSame( 'HelloWorld', $result );
 
 		// Test shortcode with attributes.
-		$shortcode = new Shortcode( 'second_tag', array( $this, 'shortcode_json_atts' ), array(), $this->shortcodes );
+		$shortcode = new Shortcode( 'second_tag', array( $this, 'shortcode_json_atts' ), array(), self::$shortcodes );
 		$atts = array( 'key1' => 'foo', 'key2' => 'bar' );
 		$result = $shortcode->run( $atts, null );
 		$this->assertSame( json_encode( $atts ), $result );
 
 		// Test shortcode with content.
-		$shortcode = new Shortcode( 'third_tag', array( $this, 'shortcode_content_autop' ), array(), $this->shortcodes );
+		$shortcode = new Shortcode( 'third_tag', array( $this, 'shortcode_content_autop' ), array(), self::$shortcodes );
 		$content = 'Hello, World!';
 		$result = $shortcode->run( array(), $content );
 		$this->assertSame( wpautop( $content ), $result );
@@ -47,7 +51,7 @@ class Tests_Shortcode extends Unit_Test_Case {
 		$defaults = array( 'key' => 'value' );
 		$shortcode = new Shortcode( 'fourth_tag', array( $this, 'shortcode_json_atts' ), array(
 			'defaults' => $defaults,
-		), $this->shortcodes );
+		), self::$shortcodes );
 		$atts = array( 'key1' => 'foo', 'key2' => 'bar' );
 		$result = $shortcode->run( $atts, null );
 		$this->assertSame( json_encode( shortcode_atts( $defaults, $atts, 'third_tag' ) ), $result );
@@ -55,7 +59,7 @@ class Tests_Shortcode extends Unit_Test_Case {
 		// Test shortcode cache.
 		$shortcode = new Shortcode( 'fifth_tag', array( $this, 'shortcode_property' ), array(
 			'cache' => true,
-		), $this->shortcodes );
+		), self::$shortcodes );
 		$this->random_property = 'foo';
 		$result = $shortcode->run( array(), null );
 		$this->assertEquals( 'foo', $result );
@@ -68,14 +72,14 @@ class Tests_Shortcode extends Unit_Test_Case {
 
 	public function test_get_tag() {
 		$tag_name = 'verycustomtagname';
-		$shortcode = new Shortcode( $tag_name, '__return_empty_string', array(), $this->shortcodes );
+		$shortcode = new Shortcode( $tag_name, '__return_empty_string', array(), self::$shortcodes );
 		$this->assertEquals( $tag_name, $shortcode->get_tag() );
 	}
 
 	public function test_enqueue_assets() {
 		$shortcode = new Shortcode( 'shortcode_with_css', '__return_empty_string', array(
 			'enqueue_callback' => array( $this, 'enqueue_stylesheet' ),
-		), $this->shortcodes );
+		), self::$shortcodes );
 		$shortcode->enqueue_assets();
 		$this->assertTrue( wp_style_is( 'plugin_lib_shortcode_test' ) );
 		$this->assertSame( 1, $this->enqueue_count );
@@ -86,17 +90,17 @@ class Tests_Shortcode extends Unit_Test_Case {
 	public function test_has_enqueue_callback() {
 		$shortcode = new Shortcode( 'shortcode_with_valid_enqueue', '__return_empty_string', array(
 			'enqueue_callback' => array( $this, 'enqueue_stylesheet' ),
-		), $this->shortcodes );
+		), self::$shortcodes );
 		$result = $shortcode->has_enqueue_callback();
 		$this->assertTrue( $result );
 
 		$shortcode = new Shortcode( 'shortcode_with_invalid_enqueue', '__return_empty_string', array(
 			'enqueue_callback' => array( $this, 'invalid_method' ),
-		), $this->shortcodes );
+		), self::$shortcodes );
 		$result = $shortcode->has_enqueue_callback();
 		$this->assertFalse( $result );
 
-		$shortcode = new Shortcode( 'shortcode_without_enqueue', '__return_empty_string', array(), $this->shortcodes );
+		$shortcode = new Shortcode( 'shortcode_without_enqueue', '__return_empty_string', array(), self::$shortcodes );
 		$result = $shortcode->has_enqueue_callback();
 		$this->assertFalse( $result );
 	}

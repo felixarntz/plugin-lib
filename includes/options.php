@@ -253,13 +253,7 @@ class Options extends Service {
 	public function store_in_network( $option ) {
 		$option_names = (array) $option;
 
-		foreach ( $option_names as $option_name ) {
-			if ( $this->is_stored_in_network( $option_name ) ) {
-				continue;
-			}
-
-			$this->network_stored[] = $option_name;
-		}
+		$this->network_stored = array_unique( array_merge( $this->network_stored, $option_names ) );
 	}
 
 	/**

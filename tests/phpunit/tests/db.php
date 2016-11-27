@@ -10,29 +10,32 @@ use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
 
 class Tests_DB extends Unit_Test_Case {
-	protected $db;
+	protected static $prefix;
+	protected static $db;
 
-	public function setUp() {
+	public static function setUpBeforeClass() {
 		global $wpdb;
 
-		parent::setUp();
+		parent::setUpBeforeClass();
 
-		$this->db = new DB( $this->prefix, new Options( $this->prefix ), array(
+		self::$prefix = 'lalpl_tests_db_';
+
+		self::$db = new DB( self::$prefix, new Options( self::$prefix ), array(
 			'table_already_exist' => 'Table %s already exists.',
 			'schema_empty'        => 'Table schema is empty.',
 		) );
 
-		$this->db->add_table( 'rows', array(
+		self::$db->add_table( 'rows', array(
 			"id bigint(20) unsigned NOT NULL auto_increment",
 			"type varchar(32) NOT NULL default ''",
 			"PRIMARY KEY  (id)",
 			"KEY type (type)",
 		) );
-		$this->db->set_version( 20160905 );
+		self::$db->set_version( 20160905 );
 
-		$this->db->check();
+		self::$db->check();
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$wpdb->insert( $wpdb->$prefixed_table, array(
 			'type' => 'default',
@@ -42,7 +45,7 @@ class Tests_DB extends Unit_Test_Case {
 	public function test_query() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$number = 3;
 		$type = 'some_type';
@@ -53,14 +56,14 @@ class Tests_DB extends Unit_Test_Case {
 			), array( '%s' ) );
 		}
 
-		$result = $this->db->query( "SELECT * FROM %rows% WHERE type = %s", $type );
+		$result = self::$db->query( "SELECT * FROM %rows% WHERE type = %s", $type );
 		$this->assertSame( $number, $result );
 	}
 
 	public function test_get_var() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$type = 'mysupercustomtype';
 
@@ -70,14 +73,14 @@ class Tests_DB extends Unit_Test_Case {
 
 		$id = (int) $wpdb->insert_id;
 
-		$result = $this->db->get_var( "SELECT type FROM %rows% WHERE id = %d", $id );
+		$result = self::$db->get_var( "SELECT type FROM %rows% WHERE id = %d", $id );
 		$this->assertSame( $type, $result );
 	}
 
 	public function test_get_row() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$type = 'mysupercustomtype2';
 
@@ -87,7 +90,7 @@ class Tests_DB extends Unit_Test_Case {
 
 		$id = (int) $wpdb->insert_id;
 
-		$result = $this->db->get_row( "SELECT * FROM %rows% WHERE id = %d", $id );
+		$result = self::$db->get_row( "SELECT * FROM %rows% WHERE id = %d", $id );
 		$this->assertEquals( $id, $result->id );
 		$this->assertEquals( $type, $result->type );
 	}
@@ -95,7 +98,7 @@ class Tests_DB extends Unit_Test_Case {
 	public function test_get_col() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$number = 3;
 		$type = 'mysupercustomtype3';
@@ -110,14 +113,14 @@ class Tests_DB extends Unit_Test_Case {
 			$ids[] = (int) $wpdb->insert_id;
 		}
 
-		$result = $this->db->get_col( "SELECT type FROM %rows% WHERE id IN ( " . implode( ',', array_fill( 0, $number, '%d' ) ) . " )", $ids );
+		$result = self::$db->get_col( "SELECT type FROM %rows% WHERE id IN ( " . implode( ',', array_fill( 0, $number, '%d' ) ) . " )", $ids );
 		$this->assertEquals( array_fill( 0, $number, $type ), $result );
 	}
 
 	public function test_get_results() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 
 		$number = 4;
 		$type = 'mysupercustomtype4';
@@ -134,20 +137,20 @@ class Tests_DB extends Unit_Test_Case {
 
 		$ids = array_reverse( $ids );
 
-		$result = $this->db->get_results( "SELECT * FROM %rows% WHERE type = %s ORDER BY id DESC", $type );
+		$result = self::$db->get_results( "SELECT * FROM %rows% WHERE type = %s ORDER BY id DESC", $type );
 		$this->assertEquals( $ids, wp_list_pluck( $result, 'id' ) );
 	}
 
 	public function test_insert() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 		$type = 'mysupercustomtype5';
 
-		$result = $this->db->insert( 'rows', array( 'type' => $type ) );
+		$result = self::$db->insert( 'rows', array( 'type' => $type ) );
 		$this->assertEquals( 1, $result );
 
-		$id = (int) $this->db->insert_id;
+		$id = (int) self::$db->insert_id;
 
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->$prefixed_table} WHERE type = %s", $type ) );
 		$this->assertEquals( $id, $result );
@@ -156,11 +159,11 @@ class Tests_DB extends Unit_Test_Case {
 	public function test_replace() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 		$type = 'mysupercustomtype6';
 		$id = 32;
 
-		$result = $this->db->replace( 'rows', array( 'id' => $id, 'type' => $type ) );
+		$result = self::$db->replace( 'rows', array( 'id' => $id, 'type' => $type ) );
 		$this->assertEquals( 1, $result );
 
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->$prefixed_table} WHERE type = %s", $type ) );
@@ -170,7 +173,7 @@ class Tests_DB extends Unit_Test_Case {
 	public function test_update() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 		$old_type = 'another_unusual_type';
 		$type = 'mysupercustomtype7';
 
@@ -180,7 +183,7 @@ class Tests_DB extends Unit_Test_Case {
 
 		$id = (int) $wpdb->insert_id;
 
-		$result = $this->db->update( 'rows', array( 'type' => $type ), array( 'type' => $old_type ) );
+		$result = self::$db->update( 'rows', array( 'type' => $type ), array( 'type' => $old_type ) );
 		$this->assertEquals( 1, $result );
 
 		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->$prefixed_table} WHERE type = %s", $type ) );
@@ -190,14 +193,14 @@ class Tests_DB extends Unit_Test_Case {
 	public function test_delete() {
 		global $wpdb;
 
-		$prefixed_table = $this->prefix . 'rows';
+		$prefixed_table = self::$prefix . 'rows';
 		$type = 'mysupercustomtype8';
 
 		$wpdb->insert( $wpdb->$prefixed_table, array(
 			'type' => $type,
 		), array( '%s' ) );
 
-		$result = $this->db->delete( 'rows', array( 'type' => $type ) );
+		$result = self::$db->delete( 'rows', array( 'type' => $type ) );
 		$this->assertEquals( 1, $result );
 
 		$result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->$prefixed_table} WHERE type = %s", $type ) );
@@ -205,57 +208,57 @@ class Tests_DB extends Unit_Test_Case {
 	}
 
 	public function test__isset() {
-		$this->assertTrue( isset( $this->db->insert_id ) );
-		$this->assertFalse( isset( $this->db->random_prop ) );
+		$this->assertTrue( isset( self::$db->insert_id ) );
+		$this->assertFalse( isset( self::$db->random_prop ) );
 	}
 
 	public function test__get() {
-		$this->assertInternalType( 'int', $this->db->insert_id );
-		$this->assertNull( $this->db->random_prop );
+		$this->assertInternalType( 'int', self::$db->insert_id );
+		$this->assertNull( self::$db->random_prop );
 	}
 
 	public function test_check() {
 		global $wpdb;
 
-		$this->db->check();
+		self::$db->check();
 
-		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . $this->prefix . "rows;" );
+		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . self::$prefix . "rows;" );
 		$this->assertSame( 2, count( $fields ) );
 	}
 
 	public function uninstall() {
 		global $wpdb;
 
-		$this->db->uninstall();
+		self::$db->uninstall();
 
-		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . $this->prefix . "rows;" );
+		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . self::$prefix . "rows;" );
 		$this->assertEmpty( $fields );
 
 		// reinstall after uninstalling
-		$this->db->check();
+		self::$db->check();
 	}
 
 	public function test_add_table() {
 		global $wpdb;
 
-		$result = $this->db->add_table( 'rows', array(
+		$result = self::$db->add_table( 'rows', array(
 			"random_id bigint(20) unsigned NOT NULL auto_increment",
 			"PRIMARY KEY  (random_id)",
 		) );
 		$this->assertWPError( $result );
 
-		$result = $this->db->add_table( 'custom' );
+		$result = self::$db->add_table( 'custom' );
 		$this->assertWPError( $result );
 
-		$result = $this->db->add_table( 'custom', array(
+		$result = self::$db->add_table( 'custom', array(
 			"custom_id bigint(20) unsigned NOT NULL auto_increment",
 			"PRIMARY KEY  (custom_id)",
 		) );
 		$this->assertTrue( $result );
 
-		$this->db->check( true );
+		self::$db->check( true );
 
-		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . $this->prefix . "custom;" );
+		$fields = $wpdb->get_results( "DESCRIBE " . $wpdb->prefix . self::$prefix . "custom;" );
 		$this->assertSame( 1, count( $fields ) );
 	}
 }

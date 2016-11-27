@@ -9,20 +9,20 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love_Plugin_Loader;
 
 class Tests_Actions extends Unit_Test_Case {
-	protected $actions;
+	protected static $actions;
 
-	public function setUp() {
-		parent::setUp();
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
 
-		$this->actions = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->actions();
+		self::$actions = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->actions();
 	}
 
 	public function test_func() {
 		$mode = 'func';
 
-		$this->actions->add( $this->prefix . 'some_action', $mode );
+		self::$actions->add( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertEquals( 10, $result );
 
 		ob_start();
@@ -30,9 +30,9 @@ class Tests_Actions extends Unit_Test_Case {
 		$result = ob_get_clean();
 		$this->assertEquals( $mode, $result );
 
-		$this->actions->remove( $this->prefix . 'some_action', $mode );
+		self::$actions->remove( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertFalse( $result );
 
 		ob_start();
@@ -44,9 +44,9 @@ class Tests_Actions extends Unit_Test_Case {
 	public function test_public_method() {
 		$mode = 'public';
 
-		$this->actions->add( $this->prefix . 'some_action', $mode );
+		self::$actions->add( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertEquals( 10, $result );
 
 		ob_start();
@@ -54,9 +54,9 @@ class Tests_Actions extends Unit_Test_Case {
 		$result = ob_get_clean();
 		$this->assertEquals( $mode, $result );
 
-		$this->actions->remove( $this->prefix . 'some_action', $mode );
+		self::$actions->remove( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertFalse( $result );
 
 		ob_start();
@@ -68,9 +68,9 @@ class Tests_Actions extends Unit_Test_Case {
 	public function test_private_method() {
 		$mode = 'private';
 
-		$this->actions->add( $this->prefix . 'some_action', $mode );
+		self::$actions->add( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertEquals( 10, $result );
 
 		ob_start();
@@ -78,9 +78,9 @@ class Tests_Actions extends Unit_Test_Case {
 		$result = ob_get_clean();
 		$this->assertEquals( $mode, $result );
 
-		$this->actions->remove( $this->prefix . 'some_action', $mode );
+		self::$actions->remove( $this->prefix . 'some_action', $mode );
 
-		$result = $this->actions->has( $this->prefix . 'some_action', $mode );
+		$result = self::$actions->has( $this->prefix . 'some_action', $mode );
 		$this->assertFalse( $result );
 
 		ob_start();

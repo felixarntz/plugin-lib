@@ -11,15 +11,18 @@ use Leaves_And_Love\Plugin_Lib\DB;
 use Leaves_And_Love\Plugin_Lib\Meta;
 
 class Tests_Meta extends Unit_Test_Case {
-	protected $element_id;
-	protected $meta;
+	protected static $prefix;
+	protected static $element_id;
+	protected static $meta;
 
-	public function setUp() {
+	public static function setUpBeforeClass() {
 		global $wpdb;
 
-		parent::setUp();
+		parent::setUpBeforeClass();
 
-		$db = new DB( $this->prefix, new Options( $this->prefix ), array(
+		self::$prefix = 'lalpl_tests_meta_';
+
+		$db = new DB( self::$prefix, new Options( self::$prefix ), array(
 			'table_already_exist' => 'Table %s already exists.',
 			'schema_empty'        => 'Table schema is empty.',
 		) );
@@ -27,86 +30,87 @@ class Tests_Meta extends Unit_Test_Case {
 		$max_index_length = 191;
 		$db->add_table( 'elementmeta', array(
 			"meta_id bigint(20) unsigned NOT NULL auto_increment",
-			"{$this->prefix}element_id bigint(20) unsigned NOT NULL default '0'",
+			"{self::$prefix}element_id bigint(20) unsigned NOT NULL default '0'",
 			"meta_key varchar(255) default NULL",
 			"meta_value longtext",
 			"PRIMARY KEY  (meta_id)",
-			"KEY {$this->prefix}element_id ({$this->prefix}element_id)",
+			"KEY {self::$prefix}element_id ({self::$prefix}element_id)",
 			"KEY meta_key (meta_key($max_index_length))",
 		) );
 		$db->set_version( 20160905 );
 
 		$db->check();
 
-		$this->element_id = 1;
-		$this->meta = new Meta( $db );
-
-		add_metadata( $this->prefix . 'element', $this->element_id, 'test_key', 'test_value' );
+		self::$element_id = 1;
+		self::$meta = new Meta( $db );
 	}
 
 	public function test_add() {
-		$result = $this->meta->add( 'element', $this->element_id, 'test_key', 'second_value', true );
+		add_metadata( self::$prefix . 'element', self::$element_id, 'test_key', 'test_value' );
+		$result = self::$meta->add( 'element', self::$element_id, 'test_key', 'second_value', true );
 		$this->assertFalse( $result );
 
-		$result = $this->meta->add( 'element', $this->element_id, 'test_key', 'second_value' );
+		$result = self::$meta->add( 'element', self::$element_id, 'test_key', 'second_value' );
 		$this->assertInternalType( 'int', $result );
 
-		$result = $this->meta->add( 'randtype', $this->element_id, 'test_key', 'second_value' );
+		$result = self::$meta->add( 'randtype', self::$element_id, 'test_key', 'second_value' );
 		$this->assertFalse( $result );
 	}
 
 	public function test_update() {
-		$result = $this->meta->update( 'element', $this->element_id, 'test_key2', 'test_value2' );
+		$result = self::$meta->update( 'element', self::$element_id, 'test_key2', 'test_value2' );
 		$this->assertInternalType( 'int', $result );
 
-		$result = $this->meta->update( 'element', $this->element_id, 'test_key', 'new_value' );
+		add_metadata( self::$prefix . 'element', self::$element_id, 'test_key3', 'test_value' );
+		$result = self::$meta->update( 'element', self::$element_id, 'test_key3', 'new_value' );
 		$this->assertTrue( $result );
 
-		$result = $this->meta->update( 'element', $this->element_id, 'test_key', 'newer_value', 'invalid_value' );
+		$result = self::$meta->update( 'element', self::$element_id, 'test_key3', 'newer_value', 'invalid_value' );
 		$this->assertFalse( $result );
 	}
 
 	public function test_delete() {
-		$result = $this->meta->delete( 'element', $this->element_id, 'delete_key' );
+		$result = self::$meta->delete( 'element', self::$element_id, 'delete_key' );
 		$this->assertFalse( $result );
 
-		add_metadata( $this->prefix . 'element', $this->element_id, 'delete_key', 'value' );
-		$result = $this->meta->delete( 'element', $this->element_id, 'delete_key' );
+		add_metadata( self::$prefix . 'element', self::$element_id, 'delete_key', 'value' );
+		$result = self::$meta->delete( 'element', self::$element_id, 'delete_key' );
 		$this->assertTrue( $result );
 	}
 
 	public function test_get() {
-		$result = $this->meta->get( 'element', $this->element_id, 'invalid_key' );
+		$result = self::$meta->get( 'element', self::$element_id, 'invalid_key' );
 		$this->assertEmpty( $result );
 
-		$result = $this->meta->get( 'element', $this->element_id, 'invalid_key', true );
+		$result = self::$meta->get( 'element', self::$element_id, 'invalid_key', true );
 		$this->assertFalse( $result );
 
-		update_metadata( $this->prefix . 'element', $this->element_id, 'test_key', 'test_value' );
-		$result = $this->meta->get( 'element', $this->element_id, 'test_key', true );
+		update_metadata( self::$prefix . 'element', self::$element_id, 'test_key4', 'test_value' );
+		$result = self::$meta->get( 'element', self::$element_id, 'test_key4', true );
 		$this->assertSame( 'test_value', $result );
 	}
 
 	public function test_exists() {
-		$result = $this->meta->exists( 'element', $this->element_id, 'invalid_key' );
+		$result = self::$meta->exists( 'element', self::$element_id, 'invalid_key' );
 		$this->assertFalse( $result );
 
-		$result = $this->meta->exists( 'element', $this->element_id, 'test_key' );
+		add_metadata( self::$prefix . 'element', self::$element_id, 'test_key5', 'test_value' );
+		$result = self::$meta->exists( 'element', self::$element_id, 'test_key5' );
 		$this->assertTrue( $result );
 	}
 
 	public function test_delete_all() {
 		$id = 34;
 
-		$this->meta->update( 'element', $id, 'key1', 'value1' );
-		$this->meta->update( 'element', $id, 'key2', 'value2' );
-		$this->meta->update( 'element', $id, 'key3', 'value3' );
-		$this->meta->update( 'element', $id, 'key4', 'value4' );
+		self::$meta->update( 'element', $id, 'key1', 'value1' );
+		self::$meta->update( 'element', $id, 'key2', 'value2' );
+		self::$meta->update( 'element', $id, 'key3', 'value3' );
+		self::$meta->update( 'element', $id, 'key4', 'value4' );
 
-		$result = $this->meta->delete_all( 'element', $id );
+		$result = self::$meta->delete_all( 'element', $id );
 		$this->assertTrue( $result );
 
-		$result = $this->meta->get( 'element', $id );
+		$result = self::$meta->get( 'element', $id );
 		$this->assertEmpty( $result );
 	}
 }
