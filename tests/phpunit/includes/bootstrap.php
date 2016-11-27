@@ -24,7 +24,11 @@ if ( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
 } elseif ( file_exists( '/tmp/wordpress-tests-lib/includes/bootstrap.php' ) ) {
 	$test_root = '/tmp/wordpress-tests-lib';
 } else {
-	$test_root = '../../../../../../../../../../tests/phpunit';
+	$test_root = __FILE__;
+	for ( $i = 0; $i < 11; $i++ ) {
+		$test_root = dirname( $test_root );
+	}
+	$test_root .= '/tests/phpunit';
 }
 
 require $test_root . '/includes/bootstrap.php';
