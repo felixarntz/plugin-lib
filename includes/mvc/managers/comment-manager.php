@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\MVC\Managers;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager;
 use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Comment_Manager' ) ) :
 
@@ -21,20 +22,22 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\MVC\Managers\Comment_Manager' )
  * @since 1.0.0
  */
 class Comment_Manager extends Core_Manager {
-	use Sitewide_Manager, Meta_Manager;
+	use Sitewide_Manager, Meta_Manager, Type_Manager;
 
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB    $db       The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache    The cache instance.
-	 * @param array                            $messages Messages printed to the user.
-	 * @param Leaves_And_Love\Plugin_Lib\Meta  $meta     The meta instance. Optional, but required for managers
-	 *                                                   with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\DB                     $db           The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache                  $cache        The cache instance.
+	 * @param array                                             $messages     Messages printed to the user.
+	 * @param Leaves_And_Love\Plugin_Lib\Meta                   $meta         The meta instance. Optional, but required
+	 *                                                                        for managers with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager $type_manager The type manager instance. Optional,
+	 *                                                                        but required for managers with types.
 	 */
-	public function __construct( $db, $cache, $messages, $meta = null ) {
+	public function __construct( $db, $cache, $messages, $meta = null, $type_manager = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Comment';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Comment_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Comment_Query';
@@ -44,7 +47,7 @@ class Comment_Manager extends Core_Manager {
 		$this->meta_type      = 'comment';
 		$this->fetch_callback = 'get_comment';
 
-		parent::__construct( $db, $cache, $messages, $meta );
+		parent::__construct( $db, $cache, $messages, $meta, $type_manager );
 	}
 
 	/**

@@ -48,6 +48,15 @@ abstract class Model {
 	protected $manager;
 
 	/**
+	 * The primary property of the model.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $primary_property = 'id';
+
+	/**
 	 * Constructor.
 	 *
 	 * Sets the ID and fetches relevant data.
@@ -81,7 +90,9 @@ abstract class Model {
 	 *
 	 * @return string Name of the primary property.
 	 */
-	public abstract function get_primary_property();
+	public function get_primary_property() {
+		return $this->primary_property;
+	}
 
 	/**
 	 * Magic isset-er.
@@ -499,7 +510,12 @@ abstract class Model {
 			'pending_properties',
 			'pending_meta',
 			'manager',
+			'primary_property',
 		);
+
+		if ( property_exists( $this, 'type_property' ) ) {
+			$blacklist[] = 'type_property';
+		}
 
 		if ( property_exists( $this, '__site_id' ) ) {
 			$blacklist[] = '__site_id';

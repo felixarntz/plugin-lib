@@ -42,20 +42,8 @@ class Network extends Core_Model {
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
-	}
 
-	/**
-	 * Returns the name of the primary property that identifies the model.
-	 *
-	 * This is usually an integer ID denoting the database row.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return string Name of the primary property.
-	 */
-	public function get_primary_property() {
-		return 'id';
+		$this->primary_property = 'id';
 	}
 
 	/**

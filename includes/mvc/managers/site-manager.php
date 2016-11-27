@@ -27,13 +27,15 @@ class Site_Manager extends Core_Manager {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB    $db       The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache    The cache instance.
-	 * @param array                            $messages Messages printed to the user.
-	 * @param Leaves_And_Love\Plugin_Lib\Meta  $meta     The meta instance. Optional, but required for managers
-	 *                                                   with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\DB                     $db           The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache                  $cache        The cache instance.
+	 * @param array                                             $messages     Messages printed to the user.
+	 * @param Leaves_And_Love\Plugin_Lib\Meta                   $meta         The meta instance. Optional, but required
+	 *                                                                        for managers with meta.
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager $type_manager The type manager instance. Optional,
+	 *                                                                        but required for managers with types.
 	 */
-	public function __construct( $db, $cache, $messages, $meta = null ) {
+	public function __construct( $db, $cache, $messages, $meta = null, $type_manager = null ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Site';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Site_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Site_Query';
@@ -43,7 +45,7 @@ class Site_Manager extends Core_Manager {
 		$this->meta_type      = 'site';
 		$this->fetch_callback = 'get_site';
 
-		parent::__construct( $db, $cache, $messages, $meta );
+		parent::__construct( $db, $cache, $messages, $meta, $type_manager );
 	}
 
 	/**
