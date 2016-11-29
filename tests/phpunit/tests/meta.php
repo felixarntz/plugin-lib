@@ -16,11 +16,9 @@ class Tests_Meta extends Unit_Test_Case {
 	protected static $meta;
 
 	public static function setUpBeforeClass() {
-		global $wpdb;
-
 		parent::setUpBeforeClass();
 
-		self::$prefix = 'lalpl_tests_meta_';
+		self::$prefix = $prefix = 'lalpl_tests_meta_';
 
 		$db = new DB( self::$prefix, new Options( self::$prefix ), array(
 			'table_already_exist' => 'Table %s already exists.',
@@ -30,11 +28,11 @@ class Tests_Meta extends Unit_Test_Case {
 		$max_index_length = 191;
 		$db->add_table( 'elementmeta', array(
 			"meta_id bigint(20) unsigned NOT NULL auto_increment",
-			"{self::$prefix}element_id bigint(20) unsigned NOT NULL default '0'",
+			"{$prefix}element_id bigint(20) unsigned NOT NULL default '0'",
 			"meta_key varchar(255) default NULL",
 			"meta_value longtext",
 			"PRIMARY KEY  (meta_id)",
-			"KEY {self::$prefix}element_id ({self::$prefix}element_id)",
+			"KEY {$prefix}element_id ({$prefix}element_id)",
 			"KEY meta_key (meta_key($max_index_length))",
 		) );
 		$db->set_version( 20160905 );
