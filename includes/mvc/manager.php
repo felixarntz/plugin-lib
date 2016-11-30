@@ -197,9 +197,9 @@ abstract class Manager extends Service {
 	public function query( $query = array() ) {
 		$class_name = $this->query_class_name;
 
-		$query = new $class_name( $this );
+		$query_instance = new $class_name( $this );
 
-		return $query->query( $query );
+		return $query_instance->query( $query );
 	}
 
 	/**

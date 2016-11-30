@@ -141,7 +141,7 @@ abstract class Model_Type_Manager extends Service {
 			$transformed_to_array = true;
 		}
 
-		$util = new WP_List_Util( $this->model_types );
+		$util = new WP_List_Util( $model_types );
 
 		$util->filter( $args, $operator );
 
