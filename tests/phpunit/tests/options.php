@@ -23,8 +23,13 @@ class Tests_Options extends Unit_Test_Case {
 		}
 
 		self::$options = new Options( self::$prefix );
-		self::$options->add_hooks();
 		self::$options->store_in_network( $stored_in_network );
+
+		self::setUpHooks( self::$options );
+	}
+
+	public static function tearDownAfterClass() {
+		self::tearDownHooks( self::$options );
 	}
 
 	public function test_get() {
@@ -170,8 +175,7 @@ class Tests_Options extends Unit_Test_Case {
 		$base_options = array( 'somekey' => 'somevalue' );
 
 		if ( is_multisite() ) {
-			$result = self::$options->migrate_to_network( $base_options );
-			$result = apply_filters( 'populate_network_meta', $base_options, 2 );
+			$result = apply_filters( 'populate_network_meta', $base_options, 1 );
 			$this->assertEquals( $base_options, $result );
 		} else {
 			$new_value = '23';
