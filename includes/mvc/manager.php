@@ -512,7 +512,7 @@ abstract class Manager extends Service {
 			return isset( $this->models[ $site_id ][ $model_id ] );
 		}
 
-		return ! isset( $this->models[ $model_id ] );
+		return isset( $this->models[ $model_id ] );
 	}
 
 	/**

@@ -111,7 +111,7 @@ abstract class Model {
 			return false;
 		}
 
-		if ( isset( $this->$property ) ) {
+		if ( property_exists( $this, $property ) ) {
 			return true;
 		}
 
@@ -154,7 +154,7 @@ abstract class Model {
 			return null;
 		}
 
-		if ( isset( $this->$property ) ) {
+		if ( property_exists( $this, $property ) ) {
 			return $this->$property;
 		}
 
@@ -202,7 +202,7 @@ abstract class Model {
 			return;
 		}
 
-		if ( isset( $this->$property ) ) {
+		if ( property_exists( $this, $property ) ) {
 			$old = $this->$property;
 
 			$this->set_value_type_safe( $property, $value );
@@ -423,7 +423,7 @@ abstract class Model {
 				continue;
 			}
 
-			if ( ! isset( $this->$property ) ) {
+			if ( ! property_exists( $this, $property ) ) {
 				continue;
 			}
 

@@ -55,3 +55,5 @@ trait Type_Model {
 		return $this->manager->get_type( $this->$type_property );
 	}
 }
+
+endif;
