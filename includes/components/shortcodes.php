@@ -19,7 +19,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcodes' ) ) :
  *
  * @since 1.0.0
  *
- * @method string                              get_prefix()
  * @method Leaves_And_Love\Plugin_Lib\Cache    cache()
  * @method Leaves_And_Love\Plugin_Lib\Template template()
  */

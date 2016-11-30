@@ -14,6 +14,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service' ) ) :
  * Abstract class for any kind of service.
  *
  * @since 1.0.0
+ *
+ * @method string get_prefix()
  */
 abstract class Service {
 	/**
@@ -44,15 +46,6 @@ abstract class Service {
 	protected $services = array();
 
 	/**
-	 * Whether the hooks for this service have been added.
-	 *
-	 * @since 1.0.0
-	 * @access private
-	 * @var bool
-	 */
-	private $hooks_added = false;
-
-	/**
 	 * Magic caller.
 	 *
 	 * Supports a `get_prefix()` method (if property has been set by the extending class)
@@ -66,31 +59,14 @@ abstract class Service {
 	 * @return mixed Method results, or void if the method does not exist.
 	 */
 	public function __call( $method, $args ) {
-		if ( 'get_prefix' === $method ) {
-			if ( is_string( $this->prefix ) ) {
+		switch ( $method ) {
+			case 'get_prefix':
 				return $this->prefix;
-			}
-		} elseif ( 'add_hooks' === $method ) {
-			if ( $this->hooks_added ) {
-				return;
-			}
-
-			$this->add_hooks();
-
-			$this->hooks_added = true;
-		} elseif ( in_array( $method, $this->services, true ) && isset( $this->$method ) ) {
-			return $this->$method;
+			default:
+				if ( in_array( $method, $this->services, true ) && isset( $this->$method ) ) {
+					return $this->$method;
+				}
 		}
-	}
-
-	/**
-	 * Adds all hooks for this service.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function add_hooks() {
-		// Empty method body.
 	}
 
 	/**

@@ -18,11 +18,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  *
  * @since 1.0.0
  *
- * @method string                             get_prefix()
- * @method void                               add_hooks()
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
-class DB extends Service {
+class DB extends Hook_Service {
 	use Actions;
 
 	/**
@@ -602,6 +600,16 @@ class DB extends Service {
 	 */
 	protected function add_hooks() {
 		$this->add_action( 'admin_init', array( $this, 'check' ), 10, 0 );
+	}
+
+	/**
+	 * Removes database hooks.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function remove_hooks() {
+		$this->remove_action( 'admin_init', array( $this, 'check' ), 10 );
 	}
 }
 

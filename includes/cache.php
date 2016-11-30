@@ -16,8 +16,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Cache' ) ) :
  * The class is a wrapper for the WordPress cache.
  *
  * @since 1.0.0
- *
- * @method string get_prefix()
  */
 class Cache extends Service {
 	/**

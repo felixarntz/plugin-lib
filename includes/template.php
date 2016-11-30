@@ -16,8 +16,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Template' ) ) :
  * The class includes a reusable template hierarchy that lets themes override each template.
  *
  * @since 1.0.0
- *
- * @method string get_prefix()
  */
 class Template extends Service {
 	/**

@@ -20,11 +20,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
  * is enabled). This can be useful in some cases for various reasons.
  *
  * @since 1.0.0
- *
- * @method string get_prefix()
- * @method void   add_hooks()
  */
-class Options extends Service {
+class Options extends Hook_Service {
 	use Filters;
 
 	/**
@@ -296,6 +293,16 @@ class Options extends Service {
 	 */
 	protected function add_hooks() {
 		$this->add_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10, 1 );
+	}
+
+	/**
+	 * Removes options hooks.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function remove_hooks() {
+		$this->remove_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10 );
 	}
 }
 
