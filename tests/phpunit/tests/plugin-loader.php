@@ -20,8 +20,8 @@ class Tests_Plugin_Loader extends Unit_Test_Case {
 		$result = Leaves_And_Love_Plugin_Loader::load( 'WP_Error', __FILE__ );
 		$this->assertFalse( $result );
 
-		require_once dirname( dirname( __FILE__ ) ) . '/data/another-sample-class.php';
-		require_once dirname( dirname( __FILE__ ) ) . '/data/yet-another-sample-class.php';
+		require_once LALPL_TESTS_DATA . 'another-sample-class.php';
+		require_once LALPL_TESTS_DATA . 'yet-another-sample-class.php';
 
 		$result = Leaves_And_Love_Plugin_Loader::load( 'Another_Sample_Class', __FILE__ );
 		$this->assertTrue( $result );
@@ -37,7 +37,7 @@ class Tests_Plugin_Loader extends Unit_Test_Case {
 		$result = Leaves_And_Love_Plugin_Loader::get( 'WP_Error' );
 		$this->assertNull( $result );
 
-		require_once dirname( dirname( __FILE__ ) ) . '/data/yet-another-sample-class.php';
+		require_once LALPL_TESTS_DATA . 'yet-another-sample-class.php';
 
 		Leaves_And_Love_Plugin_Loader::load( 'Yet_Another_Sample_Class', __FILE__ );
 		$result = Leaves_And_Love_Plugin_Loader::get( 'Yet_Another_Sample_Class' );
@@ -45,7 +45,7 @@ class Tests_Plugin_Loader extends Unit_Test_Case {
 	}
 
 	public function test_error_notice() {
-		require_once dirname( dirname( __FILE__ ) ) . '/data/yet-another-sample-class.php';
+		require_once LALPL_TESTS_DATA . 'yet-another-sample-class.php';
 
 		Leaves_And_Love_Plugin_Loader::load( 'Yet_Another_Sample_Class', __FILE__ );
 

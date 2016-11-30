@@ -73,7 +73,7 @@ class Tests_Template extends Unit_Test_Case {
 
 	public function test_load_file() {
 		$require_file = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->path( 'templates/base.php' );
-		$require_once_file = dirname( dirname( __FILE__ ) ) . '/data/templates/require-this-once.php';
+		$require_once_file = LALPL_TESTS_DATA . 'templates/require-this-once.php';
 
 		$require_content = 'Basic template.';
 		$require_once_content = 'Require this once!';
@@ -95,7 +95,7 @@ class Tests_Template extends Unit_Test_Case {
 	}
 
 	public function test_register_location() {
-		$custom_location = dirname( dirname( __FILE__ ) ) . '/data/templates/';
+		$custom_location = LALPL_TESTS_DATA . 'templates/';
 
 		$base = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->path( 'templates/base.php' );
 		$base_overridden = $custom_location . 'base.php';
@@ -118,7 +118,7 @@ class Tests_Template extends Unit_Test_Case {
 	public function test_unregister_location() {
 		$location_name = 'my_location';
 
-		self::$template_instance->register_location( $location_name, dirname( dirname( __FILE__ ) ) . '/data/templates/' );
+		self::$template_instance->register_location( $location_name, LALPL_TESTS_DATA . 'templates/' );
 
 		$result = self::$template_instance->unregister_location( $location_name );
 		$this->assertTrue( $result );

@@ -31,6 +31,8 @@ if ( false !== getenv( 'WP_DEVELOP_DIR' ) ) {
 	$test_root .= '/tests/phpunit';
 }
 
+define( 'LALPL_TESTS_DATA', dirname( dirname( __FILE__ ) ) . '/data/' );
+
 require $test_root . '/includes/bootstrap.php';
 
 require_once dirname( __FILE__ ) . '/factory.php';
