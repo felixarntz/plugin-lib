@@ -42,11 +42,33 @@ class Tests_Element_Model extends Unit_Test_Case {
 		$model = self::$manager->create();
 
 		$this->assertFalse( isset( $model->random_value ) );
+		$this->assertNull( $model->random_value );
 
 		$value = 'foobar';
 		$model->random_value = $value;
 		$this->assertTrue( isset( $model->random_value ) );
 		$this->assertSame( $value, $model->random_value );
+
+		$model->sync_upstream();
+		$this->assertTrue( isset( $model->random_value ) );
+		$this->assertSame( $value, $model->random_value );
+
+		$value = 'bar';
+		$model->random_value = $value;
+		$this->assertTrue( isset( $model->random_value ) );
+		$this->assertSame( $value, $model->random_value );
+
+		$model->random_value = null;
+		$this->assertFalse( isset( $model->random_value ) );
+	}
+
+	public function test_setgetisset_invalid() {
+		$model = self::$manager->create();
+
+		$this->assertFalse( isset( $model->pending_properties ) );
+		$this->assertNull( $model->pending_properties );
+		$model->pending_properties = '';
+		$this->assertNull( $model->pending_properties );
 	}
 
 	public function test_get_primary_property() {
