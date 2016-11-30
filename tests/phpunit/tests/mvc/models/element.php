@@ -11,14 +11,14 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
  * @group models
  * @group elements
  */
-class Tests_Element_Model extends Unit_Test_Case {
+class Tests_Element extends Unit_Test_Case {
 	protected static $prefix;
 	protected static $manager;
 
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 
-		self::$prefix = 'lalpl_tests_element_model_';
+		self::$prefix = 'lalpl_tests_element_';
 
 		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
 	}
