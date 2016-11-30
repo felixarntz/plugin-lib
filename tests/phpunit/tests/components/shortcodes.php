@@ -10,6 +10,9 @@ use Leaves_And_Love_Plugin_Loader;
 use Leaves_And_Love\Plugin_Lib\Cache;
 use Leaves_And_Love\Plugin_Lib\Components\Shortcodes;
 
+/**
+ * @group shortcodes
+ */
 class Tests_Shortcodes extends Unit_Test_Case {
 	protected static $prefix;
 	protected static $shortcodes;

@@ -10,6 +10,9 @@ use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
 use Leaves_And_Love\Plugin_Lib\Meta;
 
+/**
+ * @group meta
+ */
 class Tests_Meta extends Unit_Test_Case {
 	protected static $prefix;
 	protected static $element_id;

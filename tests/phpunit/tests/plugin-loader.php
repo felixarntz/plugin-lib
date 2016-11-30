@@ -9,6 +9,9 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love_Plugin_Loader;
 use WP_Error;
 
+/**
+ * @group plugin-loader
+ */
 class Tests_Plugin_Loader extends Unit_Test_Case {
 	public function test_load() {
 		$result = Leaves_And_Love_Plugin_Loader::load( 'SP_Main', __FILE__ );

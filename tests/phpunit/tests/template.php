@@ -8,6 +8,9 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 use Leaves_And_Love_Plugin_Loader;
 
+/**
+ * @group template
+ */
 class Tests_Template extends Unit_Test_Case {
 	protected static $template_instance;
 
