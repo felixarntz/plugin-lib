@@ -121,7 +121,7 @@ abstract class Leaves_And_Love_Plugin {
 		$this->main_file = $main_file;
 		$this->basedir_relative = $basedir_relative;
 		$this->minimum_php = '5.4';
-		$this->minimum_wp = '4.6';
+		$this->minimum_wp = '4.7';
 
 		$this->load_base_properties();
 		$this->load_textdomain();
