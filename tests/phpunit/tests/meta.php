@@ -46,6 +46,26 @@ class Tests_Meta extends Unit_Test_Case {
 		self::$meta = new Meta( $db );
 	}
 
+	public static function tearDownAfterClass() {
+		global $wpdb;
+
+		parent::tearDownAfterClass();
+
+		$prefixed_table_name = self::$prefix . 'elementmeta';
+
+		$db_table_name = $wpdb->$prefixed_table_name;
+		$wpdb->query( "DROP TABLE $db_table_name" );
+
+		$key = array_search( $prefixed_table_name, $wpdb->tables );
+		if ( false !== $key ) {
+			$wpdb->tables = array_splice( $wpdb->tables, $key, 1 );
+		}
+
+		unset( $wpdb->$prefixed_table_name );
+
+		delete_network_option( null, self::$prefix . 'db_version' );
+	}
+
 	public function test_add() {
 		add_metadata( self::$prefix . 'element', self::$element_id, 'test_key', 'test_value' );
 		$result = self::$meta->add( 'element', self::$element_id, 'test_key', 'second_value', true );

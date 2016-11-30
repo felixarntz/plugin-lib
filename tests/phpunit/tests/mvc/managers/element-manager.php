@@ -23,6 +23,13 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
 	}
 
+	public static function tearDownAfterClass() {
+		parent::tearDownAfterClass();
+
+		self::tearDownSampleManager( self::$prefix, 'element' );
+		self::$manager = null;
+	}
+
 	public function test_create() {
 		$model = self::$manager->create();
 		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );

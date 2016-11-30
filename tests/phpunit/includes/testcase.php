@@ -91,4 +91,31 @@ class Unit_Test_Case extends WP_UnitTestCase {
 
 		return new \Leaves_And_Love\Sample_MVC\Sample_Manager( $db, new Cache( $prefix ), $messages, new Meta( $db ), new \Leaves_And_Love\Sample_MVC\Sample_Type_Manager( $prefix ), $name );
 	}
+
+	protected static function tearDownSampleManager( $prefix, $name ) {
+		global $wpdb;
+
+		$prefixed_table_names = array(
+			$prefix . $name . 's',
+			$prefix . $name . 'meta',
+		);
+
+		foreach ( $prefixed_table_names as $prefixed_table_name ) {
+			if ( ! isset( $wpdb->$prefixed_table_name ) ) {
+				continue;
+			}
+
+			$db_table_name = $wpdb->$prefixed_table_name;
+			$wpdb->query( "DROP TABLE $db_table_name" );
+
+			$key = array_search( $prefixed_table_name, $wpdb->tables );
+			if ( false !== $key ) {
+				$wpdb->tables = array_splice( $wpdb->tables, $key, 1 );
+			}
+
+			unset( $wpdb->$prefixed_table_name );
+		}
+
+		delete_network_option( null, $prefix . 'db_version' );
+	}
 }

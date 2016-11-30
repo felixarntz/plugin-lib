@@ -23,6 +23,13 @@ class Tests_Element extends Unit_Test_Case {
 		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
 	}
 
+	public static function tearDownAfterClass() {
+		parent::tearDownAfterClass();
+
+		self::tearDownSampleManager( self::$prefix, 'element' );
+		self::$manager = null;
+	}
+
 	public function test_setgetisset_property() {
 		$model = self::$manager->create();
 
