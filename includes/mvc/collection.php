@@ -329,6 +329,10 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 			return $model;
 		}
 
+		if ( null === $model ) {
+			return 0;
+		}
+
 		$primary_property = $model->get_primary_property();
 
 		return $model->$primary_property;
@@ -344,6 +348,10 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @return array Array including all information for the model.
 	 */
 	protected function transform_into_json( $model ) {
+		if ( null === $model ) {
+			return array( 'id' => 0 );
+		}
+
 		return $model->to_json();
 	}
 
