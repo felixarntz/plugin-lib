@@ -57,7 +57,8 @@ class Tests_DB extends Unit_Test_Case {
 
 		$key = array_search( $prefixed_table_name, $wpdb->tables );
 		if ( false !== $key ) {
-			$wpdb->tables = array_splice( $wpdb->tables, $key, 1 );
+			unset( $wpdb->tables[ $key ] );
+			$wpdb->tables = array_values( $wpdb->tables );
 		}
 
 		unset( $wpdb->$prefixed_table_name );

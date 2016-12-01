@@ -14,6 +14,7 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 class Tests_Element extends Unit_Test_Case {
 	protected static $prefix;
 	protected static $manager;
+	protected static $other_site_id;
 
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
@@ -21,6 +22,10 @@ class Tests_Element extends Unit_Test_Case {
 		self::$prefix = 'lalpl_tests_element_';
 
 		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
+
+		if ( is_multisite() ) {
+			self::$other_site_id = self::factory()->blog->create();
+		}
 	}
 
 	public static function tearDownAfterClass() {
@@ -28,6 +33,10 @@ class Tests_Element extends Unit_Test_Case {
 
 		self::tearDownSampleManager( self::$prefix, 'element' );
 		self::$manager = null;
+
+		if ( is_multisite() ) {
+			wpmu_delete_blog( self::$other_site_id, true );
+		}
 	}
 
 	public function test_setgetisset_property() {
@@ -130,8 +139,7 @@ class Tests_Element extends Unit_Test_Case {
 
 		$current_site_id = get_current_blog_id();
 
-		$new_site_id = self::factory()->blog->create();
-		switch_to_blog( $blog_id );
+		switch_to_blog( self::$other_site_id );
 
 		$this->assertSame( $current_site_id, $model->get_site_id() );
 
