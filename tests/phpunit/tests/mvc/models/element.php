@@ -127,31 +127,6 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertTrue( 0 != $model->id );
 	}
 
-	public function test_sync_while_switched() {
-		if ( ! is_multisite() ) {
-			$this->markTestSkipped( 'Test only runs in multisite' );
-		}
-
-		$title = 'Very Unique Title';
-
-		$model = self::$manager->create();
-		$model->title = $title;
-
-		$current_site_id = get_current_blog_id();
-
-		switch_to_blog( self::$other_site_id );
-
-		$this->assertSame( $current_site_id, $model->get_site_id() );
-
-		$model->sync_upstream();
-
-		restore_current_blog();
-
-		$db_object = self::$manager->fetch( $model->id );
-		$this->assertInstanceOf( 'stdClass', $db_object );
-		$this->assertEquals( $title, $db_object->title );
-	}
-
 	public function test_sync_downstream() {
 		$model = self::$manager->create();
 
@@ -187,6 +162,31 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertSame( $new_type, $model->type );
 		$this->assertSame( $new_title, $model->title );
 		$this->assertSame( $new_random, $model->random );
+	}
+
+	public function test_sync_while_switched() {
+		if ( ! is_multisite() ) {
+			$this->markTestSkipped( 'Test only runs in multisite' );
+		}
+
+		$title = 'Very Unique Title';
+
+		$model = self::$manager->create();
+		$model->title = $title;
+
+		$current_site_id = get_current_blog_id();
+
+		switch_to_blog( self::$other_site_id );
+
+		$this->assertSame( $current_site_id, $model->get_site_id() );
+
+		$model->sync_upstream();
+
+		restore_current_blog();
+
+		$db_object = self::$manager->fetch( $model->id );
+		$this->assertInstanceOf( 'stdClass', $db_object );
+		$this->assertEquals( $title, $db_object->title );
 	}
 
 	public function test_delete() {
