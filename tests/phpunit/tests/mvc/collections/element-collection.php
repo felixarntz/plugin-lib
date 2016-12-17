@@ -103,8 +103,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		$json = $collection->to_json();
 		$this->assertEquals( $expected, $json );
 
-		// TODO: make get() calls work in tests
-		/*$collection->transform_into_objects();
+		$collection->transform_into_objects();
 
 		$expected = array(
 			'total'  => $total_models,
@@ -116,7 +115,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 			$expected['models'][] = $model->to_json();
 		}
 		$json = $collection->to_json();
-		$this->assertEquals( $expected, $json );*/
+		$this->assertEquals( $expected, $json );
 	}
 
 	public function test_array_access() {
