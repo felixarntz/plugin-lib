@@ -47,7 +47,7 @@ trait Type_Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Model_Type|null Type object, or null it it does not exist.
+	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
 	 */
 	public function get_type_object() {
 		$type_property = $this->type_property;

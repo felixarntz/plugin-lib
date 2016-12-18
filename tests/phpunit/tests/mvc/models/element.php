@@ -6,10 +6,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
-use Leaves_And_Love\Sample_MVC\Sample;
+use Leaves_And_Love\Sample_DB_Objects\Sample;
 
 /**
- * @group mvc
+ * @group db-objects
  * @group models
  * @group elements
  */
@@ -110,7 +110,7 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertNull( $model->get_type_object() );
 
 		$model->type = 'foo';
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample_Type', $model->get_type_object() );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Type', $model->get_type_object() );
 
 		self::$manager->unregister_type( 'foo' );
 	}

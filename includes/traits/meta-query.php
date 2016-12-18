@@ -97,7 +97,7 @@ trait Meta_Query {
 	 * @access protected
 	 *
 	 * @param string|array $query Array or query string of model query arguments. See
-	 *                            Leaves_And_Love\Plugin_Lib\MVC\Query::query().
+	 *                            Leaves_And_Love\Plugin_Lib\DB_Objects\Query::query().
 	 */
 	protected function parse_query( $query ) {
 		parent::parse_query( $query );

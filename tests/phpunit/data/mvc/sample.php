@@ -1,8 +1,8 @@
 <?php
 
-namespace Leaves_And_Love\Sample_MVC;
+namespace Leaves_And_Love\Sample_DB_Objects;
 
-use Leaves_And_Love\Plugin_Lib\MVC\Model;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model;
 use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
 use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
 

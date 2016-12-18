@@ -6,10 +6,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
-use Leaves_And_Love\Sample_MVC\Sample_Query;
+use Leaves_And_Love\Sample_DB_Objects\Sample_Query;
 
 /**
- * @group mvc
+ * @group db-objects
  * @group queries
  * @group elements
  */

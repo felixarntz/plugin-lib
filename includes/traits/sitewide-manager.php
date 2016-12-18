@@ -24,8 +24,8 @@ trait Sitewide_Manager {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int                                  $model_id ID of the model to set.
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model $model    Model to set for the ID.
+	 * @param int                                         $model_id ID of the model to set.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    Model to set for the ID.
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function storage_set( $model_id, $model ) {
@@ -51,7 +51,7 @@ trait Sitewide_Manager {
 	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to get.
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Model|null The model on success, or null if it doesn't exist.
+	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null The model on success, or null if it doesn't exist.
 	 */
 	protected function storage_get( $model_id ) {
 		if ( is_multisite() ) {

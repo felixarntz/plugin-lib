@@ -7,7 +7,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 /**
- * @group mvc
+ * @group db-objects
  * @group managers
  * @group elements
  */
@@ -32,19 +32,19 @@ class Tests_Element_Manager extends Unit_Test_Case {
 
 	public function test_create() {
 		$model = self::$manager->create();
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 	}
 
 	public function test_get() {
 		$model = self::$manager->create();
 
 		$model = self::$manager->get( $model );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 
 		$model->sync_upstream();
 
 		$model = self::$manager->get( $model->id );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 
 		$this->assertNull( self::$manager->get( 0 ) );
 	}
@@ -72,7 +72,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 			'type'    => 'very_unique_type',
 			'orderby' => array( 'parent_id' => 'DESC' ),
 		) );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample_Collection', $result );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Collection', $result );
 		$this->assertEquals( $expected, $result->to_json()['models'] );
 	}
 
@@ -80,7 +80,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		$model_ids = array( 1, 3, 5, 7, 9 );
 
 		$collection = self::$manager->get_collection( $model_ids, 10, 'ids' );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample_Collection', $collection );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Collection', $collection );
 		$this->assertEquals( $model_ids, $collection->to_json()['models'] );
 		$this->assertSame( 10, $collection->get_total() );
 	}
@@ -94,7 +94,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		$this->assertInternalType( 'int', $model_id );
 
 		$model = self::$manager->get( $model_id );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 		$this->assertSame( $model_id, $model->id );
 	}
 
@@ -119,7 +119,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		$this->assertTrue( $result );
 
 		$model = self::$manager->get( $model_id );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 		$this->assertSame( $type, $model->type );
 		$this->assertSame( $title, $model->title );
 		$this->assertSame( $content, $model->content );
@@ -130,7 +130,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		$model_id = self::$manager->add( array( 'type' => 'randomtype' ) );
 
 		$model = self::$manager->get( $model_id );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample', $model );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample', $model );
 
 		$result = self::$manager->delete( $model_id );
 		$this->assertTrue( $result );
@@ -271,7 +271,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		self::$manager->register_type( 'type2' );
 
 		$type = self::$manager->get_type( 'type2' );
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_MVC\Sample_Type', $type );
+		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Type', $type );
 	}
 
 	public function test_query_types() {

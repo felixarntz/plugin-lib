@@ -23,7 +23,7 @@ trait Type_Manager {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager
+	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager
 	 */
 	protected $type_manager;
 
@@ -48,7 +48,7 @@ trait Type_Manager {
 	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
-	 * @return Leaves_And_Love\Plugin_Lib\MVC\Model_Type|null Type object, or null it it does not exist.
+	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
 	 */
 	public function get_type( $slug ) {
 		return $this->type_manager->get( $slug );

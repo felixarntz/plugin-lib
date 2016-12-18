@@ -1,8 +1,8 @@
 <?php
 
-namespace Leaves_And_Love\Sample_MVC;
+namespace Leaves_And_Love\Sample_DB_Objects;
 
-use Leaves_And_Love\Plugin_Lib\MVC\Query;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Query;
 use Leaves_And_Love\Plugin_Lib\Traits\Meta_Query;
 
 class Sample_Query extends Query {

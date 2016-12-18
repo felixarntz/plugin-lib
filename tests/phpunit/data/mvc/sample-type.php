@@ -1,8 +1,8 @@
 <?php
 
-namespace Leaves_And_Love\Sample_MVC;
+namespace Leaves_And_Love\Sample_DB_Objects;
 
-use Leaves_And_Love\Plugin_Lib\MVC\Model_Type;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type;
 
 class Sample_Type extends Model_Type {
 	protected function set_args( $args ) {
