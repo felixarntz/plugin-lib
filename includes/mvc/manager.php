@@ -244,6 +244,8 @@ abstract class Manager extends Service {
 
 		$id = absint( $this->db->insert_id );
 
+		$this->clean_cache( $id );
+
 		return $id;
 	}
 
@@ -306,7 +308,7 @@ abstract class Manager extends Service {
 	public function fetch( $model_id ) {
 		$model_id = absint( $model_id );
 
-		$db_obj = $this->get_cache( $model_id );
+		$db_obj = $this->get_from_cache( $model_id );
 		if ( ! $db_obj ) {
 			$db_obj = $this->db->get_row( "SELECT * FROM %{$this->table_name}% WHERE id = %d", $model_id );
 
@@ -314,7 +316,7 @@ abstract class Manager extends Service {
 				return null;
 			}
 
-			$this->add_cache( $model_id, $db_obj );
+			$this->add_to_cache( $model_id, $db_obj );
 		}
 
 		return $db_obj;
@@ -402,8 +404,8 @@ abstract class Manager extends Service {
 	/**
 	 * Saves data to the model cache.
 	 *
-	 * Differs from Leaves_And_Love\Plugin_Lib\MVC\Manager::add_cache() and
-	 * Leaves_And_Love\Plugin_Lib\MVC\Manager::replace_cache() in that it will
+	 * Differs from Leaves_And_Love\Plugin_Lib\MVC\Manager::add_to_cache() and
+	 * Leaves_And_Love\Plugin_Lib\MVC\Manager::replace_in_cache() in that it will
 	 * always write data.
 	 *
 	 * @since 1.0.0
@@ -430,9 +432,9 @@ abstract class Manager extends Service {
 	protected function clean_cache( $model_id ) {
 		$model_id = absint( $model_id );
 
-		$this->delete_cache( $model_id );
+		$this->delete_from_cache( $model_id );
 
-		$this->set_cache( 'last_changed', microtime() );
+		$this->set_in_cache( 'last_changed', microtime() );
 	}
 
 	/**

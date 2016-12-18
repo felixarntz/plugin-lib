@@ -39,18 +39,12 @@ trait Meta_Query {
 	protected $meta_query_clauses = array();
 
 	/**
-	 * Constructor.
-	 *
 	 * Adjusts query var defaults.
 	 *
 	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model query.
+	 * @access protected
 	 */
-	public function __construct( $manager ) {
-		parent::__construct( $manager );
-
+	protected function adjust_query_var_defaults() {
 		$this->query_var_defaults = array_merge( $this->query_var_defaults, array(
 			'meta_key'   => '',
 			'meta_value' => '',

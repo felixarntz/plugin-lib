@@ -71,6 +71,10 @@ abstract class Model {
 	public function __construct( $manager, $db_obj = null ) {
 		$this->manager = $manager;
 
+		if ( property_exists( $this, '__site_id' ) ) {
+			$this->__site_id = get_current_blog_id();
+		}
+
 		if ( $db_obj ) {
 			$this->set( $db_obj );
 		}

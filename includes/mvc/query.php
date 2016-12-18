@@ -126,6 +126,10 @@ abstract class Query {
 			'no_found_rows' => null,
 			'orderby'       => array( 'id' => 'ASC' ),
 		);
+
+		if ( method_exists( $this, 'adjust_query_var_defaults' ) ) {
+			$this->adjust_query_var_defaults();
+		}
 	}
 
 	/**
@@ -245,7 +249,7 @@ abstract class Query {
 		$last_changed = $this->manager->get_from_cache( 'last_changed' );
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
-			$this->manager->set_cache( 'last_changed', $last_changed );
+			$this->manager->set_in_cache( 'last_changed', $last_changed );
 		}
 
 		$cache_key = "get_results:$key:$last_changed";
@@ -261,7 +265,7 @@ abstract class Query {
 
 			$cache_value = array(
 				'model_ids' => $model_ids,
-				'total'    => $total,
+				'total'     => $total,
 			);
 
 			$this->manager->add_to_cache( $cache_key, $cache_value );

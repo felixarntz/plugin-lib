@@ -37,24 +37,6 @@ trait Sitewide_Model {
 	protected $__switched = false;
 
 	/**
-	 * Constructor.
-	 *
-	 * Sets the site ID.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model.
-	 * @param object|null                            $db_obj  Optional. The database object or
-	 *                                                        null for a new instance.
-	 */
-	public function __construct( $manager, $db_obj = null ) {
-		parent::__construct( $manager, $db_obj );
-
-		$this->__site_id = get_current_blog_id();
-	}
-
-	/**
 	 * Retrieves the site ID of the model.
 	 *
 	 * @since 1.0.0
