@@ -80,6 +80,9 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_get_fields() {
 		$collection = self::$manager->get_collection( array(), 0, 'ids' );
 		$this->assertSame( 'ids', $collection->get_fields() );
+
+		$collection = self::$manager->get_collection( array(), 0, 'invalid' );
+		$this->assertSame( 'ids', $collection->get_fields() );
 	}
 
 	public function test_get_total() {
@@ -147,16 +150,55 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		$this->assertSame( $model_ids, $model_ids );
 	}
 
+	public function test_array_access_methods() {
+		$model_ids = range( 1, 5 );
+
+		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+
+		$collection->offsetSet( 0, 500 );
+		$collection->offsetUnset( 4 );
+
+		$model_ids = array();
+		for ( $i = 0; $i < count( $model_ids ); $i++ ) {
+			if ( $collection->offsetExists( $i ) ) {
+				$model_ids[] = $collection->offsetGet( $i );
+			} else {
+				$model_ids[] = 0;
+			}
+		}
+		$this->assertSame( $model_ids, $model_ids );
+	}
+
 	public function test_iterator() {
 		$model_ids = range( 1, 5 );
 
 		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
 
 		$model_ids = array();
-		foreach ( $collection as $model_id ) {
+		$keys = array();
+		foreach ( $collection as $key => $model_id ) {
 			$model_ids[] = $model_id;
+			$keys[] = $key;
 		}
 		$this->assertSame( $model_ids, $model_ids );
+		$this->assertSame( array_keys( $model_ids ), $keys );
+	}
+
+	public function test_iterator_methods() {
+		$model_ids = range( 1, 5 );
+
+		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+
+		$model_ids = array();
+		$keys = array();
+		$collection->rewind();
+		while ( $collection->valid() ) {
+			$model_ids[] = $collection->current();
+			$keys[] = $collection->key();
+			$collection->next();
+		}
+		$this->assertSame( $model_ids, $model_ids );
+		$this->assertSame( array_keys( $model_ids ), $keys );
 	}
 
 	public function test_countable() {
@@ -164,5 +206,12 @@ class Tests_Element_Collection extends Unit_Test_Case {
 
 		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
 		$this->assertSame( count( $model_ids ), count( $collection ) );
+	}
+
+	public function test_countable_methods() {
+		$model_ids = range( 1, 5 );
+
+		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$this->assertSame( count( $model_ids ), $collection->count() );
 	}
 }
