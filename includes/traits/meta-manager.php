@@ -139,6 +139,18 @@ trait Meta_Manager {
 	public function delete_all_meta( $model_id ) {
 		return $this->meta->delete_all( $this->meta_type, $model_id );
 	}
+
+	/**
+	 * Returns the metadata type.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string The metadata type.
+	 */
+	public function get_meta_type() {
+		return $this->meta_type;
+	}
 }
 
 endif;

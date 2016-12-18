@@ -3,12 +3,10 @@
 namespace Leaves_And_Love\Sample_MVC;
 
 use Leaves_And_Love\Plugin_Lib\MVC\Query;
-use WP_Meta_Query;
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Query;
 
 class Sample_Query extends Query {
-	protected $meta_query;
-
-	protected $meta_query_clauses;
+	use Meta_Query;
 
 	public function __construct( $manager ) {
 		$name = $manager->get_sample_name();
@@ -25,37 +23,11 @@ class Sample_Query extends Query {
 			'parent',
 			'parent__in',
 			'parent__not_in',
-			'meta_key',
-			'meta_value',
-			'meta_query',
 		);
 
 		foreach ( $query_vars as $query_var ) {
 			$this->query_var_defaults[ $query_var ] = '';
 		}
-	}
-
-	protected function parse_query( $query ) {
-		parent::parse_query( $query );
-
-		$prefix = $this->manager->db()->get_prefix();
-		$name   = $this->manager->get_sample_name();
-
-		$this->meta_query = new WP_Meta_Query();
-		$this->meta_query->parse_query_vars( $this->query_vars );
-		if ( ! empty( $this->meta_query->queries ) ) {
-			$this->meta_query_clauses = $this->meta_query->get_sql( $prefix . $name, "%{$this->table_name}%", 'id', $this );
-		}
-	}
-
-	protected function parse_join() {
-		$join = parent::parse_join();
-
-		if ( ! empty( $this->meta_query_clauses ) ) {
-			$join .= $this->meta_query_clauses['join'];
-		}
-
-		return $join;
 	}
 
 	protected function parse_where() {
@@ -111,14 +83,38 @@ class Sample_Query extends Query {
 			$args = array_merge( $args, $parent_ids );
 		}
 
-		if ( ! empty( $this->meta_query_clauses ) ) {
-			$where['meta_query'] = preg_replace( '/^\s*AND\s*/', '', $this->meta_query_clauses['where'] );
-		}
-
 		return array( $where, $args );
 	}
 
+	protected function parse_single_orderby( $orderby ) {
+		$name = $this->manager->get_sample_name();
+
+		if ( $name . '__in' === $orderby ) {
+			$ids = implode( ',', array_map( 'absint', $this->query_vars[ $name . '__in' ] ) );
+			return "FIELD( %{$this->table_name}%.id, $ids )";
+		}
+
+		if ( 'parent__in' === $orderby ) {
+			$ids = implode( ',', array_map( 'absint', $this->query_vars['parent__in'] ) );
+			return "FIELD( %{$this->table_name}%.parent_id, $ids )";
+		}
+
+		return parent::parse_single_orderby( $orderby );
+	}
+
+	protected function parse_single_order( $order, $orderby ) {
+		$name = $this->manager->get_sample_name();
+
+		if ( in_array( $orderby, array( $name . '__in', 'parent__in' ), true ) ) {
+			return '';
+		}
+
+		return parent::parse_single_order( $order, $orderby );
+	}
+
 	protected function get_valid_orderby_fields() {
-		return array_merge( parent::get_valid_orderby_fields(), array( 'type', 'title', 'parent_id' ) );
+		$name = $this->manager->get_sample_name();
+
+		return array_merge( parent::get_valid_orderby_fields(), array( 'type', 'title', 'parent_id', $name . '__in', 'parent__in' ) );
 	}
 }

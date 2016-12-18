@@ -427,10 +427,17 @@ abstract class Query {
 
 		$orderby_array = array();
 		foreach ( $orderby as $_orderby => $_order ) {
-			$parsed = $this->parse_single_orderby( $_orderby, $_order );
-			if ( $parsed ) {
-				$orderby_array[] = $parsed;
+			if ( ! in_array( $_orderby, $this->get_valid_orderby_fields(), true ) ) {
+				continue;
 			}
+
+			$parsed_orderby = $this->parse_single_orderby( $_orderby );
+			$parsed_order   = $this->parse_single_order( $_order, $_orderby );
+			if ( ! empty( $parsed_order ) ) {
+				$parsed_orderby .= ' ' . $parsed_order;
+			}
+
+			$orderby_array[] = $parsed_orderby;
 		}
 
 		return implode( ', ', array_unique( $orderby_array ) );
@@ -442,19 +449,25 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $orderby The orderby field.
-	 * @param string $order   The order value. Either 'ASC' or 'DESC'.
-	 * @return string|false The parsed SQL string or false if invalid.
+	 * @param string $orderby The orderby field. Must be valid.
+	 * @return string The parsed orderby SQL string.
 	 */
-	protected function parse_single_orderby( $orderby, $order ) {
-		if ( ! in_array( $orderby, $this->get_valid_orderby_fields(), true ) ) {
-			return false;
-		}
+	protected function parse_single_orderby( $orderby ) {
+		return '%' . $this->table_name . '%.' . $orderby;
+	}
 
-		$parsed_orderby = '%' . $this->table_name . '%.' . $orderby;
-		$parsed_order = 'DESC' === strtoupper( $order ) ? 'DESC' : 'ASC';
-
-		return $parsed_orderby . ' ' . $parsed_order;
+	/**
+	 * Parses a single $order element.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $order   The order value. Either 'ASC' or 'DESC'.
+	 * @param string $orderby The orderby field. Must be valid.
+	 * @return string The parsed order SQL string, or empty if not necessary.
+	 */
+	protected function parse_single_order( $order, $orderby ) {
+		return 'DESC' === strtoupper( $order ) ? 'DESC' : 'ASC';
 	}
 
 	/**
@@ -463,7 +476,7 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return array Array of valid fields.
+	 * @return array Array of valid orderby fields.
 	 */
 	protected function get_valid_orderby_fields() {
 		return array( 'id' );
