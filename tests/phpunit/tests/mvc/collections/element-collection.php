@@ -6,6 +6,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Sample_MVC\Sample_Collection;
+
 /**
  * @group mvc
  * @group collections
@@ -39,7 +41,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 			) );
 		}
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 		$this->assertSame( 'ids', $collection->get_fields() );
 		$this->assertEquals( $model_ids, $collection->to_json()['models'] );
 
@@ -64,7 +66,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 			$models[] = self::$manager->get( $model_id );
 		}
 
-		$collection = self::$manager->get_collection( $models, 0, 'objects' );
+		$collection = new Sample_Collection( self::$manager, $models, 0, 'objects' );
 		$this->assertSame( 'objects', $collection->get_fields() );
 		$this->assertEquals( $model_ids, wp_list_pluck( $collection->to_json()['models'], 'id' ) );
 
@@ -78,21 +80,21 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	}
 
 	public function test_get_fields() {
-		$collection = self::$manager->get_collection( array(), 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, array(), 0, 'ids' );
 		$this->assertSame( 'ids', $collection->get_fields() );
 
-		$collection = self::$manager->get_collection( array(), 0, 'invalid' );
+		$collection = new Sample_Collection( self::$manager, array(), 0, 'invalid' );
 		$this->assertSame( 'ids', $collection->get_fields() );
 	}
 
 	public function test_get_total() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 		$this->assertSame( count( $model_ids ), $collection->get_total() );
 
 		$total_models = 20;
-		$collection = self::$manager->get_collection( $model_ids, $total_models, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, $total_models, 'ids' );
 		$this->assertSame( $total_models, $collection->get_total() );
 	}
 
@@ -106,7 +108,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		}
 
 		$total_models = 10;
-		$collection = self::$manager->get_collection( $model_ids, $total_models, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, $total_models, 'ids' );
 
 		$expected = array(
 			'total'  => $total_models,
@@ -134,7 +136,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_array_access() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 
 		$collection[0] = 500;
 		unset( $collection[4] );
@@ -153,7 +155,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_array_access_methods() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 
 		$collection->offsetSet( 0, 500 );
 		$collection->offsetUnset( 4 );
@@ -172,7 +174,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_iterator() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 
 		$model_ids = array();
 		$keys = array();
@@ -187,7 +189,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_iterator_methods() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 
 		$model_ids = array();
 		$keys = array();
@@ -204,14 +206,14 @@ class Tests_Element_Collection extends Unit_Test_Case {
 	public function test_countable() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 		$this->assertSame( count( $model_ids ), count( $collection ) );
 	}
 
 	public function test_countable_methods() {
 		$model_ids = range( 1, 5 );
 
-		$collection = self::$manager->get_collection( $model_ids, 0, 'ids' );
+		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 		$this->assertSame( count( $model_ids ), $collection->count() );
 	}
 }

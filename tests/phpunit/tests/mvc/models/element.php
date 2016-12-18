@@ -6,6 +6,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Sample_MVC\Sample;
+
 /**
  * @group mvc
  * @group models
@@ -40,7 +42,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_setgetisset_property() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$this->assertSame( 0, $model->id );
 
@@ -55,7 +57,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_setgetisset_meta() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$this->assertFalse( isset( $model->random_value ) );
 		$this->assertNull( $model->random_value );
@@ -79,7 +81,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_setgetisset_invalid() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$this->assertFalse( isset( $model->pending_properties ) );
 		$this->assertNull( $model->pending_properties );
@@ -88,19 +90,19 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_get_primary_property() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$this->assertSame( 'id', $model->get_primary_property() );
 	}
 
 	public function test_get_type_property() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$this->assertSame( 'type', $model->get_type_property() );
 	}
 
 	public function test_get_type_object() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		self::$manager->register_type( 'foo' );
 
@@ -114,7 +116,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_sync_upstream() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$model->type = 'foo';
 		$model->title = 'Element Title';
@@ -128,7 +130,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_sync_downstream() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$result = $model->sync_downstream();
 		$this->assertWPError( $result );
@@ -171,7 +173,7 @@ class Tests_Element extends Unit_Test_Case {
 
 		$title = 'Very Unique Title';
 
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 		$model->title = $title;
 
 		$current_site_id = get_current_blog_id();
@@ -190,7 +192,7 @@ class Tests_Element extends Unit_Test_Case {
 	}
 
 	public function test_delete() {
-		$model = self::$manager->create();
+		$model = new Sample( self::$manager );
 
 		$result = $model->delete();
 		$this->assertWPError( $result );
