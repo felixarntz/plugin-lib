@@ -16,6 +16,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
  * This class handles errors triggered by incorrect plugin usage.
  *
  * @since 1.0.0
+ *
+ * @codeCoverageIgnore
  */
 class Error_Handler extends Service {
 	/**
