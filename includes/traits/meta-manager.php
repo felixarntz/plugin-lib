@@ -151,6 +151,22 @@ trait Meta_Manager {
 	public function get_meta_type() {
 		return $this->meta_type;
 	}
+
+	/**
+	 * Cleans the cache for an model with a specific ID.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int $model_id ID of the model to clean the cache for.
+	 */
+	protected function clean_cache( $model_id ) {
+		$model_id = absint( $model_id );
+
+		$this->cache->delete( $model_id, $this->meta_type . '_meta' );
+
+		parent::clean_cache( $model_id );
+	}
 }
 
 endif;

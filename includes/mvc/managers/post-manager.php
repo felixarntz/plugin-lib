@@ -28,16 +28,14 @@ class Post_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
+	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB                     $db           The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache                  $cache        The cache instance.
-	 * @param array                                             $messages     Messages printed to the user.
-	 * @param Leaves_And_Love\Plugin_Lib\Meta                   $meta         The meta instance. Optional, but required
-	 *                                                                        for managers with meta.
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager $type_manager The type manager instance. Optional,
-	 *                                                                        but required for managers with types.
+	 * @param Leaves_And_Love\Plugin_Lib\DB    $db                  The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache               The cache instance.
+	 * @param array                            $messages            Messages printed to the user.
+	 * @param array                            $additional_services Optional. Further services. Default empty.
 	 */
-	public function __construct( $db, $cache, $messages, $meta = null, $type_manager = null ) {
+	public function __construct( $db, $cache, $messages, $additional_services = array() ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\MVC\Models\Post';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\MVC\Collections\Post_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\MVC\Queries\Post_Query';
@@ -47,7 +45,7 @@ class Post_Manager extends Core_Manager {
 		$this->meta_type      = 'post';
 		$this->fetch_callback = 'get_post';
 
-		parent::__construct( $db, $cache, $messages, $meta, $type_manager );
+		parent::__construct( $db, $cache, $messages, $additional_services );
 	}
 
 	/**

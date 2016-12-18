@@ -37,12 +37,20 @@ trait Sitewide_Model {
 	protected $__switched = false;
 
 	/**
-	 * Sets the site ID of the model.
+	 * Constructor.
+	 *
+	 * Sets the site ID.
 	 *
 	 * @since 1.0.0
-	 * @access protected
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\MVC\Manager $manager The manager instance for the model.
+	 * @param object|null                            $db_obj  Optional. The database object or
+	 *                                                        null for a new instance.
 	 */
-	protected function set_site_id() {
+	public function __construct( $manager, $db_obj = null ) {
+		parent::__construct( $manager, $db_obj );
+
 		$this->__site_id = get_current_blog_id();
 	}
 
@@ -56,6 +64,83 @@ trait Sitewide_Model {
 	 */
 	public function get_site_id() {
 		return $this->__site_id;
+	}
+
+	/**
+	 * Synchronizes the model with the database by storing the currently pending values.
+	 *
+	 * If the model is new (i.e. does not have an ID yet), it will be inserted to the database.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return true|WP_Error True on success, or an error object on failure.
+	 */
+	public function sync_upstream() {
+		$this->maybe_switch();
+
+		$result = parent::sync_upstream();
+
+		$this->maybe_restore();
+
+		return $result;
+	}
+
+	/**
+	 * Synchronizes the model with the database by fetching the currently stored values.
+	 *
+	 * If the model contains unsynchronized changes, these will be overridden. This method basically allows
+	 * to reset the model to the values stored in the database.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return true|WP_Error True on success, or an error object on failure.
+	 */
+	public function sync_downstream() {
+		$this->maybe_switch();
+
+		$result = parent::sync_downstream();
+
+		$this->maybe_restore();
+
+		return $result;
+	}
+
+	/**
+	 * Deletes the model from the database.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return true|WP_Error True on success, or an error object on failure.
+	 */
+	public function delete() {
+		$this->maybe_switch();
+
+		$result = parent::delete();
+
+		$this->maybe_restore();
+
+		return $result;
+	}
+
+	/**
+	 * Returns an array representation of the model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array including all information for the model.
+	 */
+	public function to_json() {
+		$this->maybe_switch();
+
+		$result = parent::to_json();
+
+		$this->maybe_restore();
+
+		return $result;
 	}
 
 	/**

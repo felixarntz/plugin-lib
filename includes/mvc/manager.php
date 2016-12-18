@@ -101,32 +101,38 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB                     $db           The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache                  $cache        The cache instance.
-	 * @param array                                             $messages     Messages printed to the user.
-	 * @param Leaves_And_Love\Plugin_Lib\Meta                   $meta         The meta instance. Optional, but required
-	 *                                                                        for managers with meta.
-	 * @param Leaves_And_Love\Plugin_Lib\MVC\Model_Type_Manager $type_manager The type manager instance. Optional,
-	 *                                                                        but required for managers with types.
+	 * @param Leaves_And_Love\Plugin_Lib\DB    $db                  The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache               The cache instance.
+	 * @param array                            $messages            Messages printed to the user.
+	 * @param array                            $additional_services Optional. Further services. Default empty.
 	 */
-	public function __construct( $db, $cache, $messages, $meta = null, $type_manager = null ) {
+	public function __construct( $db, $cache, $messages, $additional_services = array() ) {
 		$this->db = $db;
 		$this->cache = $cache;
+
+		$this->set_messages( $messages );
 
 		$services = array( 'db', 'cache' );
 
 		if ( property_exists( $this, 'meta' ) ) {
-			$this->meta = $meta;
-			$services[] = 'meta';
+			if ( ! isset( $additional_services['meta'] ) ) {
+
+			} else {
+				$this->meta = $additional_services['meta'];
+				$services[] = 'meta';
+			}
 		}
 
 		if ( property_exists( $this, 'type_manager' ) ) {
-			$this->type_manager = $type_manager;
-			$services[] = 'type_manager';
+			if ( ! isset( $additional_services['type_manager'] ) ) {
+
+			} else {
+				$this->type_manager = $additional_services['type_manager'];
+				$services[] = 'type_manager';
+			}
 		}
 
 		$this->set_services( $services );
-		$this->set_messages( $messages );
 	}
 
 	/**
@@ -424,10 +430,6 @@ abstract class Manager extends Service {
 	protected function clean_cache( $model_id ) {
 		$model_id = absint( $model_id );
 
-		if ( property_exists( $this, 'meta_type' ) ) {
-			$this->cache->delete( $model_id, $this->meta_type . '_meta' );
-		}
-
 		$this->delete_cache( $model_id );
 
 		$this->set_cache( 'last_changed', microtime() );
@@ -444,18 +446,6 @@ abstract class Manager extends Service {
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function storage_set( $model_id, $model ) {
-		if ( property_exists( $this, '__sitewide' ) && is_multisite() ) {
-			$site_id = get_current_blog_id();
-
-			if ( ! isset( $this->models[ $site_id ] ) ) {
-				$this->models[ $site_id ] = array();
-			}
-
-			$this->models[ $site_id ][ $model_id ] = $model;
-
-			return true;
-		}
-
 		$this->models[ $model_id ] = $model;
 
 		return true;
@@ -471,20 +461,6 @@ abstract class Manager extends Service {
 	 * @return Leaves_And_Love\Plugin_Lib\MVC\Model|null The model on success, or null if it doesn't exist.
 	 */
 	protected function storage_get( $model_id ) {
-		if ( property_exists( $this, '__sitewide' ) && is_multisite() ) {
-			$site_id = get_current_blog_id();
-
-			if ( ! isset( $this->models[ $site_id ] ) ) {
-				return null;
-			}
-
-			if ( ! isset( $this->models[ $site_id ][ $model_id ] ) ) {
-				return null;
-			}
-
-			return $this->models[ $site_id ][ $model_id ];
-		}
-
 		if ( ! isset( $this->models[ $model_id ] ) ) {
 			return null;
 		}
@@ -502,16 +478,6 @@ abstract class Manager extends Service {
 	 * @return bool True if the model is set, or false otherwise.
 	 */
 	protected function storage_isset( $model_id ) {
-		if ( property_exists( $this, '__sitewide' ) && is_multisite() ) {
-			$site_id = get_current_blog_id();
-
-			if ( ! isset( $this->models[ $site_id ] ) ) {
-				return false;
-			}
-
-			return isset( $this->models[ $site_id ][ $model_id ] );
-		}
-
 		return isset( $this->models[ $model_id ] );
 	}
 

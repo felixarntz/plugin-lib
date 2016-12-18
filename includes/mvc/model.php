@@ -71,10 +71,6 @@ abstract class Model {
 	public function __construct( $manager, $db_obj = null ) {
 		$this->manager = $manager;
 
-		if ( property_exists( $this, '__site_id' ) && is_multisite() ) {
-			$this->set_site_id();
-		}
-
 		if ( $db_obj ) {
 			$this->set( $db_obj );
 		}
@@ -240,8 +236,6 @@ abstract class Model {
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
 	public function sync_upstream() {
-		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
-
 		if ( ! $this->primary_property_value() ) {
 			$args = $this->get_property_values();
 
@@ -249,7 +243,6 @@ abstract class Model {
 
 			$result = $this->manager->add( $args );
 			if ( ! $result ) {
-				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 				return new WP_Error( 'db_insert_error', $this->manager->get_message( 'db_insert_error' ) );
 			}
 
@@ -261,7 +254,6 @@ abstract class Model {
 
 			$result = $this->manager->update( $this->primary_property_value(), $args );
 			if ( ! $result ) {
-				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 				return new WP_Error( 'db_update_error', $this->manager->get_message( 'db_update_error' ) );
 			}
 		}
@@ -275,13 +267,11 @@ abstract class Model {
 				if ( null === $meta_value ) {
 					$result = $this->manager->delete_meta( $this->primary_property_value(), $meta_key );
 					if ( ! $result ) {
-						method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 						return new WP_Error( 'meta_delete_error', sprintf( $this->manager->get_message( 'meta_delete_error' ), $meta_key ) );
 					}
 				} else {
 					$result = $this->manager->update_meta( $this->primary_property_value(), $meta_key, $meta_value );
 					if ( ! $result ) {
-						method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 						return new WP_Error( 'meta_update_error', sprintf( $this->manager->get_message( 'meta_update_error' ), $meta_key ) );
 					}
 				}
@@ -289,8 +279,6 @@ abstract class Model {
 				unset( $this->pending_meta[ $meta_key ] );
 			}
 		}
-
-		method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
 		return true;
 	}
@@ -311,11 +299,8 @@ abstract class Model {
 			return new WP_Error( 'db_fetch_error_missing_id', $this->manager->get_message( 'db_fetch_error_missing_id' ) );
 		}
 
-		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
-
 		$result = $this->manager->fetch( $this->primary_property_value() );
 		if ( ! $result ) {
-			method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 			return new WP_Error( 'db_fetch_error', $this->manager->get_message( 'db_fetch_error' ) );
 		}
 
@@ -326,8 +311,6 @@ abstract class Model {
 		if ( method_exists( $this->manager, 'get_meta' ) ) {
 			$this->pending_meta = array();
 		}
-
-		method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
 		return true;
 	}
@@ -345,11 +328,8 @@ abstract class Model {
 			return new WP_Error( 'db_delete_error_missing_id', $this->manager->get_message( 'db_delete_error_missing_id' ) );
 		}
 
-		method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
-
 		$result = $this->manager->delete( $this->primary_property_value() );
 		if ( ! $result ) {
-			method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 			return new WP_Error( 'db_delete_error', $this->manager->get_message( 'db_delete_error' ) );
 		}
 
@@ -358,12 +338,9 @@ abstract class Model {
 		if ( method_exists( $this->manager, 'delete_all_meta' ) ) {
 			$result = $this->manager->delete_all_meta( $this->primary_property_value() );
 			if ( ! $result ) {
-				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 				return new WP_Error( 'meta_delete_all_error', $this->manager->get_message( 'meta_delete_all_error' ) );
 			}
 		}
-
-		method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
 		return true;
 	}
@@ -382,11 +359,7 @@ abstract class Model {
 		if ( method_exists( $this->manager, 'get_meta' ) ) {
 			$meta = $this->pending_meta;
 			if ( $this->primary_property_value() ) {
-				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
-
 				$_meta = $this->manager->get_meta( $this->primary_property_value() );
-
-				method_exists( $this, 'maybe_restore' ) && $this->maybe_restore();
 
 				foreach ( $_meta as $key => $value ) {
 					if ( array_key_exists( $key, $meta ) ) {

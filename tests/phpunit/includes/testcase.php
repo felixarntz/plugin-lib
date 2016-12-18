@@ -89,7 +89,10 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			'meta_delete_all_error'      => 'Could not delete the ' . $name . ' metadata. The ' . $name . ' itself was deleted successfully though.',
 		);
 
-		return new \Leaves_And_Love\Sample_MVC\Sample_Manager( $db, new Cache( $prefix ), $messages, new Meta( $db ), new \Leaves_And_Love\Sample_MVC\Sample_Type_Manager( $prefix ), $name );
+		return new \Leaves_And_Love\Sample_MVC\Sample_Manager( $db, new Cache( $prefix ), $messages, array(
+			'meta'         => new Meta( $db ),
+			'type_manager' => new \Leaves_And_Love\Sample_MVC\Sample_Type_Manager( $prefix ),
+		), $name );
 	}
 
 	protected static function tearDownSampleManager( $prefix, $name ) {
