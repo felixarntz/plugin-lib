@@ -229,7 +229,7 @@ abstract class Leaves_And_Love_Plugin {
 			}
 		}
 
-		spl_autoload_register( array( $this, 'autoload' ) );
+		Leaves_And_Love_Autoloader::register_namespace( $this->vendor_name, $this->project_name, $this->path( 'includes/' ) );
 
 		$this->instantiate_classes();
 
@@ -266,37 +266,6 @@ abstract class Leaves_And_Love_Plugin {
 		 * @param Leaves_And_Love_Plugin $plugin The plugin instance.
 		 */
 		do_action( $this->prefix . 'started', $this );
-	}
-
-	/**
-	 * Autoloader.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param string $class_name The class to load.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public function autoload( $class_name ) {
-		$parts = explode( '\\', $class_name );
-
-		$vendor = array_shift( $parts );
-		if ( $this->vendor_name !== $vendor ) {
-			return;
-		}
-
-		$project = array_shift( $parts );
-		if ( $this->project_name !== $project ) {
-			return;
-		}
-
-		$path = $this->path( 'includes/' . strtolower( str_replace( '_', '-', implode( '/', $parts ) ) ) . '.php' );
-		if ( ! file_exists( $path ) ) {
-			return;
-		}
-
-		require_once $path;
 	}
 
 	/**

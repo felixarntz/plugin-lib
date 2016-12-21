@@ -58,9 +58,7 @@ final class Leaves_And_Love_Plugin_Loader {
 		}
 
 		if ( ! self::$initialized ) {
-			if ( function_exists( 'spl_autoload_register' ) ) {
-				spl_autoload_register( array( __CLASS__, 'autoload' ) );
-			}
+			Leaves_And_Love_Autoloader::register_namespace( 'Leaves_And_Love', 'Plugin_Lib', dirname( __FILE__ ) . '/includes/' );
 
 			self::$initialized = true;
 		}
@@ -125,38 +123,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	}
 
 	/**
-	 * Autoloader.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 * @static
-	 *
-	 * @param string $class_name The class to load.
-	 *
-	 * @codeCoverageIgnore
-	 */
-	public static function autoload( $class_name ) {
-		$parts = explode( '\\', $class_name );
-
-		$vendor = array_shift( $parts );
-		if ( 'Leaves_And_Love' !== $vendor ) {
-			return;
-		}
-
-		$project = array_shift( $parts );
-		if ( 'Plugin_Lib' !== $project ) {
-			return;
-		}
-
-		$path = dirname( __FILE__ ) . '/includes/' . strtolower( str_replace( '_', '-', implode( '/', $parts ) ) ) . '.php';
-		if ( ! file_exists( $path ) ) {
-			return;
-		}
-
-		require_once $path;
-	}
-
-	/**
 	 * Adds the necessary hooks to bootstrap a plugin instance.
 	 *
 	 * @since 1.0.0
@@ -191,3 +157,4 @@ final class Leaves_And_Love_Plugin_Loader {
 endif;
 
 require_once dirname( __FILE__ ) . '/includes/plugin.php';
+require_once dirname( __FILE__ ) . '/includes/autoloader.php';
