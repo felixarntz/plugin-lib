@@ -13,6 +13,11 @@ if ( ! class_exists( 'Leaves_And_Love_Autoloader' ) ) :
  *
  * Contains static methods to load classes.
  *
+ * To resolve the path to a class, its namespace's vendor name and project name are
+ * checked, and if they are registered, the sub-namespaces are resolved to subdirectory
+ * names and the class name itself is resolved to a filename. All underscores are replaced
+ * with hyphens and the directory and file names are all lowercase.
+ *
  * @since 1.0.0
  */
 final class Leaves_And_Love_Autoloader {
