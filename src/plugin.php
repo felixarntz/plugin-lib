@@ -229,7 +229,7 @@ abstract class Leaves_And_Love_Plugin {
 			}
 		}
 
-		Leaves_And_Love_Autoloader::register_namespace( $this->vendor_name, $this->project_name, $this->path( 'includes/' ) );
+		Leaves_And_Love_Autoloader::register_namespace( $this->vendor_name, $this->project_name, $this->path( 'src/' ) );
 
 		$this->instantiate_classes();
 

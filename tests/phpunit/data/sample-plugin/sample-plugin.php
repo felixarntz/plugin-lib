@@ -12,6 +12,6 @@ Text Domain: sample-plugin
 */
 
 require_once plugin_dir_path( __FILE__ ) . 'vendor/felixarntz/plugin-lib/plugin-loader.php';
-require_once plugin_dir_path( __FILE__ ) . 'includes/sp-main.php';
+require_once plugin_dir_path( __FILE__ ) . 'src/sp-main.php';
 
 Leaves_And_Love_Plugin_Loader::load( 'SP_Main', __FILE__, '' );

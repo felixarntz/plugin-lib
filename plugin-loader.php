@@ -58,7 +58,7 @@ final class Leaves_And_Love_Plugin_Loader {
 		}
 
 		if ( ! self::$initialized ) {
-			Leaves_And_Love_Autoloader::register_namespace( 'Leaves_And_Love', 'Plugin_Lib', dirname( __FILE__ ) . '/includes/' );
+			Leaves_And_Love_Autoloader::register_namespace( 'Leaves_And_Love', 'Plugin_Lib', dirname( __FILE__ ) . '/src/' );
 
 			self::$initialized = true;
 		}
@@ -156,5 +156,5 @@ final class Leaves_And_Love_Plugin_Loader {
 
 endif;
 
-require_once dirname( __FILE__ ) . '/includes/plugin.php';
-require_once dirname( __FILE__ ) . '/includes/autoloader.php';
+require_once dirname( __FILE__ ) . '/src/plugin.php';
+require_once dirname( __FILE__ ) . '/src/autoloader.php';

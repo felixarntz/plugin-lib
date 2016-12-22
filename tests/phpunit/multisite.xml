@@ -25,7 +25,7 @@
 
 	<filter>
 		<whitelist>
-			<directory>./includes</directory>
+			<directory>./src</directory>
 			<file>./plugin-loader.php</file>
 		</whitelist>
 	</filter>

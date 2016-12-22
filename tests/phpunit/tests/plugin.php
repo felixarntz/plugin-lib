@@ -43,7 +43,7 @@ class Tests_Plugin extends Unit_Test_Case {
 	}
 
 	public function test_path() {
-		$subpath = 'includes/sp-main.php';
+		$subpath = 'src/sp-main.php';
 
 		$expected = WP_PLUGIN_DIR . '/sample-plugin/' . $subpath;
 
@@ -52,7 +52,7 @@ class Tests_Plugin extends Unit_Test_Case {
 	}
 
 	public function test_url() {
-		$subpath = 'includes/sp-main.php';
+		$subpath = 'src/sp-main.php';
 
 		$expected = WP_PLUGIN_URL . '/sample-plugin/' . $subpath;
 
