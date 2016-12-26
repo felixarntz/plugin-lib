@@ -108,7 +108,7 @@ abstract class Model_Type_Manager extends Service {
 	 *     @type string       $operator The logical operation to perform the filter. Must be either
 	 *                                  'AND', 'OR' or 'NOT'. Default 'AND'.
 	 *     @type string|array $orderby  Either the field name to order by or an array of multiple
-	 *                                  orderby fields as $orderby => $order. Default empty.
+	 *                                  orderby fields as $orderby => $order. Default 'slug'.
 	 *     @type string       $order    Either 'ASC' or 'DESC'. Only used if $orderby is a string.
 	 *                                  Default 'ASC'.
 	 *     @type string       $field    Field from the objects to return instead of the entire objects.
@@ -121,8 +121,12 @@ abstract class Model_Type_Manager extends Service {
 			return array();
 		}
 
+		$operator = 'and';
+		$orderby  = 'slug';
+		$order    = 'ASC';
+		$field    = '';
+
 		foreach ( array( 'operator', 'orderby', 'order', 'field' ) as $arg ) {
-			$$arg = '';
 			if ( isset( $args[ $arg ] ) ) {
 				$$arg = $args[ $arg ];
 				unset( $args[ $arg ] );
@@ -135,8 +139,8 @@ abstract class Model_Type_Manager extends Service {
 
 		$model_types = $this->model_types;
 		$transformed_to_array = false;
-		if ( ! empty( $args ) ) {
-			/* `WP_List_Util::filter() can't handle objects with magic properties. */
+		if ( ! empty( $args ) || ! empty( $orderby ) || ! empty( $order ) ) {
+			/* `WP_List_Util::filter()` and `WP_List_Util::sort()` can't handle objects with magic properties. */
 			$model_types = $this->objects_to_arrays( $model_types );
 			$transformed_to_array = true;
 		}
