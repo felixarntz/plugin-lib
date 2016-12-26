@@ -122,6 +122,19 @@ final class Leaves_And_Love_Autoloader {
 	}
 
 	/**
+	 * Returns the array of registered namespaces.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @static
+	 *
+	 * @return array Registered namespaces.
+	 */
+	public static function get_registered_namespaces() {
+		return self::$namespaces;
+	}
+
+	/**
 	 * Tries to autoload a class.
 	 *
 	 * @since 1.0.0
