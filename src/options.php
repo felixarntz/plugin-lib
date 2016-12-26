@@ -290,6 +290,8 @@ class Options extends Hook_Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function add_hooks() {
 		$this->add_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10, 1 );
@@ -300,6 +302,8 @@ class Options extends Hook_Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function remove_hooks() {
 		$this->remove_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10 );

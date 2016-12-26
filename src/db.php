@@ -597,6 +597,8 @@ class DB extends Hook_Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function add_hooks() {
 		$this->add_action( 'admin_init', array( $this, 'check' ), 10, 0 );
@@ -607,6 +609,8 @@ class DB extends Hook_Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @codeCoverageIgnore
 	 */
 	protected function remove_hooks() {
 		$this->remove_action( 'admin_init', array( $this, 'check' ), 10 );
