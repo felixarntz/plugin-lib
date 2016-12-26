@@ -337,6 +337,8 @@ abstract class Query {
 
 		$join = $this->parse_join();
 
+		$groupby = $this->parse_groupby();
+
 		$where = implode( ' AND ', $this->sql_clauses['where'] );
 
 		$pieces = array( 'fields', 'join', 'where', 'orderby', 'limits', 'groupby' );
@@ -409,6 +411,18 @@ abstract class Query {
 	 */
 	protected function parse_where() {
 		return array( array(), array() );
+	}
+
+	/**
+	 * Parses the SQL groupby clause.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return string Groupby value for the SQL query.
+	 */
+	protected function parse_groupby() {
+		return '';
 	}
 
 	/**

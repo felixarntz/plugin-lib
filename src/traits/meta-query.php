@@ -151,6 +151,22 @@ trait Meta_Query {
 	}
 
 	/**
+	 * Parses the SQL groupby clause.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return string Groupby value for the SQL query.
+	 */
+	protected function parse_groupby() {
+		if ( ! empty( $this->meta_query_clauses ) ) {
+			return '%' . $this->table_name . '%.id';
+		}
+
+		return parent::parse_groupby();
+	}
+
+	/**
 	 * Parses a single $orderby element.
 	 *
 	 * @since 1.0.0

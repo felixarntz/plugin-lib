@@ -95,7 +95,46 @@ class Tests_Element_Query extends Unit_Test_Case {
 		$query = new Sample_Query( self::$manager );
 		$results = $query->query( $args );
 
-		$this->assertEquals( array( $m6, $m3 ), wp_list_pluck( $results->to_json()['models'], 'id' ) );
+		$this->assertEquals( array( $m6, $m3 ), wp_list_pluck( $results->get_raw(), 'id' ) );
+	}
+
+	public function test_get_results_with_meta_query() {
+		$m1 = self::$manager->add( array( 'type' => 'foo' ) );
+		$m2 = self::$manager->add( array( 'type' => 'foo' ) );
+		$m3 = self::$manager->add( array( 'type' => 'foo' ) );
+		$m4 = self::$manager->add( array( 'type' => 'foo' ) );
+
+		$meta_key   = 'foometa';
+		$meta_value = 'something';
+
+		self::$manager->update_meta( $m2, $meta_key, $meta_value );
+		self::$manager->update_meta( $m2, 'barmeta', '4' );
+		self::$manager->update_meta( $m3, $meta_key, $meta_value );
+		self::$manager->update_meta( $m3, 'barmeta', '3' );
+		self::$manager->update_meta( $m4, $meta_key, 'something else' );
+
+		$args = array(
+			'fields'      => 'ids',
+			'meta_key'    => $meta_key,
+			'meta_value'  => $meta_value,
+			'meta_query'  => array(
+				'relation'  => 'AND',
+				'foometa'   => array(
+					'key'     => $meta_key,
+					'value'   => $meta_value,
+				),
+				'barmeta'   => array(
+					'key'     => 'barmeta',
+					'compare' => 'EXISTS',
+				),
+			),
+			'orderby'    => array( 'barmeta' => 'ASC' ),
+		);
+
+		$query = new Sample_Query( self::$manager );
+		$results = $query->query( $args );
+
+		$this->assertEquals( array( $m3, $m2 ), $results->get_raw() );
 	}
 
 	public function test_get_results_from_cache() {
@@ -126,7 +165,7 @@ class Tests_Element_Query extends Unit_Test_Case {
 
 		$results = $query->query( $args );
 
-		$this->assertEquals( $expected['model_ids'], $results->to_json()['models'] );
+		$this->assertEquals( $expected['model_ids'], $results->get_raw() );
 	}
 
 	public function test_get_results_from_db_with_refreshed_cache() {
@@ -151,6 +190,6 @@ class Tests_Element_Query extends Unit_Test_Case {
 		$query = new Sample_Query( self::$manager );
 		$results = $query->query( $args );
 
-		$this->assertEquals( array( $m7, $m6, $m3 ), wp_list_pluck( $results->to_json()['models'], 'id' ) );
+		$this->assertEquals( array( $m7, $m6, $m3 ), wp_list_pluck( $results->get_raw(), 'id' ) );
 	}
 }
