@@ -289,5 +289,8 @@ class Tests_Element_Manager extends Unit_Test_Case {
 
 		$result = self::$manager->unregister_type( 'type4' );
 		$this->assertTrue( $result );
+
+		$result = self::$manager->unregister_type( 'invalid' );
+		$this->assertFalse( $result );
 	}
 }

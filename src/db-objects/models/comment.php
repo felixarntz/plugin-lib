@@ -142,7 +142,7 @@ class Comment extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Comment( array() );
+		$this->original = new WP_Comment( new \stdClass() );
 	}
 
 	/**

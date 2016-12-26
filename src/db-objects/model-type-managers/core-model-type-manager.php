@@ -130,6 +130,8 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 			foreach ( $type_names as $slug ) {
 				$model_types[ $slug ] = $this->get( $slug );
 			}
+		} else {
+			$model_types = array_combine( $type_names, $type_names );
 		}
 
 		return $model_types;

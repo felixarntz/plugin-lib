@@ -159,7 +159,7 @@ class Post extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Post( array() );
+		$this->original = new WP_Post( new \stdClass() );
 	}
 
 	/**

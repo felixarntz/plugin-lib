@@ -139,7 +139,7 @@ class Site extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Site( array() );
+		$this->original = new WP_Site( new \stdClass() );
 	}
 
 	/**

@@ -148,7 +148,7 @@ class Network extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Network( array() );
+		$this->original = new WP_Network( new \stdClass() );
 	}
 
 	/**

@@ -59,7 +59,7 @@ class Term_Query extends Core_Query {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
-		$ids = $this->original->terms;
+		$ids = null !== $this->original->terms ? $this->original->terms : array();
 		$fields = $this->original->query_vars['fields'];
 
 		if ( 'ids' !== $fields ) {

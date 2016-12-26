@@ -61,9 +61,15 @@ class Network_Manager extends Core_Manager {
 			return false;
 		}
 
-		$args['user_id'] = get_current_user_id();
-		if ( ! $args['user_id'] ) {
-			$args['user_id'] = 1;
+		if ( ! isset( $args['domain'] ) ) {
+			return false;
+		}
+
+		if ( ! isset( $args['user_id'] ) ) {
+			$args['user_id'] = get_current_user_id();
+			if ( ! $args['user_id'] ) {
+				$args['user_id'] = 1;
+			}
 		}
 
 		$result = add_network( $args );

@@ -58,6 +58,10 @@ class Term_Manager extends Core_Manager {
 	 * @return int|false The ID of the new term, or false on failure.
 	 */
 	protected function insert_into_db( $args ) {
+		if ( ! isset( $args['name'] ) || ! isset( $args['taxonomy'] ) ) {
+			return false;
+		}
+
 		$name = $args['name'];
 		unset( $args['name'] );
 
@@ -83,8 +87,17 @@ class Term_Manager extends Core_Manager {
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function update_in_db( $term_id, $args ) {
-		$taxonomy = $args['taxonomy'];
-		unset( $args['taxonomy'] );
+		if ( isset( $args['taxonomy'] ) ) {
+			$taxonomy = $args['taxonomy'];
+			unset( $args['taxonomy'] );
+		} else {
+			$term = get_term( $term_id );
+			if ( ! $term || is_wp_error( $term ) ) {
+				return false;
+			}
+
+			$taxonomy = $term->taxonomy;
+		}
 
 		$result = wp_update_term( $term_id, $taxonomy, $args );
 		if ( is_wp_error( $result ) ) {
@@ -105,7 +118,7 @@ class Term_Manager extends Core_Manager {
 	 */
 	protected function delete_from_db( $term_id ) {
 		$term = get_term( $term_id );
-		if ( ! $term ) {
+		if ( ! $term || is_wp_error( $term ) ) {
 			return false;
 		}
 

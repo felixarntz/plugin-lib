@@ -124,4 +124,62 @@ class Unit_Test_Case extends WP_UnitTestCase {
 
 		delete_network_option( null, $prefix . 'db_version' );
 	}
+
+	protected static function setUpCoreManager( $prefix, $type ) {
+		$whitelist = array( 'post', 'term', 'comment', 'user' );
+		if ( is_multisite() ) {
+			$whitelist = array_merge( $whitelist, array( 'site', 'network' ) );
+		}
+
+		if ( ! in_array( $type, $whitelist, true ) ) {
+			return;
+		}
+
+		$db = new DB( $prefix, new Options( $prefix ), array(
+			'table_already_exist' => 'Table %s already exists.',
+			'schema_empty'        => 'Table schema is empty.',
+		) );
+
+		$messages = array(
+			'db_insert_error'            => 'Could not insert ' . $type . ' into the database.',
+			'db_update_error'            => 'Could not update ' . $type . ' in the database.',
+			'meta_delete_error'          => 'Could not delete ' . $type . ' metadata for key %s.',
+			'meta_update_error'          => 'Could not update ' . $type . ' metadata for key %s.',
+			'db_fetch_error_missing_id'  => 'Could not fetch ' . $type . ' from the database because it is missing an ID.',
+			'db_fetch_error'             => 'Could not fetch ' . $type . ' from the database.',
+			'db_delete_error_missing_id' => 'Could not delete ' . $type . ' from the database because it is missing an ID.',
+			'db_delete_error'            => 'Could not delete ' . $type . ' from the database.',
+			'meta_delete_all_error'      => 'Could not delete the ' . $type . ' metadata. The ' . $type . ' itself was deleted successfully though.',
+		);
+
+		$class_name = '';
+		$args = array(
+			'meta' => new Meta( $db ),
+		);
+
+		switch ( $type ) {
+			case 'post':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager';
+				$args['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
+				break;
+			case 'term':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager';
+				$args['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
+				break;
+			case 'comment':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Comment_Manager';
+				break;
+			case 'user':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manager';
+				break;
+			case 'site':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Site_Manager';
+				break;
+			case 'network':
+				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Network_Manager';
+				break;
+		}
+
+		return new $class_name( $db, new Cache( $prefix ), $messages, $args );
+	}
 }

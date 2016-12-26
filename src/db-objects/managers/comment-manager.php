@@ -48,6 +48,20 @@ class Comment_Manager extends Core_Manager {
 	}
 
 	/**
+	 * Fetches the comment object for a specific ID.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $model_id ID of the object to fetch.
+	 * @return object|null The comment object for the requested ID, or null if it does not exist.
+	 */
+	public function fetch( $model_id ) {
+		// This method requires the first parameter to be a reference, thus a direct call.
+		return get_comment( $model_id );
+	}
+
+	/**
 	 * Internal method to insert a new comment into the database.
 	 *
 	 * @since 1.0.0

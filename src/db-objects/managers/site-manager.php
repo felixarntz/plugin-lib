@@ -56,21 +56,39 @@ class Site_Manager extends Core_Manager {
 	 * @return int|false The ID of the new site, or false on failure.
 	 */
 	protected function insert_into_db( $args ) {
+		if ( ! isset( $args['domain'] ) || ! isset( $args['path'] ) ) {
+			return false;
+		}
+
 		$domain = $args['domain'];
 		unset( $args['domain'] );
 
 		$path = $args['path'];
 		unset( $args['path'] );
 
-		$network_id = $args['site_id'];
-		unset( $args['site_id'] );
+		if ( isset( $args['site_id'] ) ) {
+			$network_id = $args['site_id'];
+			unset( $args['site_id'] );
+		} else {
+			$network_id = get_current_network_id();
+		}
 
-		unset( $args['registered'] );
-		unset( $args['last_updated'] );
+		if ( isset( $args['registered'] ) ) {
+			unset( $args['registered'] );
+		}
 
-		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
-			$user_id = 1;
+		if ( isset( $args['last_updated'] ) ) {
+			unset( $args['last_updated'] );
+		}
+
+		if ( isset( $args['user_id'] ) ) {
+			$user_id = absint( $args['user_id'] );
+			unset( $args['user_id'] );
+		} else {
+			$user_id = get_current_user_id();
+			if ( ! $user_id ) {
+				$user_id = 1;
+			}
 		}
 
 		$result = wpmu_create_blog( $domain, $path, '', $user_id, $args, $network_id );
@@ -105,6 +123,11 @@ class Site_Manager extends Core_Manager {
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function delete_from_db( $site_id ) {
+		$site = get_site( $site_id );
+		if ( ! $site ) {
+			return false;
+		}
+
 		if ( ! function_exists( 'wpmu_delete_blog' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/ms.php';
 		}

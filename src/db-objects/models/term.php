@@ -150,7 +150,7 @@ class Term extends Core_Model {
 	 * @access protected
 	 */
 	protected function set_default_object() {
-		$this->original = new WP_Term( array() );
+		$this->original = new WP_Term( new \stdClass() );
 	}
 
 	/**

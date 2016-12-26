@@ -65,12 +65,14 @@ class Meta extends Service {
 	 * @return int|bool The meta ID or true on success, false on failure.
 	 */
 	public function add( $meta_type, $object_id, $meta_key, $meta_value, $unique = false ) {
-		if ( is_multisite() ) {
-			if ( 'site' === $meta_type ) {
-				return add_blog_option( $object_id, $meta_key, $meta_value );
-			} elseif ( 'network' === $meta_type ) {
-				return add_network_option( $object_id, $meta_key, $meta_value );
+		if ( is_multisite() && in_array( $meta_type, array( 'site', 'network' ), true ) ) {
+			$callback = 'network' === $meta_type ? 'add_network_option' : 'add_blog_option';
+			$result = call_user_func( $callback, $object_id, $meta_key, $meta_value );
+			if ( $result ) {
+				return $this->db->insert_id;
 			}
+
+			return $result;
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
@@ -95,12 +97,20 @@ class Meta extends Service {
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update( $meta_type, $object_id, $meta_key, $meta_value, $prev_value = '' ) {
-		if ( is_multisite() ) {
-			if ( 'site' === $meta_type ) {
-				return update_blog_option( $object_id, $meta_key, $meta_value );
-			} elseif ( 'network' === $meta_type ) {
-				return update_network_option( $object_id, $meta_key, $meta_value );
+		if ( is_multisite() && in_array( $meta_type, array( 'site', 'network' ), true ) ) {
+			$callback = 'network' === $meta_type ? 'update_network_option' : 'update_blog_option';
+
+			$adding = false;
+			if ( false === call_user_func( str_replace( 'update_', 'get_', $callback ), $object_id, $meta_key ) ) {
+				$adding = true;
 			}
+
+			$result = call_user_func( $callback, $object_id, $meta_key, $meta_value );
+			if ( $result && $adding ) {
+				return $this->db->insert_id;
+			}
+
+			return $result;
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
@@ -129,12 +139,10 @@ class Meta extends Service {
 	 * @return bool True on successful delete, false on failure.
 	 */
 	public function delete( $meta_type, $object_id, $meta_key, $meta_value = '', $delete_all = false ) {
-		if ( is_multisite() ) {
-			if ( 'site' === $meta_type ) {
-				return delete_blog_option( $object_id, $meta_key );
-			} elseif ( 'network' === $meta_type ) {
-				return delete_network_option( $object_id, $meta_key );
-			}
+		if ( is_multisite() && in_array( $meta_type, array( 'site', 'network' ), true ) ) {
+			$callback = 'network' === $meta_type ? 'delete_network_option' : 'delete_blog_option';
+
+			return call_user_func( $callback, $object_id, $meta_key );
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
