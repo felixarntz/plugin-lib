@@ -56,6 +56,10 @@ class Tests_Options extends Unit_Test_Case {
 
 		$result = self::$options->get( 'non_existing_option' );
 		$this->assertFalse( $result );
+
+		$default = 3;
+		$result = self::$options->get( 'non_existing_global_option', $default );
+		$this->assertSame( $default, $result );
 	}
 
 	public function test_add() {
@@ -108,6 +112,14 @@ class Tests_Options extends Unit_Test_Case {
 
 		if ( is_multisite() ) {
 			update_network_option( null, self::$prefix . 'globalkey3', array( get_current_blog_id() => 'hello' ) );
+		} else {
+			update_option( self::$prefix . 'globalkey3', 'hello' );
+		}
+		$result = self::$options->delete( 'globalkey3' );
+		$this->assertTrue( $result );
+
+		if ( is_multisite() ) {
+			update_network_option( null, self::$prefix . 'globalkey3', array( get_current_blog_id() => 'hello', 3335 => 'this is gonna remain' ) );
 		} else {
 			update_option( self::$prefix . 'globalkey3', 'hello' );
 		}
