@@ -78,6 +78,9 @@ class Tests_Element extends Unit_Test_Case {
 
 		$model->random_value = null;
 		$this->assertFalse( isset( $model->random_value ) );
+
+		$this->assertFalse( isset( $model->invalid_meta_key ) );
+		$this->assertNull( $model->invalid_meta_key );
 	}
 
 	public function test_setgetisset_invalid() {
@@ -211,6 +214,8 @@ class Tests_Element extends Unit_Test_Case {
 			'title'     => 'Hello',
 			'content'   => rand_long_str( 500 ),
 			'parent_id' => 3,
+			'priority'  => 4.4,
+			'active'    => false,
 		);
 
 		$meta = array(
@@ -227,5 +232,30 @@ class Tests_Element extends Unit_Test_Case {
 
 		$expected = array_merge( array( 'id' => $model_id ), $properties, $meta );
 		$this->assertEqualSetsWithIndex( $expected, $model->to_json() );
+	}
+
+	public function test_construct_set() {
+		$db_obj = new \stdClass();
+		$db_obj->id        = '23';
+		$db_obj->type      = 'foo';
+		$db_obj->title     = 'Foo';
+		$db_obj->content   = 'Some text content.';
+		$db_obj->parent_id = '11';
+		$db_obj->priority  = '1.7';
+		$db_obj->active    = '1';
+		// Invalid properties.
+		$db_obj->manager   = 'This must not be set.';
+		$db_obj->invalid   = 'This must not be set.';
+
+		$model = new Sample( self::$manager, $db_obj );
+		$this->assertSame( 23,                   $model->id );
+		$this->assertSame( 'foo',                $model->type );
+		$this->assertSame( 'Foo',                $model->title );
+		$this->assertSame( 'Some text content.', $model->content );
+		$this->assertSame( 11,                   $model->parent_id );
+		$this->assertSame( 1.7,                  $model->priority );
+		$this->assertSame( true,                 $model->active );
+		$this->assertNull( $model->manager );
+		$this->assertNull( $model->invalid );
 	}
 }

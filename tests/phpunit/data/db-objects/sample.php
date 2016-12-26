@@ -19,6 +19,10 @@ class Sample extends Model {
 
 	protected $parent_id = 0;
 
+	protected $priority = 0.0;
+
+	protected $active = false;
+
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 

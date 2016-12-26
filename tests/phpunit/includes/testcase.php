@@ -61,6 +61,8 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			"title text NOT NULL",
 			"content longtext NOT NULL",
 			"parent_id bigint(20) unsigned NOT NULL default '0'",
+			"priority float NOT NULL",
+			"active boolean NOT NULL",
 			"PRIMARY KEY  (id)",
 			"KEY type (type)",
 		) );
