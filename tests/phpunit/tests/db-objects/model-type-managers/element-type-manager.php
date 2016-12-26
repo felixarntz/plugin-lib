@@ -6,8 +6,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
-use Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager;
-
 /**
  * @group db-objects
  * @group model-type-managers
