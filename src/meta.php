@@ -159,12 +159,24 @@ class Meta extends Service {
 	 * @return mixed Single metadata value, or array of values.
 	 */
 	public function get( $meta_type, $object_id, $meta_key = '', $single = false ) {
-		if ( is_multisite() ) {
-			if ( 'site' === $meta_type ) {
-				return get_blog_option( $object_id, $meta_key );
-			} elseif ( 'network' === $meta_type ) {
-				return get_network_option( $object_id, $meta_key );
+		if ( is_multisite() && in_array( $meta_type, array( 'site', 'network' ), true ) ) {
+			// Querying all site or network options is not possible here.
+			if ( ! $meta_key ) {
+				return array();
 			}
+
+			$callback = 'network' === $meta_type ? 'get_network_option' : 'get_blog_option';
+
+			$result = call_user_func( $callback, $object_id, $meta_key );
+			if ( ! $single ) {
+				if ( false !== $result ) {
+					return array( $result );
+				}
+
+				return array();
+			}
+
+			return $result;
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
