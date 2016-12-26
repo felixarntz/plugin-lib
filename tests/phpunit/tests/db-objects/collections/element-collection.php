@@ -43,15 +43,19 @@ class Tests_Element_Collection extends Unit_Test_Case {
 
 		$collection = new Sample_Collection( self::$manager, $model_ids, 0, 'ids' );
 		$this->assertSame( 'ids', $collection->get_fields() );
-		$this->assertEquals( $model_ids, $collection->to_json()['models'] );
+		$this->assertEquals( $model_ids, $collection->get_raw() );
 
 		$collection->transform_into_objects();
 		$this->assertSame( 'objects', $collection->get_fields() );
-		$this->assertEquals( $model_ids, wp_list_pluck( $collection->to_json()['models'], 'id' ) );
+		$this->assertEquals( $model_ids, wp_list_pluck( $collection->get_raw(), 'id' ) );
 
 		$collection->transform_into_objects();
 		$this->assertSame( 'objects', $collection->get_fields() );
-		$this->assertEquals( $model_ids, wp_list_pluck( $collection->to_json()['models'], 'id' ) );
+		$this->assertEquals( $model_ids, wp_list_pluck( $collection->get_raw(), 'id' ) );
+
+		$collection = new Sample_Collection( self::$manager, array_fill( 0, 5, 0 ), 0, 'ids' );
+		$collection->transform_into_objects();
+		$this->assertEquals( array_fill( 0, 5, null ), $collection->get_raw() );
 	}
 
 	public function test_transform_into_ids() {
@@ -68,15 +72,19 @@ class Tests_Element_Collection extends Unit_Test_Case {
 
 		$collection = new Sample_Collection( self::$manager, $models, 0, 'objects' );
 		$this->assertSame( 'objects', $collection->get_fields() );
-		$this->assertEquals( $model_ids, wp_list_pluck( $collection->to_json()['models'], 'id' ) );
+		$this->assertEquals( $model_ids, wp_list_pluck( $collection->get_raw(), 'id' ) );
 
 		$collection->transform_into_ids();
 		$this->assertSame( 'ids', $collection->get_fields() );
-		$this->assertEquals( $model_ids, $collection->to_json()['models'] );
+		$this->assertEquals( $model_ids, $collection->get_raw() );
 
 		$collection->transform_into_ids();
 		$this->assertSame( 'ids', $collection->get_fields() );
-		$this->assertEquals( $model_ids, $collection->to_json()['models'] );
+		$this->assertEquals( $model_ids, $collection->get_raw() );
+
+		$collection = new Sample_Collection( self::$manager, array_fill( 0, 5, null ), 0, 'objects' );
+		$collection->transform_into_ids();
+		$this->assertEquals( array_fill( 0, 5, 0 ), $collection->get_raw() );
 	}
 
 	public function test_get_fields() {
@@ -131,6 +139,15 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		}
 		$json = $collection->to_json();
 		$this->assertEquals( $expected, $json );
+
+		$collection = new Sample_Collection( self::$manager, array_fill( 0, 5, null ), 0, 'objects' );
+		$expected = array(
+			'total'  => 5,
+			'fields' => 'objects',
+			'models' => array_fill( 0, 5, array( 'id' => 0 ) ),
+		);
+		$json = $collection->to_json();
+		$this->assertEquals( $expected, $json );
 	}
 
 	public function test_array_access() {
@@ -160,15 +177,15 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		$collection->offsetSet( 0, 500 );
 		$collection->offsetUnset( 4 );
 
-		$model_ids = array();
+		$model_ids_read = array();
 		for ( $i = 0; $i < count( $model_ids ); $i++ ) {
 			if ( $collection->offsetExists( $i ) ) {
-				$model_ids[] = $collection->offsetGet( $i );
+				$model_ids_read[] = $collection->offsetGet( $i );
 			} else {
-				$model_ids[] = 0;
+				$model_ids_read[] = 0;
 			}
 		}
-		$this->assertSame( $model_ids, $model_ids );
+		$this->assertSame( $model_ids, $model_ids_read );
 	}
 
 	public function test_iterator() {
@@ -201,6 +218,7 @@ class Tests_Element_Collection extends Unit_Test_Case {
 		}
 		$this->assertSame( $model_ids, $model_ids );
 		$this->assertSame( array_keys( $model_ids ), $keys );
+		$this->assertNull( $collection->current() );
 	}
 
 	public function test_countable() {

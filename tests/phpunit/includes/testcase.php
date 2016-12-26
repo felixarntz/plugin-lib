@@ -38,12 +38,12 @@ class Unit_Test_Case extends WP_UnitTestCase {
 	}
 
 	protected static function setUpSampleManager( $prefix, $name ) {
-		require_once LALPL_TESTS_DATA . 'mvc/sample.php';
-		require_once LALPL_TESTS_DATA . 'mvc/sample-collection.php';
-		require_once LALPL_TESTS_DATA . 'mvc/sample-query.php';
-		require_once LALPL_TESTS_DATA . 'mvc/sample-manager.php';
-		require_once LALPL_TESTS_DATA . 'mvc/sample-type.php';
-		require_once LALPL_TESTS_DATA . 'mvc/sample-type-manager.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-collection.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-query.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-manager.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-type.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-type-manager.php';
 
 		$db = new DB( $prefix, new Options( $prefix ), array(
 			'table_already_exist' => 'Table %s already exists.',

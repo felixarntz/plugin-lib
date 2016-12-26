@@ -178,6 +178,20 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	}
 
 	/**
+	 * Returns the raw collection array.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Raw collection array.
+	 *
+	 * @codeCoverageIgnore
+	 */
+	public function get_raw() {
+		return $this->models;
+	}
+
+	/**
 	 * Implements ArrayAccess.
 	 *
 	 * @since 1.0.0
