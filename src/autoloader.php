@@ -175,6 +175,8 @@ final class Leaves_And_Love_Autoloader {
 	 * @static
 	 *
 	 * @return bool True on success, false on failure.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	private static function init() {
 		if ( ! function_exists( 'spl_autoload_register' ) ) {
