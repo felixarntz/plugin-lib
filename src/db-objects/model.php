@@ -214,13 +214,19 @@ abstract class Model {
 		}
 
 		if ( method_exists( $this->manager, 'get_meta' ) ) {
-			if ( ! $this->primary_property_value() && null !== $value ) {
-				$this->pending_meta[ $property ] = $value;
+			if ( ! $this->primary_property_value() ) {
+				if ( null !== $value ) {
+					$this->pending_meta[ $property ] = $value;
+				} elseif ( array_key_exists( $property, $this->pending_meta ) ) {
+					unset( $this->pending_meta[ $property ] );
+				}
 			} else {
 				method_exists( $this, 'maybe_switch' ) && $this->maybe_switch();
 
 				$old_value = $this->manager->get_meta( $this->primary_property_value(), $property, true );
-				if ( $value != $old_value ) {
+				if ( false === $old_value && array_key_exists( $property, $this->pending_meta ) && null === $value ) {
+					unset( $this->pending_meta[ $property ] );
+				} elseif ( $value != $old_value ) {
 					$this->pending_meta[ $property ] = $value;
 				}
 

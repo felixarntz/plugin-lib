@@ -67,6 +67,10 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertTrue( isset( $model->random_value ) );
 		$this->assertSame( $value, $model->random_value );
 
+		$model->random_value2 = 'foo';
+		$model->random_value2 = null;
+		$this->assertFalse( isset( $model->random_value2 ) );
+
 		$model->sync_upstream();
 		$this->assertTrue( isset( $model->random_value ) );
 		$this->assertSame( $value, $model->random_value );
