@@ -66,6 +66,10 @@ class Network extends Core_Model {
 			return true;
 		}
 
+		if ( 'name' === $property ) {
+			return true;
+		}
+
 		return parent::__isset( $property );
 	}
 
@@ -89,6 +93,10 @@ class Network extends Core_Model {
 			return $this->original->cookie_domain;
 		}
 
+		if ( 'name' === $property ) {
+			return $this->original->site_name;
+		}
+
 		return parent::__get( $property );
 	}
 
@@ -107,14 +115,13 @@ class Network extends Core_Model {
 		$nowrite_properties = array(
 			'id',
 			'cookie_domain',
+			'site_id',
+			'blog_id',
+			'name',
+			'site_name',
 		);
 
 		if ( in_array( $property, $nowrite_properties, true ) ) {
-			return;
-		}
-
-		if ( 'site_id' === $property ) {
-			$this->set_value_type_safe( 'blog_id', $value );
 			return;
 		}
 
