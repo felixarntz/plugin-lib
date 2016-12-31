@@ -54,8 +54,7 @@ class Tests_Comment extends Unit_Test_Case {
 
 		$this->assertEquals( self::$comment_id, $comment->id );
 		$this->assertEquals( self::$post_id, $comment->post_id );
-		$this->assertEquals( '1', $comment->approved );
-		$this->assertEquals( '1', $comment->comment_approved );
+		$this->assertEquals( $comment->comment_approved, $comment->approved );
 
 		$comment->id = 22;
 		$this->assertEquals( self::$comment_id, $comment->id );

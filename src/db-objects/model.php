@@ -361,12 +361,14 @@ abstract class Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
+	 *                           Default true.
 	 * @return array Array including all information for the model.
 	 */
-	public function to_json() {
+	public function to_json( $include_meta = true ) {
 		$data = $this->get_property_values();
 
-		if ( method_exists( $this->manager, 'get_meta' ) ) {
+		if ( $include_meta && method_exists( $this->manager, 'get_meta' ) ) {
 			$meta = $this->pending_meta;
 			if ( $this->primary_property_value() ) {
 				$_meta = $this->manager->get_meta( $this->primary_property_value() );

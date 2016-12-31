@@ -72,6 +72,10 @@ class Term extends Core_Model {
 			return true;
 		}
 
+		if ( 'object_id' === $property ) {
+			return isset( $this->original->object_id );
+		}
+
 		return parent::__isset( $property );
 	}
 
@@ -89,6 +93,14 @@ class Term extends Core_Model {
 	public function __get( $property ) {
 		if ( 'id' === $property ) {
 			return $this->original->term_id;
+		}
+
+		if ( 'object_id' === $property ) {
+			if ( ! isset( $this->original->object_id ) ) {
+				return null;
+			}
+
+			return $this->original->object_id;
 		}
 
 		return parent::__get( $property );
@@ -172,7 +184,6 @@ class Term extends Core_Model {
 			'description',
 			'parent',
 			'count',
-			'object_id',
 		);
 	}
 }

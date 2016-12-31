@@ -82,6 +82,10 @@ class Tests_Site_Manager extends Unit_Test_Case {
 	}
 
 	public function test_add() {
+		global $wpdb;
+
+		// Ignore MySQL reopen table errors.
+		$suppress_errors = $wpdb->suppress_errors( true );
 		$args = array(
 			'domain'       => 'example.com',
 			'path'         => '/',
@@ -89,6 +93,7 @@ class Tests_Site_Manager extends Unit_Test_Case {
 			'last_updated' => current_time( 'mysql' ),
 		);
 		$site_id = self::$manager->add( $args );
+		$wpdb->suppress_errors( $suppress_errors );
 		$this->assertInternalType( 'int', $site_id );
 
 		$wp_site = get_site( $site_id );

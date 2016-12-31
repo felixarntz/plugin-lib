@@ -54,12 +54,11 @@ class Tests_Network extends Unit_Test_Case {
 		$this->assertTrue( isset( $network->domain ) );
 		$this->assertTrue( isset( $network->site_id ) );
 		$this->assertTrue( isset( $network->cookie_domain ) );
-		$this->assertTrue( isset( $network->name ) );
 
 		$this->assertEquals( self::$network, $network->id );
 		$this->assertEquals( 'wordpress.org', $network->domain );
+		$this->assertEquals( null, $network->site_id );
 		$this->assertEquals( 'wordpress.org', $network->cookie_domain );
-		$this->assertEquals( 'WordPress', $network->name );
 
 		$network->id = 22;
 		$this->assertEquals( self::$network, $network->id );
@@ -70,15 +69,15 @@ class Tests_Network extends Unit_Test_Case {
 		$network->site_id = 3;
 		$this->assertEquals( null, $network->site_id );
 
-		$network->cookie_domain = 'wordpress.net';
-		$this->assertEquals( 'wordpress.org', $network->cookie_domain );
-
-		$network->name = 'WordPress.net';
-		$this->assertEquals( 'WordPress', $network->name );
+		$network->cookie_domain = 'example.com';
+		$this->assertEquals( 'wordpress.net', $network->cookie_domain );
 	}
 
 	public function test_setgetisset_meta() {
 		$network = new Network( self::$manager, get_network( self::$network ) );
+
+		$this->assertTrue( isset( $network->site_name ) );
+		$this->assertEquals( 'WordPress', $network->site_name );
 
 		$this->assertFalse( isset( $network->random_value ) );
 		$this->assertNull( $network->random_value );

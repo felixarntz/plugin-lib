@@ -113,12 +113,14 @@ trait Sitewide_Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
+	 *                           Default true.
 	 * @return array Array including all information for the model.
 	 */
-	public function to_json() {
+	public function to_json( $include_meta = true ) {
 		$this->maybe_switch();
 
-		$result = parent::to_json();
+		$result = parent::to_json( $include_meta );
 
 		$this->maybe_restore();
 

@@ -161,9 +161,11 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
+	 *                           Default true.
 	 * @return array Array including all information for the collection.
 	 */
-	public function to_json() {
+	public function to_json( $include_meta = true ) {
 		$data = array(
 			'total'  => $this->total,
 			'fields' => $this->fields,
@@ -171,7 +173,11 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 		);
 
 		if ( 'objects' === $this->fields ) {
-			$data['models'] = array_map( array( $this, 'transform_into_json' ), $this->models );
+			if ( $include_meta ) {
+				$data['models'] = array_map( array( $this, 'transform_into_json' ), $this->models, array_fill( 0, count( $this->models ), true ) );
+			} else {
+				$data['models'] = array_map( array( $this, 'transform_into_json' ), $this->models );
+			}
 		}
 
 		return $data;
@@ -358,15 +364,18 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model Model object.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model        Model object.
+	 * @param bool                                        $include_meta Whether to include metadata
+	 *                                                                  for each model in the
+	 *                                                                  collection. Default true.
 	 * @return array Array including all information for the model.
 	 */
-	protected function transform_into_json( $model ) {
+	protected function transform_into_json( $model, $include_meta = true ) {
 		if ( null === $model ) {
 			return array( 'id' => 0 );
 		}
 
-		return $model->to_json();
+		return $model->to_json( $include_meta );
 	}
 
 	/**

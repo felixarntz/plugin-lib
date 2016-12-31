@@ -24,7 +24,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network' ) ) 
  * @property int    $site_id
  *
  * @property-read int    $id
- * @property-read string $name
  * @property-read string $cookie_domain
  */
 class Network extends Core_Model {
@@ -66,10 +65,6 @@ class Network extends Core_Model {
 			return true;
 		}
 
-		if ( 'name' === $property ) {
-			return true;
-		}
-
 		return parent::__isset( $property );
 	}
 
@@ -90,11 +85,11 @@ class Network extends Core_Model {
 		}
 
 		if ( 'cookie_domain' === $property ) {
-			return $this->original->cookie_domain;
-		}
+			if ( 'www.' === substr( $this->original->domain, 0, 4 ) ) {
+				return substr( $this->original->domain, 4 );
+			}
 
-		if ( 'name' === $property ) {
-			return $this->original->site_name;
+			return $this->original->domain;
 		}
 
 		return parent::__get( $property );
@@ -117,8 +112,6 @@ class Network extends Core_Model {
 			'cookie_domain',
 			'site_id',
 			'blog_id',
-			'name',
-			'site_name',
 		);
 
 		if ( in_array( $property, $nowrite_properties, true ) ) {

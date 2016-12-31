@@ -31,11 +31,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site' ) ) :
  * @property string $deleted
  * @property string $lang_id
  *
- * @property-read int    $id
- * @property-read string $name
- * @property-read string $home
- * @property-read string $siteurl
- * @property-read int    $post_count
+ * @property-read int $id
  */
 class Site extends Core_Model {
 	/**
