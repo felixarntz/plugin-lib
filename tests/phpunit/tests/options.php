@@ -9,6 +9,7 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love\Plugin_Lib\Options;
 
 /**
+ * @group general
  * @group options
  */
 class Tests_Options extends Unit_Test_Case {

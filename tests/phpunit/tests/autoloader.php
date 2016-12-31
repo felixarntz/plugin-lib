@@ -9,6 +9,7 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love_Autoloader;
 
 /**
+ * @group general
  * @group autoloader
  */
 class Tests_Autoloader extends Unit_Test_Case {

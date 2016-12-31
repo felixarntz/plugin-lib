@@ -9,6 +9,7 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 use Leaves_And_Love\Plugin_Lib\Cache;
 
 /**
+ * @group general
  * @group cache
  */
 class Tests_Cache extends Unit_Test_Case {

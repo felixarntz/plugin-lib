@@ -7,6 +7,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 /**
+ * @group general
  * @group hook-service
  */
 class Tests_Hook_Service extends Unit_Test_Case {

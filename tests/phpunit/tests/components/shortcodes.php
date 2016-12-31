@@ -11,6 +11,7 @@ use Leaves_And_Love\Plugin_Lib\Cache;
 use Leaves_And_Love\Plugin_Lib\Components\Shortcodes;
 
 /**
+ * @group components
  * @group shortcodes
  */
 class Tests_Shortcodes extends Unit_Test_Case {

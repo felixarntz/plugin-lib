@@ -11,6 +11,7 @@ use Leaves_And_Love\Plugin_Lib\DB;
 use Leaves_And_Love\Plugin_Lib\Meta;
 
 /**
+ * @group general
  * @group meta
  */
 class Tests_Meta extends Unit_Test_Case {

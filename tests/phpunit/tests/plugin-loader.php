@@ -10,6 +10,7 @@ use Leaves_And_Love_Plugin_Loader;
 use WP_Error;
 
 /**
+ * @group general
  * @group plugin-loader
  */
 class Tests_Plugin_Loader extends Unit_Test_Case {

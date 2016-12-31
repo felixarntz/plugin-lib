@@ -10,6 +10,7 @@ use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
 
 /**
+ * @group general
  * @group db
  */
 class Tests_DB extends Unit_Test_Case {
