@@ -46,6 +46,8 @@ class Tests_Service extends Unit_Test_Case {
 			$this->assertInstanceOf( 'Leaves_And_Love\Plugin_Lib\Cache', $result );
 			$this->assertSame( $prefix . $i . '_', $result->get_prefix() );
 		}
+
+		$this->assertNull( $service->invalid() );
 	}
 
 	public function test_messages() {
