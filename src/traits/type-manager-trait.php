@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Manager' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait' ) ) :
 
 /**
  * Trait for managers.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Manager' ) ) :
  *
  * @since 1.0.0
  */
-trait Type_Manager {
+trait Type_Manager_Trait {
 	/**
 	 * The type manager instance.
 	 *

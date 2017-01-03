@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Filters;
+use Leaves_And_Love\Plugin_Lib\Traits\Filters_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
 
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
  * @since 1.0.0
  */
 class Options extends Hook_Service {
-	use Filters;
+	use Filters_Trait;
 
 	/**
 	 * An array of options stored in network.

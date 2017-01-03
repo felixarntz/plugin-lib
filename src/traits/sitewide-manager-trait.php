@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager_Trait' ) ) :
 
 /**
  * Trait for managers.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager' ) ) :
  *
  * @since 1.0.0
  */
-trait Sitewide_Manager {
+trait Sitewide_Manager_Trait {
 	/**
 	 * Sets a model in the storage.
 	 *

@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Hooks' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait' ) ) :
 
 /**
  * Trait for Hooks API.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Hooks' ) ) :
  *
  * @since 1.0.0
  */
-trait Hooks {
+trait Hooks_Trait {
 	/**
 	 * Reference for the internal hook closures.
 	 *

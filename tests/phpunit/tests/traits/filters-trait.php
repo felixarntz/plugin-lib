@@ -13,7 +13,7 @@ use Leaves_And_Love_Plugin_Loader;
  * @group hooks
  * @group filters
  */
-class Tests_Filters extends Unit_Test_Case {
+class Tests_Filters_Trait extends Unit_Test_Case {
 	protected static $filters;
 
 	public static function setUpBeforeClass() {

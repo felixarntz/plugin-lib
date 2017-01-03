@@ -3,12 +3,12 @@
 namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager;
+use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait;
 
 class Sample_Manager extends Manager {
-	use Sitewide_Manager, Meta_Manager, Type_Manager;
+	use Sitewide_Manager_Trait, Meta_Manager_Trait, Type_Manager_Trait;
 
 	protected $name = '';
 

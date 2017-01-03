@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manager' ) ) :
 
@@ -20,7 +20,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manage
  * @since 1.0.0
  */
 class User_Manager extends Core_Manager {
-	use Meta_Manager;
+	use Meta_Manager_Trait;
 
 	/**
 	 * Constructor.

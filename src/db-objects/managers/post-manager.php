@@ -8,9 +8,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager;
+use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager' ) ) :
 
@@ -22,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manage
  * @since 1.0.0
  */
 class Post_Manager extends Core_Manager {
-	use Sitewide_Manager, Meta_Manager, Type_Manager;
+	use Sitewide_Manager_Trait, Meta_Manager_Trait, Type_Manager_Trait;
 
 	/**
 	 * Constructor.

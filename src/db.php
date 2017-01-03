@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Actions;
+use Leaves_And_Love\Plugin_Lib\Traits\Actions_Trait;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
@@ -21,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
 class DB extends Hook_Service {
-	use Actions;
+	use Actions_Trait;
 
 	/**
 	 * WordPress database abstraction object.

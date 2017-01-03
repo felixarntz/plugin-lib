@@ -3,13 +3,13 @@
 namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Query;
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Query;
+use Leaves_And_Love\Plugin_Lib\Traits\Meta_Query_Trait;
 
 class Sample_Query extends Query {
-	use Meta_Query {
-		Meta_Query::parse_where as meta_parse_where;
-		Meta_Query::parse_single_orderby as meta_parse_single_orderby;
-		Meta_Query::get_valid_orderby_fields as meta_get_valid_orderby_fields;
+	use Meta_Query_Trait {
+		Meta_Query_Trait::parse_where as meta_parse_where;
+		Meta_Query_Trait::parse_single_orderby as meta_parse_single_orderby;
+		Meta_Query_Trait::get_valid_orderby_fields as meta_get_valid_orderby_fields;
 	}
 
 	public function __construct( $manager ) {

@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Actions' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Actions_Trait' ) ) :
 
 /**
  * Trait for Actions API.
@@ -17,8 +17,8 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Actions' ) ) :
  *
  * @since 1.0.0
  */
-trait Actions {
-	use Hooks;
+trait Actions_Trait {
+	use Hooks_Trait;
 
 	/**
 	 * Hooks a function or method to a specific action.

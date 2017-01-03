@@ -8,8 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
+use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Model_Trait;
 use WP_Term;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term' ) ) :
@@ -34,7 +34,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term' ) ) :
  * @property-read int $object_id
  */
 class Term extends Core_Model {
-	use Sitewide_Model, Type_Model;
+	use Sitewide_Model_Trait, Type_Model_Trait;
 
 	/**
 	 * Constructor.

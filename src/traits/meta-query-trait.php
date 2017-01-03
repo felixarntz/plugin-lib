@@ -10,7 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\Traits;
 
 use WP_Meta_Query;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Meta_Query' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Meta_Query_Trait' ) ) :
 
 /**
  * Trait for queries.
@@ -19,7 +19,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Meta_Query' ) ) :
  *
  * @since 1.0.0
  */
-trait Meta_Query {
+trait Meta_Query_Trait {
 	/**
 	 * Metadata query container.
 	 *

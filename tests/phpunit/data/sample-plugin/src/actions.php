@@ -2,10 +2,10 @@
 
 namespace Leaves_And_Love\Sample_Plugin;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Actions as ActionsTrait;
+use Leaves_And_Love\Plugin_Lib\Traits\Actions_Trait;
 
 class Actions {
-	use ActionsTrait;
+	use Actions_Trait;
 
 	public function add( $tag, $mode = 'func' ) {
 		return $this->add_action( $tag, $this->get_callback( $mode ) );

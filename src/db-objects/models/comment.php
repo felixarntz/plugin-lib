@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
+use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait;
 use WP_Comment;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Comment' ) ) :
@@ -38,7 +38,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Comment' ) ) 
  * @property-read int $id
  */
 class Comment extends Core_Model {
-	use Sitewide_Model;
+	use Sitewide_Model_Trait;
 
 	/**
 	 * Constructor.

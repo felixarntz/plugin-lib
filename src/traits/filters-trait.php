@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Filters' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Filters_Trait' ) ) :
 
 /**
  * Trait for Filters API.
@@ -17,8 +17,8 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Filters' ) ) :
  *
  * @since 1.0.0
  */
-trait Filters {
-	use Hooks;
+trait Filters_Trait {
+	use Hooks_Trait;
 
 	/**
 	 * Hooks a function or method to a specific filter action.

@@ -8,8 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Model;
+use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Type_Model_Trait;
 use WP_Post;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post' ) ) :
@@ -47,7 +47,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post' ) ) :
  * @property-read int $comment_count
  */
 class Post extends Core_Model {
-	use Sitewide_Model, Type_Model;
+	use Sitewide_Model_Trait, Type_Model_Trait;
 
 	/**
 	 * Constructor.

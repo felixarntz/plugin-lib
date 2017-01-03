@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Model' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Model_Trait' ) ) :
 
 /**
  * Trait for models.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Model' ) ) :
  *
  * @since 1.0.0
  */
-trait Type_Model {
+trait Type_Model_Trait {
 	/**
 	 * The type property of the model.
 	 *

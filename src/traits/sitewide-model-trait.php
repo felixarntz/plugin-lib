@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait' ) ) :
 
 /**
  * Trait for models.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model' ) ) :
  *
  * @since 1.0.0
  */
-trait Sitewide_Model {
+trait Sitewide_Model_Trait {
 	/**
 	 * Site ID this model belongs to.
 	 *

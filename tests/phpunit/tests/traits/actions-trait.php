@@ -13,7 +13,7 @@ use Leaves_And_Love_Plugin_Loader;
  * @group hooks
  * @group actions
  */
-class Tests_Actions extends Unit_Test_Case {
+class Tests_Actions_Trait extends Unit_Test_Case {
 	protected static $actions;
 
 	public static function setUpBeforeClass() {
