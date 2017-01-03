@@ -29,12 +29,12 @@ class Network_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB    $db                  The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache               The cache instance.
-	 * @param array                            $messages            Messages printed to the user.
-	 * @param array                            $additional_services Optional. Further services. Default empty.
+	 * @param Leaves_And_Love\Plugin_Lib\DB                        $db                  The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache                     $cache               The cache instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations        Translations instance.
+	 * @param array                                                $additional_services Optional. Further services. Default empty.
 	 */
-	public function __construct( $db, $cache, $messages, $additional_services = array() ) {
+	public function __construct( $db, $cache, $translations, $additional_services = array() ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Network_Query';
@@ -44,7 +44,7 @@ class Network_Manager extends Core_Manager {
 		$this->meta_type      = 'network';
 		$this->fetch_callback = 'get_network';
 
-		parent::__construct( $db, $cache, $messages, $additional_services );
+		parent::__construct( $db, $cache, $translations, $additional_services );
 	}
 
 	/**

@@ -28,15 +28,6 @@ abstract class Service {
 	protected $prefix = false;
 
 	/**
-	 * Messages to print to the user.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $messages = array();
-
-	/**
 	 * Array of property names that denote services.
 	 *
 	 * @since 1.0.0
@@ -67,18 +58,6 @@ abstract class Service {
 					return $this->$method;
 				}
 		}
-	}
-
-	/**
-	 * Specifies the messages to print to the user.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param array $messages Messages to print to the user.
-	 */
-	protected function set_messages( $messages ) {
-		$this->messages = $messages;
 	}
 
 	/**

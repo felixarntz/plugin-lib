@@ -49,21 +49,4 @@ class Tests_Service extends Unit_Test_Case {
 
 		$this->assertNull( $service->invalid() );
 	}
-
-	public function test_messages() {
-		require_once LALPL_TESTS_DATA . 'test-service-class.php';
-
-		$prefix = 'foo_bar_';
-
-		$messages = array(
-			'hello' => 'Hello World!',
-			'bye'   => 'Goodbye World!',
-		);
-
-		$service = new \Test_Service_Class( $prefix, array(), $messages );
-
-		$this->assertSame( $messages['hello'], $service->get_message( 'hello' ) );
-		$this->assertSame( $messages['bye'], $service->get_message( 'bye' ) );
-		$this->assertSame( '', $service->get_message( 'invalid' ) );
-	}
 }

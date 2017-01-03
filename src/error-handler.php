@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 
 /**
@@ -20,16 +22,18 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
  * @codeCoverageIgnore
  */
 class Error_Handler extends Service {
+	use Translations_Trait;
+
 	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param array $messages Messages to print to the user.
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $messages ) {
-		$this->set_messages( $messages );
+	public function __construct( $translations ) {
+		$this->set_translations( $translations );
 	}
 
 	/**
@@ -47,9 +51,9 @@ class Error_Handler extends Service {
 
 		if ( WP_DEBUG && apply_filters( 'deprecated_function_trigger_error', true ) ) {
 			if ( ! is_null( $replacement ) ) {
-				trigger_error( sprintf( $this->messages['deprecated_function'], $function, $version, $replacement ) );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_function' ), $function, $version, $replacement ) );
 			} else {
-				trigger_error( sprintf( $this->messages['deprecated_function_no_alt'], $function, $version ) );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_function_no_alt' ), $function, $version ) );
 			}
 		}
 	}
@@ -69,9 +73,9 @@ class Error_Handler extends Service {
 
 		if ( WP_DEBUG && apply_filters( 'deprecated_argument_trigger_error', true ) ) {
 			if ( ! is_null( $message ) ) {
-				trigger_error( sprintf( $this->messages['deprecated_argument'], $function, $version, $message ) );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_argument' ), $function, $version, $message ) );
 			} else {
-				trigger_error( sprintf( $this->messages['deprecated_argument_no_alt'], $function, $version ) );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_argument_no_alt' ), $function, $version ) );
 			}
 		}
 	}
@@ -94,9 +98,9 @@ class Error_Handler extends Service {
 			$message = empty( $message ) ? '' : ' ' . $message;
 
 			if ( ! is_null( $replacement ) ) {
-				trigger_error( sprintf( $this->messages['deprecated_hook'], $hook, $version, $replacement ) . $message );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_hook' ), $hook, $version, $replacement ) . $message );
 			} else {
-				trigger_error( sprintf( $this->messages['deprecated_hook_no_alt'], $hook, $version ) . $message );
+				trigger_error( sprintf( $this->get_translation( 'deprecated_hook_no_alt' ), $hook, $version ) . $message );
 			}
 		}
 	}
@@ -118,10 +122,10 @@ class Error_Handler extends Service {
 			if ( is_null( $version ) ) {
 				$version = '';
 			} else {
-				$version = ' ' . sprintf( $this->messages['added_in_version'], $version );
+				$version = ' ' . sprintf( $this->get_translation( 'added_in_version' ), $version );
 			}
 
-			trigger_error( sprintf( $this->messages['called_incorrectly'], $function, $message . $version ) );
+			trigger_error( sprintf( $this->get_translation( 'called_incorrectly' ), $function, $message . $version ) );
 		}
 	}
 }

@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Actions_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
@@ -21,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
 class DB extends Hook_Service {
-	use Actions_Trait;
+	use Actions_Trait, Translations_Trait;
 
 	/**
 	 * WordPress database abstraction object.
@@ -82,18 +83,18 @@ class DB extends Hook_Service {
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param string                             $prefix   The prefix for all database tables.
-	 * @param Leaves_And_Love\Plugin_Lib\Options $options  The Option API class instance.
-	 * @param array                              $messages Messages printed to the user.
+	 * @param string                                               $prefix       The prefix for all database tables.
+	 * @param Leaves_And_Love\Plugin_Lib\Options                   $options      The Option API class instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $prefix, $options, $messages ) {
+	public function __construct( $prefix, $options, $translations ) {
 		global $wpdb;
 
 		$this->prefix  = $prefix;
 		$this->wpdb    = $wpdb;
 		$this->options = $options;
 
-		$this->set_messages( $messages );
+		$this->set_translations( $translations );
 		$this->set_services( array( 'options' ) );
 
 		$this->options->store_in_network( 'db_version' );
@@ -393,11 +394,11 @@ class DB extends Hook_Service {
 	 */
 	public function add_table( $table, $schema = array() ) {
 		if ( isset( $this->tables[ $table ] ) ) {
-			return new WP_Error( 'table_already_exist', sprintf( $this->messages['table_already_exist'], $table ) );
+			return new WP_Error( 'table_already_exist', sprintf( $this->get_translation( 'table_already_exist' ), $table ) );
 		}
 
 		if ( empty( $schema ) ) {
-			return new WP_Error( 'schema_empty', $this->messages['schema_empty'] );
+			return new WP_Error( 'schema_empty', $this->get_translation( 'schema_empty' ) );
 		}
 
 		$schemastring = "\n\t" . implode( ",\n\t", $schema ) . "\n";

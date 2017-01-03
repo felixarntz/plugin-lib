@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Service;
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 
@@ -23,6 +24,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Cache cache()
  */
 abstract class Manager extends Service {
+	use Translations_Trait;
+
 	/**
 	 * The database instance.
 	 *
@@ -101,16 +104,16 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB    $db                  The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache $cache               The cache instance.
-	 * @param array                            $messages            Messages printed to the user.
-	 * @param array                            $additional_services Optional. Further services. Default empty.
+	 * @param Leaves_And_Love\Plugin_Lib\DB                        $db                  The database instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Cache                     $cache               The cache instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations        Translations instance.
+	 * @param array                                                $additional_services Optional. Further services. Default empty.
 	 */
-	public function __construct( $db, $cache, $messages, $additional_services = array() ) {
+	public function __construct( $db, $cache, $translations, $additional_services = array() ) {
 		$this->db = $db;
 		$this->cache = $cache;
 
-		$this->set_messages( $messages );
+		$this->set_translations( $translations );
 
 		$services = array( 'db', 'cache' );
 
@@ -328,15 +331,11 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $slug Slug for the message.
+	 * @param string $identifier Identifier for the message.
 	 * @return string The message, or an empty string if not found.
 	 */
-	public function get_message( $slug ) {
-		if ( ! isset( $this->messages[ $slug ] ) ) {
-			return '';
-		}
-
-		return $this->messages[ $slug ];
+	public function get_message( $identifier ) {
+		return $this->get_translation( $identifier );
 	}
 
 	/**

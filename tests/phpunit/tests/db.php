@@ -8,6 +8,7 @@ namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_DB;
 
 /**
  * @group general
@@ -24,10 +25,7 @@ class Tests_DB extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_db_';
 
-		self::$db = new DB( self::$prefix, new Options( self::$prefix ), array(
-			'table_already_exist' => 'Table %s already exists.',
-			'schema_empty'        => 'Table schema is empty.',
-		) );
+		self::$db = new DB( self::$prefix, new Options( self::$prefix ), new Translations_DB() );
 
 		self::$db->add_table( 'rows', array(
 			"id bigint(20) unsigned NOT NULL auto_increment",
