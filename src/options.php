@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Filters_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
 
@@ -21,8 +21,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
  *
  * @since 1.0.0
  */
-class Options extends Hook_Service {
-	use Filters_Trait;
+class Options extends Service {
+	use Hook_Service_Trait;
 
 	/**
 	 * An array of options stored in network.
@@ -45,6 +45,8 @@ class Options extends Hook_Service {
 	 */
 	public function __construct( $prefix ) {
 		$this->prefix = $prefix;
+
+		$this->setup_hooks();
 	}
 
 	/**
@@ -286,27 +288,22 @@ class Options extends Hook_Service {
 	}
 
 	/**
-	 * Adds options hooks.
+	 * Sets up all action and filter hooks for the service.
+	 *
+	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 *
-	 * @codeCoverageIgnore
 	 */
-	protected function add_hooks() {
-		$this->add_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10, 1 );
-	}
-
-	/**
-	 * Removes options hooks.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected function remove_hooks() {
-		$this->remove_filter( 'populate_network_meta', array( $this, 'migrate_to_network' ), 10 );
+	protected function setup_hooks() {
+		$this->filters = array(
+			array(
+				'name'     => 'populate_network_meta',
+				'callback' => array( $this, 'migrate_to_network' ),
+				'priority' => 10,
+				'num_args' => 1,
+			),
+		);
 	}
 }
 

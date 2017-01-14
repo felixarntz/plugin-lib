@@ -7,10 +7,9 @@
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 /**
- * @group general
- * @group hook-service
+ * @group traits
  */
-class Tests_Hook_Service extends Unit_Test_Case {
+class Tests_Hook_Service_Trait extends Unit_Test_Case {
 	public function data_hooks() {
 		return array(
 			array(
@@ -38,9 +37,8 @@ class Tests_Hook_Service extends Unit_Test_Case {
 	 * @dataProvider data_hooks
 	 */
 	public function test_hooks( $name, $callback, $type, $value ) {
-		require_once LALPL_TESTS_DATA . 'test-hook-service-class.php';
+		require_once LALPL_TESTS_DATA . 'test-hook-service-trait-class.php';
 
-		$prefix = 'foo_bar_';
 		$hooks = array(
 			array(
 				'name'     => $name,
@@ -49,7 +47,7 @@ class Tests_Hook_Service extends Unit_Test_Case {
 			),
 		);
 
-		$hook_service = new \Test_Hook_Service_Class( $prefix, $hooks );
+		$hook_service = new \Test_Hook_Service_Trait_Class( $hooks );
 
 		if ( 'filter' === $type ) {
 			$modified = apply_filters( $name, $value );

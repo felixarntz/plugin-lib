@@ -2,10 +2,10 @@
 
 namespace Leaves_And_Love\Sample_Plugin;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Filters_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait;
 
 class Filters {
-	use Filters_Trait;
+	use Hooks_Trait;
 
 	public function add( $tag, $mode = 'func' ) {
 		return $this->add_filter( $tag, $this->get_callback( $mode ) );

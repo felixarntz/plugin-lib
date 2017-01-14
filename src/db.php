@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Actions_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
 use WP_Error;
 
@@ -21,8 +21,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  *
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
-class DB extends Hook_Service {
-	use Actions_Trait, Translations_Trait;
+class DB extends Service {
+	use Hook_Service_Trait, Translations_Trait;
 
 	/**
 	 * WordPress database abstraction object.
@@ -98,6 +98,8 @@ class DB extends Hook_Service {
 		$this->set_services( array( 'options' ) );
 
 		$this->options->store_in_network( 'db_version' );
+
+		$this->setup_hooks();
 	}
 
 	/**
@@ -594,27 +596,22 @@ class DB extends Hook_Service {
 	}
 
 	/**
-	 * Adds database hooks.
+	 * Sets up all action and filter hooks for the service.
+	 *
+	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 *
-	 * @codeCoverageIgnore
 	 */
-	protected function add_hooks() {
-		$this->add_action( 'admin_init', array( $this, 'check' ), 10, 0 );
-	}
-
-	/**
-	 * Removes database hooks.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @codeCoverageIgnore
-	 */
-	protected function remove_hooks() {
-		$this->remove_action( 'admin_init', array( $this, 'check' ), 10 );
+	protected function setup_hooks() {
+		$this->actions = array(
+			array(
+				'name'     => 'admin_init',
+				'callback' => array( $this, 'check' ),
+				'priority' => 10,
+				'num_args' => 0,
+			),
+		);
 	}
 }
 
