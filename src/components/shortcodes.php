@@ -30,7 +30,7 @@ class Shortcodes extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\Cache
 	 */
-	protected $cache;
+	protected $service_cache = null;
 
 	/**
 	 * Template instance.
@@ -39,7 +39,7 @@ class Shortcodes extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\Template
 	 */
-	protected $template;
+	protected $service_template = null;
 
 	/**
 	 * Added shortcodes.
@@ -57,15 +57,16 @@ class Shortcodes extends Service {
 	 * @access public
 	 *
 	 * @param string                              $prefix   The prefix for all shortcodes.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache    $cache    The Cache API instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Template $template The Template API instance.
+	 * @param array  $services {
+	 *     Array of service instances.
+	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Cache    $cache    The Cache API instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Template $template The Template API instance.
+	 * }
 	 */
-	public function __construct( $prefix, $cache, $template ) {
-		$this->prefix = $prefix;
-		$this->cache = $cache;
-		$this->template = $template;
-
-		$this->set_services( array( 'cache', 'template' ) );
+	public function __construct( $prefix, $services ) {
+		$this->set_prefix( $prefix );
+		$this->set_services( $services );
 	}
 
 	/**
@@ -101,7 +102,7 @@ class Shortcodes extends Service {
 			return false;
 		}
 
-		$tag = $this->prefix . $tag;
+		$tag = $this->get_prefix() . $tag;
 
 		$this->shortcode_tags[ $tag ] = new Shortcode( $tag, $func, $args, $this );
 		add_shortcode( $tag, array( $this->shortcode_tags[ $tag ], 'run' ) );
@@ -119,7 +120,7 @@ class Shortcodes extends Service {
 	 * @return bool True if the shortcode tag exists, otherwise false.
 	 */
 	public function has( $tag ) {
-		$tag = $this->prefix . $tag;
+		$tag = $this->get_prefix() . $tag;
 
 		return isset( $this->shortcode_tags[ $tag ] ) && shortcode_exists( $tag );
 	}
@@ -138,7 +139,7 @@ class Shortcodes extends Service {
 			return null;
 		}
 
-		$tag = $this->prefix . $tag;
+		$tag = $this->get_prefix() . $tag;
 
 		return $this->shortcode_tags[ $tag ];
 	}
@@ -153,7 +154,7 @@ class Shortcodes extends Service {
 	 * @return bool True on success, false on failure.
 	 */
 	public function remove( $tag ) {
-		$tag = $this->prefix . $tag;
+		$tag = $this->get_prefix() . $tag;
 
 		if ( ! isset( $this->shortcode_tags[ $tag ] ) ) {
 			return false;

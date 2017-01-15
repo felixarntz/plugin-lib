@@ -32,7 +32,7 @@ class Meta extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\DB
 	 */
-	protected $db;
+	protected $service_db;
 
 	/**
 	 * Constructor.
@@ -40,12 +40,14 @@ class Meta extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB $db The database class instance.
+	 * @param array $services {
+	 *     Array of service instances.
+	 *
+	 *     @param Leaves_And_Love\Plugin_Lib\DB $db The database class instance.
+	 * }
 	 */
-	public function __construct( $db ) {
-		$this->db = $db;
-
-		$this->set_services( array( 'db' ) );
+	public function __construct( $services ) {
+		$this->set_services( $services );
 	}
 
 	/**
@@ -69,14 +71,14 @@ class Meta extends Service {
 			$callback = 'network' === $meta_type ? 'add_network_option' : 'add_blog_option';
 			$result = call_user_func( $callback, $object_id, $meta_key, $meta_value );
 			if ( $result ) {
-				return $this->db->insert_id;
+				return $this->db()->insert_id;
 			}
 
 			return $result;
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
-			$meta_type = $this->db->get_prefix() . $meta_type;
+			$meta_type = $this->db()->get_prefix() . $meta_type;
 		}
 		return add_metadata( $meta_type, $object_id, $meta_key, $meta_value, $unique );
 	}
@@ -107,14 +109,14 @@ class Meta extends Service {
 
 			$result = call_user_func( $callback, $object_id, $meta_key, $meta_value );
 			if ( $result && $adding ) {
-				return $this->db->insert_id;
+				return $this->db()->insert_id;
 			}
 
 			return $result;
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
-			$meta_type = $this->db->get_prefix() . $meta_type;
+			$meta_type = $this->db()->get_prefix() . $meta_type;
 		}
 		return update_metadata( $meta_type, $object_id, $meta_key, $meta_value, $prev_value );
 	}
@@ -146,7 +148,7 @@ class Meta extends Service {
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
-			$meta_type = $this->db->get_prefix() . $meta_type;
+			$meta_type = $this->db()->get_prefix() . $meta_type;
 		}
 		return delete_metadata( $meta_type, $object_id, $meta_key, $meta_value, $delete_all );
 	}
@@ -188,7 +190,7 @@ class Meta extends Service {
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
-			$meta_type = $this->db->get_prefix() . $meta_type;
+			$meta_type = $this->db()->get_prefix() . $meta_type;
 		}
 		$values = get_metadata( $meta_type, $object_id, $meta_key, false );
 
@@ -230,7 +232,7 @@ class Meta extends Service {
 		}
 
 		if ( $this->is_prefixed_type( $meta_type ) ) {
-			$meta_type = $this->db->get_prefix() . $meta_type;
+			$meta_type = $this->db()->get_prefix() . $meta_type;
 		}
 		return metadata_exists( $meta_type, $object_id, $meta_key );
 	}
@@ -250,9 +252,9 @@ class Meta extends Service {
 			return false;
 		}
 
-		$prefixed_meta_type = $this->db->get_prefix() . $meta_type;
+		$prefixed_meta_type = $this->db()->get_prefix() . $meta_type;
 
-		$meta_ids = $this->db->get_col( "SELECT meta_id FROM %{$meta_type}meta% WHERE {$prefixed_meta_type}_id = %d", $object_id );
+		$meta_ids = $this->db()->get_col( "SELECT meta_id FROM %{$meta_type}meta% WHERE {$prefixed_meta_type}_id = %d", $object_id );
 		foreach ( $meta_ids as $meta_id ) {
 			delete_metadata_by_mid( $prefixed_meta_type, $meta_id );
 		}
@@ -270,7 +272,7 @@ class Meta extends Service {
 	 * @return bool True if the meta type must be prefixed, false otherwise.
 	 */
 	protected function is_prefixed_type( $meta_type ) {
-		return $this->db->table_exists( $meta_type . 'meta' );
+		return $this->db()->table_exists( $meta_type . 'meta' );
 	}
 }
 

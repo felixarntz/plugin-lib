@@ -44,7 +44,7 @@ class Options extends Service {
 	 * @param string $prefix The prefix for all options.
 	 */
 	public function __construct( $prefix ) {
-		$this->prefix = $prefix;
+		$this->set_prefix( $prefix );
 
 		$this->setup_hooks();
 	}
@@ -63,7 +63,7 @@ class Options extends Service {
 		if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
 			$site_id = get_current_blog_id();
 
-			$options = get_network_option( null, $this->prefix . $option, array() );
+			$options = get_network_option( null, $this->get_prefix() . $option, array() );
 			if ( ! isset( $options[ $site_id ] ) ) {
 				return $default;
 			}
@@ -71,7 +71,7 @@ class Options extends Service {
 			return $options[ $site_id ];
 		}
 
-		return get_option( $this->prefix . $option, $default );
+		return get_option( $this->get_prefix() . $option, $default );
 	}
 
 	/**
@@ -90,17 +90,17 @@ class Options extends Service {
 		if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
 			$site_id = get_current_blog_id();
 
-			$options = get_network_option( null, $this->prefix . $option, array() );
+			$options = get_network_option( null, $this->get_prefix() . $option, array() );
 			if ( isset( $options[ $site_id ] ) ) {
 				return false;
 			}
 
 			$options[ $site_id ] = $value;
 
-			return update_network_option( null, $this->prefix . $option, $options );
+			return update_network_option( null, $this->get_prefix() . $option, $options );
 		}
 
-		return add_option( $this->prefix . $option, $value );
+		return add_option( $this->get_prefix() . $option, $value );
 	}
 
 	/**
@@ -119,13 +119,13 @@ class Options extends Service {
 		if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
 			$site_id = get_current_blog_id();
 
-			$options = get_network_option( null, $this->prefix . $option, array() );
+			$options = get_network_option( null, $this->get_prefix() . $option, array() );
 			$options[ $site_id ] = $value;
 
-			return update_network_option( null, $this->prefix . $option, $options );
+			return update_network_option( null, $this->get_prefix() . $option, $options );
 		}
 
-		return update_option( $this->prefix . $option, $value );
+		return update_option( $this->get_prefix() . $option, $value );
 	}
 
 	/**
@@ -143,20 +143,20 @@ class Options extends Service {
 		if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
 			$site_id = get_current_blog_id();
 
-			$options = get_network_option( null, $this->prefix . $option, array() );
+			$options = get_network_option( null, $this->get_prefix() . $option, array() );
 			if ( ! isset( $options[ $site_id ] ) ) {
 				return false;
 			}
 
 			if ( count( $options ) > 1 ) {
 				unset( $options[ $site_id ] );
-				return update_network_option( null, $this->prefix . $option, $options );
+				return update_network_option( null, $this->get_prefix() . $option, $options );
 			}
 
-			return delete_network_option( null, $this->prefix . $option );
+			return delete_network_option( null, $this->get_prefix() . $option );
 		}
 
-		return delete_option( $this->prefix . $option );
+		return delete_option( $this->get_prefix() . $option );
 	}
 
 	/**
@@ -179,7 +179,7 @@ class Options extends Service {
 			return array( 1 => $value );
 		}
 
-		return get_network_option( $network_id, $this->prefix . $option, array() );
+		return get_network_option( $network_id, $this->get_prefix() . $option, array() );
 	}
 
 	/**
@@ -204,7 +204,7 @@ class Options extends Service {
 			return array( 1 );
 		}
 
-		return array_map( 'absint', $wpdb->get_col( $wpdb->prepare( "SELECT site_id FROM $wpdb->sitemeta WHERE meta_key = %s", $this->prefix . $option ) ) );
+		return array_map( 'absint', $wpdb->get_col( $wpdb->prepare( "SELECT site_id FROM $wpdb->sitemeta WHERE meta_key = %s", $this->get_prefix() . $option ) ) );
 	}
 
 	/**
@@ -222,10 +222,10 @@ class Options extends Service {
 	 */
 	public function flush( $option, $network_id = null ) {
 		if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
-			return delete_network_option( $network_id, $this->prefix . $option );
+			return delete_network_option( $network_id, $this->get_prefix() . $option );
 		}
 
-		return delete_option( $this->prefix . $option );
+		return delete_option( $this->get_prefix() . $option );
 	}
 
 	/**
@@ -274,14 +274,14 @@ class Options extends Service {
 		}
 
 		foreach ( $this->network_stored as $option ) {
-			$value = get_option( $this->prefix . $option );
+			$value = get_option( $this->get_prefix() . $option );
 			if ( false === $value ) {
 				continue;
 			}
 
-			$network_options[ $this->prefix . $option ] = array( 1 => $value );
+			$network_options[ $this->get_prefix() . $option ] = array( 1 => $value );
 
-			delete_option( $this->prefix . $option );
+			delete_option( $this->get_prefix() . $option );
 		}
 
 		return $network_options;

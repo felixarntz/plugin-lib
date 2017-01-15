@@ -40,7 +40,7 @@ class DB extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\Options
 	 */
-	protected $options;
+	protected $service_options;
 
 	/**
 	 * Table names with their prefixes.
@@ -84,20 +84,23 @@ class DB extends Service {
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param string                                               $prefix       The prefix for all database tables.
-	 * @param Leaves_And_Love\Plugin_Lib\Options                   $options      The Option API class instance.
+	 * @param array                                                $services {
+	 *     Array of service instances.
+	 *
+	 *     @param Leaves_And_Love\Plugin_Lib\Options $options The Option API class instance.
+	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $prefix, $options, $translations ) {
+	public function __construct( $prefix, $services, $translations ) {
 		global $wpdb;
 
-		$this->prefix  = $prefix;
-		$this->wpdb    = $wpdb;
-		$this->options = $options;
-
+		$this->set_prefix( $prefix );
+		$this->set_services( $services );
 		$this->set_translations( $translations );
-		$this->set_services( array( 'options' ) );
 
-		$this->options->store_in_network( 'db_version' );
+		$this->wpdb = $wpdb;
+
+		$this->options()->store_in_network( 'db_version' );
 
 		$this->setup_hooks();
 	}
@@ -327,13 +330,13 @@ class DB extends Service {
 	 * @access public
 	 */
 	public function check( $force = false ) {
-		if ( ! $force && $this->version <= $this->options->get( 'db_version', 0 ) ) {
+		if ( ! $force && $this->version <= $this->options()->get( 'db_version', 0 ) ) {
 			return;
 		}
 
 		$this->install_single();
 
-		$this->options->update( 'db_version', $this->version );
+		$this->options()->update( 'db_version', $this->version );
 	}
 
 	/**
@@ -349,9 +352,9 @@ class DB extends Service {
 	 */
 	public function uninstall() {
 		if ( is_multisite() ) {
-			$network_ids = $this->options->get_networks_with_option( 'db_version' );
+			$network_ids = $this->options()->get_networks_with_option( 'db_version' );
 			foreach ( $network_ids as $network_id ) {
-				$versions = $this->options->get_for_all_sites( 'db_version', $network_id );
+				$versions = $this->options()->get_for_all_sites( 'db_version', $network_id );
 
 				foreach ( array_keys( $versions ) as $site_id ) {
 					switch_to_blog( $site_id );
@@ -359,7 +362,7 @@ class DB extends Service {
 					restore_current_blog();
 				}
 
-				$this->options->flush( 'db_version', $network_id );
+				$this->options()->flush( 'db_version', $network_id );
 			}
 		} else {
 			$this->uninstall_single();
@@ -410,7 +413,7 @@ class DB extends Service {
 		}
 		$this->schema .= 'CREATE TABLE %' . $table . '% (' . $schemastring . ') ' . $this->wpdb->get_charset_collate() . ';';
 
-		$prefixed_table_name = $this->prefix . $table;
+		$prefixed_table_name = $this->get_prefix() . $table;
 
 		$this->wpdb->tables[] = $prefixed_table_name;
 		$this->wpdb->$prefixed_table_name = $this->wpdb->prefix . $prefixed_table_name;

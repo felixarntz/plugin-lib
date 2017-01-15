@@ -8,14 +8,14 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use WP_Error;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service' ) ) :
 
 /**
  * Abstract class for any kind of service.
  *
  * @since 1.0.0
- *
- * @method string get_prefix()
  */
 abstract class Service {
 	/**
@@ -28,19 +28,21 @@ abstract class Service {
 	protected $prefix = false;
 
 	/**
-	 * Array of property names that denote services.
+	 * Returns the instance prefix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
-	 * @var array
+	 * @access public
+	 *
+	 * @return string|bool Instance prefix, or false if no prefix is set.
 	 */
-	protected $services = array();
+	public function get_prefix() {
+		return $this->prefix;
+	}
 
 	/**
 	 * Magic caller.
 	 *
-	 * Supports a `get_prefix()` method (if property has been set by the extending class)
-	 * and methods to get internally used services.
+	 * Supports methods to get internally used services.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -50,40 +52,61 @@ abstract class Service {
 	 * @return mixed Method results, or void if the method does not exist.
 	 */
 	public function __call( $method, $args ) {
-		switch ( $method ) {
-			case 'get_prefix':
-				return $this->prefix;
-			default:
-				if ( in_array( $method, $this->services, true ) && isset( $this->$method ) ) {
-					return $this->$method;
-				}
+		$service_property = 'service_' . $method;
+		if ( isset( $this->$service_property ) ) {
+			return $this->$service_property;
 		}
+
+		return null;
 	}
 
 	/**
-	 * Specifies the services included in this service.
+	 * Sets the instance prefix.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param array $services Property names that denote services.
+	 * @param string $prefix Instance prefix.
+	 */
+	protected function set_prefix( $prefix ) {
+		$this->prefix = $prefix;
+	}
+
+	/**
+	 * Sets the services for this class.
+	 *
+	 * Services are class properties whose names are prefixed with 'service_'.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $services Array of passed services.
+	 * @return bool|WP_Error True on success, error object with missing services
+	 *                       as data on failure.
 	 */
 	protected function set_services( $services ) {
-		$this->services = $services;
-	}
+		$missing_services = array();
 
-	/**
-	 * Adds included services to this service.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param array $services Property names that denote services.
-	 */
-	protected function add_services( $services ) {
-		$services = (array) $services;
+		foreach ( get_class_vars( get_class( $this ) ) as $property => $value ) {
+			if ( 0 !== strpos( $property, 'service_' ) ) {
+				continue;
+			}
 
-		$this->services = array_merge( $this->services, $services );
+			$unprefixed_property = substr( $property, 8 );
+
+			if ( ! isset( $services[ $unprefixed_property ] ) ) {
+				$missing_services[] = $unprefixed_property;
+				continue;
+			}
+
+			$this->$property = $services[ $unprefixed_property ];
+		}
+
+		if ( ! empty( $missing_services ) ) {
+			return new WP_Error( 'missing_services', 'Missing services!', $missing_services );
+		}
+
+		return true;
 	}
 }
 

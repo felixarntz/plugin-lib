@@ -48,7 +48,8 @@ class Template extends Service {
 	 * @param string $default_location The default location for all templates.
 	 */
 	public function __construct( $prefix, $default_location ) {
-		$this->prefix = $prefix;
+		$this->set_prefix( $prefix );
+
 		$this->default_location = trailingslashit( $default_location );
 	}
 
@@ -114,13 +115,13 @@ class Template extends Service {
 		if ( STYLESHEETPATH !== TEMPLATEPATH ) {
 			array_unshift( $locations, array(
 				'priority' => -1,
-				'path'     => TEMPLATEPATH . '/' . $this->prefix . 'templates/',
+				'path'     => TEMPLATEPATH . '/' . $this->get_prefix() . 'templates/',
 			) );
 		}
 
 		array_unshift( $locations, array(
 			'priority' => -2,
-			'path'     => STYLESHEETPATH . '/' . $this->prefix . 'templates/',
+			'path'     => STYLESHEETPATH . '/' . $this->get_prefix() . 'templates/',
 		) );
 
 		array_push( $locations, array(

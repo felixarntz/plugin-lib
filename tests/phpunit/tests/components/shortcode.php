@@ -27,10 +27,10 @@ class Tests_Shortcode extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_shortcode_';
 
-		$cache = new Cache( self::$prefix );
-		$template = Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template();
-
-		self::$shortcodes = new Shortcodes( self::$prefix, $cache, $template );
+		self::$shortcodes = new Shortcodes( self::$prefix, array(
+			'cache'    => new Cache( self::$prefix ),
+			'template' => Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template(),
+		) );
 	}
 
 	public function test_run() {

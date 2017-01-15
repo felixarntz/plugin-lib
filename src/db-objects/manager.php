@@ -33,7 +33,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\DB
 	 */
-	protected $db;
+	protected $service_db;
 
 	/**
 	 * The cache instance.
@@ -42,7 +42,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\Cache
 	 */
-	protected $cache;
+	protected $service_cache;
 
 	/**
 	 * The model class name.
@@ -95,38 +95,17 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB                        $db                  The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache                     $cache               The cache instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations        Translations instance.
-	 * @param array                                                $additional_services Optional. Further services. Default empty.
+	 * @param array                                                $services {
+	 *     Array of service instances.
+	 *
+	 *     @param Leaves_And_Love\Plugin_Lib\DB    $db    The database instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\Cache $cache The cache instance.
+	 * }
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $db, $cache, $translations, $additional_services = array() ) {
-		$this->db = $db;
-		$this->cache = $cache;
-
-		$this->set_translations( $translations );
-
-		$services = array( 'db', 'cache' );
-
-		if ( property_exists( $this, 'meta' ) ) {
-			if ( ! isset( $additional_services['meta'] ) ) {
-
-			} else {
-				$this->meta = $additional_services['meta'];
-				$services[] = 'meta';
-			}
-		}
-
-		if ( property_exists( $this, 'type_manager' ) ) {
-			if ( ! isset( $additional_services['type_manager'] ) ) {
-
-			} else {
-				$this->type_manager = $additional_services['type_manager'];
-				$services[] = 'type_manager';
-			}
-		}
-
+	public function __construct( $services, $translations ) {
 		$this->set_services( $services );
+		$this->set_translations( $translations );
 	}
 
 	/**
@@ -231,12 +210,12 @@ abstract class Manager extends Service {
 	 * @return int|false The ID of the new model, or false on failure.
 	 */
 	public function add( $args ) {
-		$result = $this->db->insert( $this->table_name, $args );
+		$result = $this->db()->insert( $this->table_name, $args );
 		if ( ! $result ) {
 			return false;
 		}
 
-		$id = absint( $this->db->insert_id );
+		$id = absint( $this->db()->insert_id );
 
 		$this->clean_cache( $id );
 
@@ -256,7 +235,7 @@ abstract class Manager extends Service {
 	public function update( $model_id, $args ) {
 		$model_id = absint( $model_id );
 
-		$result = $this->db->update( $this->table_name, $args, array( 'id' => $model_id ) );
+		$result = $this->db()->update( $this->table_name, $args, array( 'id' => $model_id ) );
 		if ( ! $result ) {
 			return false;
 		}
@@ -278,7 +257,7 @@ abstract class Manager extends Service {
 	public function delete( $model_id ) {
 		$model_id = absint( $model_id );
 
-		$result = $this->db->delete( $this->table_name, array( 'id' => $model_id ) );
+		$result = $this->db()->delete( $this->table_name, array( 'id' => $model_id ) );
 		if ( ! $result ) {
 			return false;
 		}
@@ -304,7 +283,7 @@ abstract class Manager extends Service {
 
 		$db_obj = $this->get_from_cache( $model_id );
 		if ( ! $db_obj ) {
-			$db_obj = $this->db->get_row( "SELECT * FROM %{$this->table_name}% WHERE id = %d", $model_id );
+			$db_obj = $this->db()->get_row( "SELECT * FROM %{$this->table_name}% WHERE id = %d", $model_id );
 
 			if ( ! $db_obj ) {
 				return null;
@@ -342,7 +321,7 @@ abstract class Manager extends Service {
 	 * @return bool False if cache key already exists, true on success.
 	 */
 	public function add_to_cache( $key, $data, $expire = 0 ) {
-		return $this->cache->add( $key, $data, $this->cache_group, $expire );
+		return $this->cache()->add( $key, $data, $this->cache_group, $expire );
 	}
 
 	/**
@@ -355,7 +334,7 @@ abstract class Manager extends Service {
 	 * @return bool True on successful removal, false on failure.
 	 */
 	public function delete_from_cache( $key ) {
-		return $this->cache->delete( $key, $this->cache_group );
+		return $this->cache()->delete( $key, $this->cache_group );
 	}
 
 	/**
@@ -372,7 +351,7 @@ abstract class Manager extends Service {
 	 * @return bool|mixed False on failure to retrieve contents, or the cache contents on success.
 	 */
 	public function get_from_cache( $key, $force = false, &$found = null ) {
-		return $this->cache->get( $key, $this->cache_group, $force, $found );
+		return $this->cache()->get( $key, $this->cache_group, $force, $found );
 	}
 
 	/**
@@ -388,7 +367,7 @@ abstract class Manager extends Service {
 	 * @return bool False if original value does not exist, true if contents were replaced.
 	 */
 	public function replace_in_cache( $key, $data, $expire = 0 ) {
-		return $this->cache->replace( $key, $data, $this->cache_group, $expire );
+		return $this->cache()->replace( $key, $data, $this->cache_group, $expire );
 	}
 
 	/**
@@ -408,7 +387,7 @@ abstract class Manager extends Service {
 	 * @return bool False on failure, true on success.
 	 */
 	public function set_in_cache( $key, $data, $expire = 0 ) {
-		return $this->cache->set( $key, $data, $this->cache_group, $expire );
+		return $this->cache()->set( $key, $data, $this->cache_group, $expire );
 	}
 
 	/**

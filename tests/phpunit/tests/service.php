@@ -7,6 +7,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Options;
 
 /**
  * @group general
@@ -18,7 +19,10 @@ class Tests_Service extends Unit_Test_Case {
 
 		$prefix = 'foo_bar_';
 
-		$service = new \Test_Service_Class( $prefix );
+		$service = new \Test_Service_Class( $prefix, array(
+			'cache'   => new Cache( $prefix ),
+			'options' => new Options( $prefix ),
+		) );
 		$this->assertSame( $prefix, $service->get_prefix() );
 	}
 
@@ -27,24 +31,17 @@ class Tests_Service extends Unit_Test_Case {
 
 		$prefix = 'foo_bar_';
 
-		$services = array();
-		for ( $i = 1; $i <= 3; $i++ ) {
-			$services[ 'cache' . $i ] = new Cache( $prefix . $i . '_' );
-		}
+		$services = array(
+			'cache'   => new Cache( $prefix ),
+			'options' => new Options( $prefix ),
+		);
 
 		$service = new \Test_Service_Class( $prefix, $services );
 
-		$services['cache4'] = new Cache( $prefix . '4_' );
-		$service->add_service( 'cache4', $services['cache4'] );
-
-		$i = 0;
 		foreach ( $services as $name => $instance ) {
-			$i++;
-
 			$result = call_user_func( array( $service, $name ) );
 
-			$this->assertInstanceOf( 'Leaves_And_Love\Plugin_Lib\Cache', $result );
-			$this->assertSame( $prefix . $i . '_', $result->get_prefix() );
+			$this->assertInstanceOf( get_class( $instance ), $result );
 		}
 
 		$this->assertNull( $service->invalid() );

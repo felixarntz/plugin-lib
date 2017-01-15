@@ -29,7 +29,7 @@ class Cache extends Service {
 	 * @param string $prefix The prefix for all cache groups.
 	 */
 	public function __construct( $prefix ) {
-		$this->prefix = $prefix;
+		$this->set_prefix( $prefix );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class Cache extends Service {
 	 * @return bool False if cache key and group already exist, true on success.
 	 */
 	public function add( $key, $data, $group = 'general', $expire = 0 ) {
-		return wp_cache_add( $key, $data, $this->prefix . $group, $expire );
+		return wp_cache_add( $key, $data, $this->get_prefix() . $group, $expire );
 	}
 
 	/**
@@ -61,7 +61,7 @@ class Cache extends Service {
 	 * @return bool True on successful removal, false on failure.
 	 */
 	public function delete( $key, $group = 'general' ) {
-		return wp_cache_delete( $key, $this->prefix . $group );
+		return wp_cache_delete( $key, $this->get_prefix() . $group );
 	}
 
 	/**
@@ -79,7 +79,7 @@ class Cache extends Service {
 	 * @return bool|mixed False on failure to retrieve contents, or the cache contents on success.
 	 */
 	public function get( $key, $group = 'general', $force = false, &$found = null ) {
-		return wp_cache_get( $key, $this->prefix . $group, $force, $found );
+		return wp_cache_get( $key, $this->get_prefix() . $group, $force, $found );
 	}
 
 	/**
@@ -97,7 +97,7 @@ class Cache extends Service {
 	 * @return bool False if original value does not exist, true if contents were replaced.
 	 */
 	public function replace( $key, $data, $group = 'general', $expire = 0 ) {
-		return wp_cache_replace( $key, $data, $this->prefix . $group, $expire );
+		return wp_cache_replace( $key, $data, $this->get_prefix() . $group, $expire );
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Cache extends Service {
 	 * @return bool False on failure, true on success.
 	 */
 	public function set( $key, $data, $group = 'general', $expire = 0 ) {
-		return wp_cache_set( $key, $data, $this->prefix . $group, $expire );
+		return wp_cache_set( $key, $data, $this->get_prefix() . $group, $expire );
 	}
 }
 

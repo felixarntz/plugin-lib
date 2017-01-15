@@ -25,7 +25,9 @@ class Tests_Meta extends Unit_Test_Case {
 
 		self::$prefix = $prefix = 'lalpl_tests_meta_';
 
-		$db = new DB( self::$prefix, new Options( self::$prefix ), new Translations_DB() );
+		$db = new DB( self::$prefix, array(
+			'options' => new Options( self::$prefix ),
+		), new Translations_DB() );
 
 		$max_index_length = 191;
 		$db->add_table( 'elementmeta', array(
@@ -42,7 +44,9 @@ class Tests_Meta extends Unit_Test_Case {
 		$db->check();
 
 		self::$element_id = 1;
-		self::$meta = new Meta( $db );
+		self::$meta = new Meta( array(
+			'db' => $db,
+		) );
 	}
 
 	public static function tearDownAfterClass() {

@@ -25,7 +25,7 @@ trait Type_Manager_Trait {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager
 	 */
-	protected $type_manager;
+	protected $service_type_manager = null;
 
 	/**
 	 * Registers a new type.
@@ -38,7 +38,7 @@ trait Type_Manager_Trait {
 	 * @return bool True on success, false on failure.
 	 */
 	public function register_type( $slug, $args = array() ) {
-		return $this->type_manager->register( $slug, $args );
+		return $this->type_manager()->register( $slug, $args );
 	}
 
 	/**
@@ -51,7 +51,7 @@ trait Type_Manager_Trait {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
 	 */
 	public function get_type( $slug ) {
-		return $this->type_manager->get( $slug );
+		return $this->type_manager()->get( $slug );
 	}
 
 	/**
@@ -64,7 +64,7 @@ trait Type_Manager_Trait {
 	 * @return array Array of type objects.
 	 */
 	public function query_types( $args ) {
-		return $this->type_manager->query( $args );
+		return $this->type_manager()->query( $args );
 	}
 
 	/**
@@ -77,7 +77,7 @@ trait Type_Manager_Trait {
 	 * @return bool True on success, false on failure.
 	 */
 	public function unregister_type( $slug ) {
-		return $this->type_manager->unregister( $slug );
+		return $this->type_manager()->unregister( $slug );
 	}
 }
 

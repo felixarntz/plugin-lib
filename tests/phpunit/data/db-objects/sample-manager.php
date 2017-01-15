@@ -11,8 +11,8 @@ class Sample_Manager extends Manager {
 
 	protected $name = '';
 
-	public function __construct( $db, $cache, $translations, $additional_services = array(), $name = '' ) {
-		parent::__construct( $db, $cache, $translations, $additional_services );
+	public function __construct( $services, $translations, $name = '' ) {
+		parent::__construct( $services, $translations );
 
 		$this->name = $name;
 

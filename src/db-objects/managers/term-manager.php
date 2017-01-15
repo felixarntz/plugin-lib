@@ -29,12 +29,17 @@ class Term_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB                        $db                  The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache                     $cache               The cache instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations        Translations instance.
-	 * @param array                                                $additional_services Optional. Further services. Default empty.
+	 * @param array                                                             $services {
+	 *     Array of service instances.
+	 *
+	 *     @param Leaves_And_Love\Plugin_Lib\DB                                              $db           The database instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\Cache                                           $cache        The cache instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\Meta                                            $meta         The meta instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager $type_manager The type manager instance.
+	 * }
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager $translations Translations instance.
 	 */
-	public function __construct( $db, $cache, $translations, $additional_services = array() ) {
+	public function __construct( $services, $translations ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query';
@@ -44,7 +49,7 @@ class Term_Manager extends Core_Manager {
 		$this->meta_type      = 'term';
 		$this->fetch_callback = 'get_term';
 
-		parent::__construct( $db, $cache, $translations, $additional_services );
+		parent::__construct( $services, $translations );
 	}
 
 	/**

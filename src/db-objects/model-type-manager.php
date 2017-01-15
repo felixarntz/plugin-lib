@@ -49,7 +49,7 @@ abstract class Model_Type_Manager extends Service {
 	 * @param string $prefix The prefix.
 	 */
 	public function __construct( $prefix ) {
-		$this->prefix = $prefix;
+		$this->set_prefix( $prefix );
 	}
 
 	/**

@@ -25,7 +25,7 @@ trait Meta_Manager_Trait {
 	 * @access protected
 	 * @var Leaves_And_Love\Plugin_Lib\Meta
 	 */
-	protected $meta;
+	protected $service_meta = null;
 
 	/**
 	 * The metadata type.
@@ -52,7 +52,7 @@ trait Meta_Manager_Trait {
 	 * @return int|false The meta ID on success, false on failure.
 	 */
 	public function add_meta( $model_id, $meta_key, $meta_value, $unique = false ) {
-		return $this->meta->add( $this->meta_type, $model_id, $meta_key, $meta_value, $unique );
+		return $this->meta()->add( $this->meta_type, $model_id, $meta_key, $meta_value, $unique );
 	}
 
 	/**
@@ -70,7 +70,7 @@ trait Meta_Manager_Trait {
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public function update_meta( $model_id, $meta_key, $meta_value, $prev_value = '' ) {
-		return $this->meta->update( $this->meta_type, $model_id, $meta_key, $meta_value, $prev_value );
+		return $this->meta()->update( $this->meta_type, $model_id, $meta_key, $meta_value, $prev_value );
 	}
 
 	/**
@@ -92,7 +92,7 @@ trait Meta_Manager_Trait {
 	 * @return bool True on successful delete, false on failure.
 	 */
 	public function delete_meta( $model_id, $meta_key, $meta_value = '', $delete_all = false ) {
-		return $this->meta->delete( $this->meta_type, $model_id, $meta_key, $meta_value, $delete_all );
+		return $this->meta()->delete( $this->meta_type, $model_id, $meta_key, $meta_value, $delete_all );
 	}
 
 	/**
@@ -110,7 +110,7 @@ trait Meta_Manager_Trait {
 	 * @return mixed Single metadata value, or array of values.
 	 */
 	public function get_meta( $model_id, $meta_key = '', $single = false ) {
-		return $this->meta->get( $this->meta_type, $model_id, $meta_key, $single );
+		return $this->meta()->get( $this->meta_type, $model_id, $meta_key, $single );
 	}
 
 	/**
@@ -124,7 +124,7 @@ trait Meta_Manager_Trait {
 	 * @return bool True of the key is set, false if not.
 	 */
 	public function meta_exists( $model_id, $meta_key ) {
-		return $this->meta->exists( $this->meta_type, $model_id, $meta_key );
+		return $this->meta()->exists( $this->meta_type, $model_id, $meta_key );
 	}
 
 	/**
@@ -137,7 +137,7 @@ trait Meta_Manager_Trait {
 	 * @return bool True on successful delete, false on failure.
 	 */
 	public function delete_all_meta( $model_id ) {
-		return $this->meta->delete_all( $this->meta_type, $model_id );
+		return $this->meta()->delete_all( $this->meta_type, $model_id );
 	}
 
 	/**
@@ -163,7 +163,7 @@ trait Meta_Manager_Trait {
 	protected function clean_cache( $model_id ) {
 		$model_id = absint( $model_id );
 
-		$this->cache->delete( $model_id, $this->meta_type . '_meta' );
+		$this->cache()->delete( $model_id, $this->meta_type . '_meta' );
 
 		parent::clean_cache( $model_id );
 	}

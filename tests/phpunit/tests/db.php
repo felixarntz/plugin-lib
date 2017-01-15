@@ -25,7 +25,9 @@ class Tests_DB extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_db_';
 
-		self::$db = new DB( self::$prefix, new Options( self::$prefix ), new Translations_DB() );
+		self::$db = new DB( self::$prefix, array(
+			'options' => new Options( self::$prefix ),
+		), new Translations_DB() );
 
 		self::$db->add_table( 'rows', array(
 			"id bigint(20) unsigned NOT NULL auto_increment",

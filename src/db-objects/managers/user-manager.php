@@ -29,12 +29,16 @@ class User_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB                        $db                  The database instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Cache                     $cache               The cache instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations        Translations instance.
-	 * @param array                                                $additional_services Optional. Further services. Default empty.
+	 * @param array                                                             $services {
+	 *     Array of service instances.
+	 *
+	 *     @param Leaves_And_Love\Plugin_Lib\DB    $db    The database instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\Cache $cache The cache instance.
+	 *     @param Leaves_And_Love\Plugin_Lib\Meta  $meta  The meta instance.
+	 * }
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_User_Manager $translations Translations instance.
 	 */
-	public function __construct( $db, $cache, $translations, $additional_services = array() ) {
+	public function __construct( $services, $translations ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\User';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\User_Query';
@@ -46,7 +50,7 @@ class User_Manager extends Core_Manager {
 
 		Storage::register_global_group( $this->cache_group );
 
-		parent::__construct( $db, $cache, $translations, $additional_services );
+		parent::__construct( $services, $translations );
 	}
 
 	/**

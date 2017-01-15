@@ -47,7 +47,9 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-type-manager.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/translations/translations-sample-manager.php';
 
-		$db = new DB( $prefix, new Options( $prefix ), new Translations_DB() );
+		$db = new DB( $prefix, array(
+			'options' => new Options( $prefix ),
+		), new Translations_DB() );
 
 		$table_name = $name . 's';
 		$meta_table_name = $name . 'meta';
@@ -78,10 +80,14 @@ class Unit_Test_Case extends WP_UnitTestCase {
 
 		$db->check();
 
-		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( $db, new Cache( $prefix ), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), array(
-			'meta'         => new Meta( $db ),
+		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( array(
+			'db'           => $db,
+			'cache'        => new Cache( $prefix ),
+			'meta'         => new Meta( array(
+				'db' => $db,
+			) ),
 			'type_manager' => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix ),
-		), $name );
+		), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), $name );
 	}
 
 	protected static function tearDownSampleManager( $prefix, $name ) {
@@ -122,27 +128,30 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			return;
 		}
 
-		$db = new DB( $prefix, new Options( $prefix ), array(
-			'table_already_exist' => 'Table %s already exists.',
-			'schema_empty'        => 'Table schema is empty.',
-		) );
+		$db = new DB( $prefix, array(
+			'options' => new Options( $prefix ),
+		), new Translations_DB() );
 
 		$class_name = '';
 		$translations = null;
-		$args = array(
-			'meta' => new Meta( $db ),
+		$services = array(
+			'db'    => $db,
+			'cache' => new Cache( $prefix ),
+			'meta'  => new Meta( array(
+				'db' => $db,
+			) ),
 		);
 
 		switch ( $type ) {
 			case 'post':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager();
-				$args['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
+				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
 				break;
 			case 'term':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager();
-				$args['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
+				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
 				break;
 			case 'comment':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Comment_Manager';
@@ -162,6 +171,6 @@ class Unit_Test_Case extends WP_UnitTestCase {
 				break;
 		}
 
-		return new $class_name( $db, new Cache( $prefix ), $translations, $args );
+		return new $class_name( $services, $translations );
 	}
 }
