@@ -45,15 +45,6 @@ abstract class Manager extends Service {
 	protected $cache;
 
 	/**
-	 * Models container.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $models = array();
-
-	/**
 	 * The model class name.
 	 *
 	 * @since 1.0.0
@@ -442,14 +433,12 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int                                  $model_id ID of the model to set.
+	 * @param int                                         $model_id ID of the model to set.
 	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    Model to set for the ID.
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function storage_set( $model_id, $model ) {
-		$this->models[ $model_id ] = $model;
-
-		return true;
+		return Storage::store( $this->cache_group, $model_id, $model );
 	}
 
 	/**
@@ -462,11 +451,7 @@ abstract class Manager extends Service {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null The model on success, or null if it doesn't exist.
 	 */
 	protected function storage_get( $model_id ) {
-		if ( ! isset( $this->models[ $model_id ] ) ) {
-			return null;
-		}
-
-		return $this->models[ $model_id ];
+		return Storage::retrieve( $this->cache_group, $model_id );
 	}
 
 	/**
@@ -479,7 +464,7 @@ abstract class Manager extends Service {
 	 * @return bool True if the model is set, or false otherwise.
 	 */
 	protected function storage_isset( $model_id ) {
-		return isset( $this->models[ $model_id ] );
+		return Storage::is_stored( $this->cache_group, $model_id );
 	}
 
 	/**

@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Storage;
 use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manager' ) ) :
@@ -42,6 +43,8 @@ class User_Manager extends Core_Manager {
 		$this->cache_group    = 'users';
 		$this->meta_type      = 'user';
 		$this->fetch_callback = 'get_userdata';
+
+		Storage::register_global_group( $this->cache_group );
 
 		parent::__construct( $db, $cache, $translations, $additional_services );
 	}

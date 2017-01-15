@@ -371,6 +371,9 @@ abstract class Model {
 		if ( $include_meta && method_exists( $this->manager, 'get_meta' ) ) {
 			$meta = $this->pending_meta;
 			if ( $this->primary_property_value() ) {
+				if ( apply_filters( 'haha', false ) ) {
+					var_dump( $this->manager->meta()->db()->get_prefix() );
+				}
 				$_meta = $this->manager->get_meta( $this->primary_property_value() );
 
 				foreach ( $_meta as $key => $value ) {

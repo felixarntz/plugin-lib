@@ -8,7 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait;
 
@@ -22,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manage
  * @since 1.0.0
  */
 class Term_Manager extends Core_Manager {
-	use Sitewide_Manager_Trait, Meta_Manager_Trait, Type_Manager_Trait;
+	use Meta_Manager_Trait, Type_Manager_Trait;
 
 	/**
 	 * Constructor.

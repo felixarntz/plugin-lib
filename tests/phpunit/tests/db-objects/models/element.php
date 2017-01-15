@@ -234,6 +234,13 @@ class Tests_Element extends Unit_Test_Case {
 
 		$model = self::$manager->get( $model_id );
 
+		//TODO: Why the fuck do these calls work, but there's still an error???
+		$data = get_metadata( self::$prefix . 'element', $model_id );
+		var_dump( $data );
+		$data = self::$manager->get_meta( $model_id );
+		var_dump( $data );
+		var_dump( self::$manager->meta()->db()->get_prefix() );
+		add_filter( 'haha', '__return_true' );
 		$expected = array_merge( array( 'id' => $model_id ), $properties, $meta );
 		$this->assertEqualSetsWithIndex( $expected, $model->to_json() );
 	}
