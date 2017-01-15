@@ -22,13 +22,13 @@ class Tests_Element_Query extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_element_query_';
 
-		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
+		self::$manager = self::setUpSampleManager( self::$prefix, 'q_element' );
 	}
 
 	public static function tearDownAfterClass() {
 		parent::tearDownAfterClass();
 
-		self::tearDownSampleManager( self::$prefix, 'element' );
+		self::tearDownSampleManager( self::$prefix, 'q_element' );
 		self::$manager = null;
 	}
 

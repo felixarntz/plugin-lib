@@ -20,13 +20,13 @@ class Tests_Element_Manager extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_element_manager_';
 
-		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
+		self::$manager = self::setUpSampleManager( self::$prefix, 'm_element' );
 	}
 
 	public static function tearDownAfterClass() {
 		parent::tearDownAfterClass();
 
-		self::tearDownSampleManager( self::$prefix, 'element' );
+		self::tearDownSampleManager( self::$prefix, 'm_element' );
 		self::$manager = null;
 	}
 
@@ -158,7 +158,7 @@ class Tests_Element_Manager extends Unit_Test_Case {
 
 	public function test_get_message() {
 		$message = self::$manager->get_message( 'db_insert_error' );
-		$this->assertSame( 'Could not insert element into the database.', $message );
+		$this->assertSame( 'Could not insert m_element into the database.', $message );
 
 		$message = self::$manager->get_message( 'invalid' );
 		$this->assertEmpty( $message );

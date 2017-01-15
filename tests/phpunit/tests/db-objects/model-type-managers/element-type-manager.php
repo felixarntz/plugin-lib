@@ -21,7 +21,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_element_type_manager_';
 
-		self::$manager = self::setUpSampleManager( self::$prefix, 'element' );
+		self::$manager = self::setUpSampleManager( self::$prefix, 'tm_element' );
 
 		self::$default_type = 'default';
 		self::$manager->type_manager()->register( self::$default_type );
@@ -30,7 +30,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	public static function tearDownAfterClass() {
 		parent::tearDownAfterClass();
 
-		self::tearDownSampleManager( self::$prefix, 'element' );
+		self::tearDownSampleManager( self::$prefix, 'tm_element' );
 		self::$manager = null;
 	}
 

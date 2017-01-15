@@ -395,7 +395,7 @@ class DB extends Service {
 	 * @return bool|WP_Error True if successful, error object otherwise.
 	 */
 	public function add_table( $table, $schema = array() ) {
-		if ( isset( $this->tables[ $table ] ) ) {
+		if ( isset( $this->wpdb->$table ) || isset( $this->tables[ $table ] ) ) {
 			return new WP_Error( 'table_already_exist', sprintf( $this->get_translation( 'table_already_exist' ), $table ) );
 		}
 
