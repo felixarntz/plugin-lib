@@ -6,8 +6,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Translations\Translations_DB;
 
 /**
@@ -25,8 +27,13 @@ class Tests_DB extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_db_';
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		self::$db = new DB( self::$prefix, array(
-			'options' => new Options( self::$prefix ),
+			'options'       => new Options( self::$prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		), new Translations_DB() );
 
 		self::$db->add_table( 'rows', array(

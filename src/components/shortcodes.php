@@ -60,13 +60,13 @@ class Shortcodes extends Service {
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache    $cache    The Cache API instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Template $template The Template API instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The Cache API instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Template      $template      The Template API instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
-		$this->set_prefix( $prefix );
-		$this->set_services( $services );
+		parent::__construct( $prefix, $services );
 	}
 
 	/**

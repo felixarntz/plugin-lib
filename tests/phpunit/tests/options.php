@@ -6,7 +6,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Options;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 
 /**
  * @group general
@@ -26,7 +28,9 @@ class Tests_Options extends Unit_Test_Case {
 			$stored_in_network[] = 'globalkey' . $i;
 		}
 
-		self::$options = new Options( self::$prefix );
+		self::$options = new Options( self::$prefix, array(
+			'error_handler' => new Error_Handler( new Translations_Error_Handler() ),
+		) );
 		self::$options->store_in_network( $stored_in_network );
 
 		self::setUpHooks( self::$options );

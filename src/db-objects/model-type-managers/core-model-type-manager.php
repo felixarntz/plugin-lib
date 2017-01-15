@@ -26,10 +26,15 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix The prefix.
+	 * @param string $prefix   The instance prefix.
+	 * @param array  $services {
+	 *     Array of service instances.
+	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 * }
 	 */
-	public function __construct( $prefix ) {
-		parent::__construct( $prefix );
+	public function __construct( $prefix, $services ) {
+		parent::__construct( $prefix, $services );
 
 		$this->model_type_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Core_Model_Type';
 	}

@@ -51,7 +51,9 @@ class Another_Sample_Class extends Leaves_And_Love_Plugin {
 	}
 
 	protected function instantiate_classes() {
-		$this->options = $this->instantiate_library_class( 'Options', $this->prefix );
+		$this->options = $this->instantiate_library_class( 'Options', $this->prefix, array(
+			'error_handler' => $this->instantiate_library_class( 'Error_Handler', $this->instantiate_library_class( 'Translations\Translations_Error_Handler' ) ),
+		) );
 	}
 
 	protected function add_hooks() {

@@ -6,8 +6,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Cache;
 use Leaves_And_Love\Plugin_Lib\Options;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 
 /**
  * @group general
@@ -19,9 +21,16 @@ class Tests_Service extends Unit_Test_Case {
 
 		$prefix = 'foo_bar_';
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		$service = new \Test_Service_Class( $prefix, array(
-			'cache'   => new Cache( $prefix ),
-			'options' => new Options( $prefix ),
+			'cache'         => new Cache( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'options'       => new Options( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		) );
 		$this->assertSame( $prefix, $service->get_prefix() );
 	}
@@ -31,9 +40,16 @@ class Tests_Service extends Unit_Test_Case {
 
 		$prefix = 'foo_bar_';
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		$services = array(
-			'cache'   => new Cache( $prefix ),
-			'options' => new Options( $prefix ),
+			'cache'         => new Cache( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'options'       => new Options( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		);
 
 		$service = new \Test_Service_Class( $prefix, $services );

@@ -6,10 +6,12 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Options;
 use Leaves_And_Love\Plugin_Lib\DB;
 use Leaves_And_Love\Plugin_Lib\Meta;
 use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Translations\Translations_DB;
 use WP_UnitTestCase;
 
@@ -47,8 +49,13 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-type-manager.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/translations/translations-sample-manager.php';
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		$db = new DB( $prefix, array(
-			'options' => new Options( $prefix ),
+			'options'       => new Options( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		), new Translations_DB() );
 
 		$table_name = $name . 's';
@@ -81,12 +88,18 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		$db->check();
 
 		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( array(
-			'db'           => $db,
-			'cache'        => new Cache( $prefix ),
-			'meta'         => new Meta( array(
-				'db' => $db,
+			'db'            => $db,
+			'cache'         => new Cache( $prefix, array(
+				'error_handler' => $error_handler,
 			) ),
-			'type_manager' => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix ),
+			'meta'          => new Meta( array(
+				'db'            => $db,
+				'error_handler' => $error_handler,
+			) ),
+			'type_manager'  => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), $name );
 	}
 
@@ -128,30 +141,43 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			return;
 		}
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		$db = new DB( $prefix, array(
-			'options' => new Options( $prefix ),
+			'options'       => new Options( $prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		), new Translations_DB() );
 
 		$class_name = '';
 		$translations = null;
 		$services = array(
-			'db'    => $db,
-			'cache' => new Cache( $prefix ),
-			'meta'  => new Meta( array(
-				'db' => $db,
+			'db'            => $db,
+			'cache'         => new Cache( $prefix, array(
+				'error_handler' => $error_handler,
 			) ),
+			'meta'          => new Meta( array(
+				'db'            => $db,
+				'error_handler' => $error_handler,
+			) ),
+			'error_handler' => $error_handler,
 		);
 
 		switch ( $type ) {
 			case 'post':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager();
-				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
+				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix, array(
+					'error_handler' => $error_handler,
+				) );
 				break;
 			case 'term':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager();
-				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
+				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix, array(
+					'error_handler' => $error_handler,
+				) );
 				break;
 			case 'comment':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Comment_Manager';

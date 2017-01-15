@@ -98,13 +98,15 @@ abstract class Manager extends Service {
 	 * @param array                                                $services {
 	 *     Array of service instances.
 	 *
-	 *     @param Leaves_And_Love\Plugin_Lib\DB    $db    The database instance.
-	 *     @param Leaves_And_Love\Plugin_Lib\Cache $cache The cache instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB            $db            The database instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The cache instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
 	public function __construct( $services, $translations ) {
-		$this->set_services( $services );
+		parent::__construct( false, $services );
+
 		$this->set_translations( $translations );
 	}
 

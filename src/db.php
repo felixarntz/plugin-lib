@@ -87,15 +87,16 @@ class DB extends Service {
 	 * @param array                                                $services {
 	 *     Array of service instances.
 	 *
-	 *     @param Leaves_And_Love\Plugin_Lib\Options $options The Option API class instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Options       $options       The Option API class instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
 		global $wpdb;
 
-		$this->set_prefix( $prefix );
-		$this->set_services( $services );
+		parent::__construct( $prefix, $services );
+
 		$this->set_translations( $translations );
 
 		$this->wpdb = $wpdb;

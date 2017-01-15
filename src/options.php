@@ -41,10 +41,15 @@ class Options extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix The prefix for all options.
+	 * @param string $prefix   The prefix for all options.
+	 * @param array  $services {
+	 *     Array of service instances.
+	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 * }
 	 */
-	public function __construct( $prefix ) {
-		$this->set_prefix( $prefix );
+	public function __construct( $prefix, $services ) {
+		parent::__construct( $prefix, $services );
 
 		$this->setup_hooks();
 	}

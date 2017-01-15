@@ -45,10 +45,15 @@ class Template extends Service {
 	 * @access public
 	 *
 	 * @param string $prefix           The prefix for the theme subdirectory.
+	 * @param array  $services {
+	 *     Array of service instances.
+	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 * }
 	 * @param string $default_location The default location for all templates.
 	 */
-	public function __construct( $prefix, $default_location ) {
-		$this->set_prefix( $prefix );
+	public function __construct( $prefix, $services, $default_location ) {
+		parent::__construct( $prefix, $services );
 
 		$this->default_location = trailingslashit( $default_location );
 	}

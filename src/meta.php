@@ -43,11 +43,12 @@ class Meta extends Service {
 	 * @param array $services {
 	 *     Array of service instances.
 	 *
-	 *     @param Leaves_And_Love\Plugin_Lib\DB $db The database class instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB           $db             The database class instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $services ) {
-		$this->set_services( $services );
+		parent::__construct( false, $services );
 	}
 
 	/**

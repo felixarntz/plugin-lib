@@ -6,7 +6,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 
 /**
  * @group general
@@ -20,7 +22,9 @@ class Tests_Cache extends Unit_Test_Case {
 		parent::setUpBeforeClass();
 
 		self::$prefix = 'lalpl_tests_cache_';
-		self::$cache = new Cache( self::$prefix );
+		self::$cache = new Cache( self::$prefix, array(
+			'error_handler' => new Error_Handler( new Translations_Error_Handler() ),
+		) );
 	}
 
 	public function test_add() {

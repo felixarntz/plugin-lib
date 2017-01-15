@@ -32,10 +32,11 @@ class Post_Manager extends Core_Manager {
 	 * @param array                                                             $services {
 	 *     Array of service instances.
 	 *
-	 *     @param Leaves_And_Love\Plugin_Lib\DB                                               $db           The database instance.
-	 *     @param Leaves_And_Love\Plugin_Lib\Cache                                            $cache        The cache instance.
-	 *     @param Leaves_And_Love\Plugin_Lib\Meta                                             $meta         The meta instance.
-	 *     @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager $type_manager The type manager instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB                                               $db            The database instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Cache                                            $cache         The cache instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Meta                                             $meta          The meta instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager $type_manager  The type manager instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler                                    $error_handler The error handler instance.
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager $translations Translations instance.
 	 */

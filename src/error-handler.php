@@ -128,6 +128,19 @@ class Error_Handler {
 			trigger_error( sprintf( $this->get_translation( 'called_incorrectly' ), $function, $message . $version ) );
 		}
 	}
+
+	/**
+	 * Marks missing services passed to a service.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $function      The function that was called.
+	 * @param array  $service_names The names of the services that are missing.
+	 */
+	public function missing_services( $function, $service_names ) {
+		$this->doing_it_wrong( $function, sprintf( $this->get_translation( 'missing_services' ), implode( ', ', $service_names ) ), null );
+	}
 }
 
 endif;

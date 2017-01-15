@@ -24,6 +24,7 @@ class Translations_Error_Handler extends Translations {
 	 */
 	protected function init() {
 		$this->translations = array(
+			'missing_services'           => $this->__translate( 'The following required services have not been passed: %s', 'textdomain' ),
 			'called_incorrectly'         => $this->__translate( '%1$s was called <strong>incorrectly</strong>. %2$s', 'textdomain' ),
 			'added_in_version'           => $this->__translate( '(This message was added in Plugin Name version %s.)', 'textdomain' ),
 			'deprecated_function'        => $this->__translate( '%1$s is <strong>deprecated</strong> since Plugin Name version %2$s. Use %3$s instead.', 'textdomain' ),

@@ -7,9 +7,11 @@
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
 use Leaves_And_Love_Plugin_Loader;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Cache;
 use Leaves_And_Love\Plugin_Lib\Components\Shortcodes;
 use Leaves_And_Love\Plugin_Lib\Components\Shortcode;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 
 /**
  * @group components
@@ -27,9 +29,14 @@ class Tests_Shortcode extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_shortcode_';
 
+		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+
 		self::$shortcodes = new Shortcodes( self::$prefix, array(
-			'cache'    => new Cache( self::$prefix ),
-			'template' => Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template(),
+			'cache'         => new Cache( self::$prefix, array(
+				'error_handler' => $error_handler,
+			) ),
+			'template'      => Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template(),
+			'error_handler' => $error_handler,
 		) );
 	}
 

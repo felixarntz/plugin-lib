@@ -8,8 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use WP_Error;
-
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service' ) ) :
 
 /**
@@ -26,6 +24,33 @@ abstract class Service {
 	 * @var string|bool
 	 */
 	protected $prefix = false;
+
+	/**
+	 * Error handler instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\Error_Handler
+	 */
+	protected $service_error_handler = null;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $prefix The instance prefix.
+	 * @param array  $services {
+	 *     Array of service instances.
+	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 * }
+	 */
+	public function __construct( $prefix, $services ) {
+		$this->set_prefix( $prefix );
+		$this->set_services( $services );
+	}
 
 	/**
 	 * Returns the instance prefix.
@@ -81,8 +106,6 @@ abstract class Service {
 	 * @access protected
 	 *
 	 * @param array $services Array of passed services.
-	 * @return bool|WP_Error True on success, error object with missing services
-	 *                       as data on failure.
 	 */
 	protected function set_services( $services ) {
 		$missing_services = array();
@@ -103,10 +126,8 @@ abstract class Service {
 		}
 
 		if ( ! empty( $missing_services ) ) {
-			return new WP_Error( 'missing_services', 'Missing services!', $missing_services );
+			$this->error_handler()->missing_services( __METHOD__, $missing_services );
 		}
-
-		return true;
 	}
 }
 
