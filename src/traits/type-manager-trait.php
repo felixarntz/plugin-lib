@@ -19,13 +19,14 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait' ) ) 
  */
 trait Type_Manager_Trait {
 	/**
-	 * The type manager instance.
+	 * The type manager service definition.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager
+	 * @static
+	 * @var string
 	 */
-	protected $service_type_manager = null;
+	protected static $service_type_manager = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager';
 
 	/**
 	 * Registers a new type.

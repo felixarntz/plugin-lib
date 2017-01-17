@@ -22,9 +22,7 @@ class Tests_Cache extends Unit_Test_Case {
 		parent::setUpBeforeClass();
 
 		self::$prefix = 'lalpl_tests_cache_';
-		self::$cache = new Cache( self::$prefix, array(
-			'error_handler' => new Error_Handler( new Translations_Error_Handler() ),
-		) );
+		self::$cache = new Cache( self::$prefix );
 	}
 
 	public function test_add() {

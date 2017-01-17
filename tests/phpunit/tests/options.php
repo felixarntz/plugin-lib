@@ -28,9 +28,7 @@ class Tests_Options extends Unit_Test_Case {
 			$stored_in_network[] = 'globalkey' . $i;
 		}
 
-		self::$options = new Options( self::$prefix, array(
-			'error_handler' => new Error_Handler( new Translations_Error_Handler() ),
-		) );
+		self::$options = new Options( self::$prefix );
 		self::$options->store_in_network( $stored_in_network );
 
 		self::setUpHooks( self::$options );

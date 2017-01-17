@@ -19,13 +19,14 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait' ) ) 
  */
 trait Meta_Manager_Trait {
 	/**
-	 * The Metadata API instance.
+	 * The Metadata API service definition.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Meta
+	 * @static
+	 * @var string
 	 */
-	protected $service_meta = null;
+	protected static $service_meta = 'Leaves_And_Love\Plugin_Lib\Meta';
 
 	/**
 	 * The metadata type.

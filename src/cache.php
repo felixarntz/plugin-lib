@@ -27,14 +27,9 @@ class Cache extends Service {
 	 * @access public
 	 *
 	 * @param string $prefix   The prefix for all cache groups.
-	 * @param array  $services {
-	 *     Array of service instances.
-	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
-	 * }
 	 */
-	public function __construct( $prefix, $services ) {
-		parent::__construct( $prefix, $services );
+	public function __construct( $prefix ) {
+		$this->set_prefix( $prefix );
 	}
 
 	/**

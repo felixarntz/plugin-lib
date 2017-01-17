@@ -22,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
  *
  * @codeCoverageIgnore
  */
-class Error_Handler {
+class Error_Handler extends Service {
 	use Translations_Trait;
 
 	/**

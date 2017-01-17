@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
 
 /**
@@ -25,14 +27,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\DB db()
  */
 class Meta extends Service {
+	use Container_Service_Trait;
+
 	/**
-	 * The database class instance.
+	 * The database service definition.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB
+	 * @static
+	 * @var string
 	 */
-	protected $service_db;
+	protected static $service_db = 'Leaves_And_Love\Plugin_Lib\DB';
 
 	/**
 	 * Constructor.
@@ -48,7 +53,8 @@ class Meta extends Service {
 	 * }
 	 */
 	public function __construct( $services ) {
-		parent::__construct( false, $services );
+		$this->set_prefix( false );
+		$this->set_services( $services );
 	}
 
 	/**

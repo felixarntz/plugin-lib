@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Components;
 
 use Leaves_And_Love\Plugin_Lib\Service;
+use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcodes' ) ) :
 
@@ -23,23 +24,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcodes' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Template template()
  */
 class Shortcodes extends Service {
-	/**
-	 * Cache instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Cache
-	 */
-	protected $service_cache = null;
-
-	/**
-	 * Template instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Template
-	 */
-	protected $service_template = null;
+	use Container_Service_Trait;
 
 	/**
 	 * Added shortcodes.
@@ -51,6 +36,26 @@ class Shortcodes extends Service {
 	protected $shortcode_tags = array();
 
 	/**
+	 * Cache service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_cache = 'Leaves_And_Love\Plugin_Lib\Cache';
+
+	/**
+	 * Template service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_template = 'Leaves_And_Love\Plugin_Lib\Template';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -60,13 +65,14 @@ class Shortcodes extends Service {
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The Cache API instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Template      $template      The Template API instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
-		parent::__construct( $prefix, $services );
+		$this->set_prefix( $prefix );
+		$this->set_services( $services );
 	}
 
 	/**

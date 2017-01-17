@@ -25,14 +25,9 @@ class Post_Type_Manager extends Core_Model_Type_Manager {
 	 * @access public
 	 *
 	 * @param string $prefix   The instance prefix.
-	 * @param array  $services {
-	 *     Array of service instances.
-	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
-	 * }
 	 */
-	public function __construct( $prefix, $services ) {
-		parent::__construct( $prefix, $services );
+	public function __construct( $prefix ) {
+		parent::__construct( $prefix );
 
 		$this->model_type_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Post_Type';
 	}

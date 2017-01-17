@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
 use Leaves_And_Love\Plugin_Lib\Error_Handler;
+use ReflectionClass;
 
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait' ) ) :
 
@@ -16,18 +17,21 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait'
  * Container service trait.
  *
  * This adds functionality to better manage dependency injection of internal services.
+ * Each class using this trait can specify the required internal services through static
+ * properties with names like `$service_{$service_name}` and the required class name as
+ * value.
  *
  * @since 1.0.0
  */
 trait Container_Service_Trait {
 	/**
-	 * Error handler instance.
+	 * The internal service instances, as `$name => $instance` pairs.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Error_Handler
+	 * @var array
 	 */
-	protected $service_error_handler = null;
+	protected $services = array();
 
 	/**
 	 * Magic call method.
@@ -43,9 +47,8 @@ trait Container_Service_Trait {
 	 *                                            if it does not exist.
 	 */
 	public function __call( $method_name, $args ) {
-		$service_property = 'service_' . $method_name;
-		if ( isset( $this->$service_property ) ) {
-			return $this->$service_property;
+		if ( isset( $this->services[ $method_name ] ) ) {
+			return $this->services[ $method_name ];
 		}
 
 		return null;
@@ -64,19 +67,13 @@ trait Container_Service_Trait {
 	protected function set_services( $services ) {
 		$missing_services = array();
 
-		foreach ( get_class_vars( get_class( $this ) ) as $property => $value ) {
-			if ( 0 !== strpos( $property, 'service_' ) ) {
+		foreach ( self::get_service_definitions() as $name => $class_name ) {
+			if ( ! isset( $services[ $name ] ) || ! is_a( $services[ $name ], $class_name ) ) {
+				$missing_services[] = $name;
 				continue;
 			}
 
-			$unprefixed_property = substr( $property, 8 );
-
-			if ( ! isset( $services[ $unprefixed_property ] ) ) {
-				$missing_services[] = $unprefixed_property;
-				continue;
-			}
-
-			$this->$property = $services[ $unprefixed_property ];
+			$this->services[ $name ] = $services[ $name ];
 		}
 
 		if ( ! empty( $missing_services ) ) {
@@ -89,6 +86,36 @@ trait Container_Service_Trait {
 
 			$error_handler->missing_services( $method_name, $missing_services );
 		}
+	}
+
+	/**
+	 * Returns the internal service definitions.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @static
+	 *
+	 * @return array Array of `$name => $class_name` pairs.
+	 */
+	public static function get_service_definitions() {
+		$reflection = new ReflectionClass( get_called_class() );
+		$properties = $reflection->getStaticProperties();
+
+		$definitions = array();
+		foreach ( $properties as $name => $value ) {
+			if ( 0 !== strpos( $name, 'service_' ) ) {
+				continue;
+			}
+
+			$definitions[ substr( $name, 8 ) ] = $value;
+		}
+
+		// The error_handler service is always required unless no services are required at all.
+		if ( ! empty( $definitions ) && ! isset( $definitions['error_handler'] ) ) {
+			$definitions['error_handler'] = 'Leaves_And_Love\Plugin_Lib\Error_Handler';
+		}
+
+		return $definitions;
 	}
 }
 

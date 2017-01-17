@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
 use WP_Error;
 
@@ -22,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
 class DB extends Service {
-	use Hook_Service_Trait, Translations_Trait;
+	use Hook_Service_Trait, Container_Service_Trait, Translations_Trait;
 
 	/**
 	 * WordPress database abstraction object.
@@ -32,15 +33,6 @@ class DB extends Service {
 	 * @var wpdb
 	 */
 	protected $wpdb;
-
-	/**
-	 * The Option API instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Options
-	 */
-	protected $service_options;
 
 	/**
 	 * Table names with their prefixes.
@@ -74,6 +66,16 @@ class DB extends Service {
 	protected $version = 0;
 
 	/**
+	 * The Option API service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_options = 'Leaves_And_Love\Plugin_Lib\Options';
+
+	/**
 	 * Constructor.
 	 *
 	 * This sets the table prefix and adds the tables.
@@ -95,8 +97,8 @@ class DB extends Service {
 	public function __construct( $prefix, $services, $translations ) {
 		global $wpdb;
 
-		parent::__construct( $prefix, $services );
-
+		$this->set_prefix( $prefix );
+		$this->set_services( $services );
 		$this->set_translations( $translations );
 
 		$this->wpdb = $wpdb;

@@ -30,9 +30,7 @@ class Tests_DB extends Unit_Test_Case {
 		$error_handler = new Error_Handler( new Translations_Error_Handler() );
 
 		self::$db = new DB( self::$prefix, array(
-			'options'       => new Options( self::$prefix, array(
-				'error_handler' => $error_handler,
-			) ),
+			'options'       => new Options( self::$prefix ),
 			'error_handler' => $error_handler,
 		), new Translations_DB() );
 

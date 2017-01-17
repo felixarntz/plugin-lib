@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Service;
+use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
@@ -24,25 +25,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Cache cache()
  */
 abstract class Manager extends Service {
-	use Translations_Trait;
-
-	/**
-	 * The database instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB
-	 */
-	protected $service_db;
-
-	/**
-	 * The cache instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Cache
-	 */
-	protected $service_cache;
+	use Container_Service_Trait, Translations_Trait;
 
 	/**
 	 * The model class name.
@@ -90,6 +73,26 @@ abstract class Manager extends Service {
 	protected $cache_group = 'models';
 
 	/**
+	 * The database service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_db = 'Leaves_And_Love\Plugin_Lib\DB';
+
+	/**
+	 * Cache service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_cache = 'Leaves_And_Love\Plugin_Lib\Cache';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -105,8 +108,7 @@ abstract class Manager extends Service {
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
 	public function __construct( $services, $translations ) {
-		parent::__construct( false, $services );
-
+		$this->set_services( $services );
 		$this->set_translations( $translations );
 	}
 

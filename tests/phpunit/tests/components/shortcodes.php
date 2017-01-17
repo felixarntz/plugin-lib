@@ -28,9 +28,7 @@ class Tests_Shortcodes extends Unit_Test_Case {
 		$error_handler = new Error_Handler( new Translations_Error_Handler() );
 
 		self::$shortcodes = new Shortcodes( self::$prefix, array(
-			'cache'         => new Cache( self::$prefix, array(
-				'error_handler' => $error_handler,
-			) ),
+			'cache'         => new Cache( self::$prefix ),
 			'template'      => Leaves_And_Love_Plugin_Loader::get( 'SP_Main' )->template(),
 			'error_handler' => $error_handler,
 		) );
