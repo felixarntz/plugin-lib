@@ -39,7 +39,9 @@ class SP_Main extends Leaves_And_Love_Plugin {
 	protected function instantiate_classes() {
 		$this->error_handler = $this->instantiate_library_class( 'Error_Handler', $this->instantiate_library_class( 'Translations\Translations_Error_Handler' ) );
 		$this->options       = $this->instantiate_library_class( 'Options', $this->prefix );
-		$this->template      = $this->instantiate_library_class( 'Template', $this->prefix, $this->path( 'templates/' ) );
+		$this->template      = $this->instantiate_library_class( 'Template', $this->prefix, array(
+			'default_location' => $this->path( 'templates/' ),
+		) );
 
 		$this->actions = $this->instantiate_plugin_class( 'Actions' );
 		$this->filters = $this->instantiate_plugin_class( 'Filters' );

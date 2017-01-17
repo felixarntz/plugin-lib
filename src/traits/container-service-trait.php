@@ -57,8 +57,6 @@ trait Container_Service_Trait {
 	/**
 	 * Sets the services for this class.
 	 *
-	 * Services are class properties whose names are prefixed with 'service_'.
-	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *

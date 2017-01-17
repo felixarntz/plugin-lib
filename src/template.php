@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Template' ) ) :
 
 /**
@@ -18,14 +20,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Template' ) ) :
  * @since 1.0.0
  */
 class Template extends Service {
-	/**
-	 * The default location for all templates.
-	 *
-	 * @since 1.0.0
-	 * @access private
-	 * @var string
-	 */
-	private $default_location;
+	use Args_Service_Trait;
 
 	/**
 	 * Custom template locations.
@@ -45,12 +40,15 @@ class Template extends Service {
 	 * @access public
 	 *
 	 * @param string $prefix           The prefix for the theme subdirectory.
-	 * @param string $default_location The default location for all templates.
+	 * @param array  $args   {
+	 *     Array of arguments.
+	 *
+	 *     @type string $default_location The default location for all templates.
+	 * }
 	 */
-	public function __construct( $prefix, $default_location ) {
+	public function __construct( $prefix, $args ) {
 		$this->set_prefix( $prefix );
-
-		$this->default_location = trailingslashit( $default_location );
+		$this->set_args( $args );
 	}
 
 	/**
@@ -124,10 +122,12 @@ class Template extends Service {
 			'path'     => STYLESHEETPATH . '/' . $this->get_prefix() . 'templates/',
 		) );
 
-		array_push( $locations, array(
-			'priority' => 1000,
-			'path'     => $this->default_location,
-		) );
+		if ( ! empty( $this->default_location ) ) {
+			array_push( $locations, array(
+				'priority' => 1000,
+				'path'     => $this->default_location,
+			) );
+		}
 
 		foreach ( (array) $template_names as $template_name ) {
 			if ( ! $template_name ) {
@@ -210,6 +210,24 @@ class Template extends Service {
 		unset( $this->locations[ $name ] );
 
 		return true;
+	}
+
+	/**
+	 * Parses the default location.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 *
+	 * @param mixed $value The input value.
+	 * @return string The parsed value.
+	 */
+	protected static function parse_arg_default_location( $value ) {
+		if ( ! is_string( $value ) ) {
+			return '';
+		}
+
+		return trailingslashit( $value );
 	}
 }
 
