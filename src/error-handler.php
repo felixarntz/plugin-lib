@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Base_Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 
@@ -140,6 +141,28 @@ class Error_Handler {
 	 */
 	public function missing_services( $function, $service_names ) {
 		$this->doing_it_wrong( $function, sprintf( $this->get_translation( 'missing_services' ), implode( ', ', $service_names ) ), null );
+	}
+
+	/**
+	 * Returns the base handler instance.
+	 *
+	 * This method should not be used outside of the library,
+	 * as the base handler is necessary for fallback notices.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @static
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\Error_Handler Base handler instance.
+	 */
+	public static function get_base_handler() {
+		static $base_handler = null;
+
+		if ( null === $base_handler ) {
+			$base_handler = new Error_Handler( new Translations_Base_Error_Handler() );
+		}
+
+		return $base_handler;
 	}
 }
 

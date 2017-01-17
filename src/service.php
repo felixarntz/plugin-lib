@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service' ) ) :
 
 /**
@@ -16,6 +18,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service' ) ) :
  * @since 1.0.0
  */
 abstract class Service {
+	use Container_Service_Trait;
+
 	/**
 	 * Prefix for class functionality.
 	 *
@@ -24,15 +28,6 @@ abstract class Service {
 	 * @var string|bool
 	 */
 	protected $prefix = false;
-
-	/**
-	 * Error handler instance.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Error_Handler
-	 */
-	protected $service_error_handler = null;
 
 	/**
 	 * Constructor.
@@ -65,27 +60,6 @@ abstract class Service {
 	}
 
 	/**
-	 * Magic caller.
-	 *
-	 * Supports methods to get internally used services.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param string $method_name Name of the method to call.
-	 * @param array  $args        Method arguments.
-	 * @return mixed Method results, or void if the method does not exist.
-	 */
-	public function __call( $method, $args ) {
-		$service_property = 'service_' . $method;
-		if ( isset( $this->$service_property ) ) {
-			return $this->$service_property;
-		}
-
-		return null;
-	}
-
-	/**
 	 * Sets the instance prefix.
 	 *
 	 * @since 1.0.0
@@ -95,39 +69,6 @@ abstract class Service {
 	 */
 	protected function set_prefix( $prefix ) {
 		$this->prefix = $prefix;
-	}
-
-	/**
-	 * Sets the services for this class.
-	 *
-	 * Services are class properties whose names are prefixed with 'service_'.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param array $services Array of passed services.
-	 */
-	protected function set_services( $services ) {
-		$missing_services = array();
-
-		foreach ( get_class_vars( get_class( $this ) ) as $property => $value ) {
-			if ( 0 !== strpos( $property, 'service_' ) ) {
-				continue;
-			}
-
-			$unprefixed_property = substr( $property, 8 );
-
-			if ( ! isset( $services[ $unprefixed_property ] ) ) {
-				$missing_services[] = $unprefixed_property;
-				continue;
-			}
-
-			$this->$property = $services[ $unprefixed_property ];
-		}
-
-		if ( ! empty( $missing_services ) ) {
-			$this->error_handler()->missing_services( __METHOD__, $missing_services );
-		}
 	}
 }
 
