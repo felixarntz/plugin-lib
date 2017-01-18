@@ -2,10 +2,15 @@
 
 namespace Leaves_And_Love\Sample_Plugin;
 
+use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait;
 
-class Filters {
+class Filters extends Service {
 	use Hooks_Trait;
+
+	public function __construct( $prefix ) {
+		$this->set_prefix( $prefix );
+	}
 
 	public function add( $tag, $mode = 'func' ) {
 		return $this->add_filter( $tag, $this->get_callback( $mode ) );

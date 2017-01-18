@@ -36,15 +36,15 @@ class SP_Main extends Leaves_And_Love_Plugin {
 		$this->messages['outdated_wp']  = __( 'Sample Plugin cannot be initialized because your setup uses a WordPress version older than %s.', 'sample-plugin' );
 	}
 
-	protected function instantiate_classes() {
-		$this->error_handler = $this->instantiate_library_class( 'Error_Handler', $this->prefix, $this->instantiate_library_class( 'Translations\Translations_Error_Handler' ) );
-		$this->options       = $this->instantiate_library_class( 'Options', $this->prefix );
-		$this->template      = $this->instantiate_library_class( 'Template', $this->prefix, array(
+	protected function instantiate_services() {
+		$this->error_handler = $this->instantiate_library_service( 'Error_Handler', $this->prefix, $this->instantiate_library_service( 'Translations\Translations_Error_Handler' ) );
+		$this->options       = $this->instantiate_library_service( 'Options', $this->prefix );
+		$this->template      = $this->instantiate_library_service( 'Template', $this->prefix, array(
 			'default_location' => $this->path( 'templates/' ),
 		) );
 
-		$this->actions = $this->instantiate_plugin_class( 'Actions' );
-		$this->filters = $this->instantiate_plugin_class( 'Filters' );
+		$this->actions = $this->instantiate_plugin_service( 'Actions' );
+		$this->filters = $this->instantiate_plugin_service( 'Filters' );
 	}
 
 	protected function add_hooks() {

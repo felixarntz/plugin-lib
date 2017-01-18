@@ -176,8 +176,12 @@ abstract class Leaves_And_Love_Plugin {
 			return false;
 		}
 
-		if ( isset( $this->$method_name ) && is_object( $this->$method_name ) ) {
+		if ( isset( $this->$method_name ) && is_a( $this->$method_name, 'Leaves_And_Love\Plugin_Lib\Service' ) ) {
 			return $this->$method_name;
+		}
+
+		if ( 'error' === $method_name && is_wp_error( $this->error ) ) {
+			return $this->error;
 		}
 
 		return null;
@@ -231,7 +235,7 @@ abstract class Leaves_And_Love_Plugin {
 
 		Leaves_And_Love_Autoloader::register_namespace( $this->vendor_name, $this->project_name, $this->path( 'src/' ) );
 
-		$this->instantiate_classes();
+		$this->instantiate_services();
 
 		/**
 		 * Fires after the plugin has loaded.
@@ -289,51 +293,43 @@ abstract class Leaves_And_Love_Plugin {
 	}
 
 	/**
-	 * Instantiates a specific plugin class.
+	 * Instantiates a specific plugin service.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
-	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
+	 * @param mixed  $args,...   Optional arguments to pass to the constructor. It is recommended to pass
+	 *                           the plugin prefix as first of these arguments.
 	 *
-	 * @return mixed The plugin class instance.
+	 * @return Leaves_And_Love\Plugin_Lib\Service|null The plugin service instance, or null if invalid.
 	 */
-	protected function instantiate_plugin_class( $class_name ) {
-		$class_name = $this->vendor_name . '\\' . $this->project_name . '\\' . $class_name;
+	protected function instantiate_plugin_service( $class_name ) {
+		$params = func_get_args();
 
-		if ( func_num_args() === 1 ) {
-			return new $class_name();
-		}
+		$params[0] = $this->vendor_name . '\\' . $this->project_name . '\\' . $class_name;
 
-		$args = array_slice( func_get_args(), 1 );
-
-		$generator = new ReflectionClass( $class_name );
-		return $generator->newInstanceArgs( $args );
+		return $this->instantiate_service( $params );
 	}
 
 	/**
-	 * Instantiates a specific library class.
+	 * Instantiates a specific library service.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
-	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
+	 * @param mixed  $args,...   Optional arguments to pass to the constructor. It is recommended to pass
+	 *                           the plugin prefix as first of these arguments.
 	 *
-	 * @return mixed The library class instance.
+	 * @return Leaves_And_Love\Plugin_Lib\Service|null The library service instance, or null if invalid.
 	 */
-	protected function instantiate_library_class( $class_name ) {
-		$class_name = 'Leaves_And_Love\\Plugin_Lib\\' . $class_name;
+	protected function instantiate_library_service( $class_name ) {
+		$params = func_get_args();
 
-		if ( func_num_args() === 1 ) {
-			return new $class_name();
-		}
+		$params[0] = 'Leaves_And_Love\\Plugin_Lib\\' . $class_name;
 
-		$args = array_slice( func_get_args(), 1 );
-
-		$generator = new ReflectionClass( $class_name );
-		return $generator->newInstanceArgs( $args );
+		return $this->instantiate_service( $params );
 	}
 
 	/**
@@ -361,12 +357,12 @@ abstract class Leaves_And_Love_Plugin {
 	protected abstract function load_messages();
 
 	/**
-	 * Instantiates the general plugin classes.
+	 * Instantiates the plugin services.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected abstract function instantiate_classes();
+	protected abstract function instantiate_services();
 
 	/**
 	 * Adds the necessary plugin hooks.
@@ -390,6 +386,33 @@ abstract class Leaves_And_Love_Plugin {
 	 */
 	protected function dependencies_loaded() {
 		return true;
+	}
+
+	/**
+	 * Instantiates a specific service.
+	 *
+	 * This private method is called only internally.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 *
+	 * @param array $params Array of parameters for the originally called method.
+	 * @return Leaves_And_Love\Plugin_Lib\Service|null The service instance, or null if invalid.
+	 */
+	private function instantiate_service( $params ) {
+		if ( count( $params ) === 1 ) {
+			array_push( $params, $this->prefix );
+		} else {
+			$key = array_search( $this->prefix, $params, true );
+			if ( false === $key ) {
+				array_splice( $params, 1, 0, $this->prefix );
+			} elseif ( 1 !== $key ) {
+				$value = array_splice( $params, $key, 1 );
+				array_splice( $params, 1, 0, $value );
+			}
+		}
+
+		return call_user_func_array( array( 'Leaves_And_Love\Plugin_Lib\Service_Instantiator', 'instantiate' ), $params );
 	}
 }
 

@@ -2,10 +2,15 @@
 
 namespace Leaves_And_Love\Sample_Plugin;
 
+use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait;
 
-class Actions {
+class Actions extends Service {
 	use Hooks_Trait;
+
+	public function __construct( $prefix ) {
+		$this->set_prefix( $prefix );
+	}
 
 	public function add( $tag, $mode = 'func' ) {
 		return $this->add_action( $tag, $this->get_callback( $mode ) );

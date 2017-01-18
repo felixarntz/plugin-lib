@@ -26,8 +26,8 @@ class Yet_Another_Sample_Class extends Leaves_And_Love_Plugin {
 		$this->messages['outdated_wp']  = __( 'Yet Another Sample Class cannot be initialized because your setup uses a WordPress version older than %s.', 'yet-another-sample-class' );
 	}
 
-	protected function instantiate_classes() {
-		$this->options = $this->instantiate_library_class( 'Options', $this->prefix );
+	protected function instantiate_services() {
+		$this->options = $this->instantiate_library_service( 'Options', $this->prefix );
 	}
 
 	protected function add_hooks() {
