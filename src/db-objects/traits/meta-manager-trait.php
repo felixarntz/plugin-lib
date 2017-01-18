@@ -6,9 +6,9 @@
  * @since 1.0.0
  */
 
-namespace Leaves_And_Love\Plugin_Lib\Traits;
+namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait' ) ) :
 
 /**
  * Trait for managers.

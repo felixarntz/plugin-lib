@@ -3,7 +3,7 @@
 namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Query;
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Query_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Query_Trait;
 
 class Sample_Query extends Query {
 	use Meta_Query_Trait {

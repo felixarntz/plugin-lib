@@ -3,8 +3,8 @@
 namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Model;
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Model_Trait;
 
 class Sample extends Model {
 	use Sitewide_Model_Trait, Type_Model_Trait;

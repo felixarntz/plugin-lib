@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Sitewide_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
 use WP_Comment;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Comment' ) ) :

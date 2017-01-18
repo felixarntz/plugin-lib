@@ -8,8 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Meta_Manager_Trait;
-use Leaves_And_Love\Plugin_Lib\Traits\Type_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager' ) ) :
 
