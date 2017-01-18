@@ -31,9 +31,11 @@ class Error_Handler extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param string                                               $prefix       The instance prefix.
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $translations ) {
+	public function __construct( $prefix, $translations ) {
+		$this->set_prefix( $prefix );
 		$this->set_translations( $translations );
 	}
 
@@ -159,7 +161,7 @@ class Error_Handler extends Service {
 		static $base_handler = null;
 
 		if ( null === $base_handler ) {
-			$base_handler = new Error_Handler( new Translations_Base_Error_Handler() );
+			$base_handler = new Error_Handler( '', new Translations_Base_Error_Handler() );
 		}
 
 		return $base_handler;

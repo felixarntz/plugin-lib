@@ -20,7 +20,7 @@ class Tests_Container_Service_Trait extends Unit_Test_Case {
 
 		$prefix = 'foo_bar_';
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( $prefix, new Translations_Error_Handler() );
 
 		$services = array(
 			'cache'         => new Cache( $prefix ),

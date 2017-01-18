@@ -45,15 +45,16 @@ class Meta extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param array $services {
+	 * @param string $prefix   The instance prefix.
+	 * @param array  $services {
 	 *     Array of service instances.
 	 *
 	 *     @type Leaves_And_Love\Plugin_Lib\DB           $db             The database class instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
-	public function __construct( $services ) {
-		$this->set_prefix( false );
+	public function __construct( $prefix, $services ) {
+		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 	}
 

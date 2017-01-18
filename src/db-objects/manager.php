@@ -98,6 +98,7 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param string                                               $prefix   The instance prefix.
 	 * @param array                                                $services {
 	 *     Array of service instances.
 	 *
@@ -107,7 +108,8 @@ abstract class Manager extends Service {
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
 	 */
-	public function __construct( $services, $translations ) {
+	public function __construct( $prefix, $services, $translations ) {
+		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 		$this->set_translations( $translations );
 	}

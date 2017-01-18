@@ -27,7 +27,7 @@ class Tests_DB extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_db_';
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( self::$prefix, new Translations_Error_Handler() );
 
 		self::$db = new DB( self::$prefix, array(
 			'options'       => new Options( self::$prefix ),

@@ -49,7 +49,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-type-manager.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/translations/translations-sample-manager.php';
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( $prefix, new Translations_Error_Handler() );
 
 		$db = new DB( $prefix, array(
 			'options'       => new Options( $prefix ),
@@ -85,10 +85,10 @@ class Unit_Test_Case extends WP_UnitTestCase {
 
 		$db->check();
 
-		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( array(
+		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( $prefix, array(
 			'db'            => $db,
 			'cache'         => new Cache( $prefix ),
-			'meta'          => new Meta( array(
+			'meta'          => new Meta( $prefix, array(
 				'db'            => $db,
 				'error_handler' => $error_handler,
 			) ),
@@ -135,7 +135,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			return;
 		}
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( $prefix, new Translations_Error_Handler() );
 
 		$db = new DB( $prefix, array(
 			'options'       => new Options( $prefix ),
@@ -147,7 +147,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		$services = array(
 			'db'            => $db,
 			'cache'         => new Cache( $prefix ),
-			'meta'          => new Meta( array(
+			'meta'          => new Meta( $prefix, array(
 				'db'            => $db,
 				'error_handler' => $error_handler,
 			) ),
@@ -183,6 +183,6 @@ class Unit_Test_Case extends WP_UnitTestCase {
 				break;
 		}
 
-		return new $class_name( $services, $translations );
+		return new $class_name( $prefix, $services, $translations );
 	}
 }

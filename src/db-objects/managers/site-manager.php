@@ -29,6 +29,7 @@ class Site_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param string                                                            $prefix   The instance prefix.
 	 * @param array                                                             $services {
 	 *     Array of service instances.
 	 *
@@ -39,7 +40,7 @@ class Site_Manager extends Core_Manager {
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Site_Manager $translations Translations instance.
 	 */
-	public function __construct( $services, $translations ) {
+	public function __construct( $prefix, $services, $translations ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query';
@@ -51,7 +52,7 @@ class Site_Manager extends Core_Manager {
 
 		Storage::register_global_group( $this->cache_group );
 
-		parent::__construct( $services, $translations );
+		parent::__construct( $prefix, $services, $translations );
 	}
 
 	/**

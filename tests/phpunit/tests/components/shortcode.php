@@ -29,7 +29,7 @@ class Tests_Shortcode extends Unit_Test_Case {
 
 		self::$prefix = 'lalpl_tests_shortcode_';
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( self::$prefix, new Translations_Error_Handler() );
 
 		self::$shortcodes = new Shortcodes( self::$prefix, array(
 			'cache'         => new Cache( self::$prefix ),

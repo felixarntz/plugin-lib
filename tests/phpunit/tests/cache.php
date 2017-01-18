@@ -6,9 +6,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Tests;
 
-use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Cache;
-use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 
 /**
  * @group general

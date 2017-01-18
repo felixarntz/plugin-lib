@@ -29,6 +29,7 @@ class Post_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param string                                                            $prefix   The instance prefix.
 	 * @param array                                                             $services {
 	 *     Array of service instances.
 	 *
@@ -40,7 +41,7 @@ class Post_Manager extends Core_Manager {
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager $translations Translations instance.
 	 */
-	public function __construct( $services, $translations ) {
+	public function __construct( $prefix, $services, $translations ) {
 		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post';
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Post_Query';
@@ -50,7 +51,7 @@ class Post_Manager extends Core_Manager {
 		$this->meta_type      = 'post';
 		$this->fetch_callback = 'get_post';
 
-		parent::__construct( $services, $translations );
+		parent::__construct( $prefix, $services, $translations );
 	}
 
 	/**

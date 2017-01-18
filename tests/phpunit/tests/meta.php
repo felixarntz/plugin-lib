@@ -27,7 +27,7 @@ class Tests_Meta extends Unit_Test_Case {
 
 		self::$prefix = $prefix = 'lalpl_tests_meta_';
 
-		$error_handler = new Error_Handler( new Translations_Error_Handler() );
+		$error_handler = new Error_Handler( self::$prefix, new Translations_Error_Handler() );
 
 		$db = new DB( self::$prefix, array(
 			'options'       => new Options( self::$prefix ),
@@ -49,7 +49,7 @@ class Tests_Meta extends Unit_Test_Case {
 		$db->check();
 
 		self::$element_id = 1;
-		self::$meta = new Meta( array(
+		self::$meta = new Meta( self::$prefix, array(
 			'db'            => $db,
 			'error_handler' => $error_handler,
 		) );

@@ -26,7 +26,7 @@ class Cache extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix   The prefix for all cache groups.
+	 * @param string $prefix The prefix for all cache groups.
 	 */
 	public function __construct( $prefix ) {
 		$this->set_prefix( $prefix );
