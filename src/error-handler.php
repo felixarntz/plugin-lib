@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
-use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Translations\Translations_Base_Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
  * @codeCoverageIgnore
  */
 class Error_Handler extends Service {
-	use Translations_Trait;
+	use Translations_Service_Trait;
 
 	/**
 	 * Constructor.

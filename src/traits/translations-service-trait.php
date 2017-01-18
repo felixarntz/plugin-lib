@@ -1,6 +1,6 @@
 <?php
 /**
- * Translations abstraction trait
+ * Translations service trait
  *
  * @package LeavesAndLovePluginLib
  * @since 1.0.0
@@ -8,14 +8,14 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait' ) ) :
 
 /**
- * Trait for library classes that need to use translatable strings.
+ * Trait for services that need to use translatable strings.
  *
  * @since 1.0.0
  */
-trait Translations_Trait {
+trait Translations_Service_Trait {
 	/**
 	 * Translations to print to the user.
 	 *

@@ -10,7 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
-use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 
@@ -25,7 +25,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Cache cache()
  */
 abstract class Manager extends Service {
-	use Container_Service_Trait, Translations_Trait;
+	use Container_Service_Trait, Translations_Service_Trait;
 
 	/**
 	 * The model class name.

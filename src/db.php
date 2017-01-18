@@ -10,7 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
-use Leaves_And_Love\Plugin_Lib\Traits\Translations_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
@@ -23,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Options options()
  */
 class DB extends Service {
-	use Hook_Service_Trait, Container_Service_Trait, Translations_Trait;
+	use Hook_Service_Trait, Container_Service_Trait, Translations_Service_Trait;
 
 	/**
 	 * WordPress database abstraction object.
