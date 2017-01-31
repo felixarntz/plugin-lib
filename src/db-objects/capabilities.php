@@ -42,6 +42,24 @@ abstract class Capabilities extends Service {
 	protected $plural = '';
 
 	/**
+	 * Name of the status field on DB objects, if applicable.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $status_field = '';
+
+	/**
+	 * Name of the author ID field on DB objects, if applicable.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $author_id_field = '';
+
+	/**
 	 * Base capabilities.
 	 *
 	 * @since 1.0.0
@@ -69,6 +87,15 @@ abstract class Capabilities extends Service {
 	protected $capability_mappings = array();
 
 	/**
+	 * Manager instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 */
+	protected $manager = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -82,6 +109,65 @@ abstract class Capabilities extends Service {
 		$this->set_capabilities();
 
 		$this->setup_hooks();
+	}
+
+	/**
+	 * Checks whether a user can create items.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $user_id Optional. User ID. Default is the current user.
+	 * @return bool True if the user can create items, false otherwise.
+	 */
+	public function user_can_create( $user_id = null ) {
+		if ( ! $user_id ) {
+			return $this->current_user_can( 'create_items' );
+		}
+
+		return $this->user_can( $user_id, 'create_items' );
+	}
+
+	/**
+	 * Checks whether a user can edit items.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $user_id Optional. User ID. Default is the current user.
+	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
+	 * @return bool True if the user can edit items, false otherwise.
+	 */
+	public function user_can_edit( $user_id = null, $item_id = null ) {
+		return $this->user_can_perform_item_action( 'edit', $user_id, $item_id );
+	}
+
+	/**
+	 * Checks whether a user can delete items.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $user_id Optional. User ID. Default is the current user.
+	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
+	 * @return bool True if the user can delete items, false otherwise.
+	 */
+	public function user_can_delete( $user_id = null, $item_id = null ) {
+		return $this->user_can_perform_item_action( 'delete', $user_id, $item_id );
+	}
+
+	/**
+	 * Checks whether a user can publish items.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $user_id Optional. User ID. Default is the current user.
+	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
+	 * @return bool True if the user can publish items, false otherwise.
+	 */
+	public function user_can_publish( $user_id = null, $item_id = null ) {
+		return $this->user_can_perform_item_action( 'publish', $user_id, $item_id );
 	}
 
 	/**
@@ -169,19 +255,45 @@ abstract class Capabilities extends Service {
 		$this->capability_mappings = array();
 
 		if ( $mode ) {
-			$this->capability_mappings[ $this->meta_capabilities['edit_item'] ]   = $this->base_capabilities['edit_items'];
-			$this->capability_mappings[ $this->meta_capabilities['delete_item'] ] = $this->base_capabilities['delete_items'];
+			$this->capability_mappings[ $this->meta_capabilities['edit_item'] ]   = array( $this, 'map_edit_item' );
+			$this->capability_mappings[ $this->meta_capabilities['delete_item'] ] = array( $this, 'map_delete_item' );
+
+			if ( isset( $this->meta_capabilities['publish_item'] ) ) {
+				$this->capability_mappings[ $this->meta_capabilities['publish_item'] ] = $this->base_capabilities['publish_items'];
+			}
 
 			if ( is_string( $mode ) && 'meta' !== $mode ) {
-				$this->capability_mappings[ $this->base_capabilities['create_items'] ] = sprintf( 'edit_%s', $mode );
-				$this->capability_mappings[ $this->base_capabilities['edit_items'] ]   = sprintf( 'edit_%s', $mode );
-				$this->capability_mappings[ $this->base_capabilities['delete_items'] ] = sprintf( 'delete_%s', $mode );
+				foreach ( $this->base_capabilities as $name => $real_name ) {
+					if ( 'create_items' === $name ) {
+						$mapped_value = sprintf( 'edit_%s', $mode );
+					} else {
+						$mapped_value = str_replace( '_items', '_' . $mode, $name );
+					}
+
+					$this->capability_mappings[ $real_name ] = $mapped_value;
+				}
 			} elseif ( is_array( $mode ) ) {
-				$this->capability_mappings[ $this->base_capabilities['create_items'] ] = $mode['create_items'];
-				$this->capability_mappings[ $this->base_capabilities['edit_items'] ]   = $mode['edit_items'];
-				$this->capability_mappings[ $this->base_capabilities['delete_items'] ] = $mode['delete_items'];
+				foreach ( $this->base_capabilities as $name => $real_name ) {
+					if ( ! isset( $mode[ $name ] ) ) {
+						continue;
+					}
+
+					$this->capability_mappings[ $real_name ] = $mode[ $name ];
+				}
 			}
 		}
+	}
+
+	/**
+	 * Sets the manager instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+	 */
+	public function set_manager( $manager ) {
+		$this->manager = $manager;
 	}
 
 	/**
@@ -211,6 +323,46 @@ abstract class Capabilities extends Service {
 			'edit_item'    => sprintf( 'edit_%s', $prefix . $this->singular ),
 			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular ),
 		);
+
+		if ( ! empty( $this->status_field ) ) {
+			$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural );
+			$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular );
+		}
+
+		if ( ! empty( $this->author_id_field ) ) {
+			$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural );
+			$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural );
+		}
+	}
+
+	/**
+	 * Checks whether the user can perform a specific action on a given item.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $action  Action name. Either 'edit', 'delete' or 'publish'.
+	 * @param int    $user_id Optional. User ID. Default is the current user.
+	 * @param int    $item_id Optional. Item ID. If omitted, a general check is performed.
+	 *                        Default null.
+	 * @return bool True if the user can perform the action, false otherwise.
+	 */
+	protected function user_can_perform_item_action( $action, $user_id = null, $item_id = null ) {
+		$args = array();
+		if ( null !== $item_id ) {
+			$args[] = $action . '_item';
+			$args[] = $item_id;
+		} else {
+			$args[] = $action . '_items';
+		}
+
+		if ( ! $user_id ) {
+			return call_user_func_array( array( $this, 'current_user_can' ), $args );
+		}
+
+		array_unshift( $args, $user_id );
+
+		return call_user_func_array( array( $this, 'user_can' ), $args );
 	}
 
 	/**
@@ -234,9 +386,91 @@ abstract class Capabilities extends Service {
 			return $caps;
 		}
 
-		$caps = array( $this->capability_mappings[ $cap ] );
+		$user_id = absint( $user_id );
 
-		return $this->map_meta_cap( $caps, $this->capability_mappings[ $cap ], $user_id, $args );
+		if ( is_callable( $this->capability_mappings[ $cap ] ) ) {
+			$mapped_cap = call_user_func( $this->capability_mappings[ $cap ], $user_id, $args );
+		} else {
+			$mapped_cap = $this->capability_mappings[ $cap ];
+		}
+
+		$caps = array( $mapped_cap );
+
+		return $this->map_meta_cap( $caps, $mapped_cap, $user_id, $args );
+	}
+
+	/**
+	 * Maps the item editing capability.
+	 *
+	 * If the model uses author IDs and the item belongs to another author, the capability is
+	 * mapped to the editing others items capability. Otherwise it is mapped to the basic
+	 * editing items capability.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param array  $args     Additional arguments.
+	 * @return string Mapped capability name.
+	 */
+	protected function map_edit_item( $user_id, $args ) {
+		return $this->map_item_action( 'edit', $user_id, $args );
+	}
+
+	/**
+	 * Maps the item deleting capability.
+	 *
+	 * If the model uses author IDs and the item belongs to another author, the capability is
+	 * mapped to the deleting others items capability. Otherwise it is mapped to the basic
+	 * deleting items capability.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int   $user_id  User ID.
+	 * @param array $args     Additional arguments.
+	 * @return string Mapped capability name.
+	 */
+	protected function map_delete_item( $user_id, $args ) {
+		return $this->map_item_action( 'delete', $user_id, $args );
+	}
+
+	/**
+	 * Maps a specific item capability.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $action  Action name. Either 'edit' or 'delete'.
+	 * @param int    $user_id User ID.
+	 * @param int    $args    Additional arguments.
+	 * @return string Mapped capability name.
+	 */
+	protected function map_item_action( $action, $user_id, $args ) {
+		/* Require an ID to be passed to this capability check. */
+		if ( ! isset( $args[0] ) || ! is_numeric( $args[0] ) ) {
+			return 'do_not_allow';
+		}
+
+		if ( null === $this->manager ) {
+			return 'do_not_allow';
+		}
+
+		$item = $this->manager->get( $args[0] );
+		if ( null === $item ) {
+			return 'do_not_allow';
+		}
+
+		if ( ! empty( $this->author_id_field ) ) {
+			$author_id_field = $this->author_id_field;
+
+			$author_id = $item->$author_id_field;
+			if ( $author_id !== $user_id ) {
+				return $this->base_capabilities[ $action . '_others_items' ];
+			}
+		}
+
+		return $this->base_capabilities[ $action . '_items' ];
 	}
 
 	/**
