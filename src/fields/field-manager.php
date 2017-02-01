@@ -12,6 +12,7 @@ use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 
@@ -31,6 +32,15 @@ class Field_Manager extends Service {
 	 * @var array
 	 */
 	protected $field_instances = array();
+
+	/**
+	 * Section lookup map for field identifiers.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $section_lookup = array();
 
 	/**
 	 * Array of registered field types, as `$type => $class_name` pairs.
@@ -109,6 +119,97 @@ class Field_Manager extends Service {
 		$this->set_translations( $translations );
 
 		self::register_default_field_types();
+	}
+
+	/**
+	 * Adds a new field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id   Field identifier. Must be unique for this field manager.
+	 * @param string $type Identifier of the type.
+	 * @param array  $args Optional. Field arguments. See the field class constructor for supported
+	 *                     arguments. Default empty array.
+	 * @return bool True on success, false on failure.
+	 */
+	public function add( $id, $type, $args = array() ) {
+		if ( ! self::is_field_type_registered( $type ) ) {
+			return false;
+		}
+
+		if ( isset( $this->section_lookup[ $id ] ) ) {
+			return false;
+		}
+
+		$section = isset( $args['section'] ) ? $args['section'] : '';
+
+		$class_name = self::get_registered_field_type( $type );
+		$field_instance = new $class_name( $this, $id, $args );
+
+		$this->section_lookup[ $id ] = $section;
+
+		if ( ! isset( $this->field_instances[ $section ] ) ) {
+			$this->field_instances[ $section ] = array();
+		}
+
+		$this->field_instances[ $section ][ $id ] = $field_instance;
+
+		return true;
+	}
+
+	/**
+	 * Gets a specific field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id Field identifier.
+	 * @return Leaves_And_Love\Plugin_Lib\Fields\Field|null Field instance, or null if it does not exist.
+	 */
+	public function get( $id ) {
+		if ( ! $this->exists( $id ) ) {
+			return null;
+		}
+
+		return $this->field_instances[ $this->section_lookup[ $id ] ][ $id ];
+	}
+
+	/**
+	 * Checks whether a specific field exists.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id Field identifier.
+	 * @return bool True if the field exists, false otherwise.
+	 */
+	public function exists( $id ) {
+		if ( ! isset( $this->section_lookup[ $id ] ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Removes an existing field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id Field identifier.
+	 * @return bool True on success, false on failure.
+	 */
+	public function remove( $id ) {
+		if ( ! $this->exists( $id ) ) {
+			return false;
+		}
+
+		unset( $this->field_instances[ $this->section_lookup[ $id ] ][ $id ] );
+		unset( $this->section_lookup[ $id ] );
+
+		return true;
 	}
 
 	/**
