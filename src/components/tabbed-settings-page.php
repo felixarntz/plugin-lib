@@ -263,8 +263,11 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @return string Identifier of the current tab.
 	 */
 	protected function get_current_tab() {
-		if ( isset( $_GET['tab'] ) && isset( $this->tabs[ $_GET['tab'] ] ) ) {
-			return $_GET['tab']
+		if ( isset( $_GET['tab'] ) ) {
+			$current_tab_id = wp_unslash( $_GET['tab'] );
+			if ( isset( $this->tabs[ $current_tab_id ] ) ) {
+				return $current_tab_id;
+			}
 		}
 
 		return key( $this->tabs );
