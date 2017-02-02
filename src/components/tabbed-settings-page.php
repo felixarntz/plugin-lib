@@ -282,7 +282,7 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected abstract function add_page_content;
+	protected abstract function add_page_content();
 }
 
 endif;

@@ -77,7 +77,7 @@ abstract class Settings_Page extends Admin_Page {
 			'name_prefix'                => $this->slug,
 		) );
 
-		$this->add_page_content;
+		$this->add_page_content();
 	}
 
 	/**
@@ -317,7 +317,7 @@ abstract class Settings_Page extends Admin_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected abstract function add_page_content;
+	protected abstract function add_page_content();
 }
 
 endif;
