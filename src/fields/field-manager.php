@@ -11,7 +11,6 @@ namespace Leaves_And_Love\Plugin_Lib\Fields;
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
-use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
@@ -22,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
  * @since 1.0.0
  */
 class Field_Manager extends Service {
-	use Container_Service_Trait, Args_Service_Trait, Translations_Service_Trait;
+	use Container_Service_Trait, Args_Service_Trait;
 
 	/**
 	 * Array of fields that are part of this manager, grouped by their `$section`.
@@ -110,13 +109,11 @@ class Field_Manager extends Service {
 	 *     @type string   $name_prefix                The name prefix to create name attributes for fields.
 	 *     @type string   $render_mode                Render mode. Default 'form-table'.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Field_Manager $translations Translations instance.
 	 */
-	public function __construct( $prefix, $services, $args, $translations ) {
+	public function __construct( $prefix, $services, $args ) {
 		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 		$this->set_args( $args );
-		$this->set_translations( $translations );
 
 		self::register_default_field_types();
 	}
