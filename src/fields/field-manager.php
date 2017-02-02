@@ -309,35 +309,31 @@ class Field_Manager extends Service {
 		$id_key = array_search( '{id}', $this->update_value_callback_args, true );
 		if ( false !== $id_key ) {
 			foreach ( $field_instances as $id => $field_instance ) {
-				$value = isset( $values[ $id ] ) ? $values[ $id ] : null;
-				$validated = $field_instance->validate( $value );
-				if ( is_wp_error( $validated ) ) {
-					$this->merge_errors( $errors, $validated );
+				$validated_value = $this->validate_value( $field_instance, $values, $errors );
+				if ( is_wp_error( $validated_value ) ) {
 					continue;
 				}
 
 				$args = $this->update_value_callback_args;
 				$args[ $id_key ] = $id;
-				$args[ $value_key ] = $validated;
+				$args[ $value_key ] = $validated_value;
 
 				call_user_func_array( $this->update_value_callback, $args );
 			}
 		} else {
-			$old_values = $this->get_values( $sections );
+			$validated_values = $this->get_values( $sections );
 
 			foreach ( $field_instances as $id => $field_instance ) {
-				$value = isset( $values[ $id ] ) ? $values[ $id ] : null;
-				$validated = $field_instance->validate( $value );
-				if ( is_wp_error( $validated ) ) {
-					$this->merge_errors( $errors, $validated );
+				$validated_value = $this->validate_value( $field_instance, $values, $errors );
+				if ( is_wp_error( $validated_value ) ) {
 					continue;
 				}
 
-				$old_values[ $id ] = $validated;
+				$validated_values[ $id ] = $validated_value;
 			}
 
 			$args = $this->update_value_callback_args;
-			$args[ $value_key ] = $old_values;
+			$args[ $value_key ] = $validated_values;
 
 			call_user_func_array( $this->update_value_callback, $args );
 		}
@@ -430,6 +426,30 @@ class Field_Manager extends Service {
 			</td>
 		</tr>
 		<?php
+	}
+
+	/**
+	 * Validates a value.
+	 *
+	 * The $errors object passed will automatically receive any occurring errors.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field $field  Field instance.
+	 * @param array                                   $values Array of all values to validate.
+	 * @param WP_Error                                $errors Error object to possibly fill.
+	 * @return mixed|WP_Error Validated value on success, error object on failure.
+	 */
+	protected function validate_value( $field, $values, $errors ) {
+		$value = isset( $values[ $field->id ] ) ? $values[ $field->id ] : null;
+
+		$validated_value = $field->validate( $value );
+		if ( is_wp_error( $validated_value ) ) {
+			$this->merge_errors( $errors, $validated_value );
+		}
+
+		return $validated_value;
 	}
 
 	/**
