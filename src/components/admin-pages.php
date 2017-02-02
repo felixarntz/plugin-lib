@@ -232,6 +232,33 @@ class Admin_Pages extends Service {
 	}
 
 	/**
+	 * Registers all available settings pages content.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function register_settings() {
+		$administration_panel = 'site';
+		if ( is_network_admin() ) {
+			$administration_panel = 'network';
+		} elseif ( is_user_admin() ) {
+			$administration_panel = 'user';
+		}
+
+		if ( ! isset( $this->pages[ $administration_panel ] ) ) {
+			return;
+		}
+
+		foreach ( $this->pages[ $administration_panel ] as $slug => $page ) {
+			if ( ! is_a( $page, 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) {
+				continue;
+			}
+
+			$page->register();
+		}
+	}
+
+	/**
 	 * Enqueues assets for the current admin page.
 	 *
 	 * @since 1.0.0
@@ -281,6 +308,12 @@ class Admin_Pages extends Service {
 			array(
 				'name'     => 'user_admin_menu',
 				'callback' => array( $this, 'add_pages' ),
+				'priority' => 10,
+				'num_args' => 0,
+			),
+			array(
+				'name'     => 'admin_init',
+				'callback' => array( $this, 'register_settings' ),
 				'priority' => 10,
 				'num_args' => 0,
 			),
