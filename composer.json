@@ -1,5 +1,6 @@
 {
   "name": "felixarntz/plugin-lib",
+  "type": "wordpress-muplugin",
   "description": "Reusable library for all kinds of WordPress plugins.",
   "version": "1.0.0",
   "license": "GPL-3.0",
