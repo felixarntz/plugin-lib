@@ -40,7 +40,7 @@ class AJAX extends Service {
 	 * @param string                                                    $prefix       The prefix for all AJAX actions.
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_AJAX $translations Translations instance.
 	 */
-	public function __construct( $prefix, $services, $translations ) {
+	public function __construct( $prefix, $translations ) {
 		$this->set_prefix( $prefix );
 		$this->set_translations( $translations );
 
