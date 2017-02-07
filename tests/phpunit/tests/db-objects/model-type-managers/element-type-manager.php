@@ -24,7 +24,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 		self::$manager = self::setUpSampleManager( self::$prefix, 'tm_element' );
 
 		self::$default_type = 'default';
-		self::$manager->type_manager()->register( self::$default_type );
+		self::$manager->types()->register( self::$default_type );
 	}
 
 	public static function tearDownAfterClass() {
@@ -37,7 +37,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	public function tearDown() {
 		parent::tearDown();
 
-		$types = self::$manager->type_manager();
+		$types = self::$manager->types();
 
 		foreach ( $types->query() as $slug => $type ) {
 			$types->unregister( $slug );
@@ -47,7 +47,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	}
 
 	public function test_register() {
-		$types = self::$manager->type_manager();
+		$types = self::$manager->types();
 
 		$result = $types->register( 'foo' );
 		$this->assertTrue( $result );
@@ -60,7 +60,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	}
 
 	public function test_get() {
-		$types = self::$manager->type_manager();
+		$types = self::$manager->types();
 
 		$result = $types->get( self::$default_type );
 		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Type', $result );
@@ -70,7 +70,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	}
 
 	public function test_query() {
-		$types = self::$manager->type_manager();
+		$types = self::$manager->types();
 
 		$public_types = array( 'foo', 'bar', 'fee' );
 		$show_ui_types = array( 'bar', 'foobar' );
@@ -116,7 +116,7 @@ class Tests_Element_Type_Manager extends Unit_Test_Case {
 	}
 
 	public function test_unregister() {
-		$types = self::$manager->type_manager();
+		$types = self::$manager->types();
 
 		$result = $types->unregister( self::$default_type );
 		$this->assertTrue( $result );

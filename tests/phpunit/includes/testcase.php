@@ -92,7 +92,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 				'db'            => $db,
 				'error_handler' => $error_handler,
 			) ),
-			'type_manager'  => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix ),
+			'types'         => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix ),
 			'error_handler' => $error_handler,
 		), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), $name );
 	}
@@ -158,12 +158,12 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			case 'post':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager();
-				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
+				$services['types'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
 				break;
 			case 'term':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager();
-				$services['type_manager'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
+				$services['types'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager( $prefix );
 				break;
 			case 'comment':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Comment_Manager';
