@@ -237,6 +237,7 @@ abstract class Capabilities extends Service {
 		$this->capability_mappings = array();
 
 		if ( $mode ) {
+			$this->capability_mappings[ $this->meta_capabilities['read_item'] ]   = array( $this, 'map_read_item' );
 			$this->capability_mappings[ $this->meta_capabilities['edit_item'] ]   = array( $this, 'map_edit_item' );
 			$this->capability_mappings[ $this->meta_capabilities['delete_item'] ] = array( $this, 'map_delete_item' );
 
@@ -246,7 +247,9 @@ abstract class Capabilities extends Service {
 
 			if ( is_string( $mode ) && 'meta' !== $mode ) {
 				foreach ( $this->base_capabilities as $name => $real_name ) {
-					if ( 'create_items' === $name ) {
+					if ( 'read_items' === $name || 'read_others_items' === $name ) {
+						$mapped_value = 'read';
+					} elseif ( 'create_items' === $name ) {
 						$mapped_value = sprintf( 'edit_%s', $mode );
 					} else {
 						$mapped_value = str_replace( '_items', '_' . $mode, $name );
@@ -296,12 +299,14 @@ abstract class Capabilities extends Service {
 		$prefix = $this->get_prefix();
 
 		$this->base_capabilities = array(
+			'read_items'   => sprintf( 'read_%s', $prefix . $this->plural_slug ),
 			'create_items' => sprintf( 'create_%s', $prefix . $this->plural_slug ),
 			'edit_items'   => sprintf( 'edit_%s', $prefix . $this->plural_slug ),
 			'delete_items' => sprintf( 'delete_%s', $prefix . $this->plural_slug ),
 		);
 
 		$this->meta_capabilities = array(
+			'read_item'    => sprintf( 'read_%s', $prefix . $this->singular_slug ),
 			'edit_item'    => sprintf( 'edit_%s', $prefix . $this->singular_slug ),
 			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular_slug ),
 		);
@@ -313,6 +318,7 @@ abstract class Capabilities extends Service {
 			}
 
 			if ( method_exists( $this->manager, 'get_author_property' ) ) {
+				$this->base_capabilities['read_others_items'] = sprintf( 'read_others_%s', $prefix . $this->plural_slug );
 				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural_slug );
 				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural_slug );
 			}
@@ -325,7 +331,7 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $action  Action name. Either 'edit', 'delete' or 'publish'.
+	 * @param string $action  Action name. Either 'read', 'edit', 'delete' or 'publish'.
 	 * @param int    $user_id Optional. User ID. Default is the current user.
 	 * @param int    $item_id Optional. Item ID. If omitted, a general check is performed.
 	 *                        Default null.
@@ -384,6 +390,24 @@ abstract class Capabilities extends Service {
 	}
 
 	/**
+	 * Maps the item reading capability.
+	 *
+	 * If the model uses author IDs and the item belongs to another author, the capability is
+	 * mapped to the reading others items capability. Otherwise it is mapped to the basic
+	 * reading items capability.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param array  $args     Additional arguments.
+	 * @return string Mapped capability name.
+	 */
+	protected function map_read_item( $user_id, $args ) {
+		return $this->map_item_action( 'read', $user_id, $args );
+	}
+
+	/**
 	 * Maps the item editing capability.
 	 *
 	 * If the model uses author IDs and the item belongs to another author, the capability is
@@ -425,7 +449,7 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $action  Action name. Either 'edit' or 'delete'.
+	 * @param string $action  Action name. Either 'read', 'edit' or 'delete'.
 	 * @param int    $user_id User ID.
 	 * @param int    $args    Additional arguments.
 	 * @return string Mapped capability name.
