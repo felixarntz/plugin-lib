@@ -42,15 +42,6 @@ abstract class Capabilities extends Service {
 	protected $plural = '';
 
 	/**
-	 * Name of the status field on DB objects, if applicable.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $status_field = '';
-
-	/**
 	 * Name of the author ID field on DB objects, if applicable.
 	 *
 	 * @since 1.0.0
@@ -324,9 +315,11 @@ abstract class Capabilities extends Service {
 			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular ),
 		);
 
-		if ( ! empty( $this->status_field ) ) {
-			$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural );
-			$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular );
+		if ( null !== $this->manager ) {
+			if ( method_exists( $this->manager, 'get_status_property' ) ) {
+				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural );
+				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular );
+			}
 		}
 
 		if ( ! empty( $this->author_id_field ) ) {

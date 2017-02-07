@@ -12,6 +12,8 @@ class Sample extends Model {
 
 	protected $type = '';
 
+	protected $status = '';
+
 	protected $title = '';
 
 	protected $content = '';

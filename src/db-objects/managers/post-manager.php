@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager' ) ) :
 
@@ -21,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manage
  * @since 1.0.0
  */
 class Post_Manager extends Core_Manager {
-	use Meta_Manager_Trait, Type_Manager_Trait;
+	use Meta_Manager_Trait, Type_Manager_Trait, Status_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -33,11 +34,12 @@ class Post_Manager extends Core_Manager {
 	 * @param array                                                             $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB                                               $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache                                            $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Meta                                             $meta          The meta instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager $types         The type manager instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler                                    $error_handler The error handler instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB                                                   $db            The database instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Cache                                                $cache         The cache instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Meta                                                 $meta          The meta instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager     $types         The type manager instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Post_Status_Manager $statuses      The status manager instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler                                        $error_handler The error handler instance.
 	 * }
 	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager $translations Translations instance.
 	 */
@@ -52,6 +54,7 @@ class Post_Manager extends Core_Manager {
 		$this->fetch_callback   = 'get_post';
 		$this->primary_property = 'ID';
 		$this->type_property    = 'post_type';
+		$this->status_property  = 'post_status';
 
 		parent::__construct( $prefix, $services, $translations );
 	}

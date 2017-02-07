@@ -45,6 +45,8 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-collection.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-query.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-manager.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-status.php';
+		require_once LALPL_TESTS_DATA . 'db-objects/sample-status-manager.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-type.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/sample-type-manager.php';
 		require_once LALPL_TESTS_DATA . 'db-objects/translations/translations-sample-manager.php';
@@ -64,6 +66,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		$db->add_table( $table_name, array(
 			"id bigint(20) unsigned NOT NULL auto_increment",
 			"type varchar(32) NOT NULL default ''",
+			"status varchar(32) NOT NULL default ''",
 			"title text NOT NULL",
 			"content longtext NOT NULL",
 			"parent_id bigint(20) unsigned NOT NULL default '0'",
@@ -71,6 +74,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			"active boolean NOT NULL",
 			"PRIMARY KEY  (id)",
 			"KEY type (type)",
+			"KEY status (status)",
 		) );
 		$db->add_table( $meta_table_name, array(
 			"meta_id bigint(20) unsigned NOT NULL auto_increment",
@@ -93,6 +97,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 				'error_handler' => $error_handler,
 			) ),
 			'types'         => new \Leaves_And_Love\Sample_DB_Objects\Sample_Type_Manager( $prefix ),
+			'statuses'      => new \Leaves_And_Love\Sample_DB_Objects\Sample_Status_Manager( $prefix ),
 			'error_handler' => $error_handler,
 		), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), $name );
 	}
@@ -159,6 +164,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager';
 				$translations = new \Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager();
 				$services['types'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager( $prefix );
+				$services['statuses'] = new \Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Post_Status_Manager( $prefix );
 				break;
 			case 'term':
 				$class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager';
