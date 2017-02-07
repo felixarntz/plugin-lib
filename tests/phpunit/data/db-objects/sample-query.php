@@ -3,15 +3,8 @@
 namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Query;
-use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Query_Trait;
 
 class Sample_Query extends Query {
-	use Meta_Query_Trait {
-		Meta_Query_Trait::parse_where as meta_parse_where;
-		Meta_Query_Trait::parse_single_orderby as meta_parse_single_orderby;
-		Meta_Query_Trait::get_valid_orderby_fields as meta_get_valid_orderby_fields;
-	}
-
 	public function __construct( $manager ) {
 		$name = $manager->get_sample_name();
 
@@ -35,7 +28,7 @@ class Sample_Query extends Query {
 	}
 
 	protected function parse_where() {
-		list( $where, $args ) = $this->meta_parse_where();
+		list( $where, $args ) = parent::parse_where();
 
 		$name = $this->manager->get_sample_name();
 
@@ -103,7 +96,7 @@ class Sample_Query extends Query {
 			return "FIELD( %{$this->table_name}%.parent_id, $ids )";
 		}
 
-		return $this->meta_parse_single_orderby( $orderby );
+		return parent::parse_single_orderby( $orderby );
 	}
 
 	protected function parse_single_order( $order, $orderby ) {
@@ -119,6 +112,10 @@ class Sample_Query extends Query {
 	protected function get_valid_orderby_fields() {
 		$name = $this->manager->get_sample_name();
 
-		return array_merge( $this->meta_get_valid_orderby_fields(), array( 'type', 'title', 'parent_id', $name . '__in', 'parent__in' ) );
+		$orderby_fields = parent::get_valid_orderby_fields();
+
+		$orderby_fields = array_merge( $orderby_fields, array( 'type', 'title', 'parent_id', $name . '__in', 'parent__in' ) );
+
+		return $orderby_fields;
 	}
 }

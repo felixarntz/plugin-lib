@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
+use WP_Meta_Query;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 
 /**
@@ -107,6 +109,24 @@ abstract class Query {
 	protected $results;
 
 	/**
+	 * Metadata query container.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var WP_Meta_Query
+	 */
+	private $meta_query;
+
+	/**
+	 * Metadata query clauses.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var array
+	 */
+	private $meta_query_clauses = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * Sets the manager instance and assigns the defaults.
@@ -127,8 +147,10 @@ abstract class Query {
 			'orderby'       => array( 'id' => 'ASC' ),
 		);
 
-		if ( method_exists( $this, 'adjust_query_var_defaults' ) ) {
-			$this->adjust_query_var_defaults();
+		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
+			$this->query_var_defaults['meta_key']   = '';
+			$this->query_var_defaults['meta_value'] = '';
+			$this->query_var_defaults['meta_query'] = '';
 		}
 	}
 
@@ -149,6 +171,11 @@ abstract class Query {
 			case 'query_var_defaults':
 			case 'results':
 				return true;
+			case 'meta_query':
+			case 'meta_query_clauses':
+				if ( method_exists( $this->manager, 'get_meta_type' ) ) {
+					return true;
+				}
 		}
 
 		return false;
@@ -171,6 +198,11 @@ abstract class Query {
 			case 'query_var_defaults':
 			case 'results':
 				return $this->$property;
+			case 'meta_query':
+			case 'meta_query_clauses':
+				if ( method_exists( $this->manager, 'get_meta_type' ) ) {
+					return $this->$property;
+				}
 		}
 
 		return null;
@@ -232,6 +264,18 @@ abstract class Query {
 				$this->query_vars['no_found_rows'] = true;
 			} else {
 				$this->query_vars['no_found_rows'] = false;
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
+			$this->meta_query = new WP_Meta_Query();
+			$this->meta_query->parse_query_vars( $this->query_vars );
+
+			if ( ! empty( $this->meta_query->queries ) ) {
+				$prefix = $this->manager->db()->get_prefix();
+				$name   = $this->manager->get_meta_type();
+
+				$this->meta_query_clauses = $this->meta_query->get_sql( $prefix . $name, "%{$this->table_name}%", 'id', $this );
 			}
 		}
 	}
@@ -397,6 +441,10 @@ abstract class Query {
 	 * @return string Join value for the SQL query.
 	 */
 	protected function parse_join() {
+		if ( ! empty( $this->meta_query_clauses ) ) {
+			return $this->meta_query_clauses['join'];
+		}
+
 		return '';
 	}
 
@@ -410,7 +458,14 @@ abstract class Query {
 	 *               being the array of arguments for those where clauses.
 	 */
 	protected function parse_where() {
-		return array( array(), array() );
+		$where = array();
+		$where_args = array();
+
+		if ( ! empty( $this->meta_query_clauses ) ) {
+			$where['meta_query'] = preg_replace( '/^\s*AND\s*/', '', $this->meta_query_clauses['where'] );
+		}
+
+		return array( $where, $where_args );
 	}
 
 	/**
@@ -422,6 +477,10 @@ abstract class Query {
 	 * @return string Groupby value for the SQL query.
 	 */
 	protected function parse_groupby() {
+		if ( ! empty( $this->meta_query_clauses ) ) {
+			return '%' . $this->table_name . '%.id';
+		}
+
 		return '';
 	}
 
@@ -471,6 +530,22 @@ abstract class Query {
 	 * @return string The parsed orderby SQL string.
 	 */
 	protected function parse_single_orderby( $orderby ) {
+		if ( method_exists( $this->manager, 'get_meta_type' ) && in_array( $orderby, $this->get_meta_orderby_fields(), true ) ) {
+			$meta_table = _get_meta_table( $this->manager->db()->get_prefix() . $this->manager->get_meta_type() );
+
+			if ( $this->query_vars['meta_key'] === $orderby || 'meta_value' === $orderby ) {
+				return "$meta_table.meta_value";
+			}
+
+			if ( 'meta_value_num' === $orderby ) {
+				return "$meta_table.meta_value+0";
+			}
+
+			$meta_query_clauses = $this->meta_query->get_clauses();
+
+			return sprintf( "CAST(%s.meta_value AS %s)", esc_sql( $meta_query_clauses[ $orderby ]['alias'] ), esc_sql( $meta_query_clauses[ $orderby ]['cast'] ) );
+		}
+
 		return '%' . $this->table_name . '%.' . $orderby;
 	}
 
@@ -497,7 +572,44 @@ abstract class Query {
 	 * @return array Array of valid orderby fields.
 	 */
 	protected function get_valid_orderby_fields() {
-		return array( 'id' );
+		$orderby_fields = array( 'id' );
+
+		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
+			$orderby_fields = array_merge( $orderby_fields, $this->get_meta_orderby_fields() );
+		}
+
+		return $orderby_fields;
+	}
+
+	/**
+	 * Returns the meta orderby fields to use in orderby clauses.
+	 *
+	 * These depend on the current meta query.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 *
+	 * @return array Array of meta orderby fields.
+	 */
+	private function get_meta_orderby_fields() {
+		if ( empty( $this->meta_query->queries ) ) {
+			return array();
+		}
+
+		$meta_orderby_fields = array();
+
+		if ( ! empty( $this->query_vars['meta_key'] ) ) {
+			$meta_orderby_fields[] = $this->query_vars['meta_key'];
+			$meta_orderby_fields[] = 'meta_value';
+			$meta_orderby_fields[] = 'meta_value_num';
+		}
+
+		$meta_query_clauses = $this->meta_query->get_clauses();
+		if ( $meta_query_clauses ) {
+			$meta_orderby_fields = array_merge( $meta_orderby_fields, array_keys( $meta_query_clauses ) );
+		}
+
+		return $meta_orderby_fields;
 	}
 }
 
