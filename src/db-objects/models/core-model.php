@@ -127,7 +127,7 @@ abstract class Core_Model extends Model {
 	 * @param mixed  $value    Property value.
 	 */
 	public function __set( $property, $value ) {
-		if ( $property === $this->get_primary_property() ) {
+		if ( $property === $this->manager->get_primary_property() ) {
 			return;
 		}
 
@@ -146,7 +146,7 @@ abstract class Core_Model extends Model {
 
 		if ( ! empty( $this->redundant_prefix ) && 0 !== strpos( $property, $this->redundant_prefix ) ) {
 			$prefixed_property = $this->redundant_prefix . $property;
-			if ( $prefixed_property === $this->get_primary_property() ) {
+			if ( $prefixed_property === $this->manager->get_primary_property() ) {
 				return;
 			}
 
@@ -199,7 +199,7 @@ abstract class Core_Model extends Model {
 	 * @param mixed  $value    Property value.
 	 */
 	protected function set_value_type_safe( $property, $value ) {
-		if ( $property === $this->get_primary_property() ) {
+		if ( $property === $this->manager->get_primary_property() ) {
 			$this->original->$property = intval( $value );
 		} elseif ( is_int( $this->original->$property ) ) {
 			$this->original->$property = intval( $value );
@@ -224,7 +224,7 @@ abstract class Core_Model extends Model {
 	 * @return return int Current value of the primary property.
 	 */
 	protected function primary_property_value( $value = null ) {
-		$primary_property = $this->get_primary_property();
+		$primary_property = $this->manager->get_primary_property();
 
 		if ( is_int( $value ) ) {
 			$this->original->$primary_property = $value;

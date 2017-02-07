@@ -64,7 +64,6 @@ class Post extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->primary_property = 'ID';
 		$this->type_property    = 'post_type';
 		$this->redundant_prefix = 'post_';
 	}

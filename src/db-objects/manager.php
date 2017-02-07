@@ -73,6 +73,15 @@ abstract class Manager extends Service {
 	protected $cache_group = 'models';
 
 	/**
+	 * The primary property for models.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $primary_property = 'id';
+
+	/**
 	 * The database service definition.
 	 *
 	 * @since 1.0.0
@@ -144,7 +153,7 @@ abstract class Manager extends Service {
 		if ( is_a( $model_id, $this->class_name ) ) {
 			$model = $model_id;
 
-			$primary_property = $model->get_primary_property();
+			$primary_property = $this->get_primary_property();
 
 			if ( $model->$primary_property ) {
 				$this->storage_set( $model->$primary_property, $model );
@@ -299,6 +308,20 @@ abstract class Manager extends Service {
 		}
 
 		return $db_obj;
+	}
+
+	/**
+	 * Returns the name of the primary property that identifies each model.
+	 *
+	 * This is usually an integer ID denoting the database row.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Name of the primary property.
+	 */
+	public function get_primary_property() {
+		return $this->primary_property;
 	}
 
 	/**

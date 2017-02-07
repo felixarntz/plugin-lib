@@ -26,7 +26,6 @@ class Sample extends Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->primary_property = 'id';
 		$this->type_property    = 'type';
 	}
 }

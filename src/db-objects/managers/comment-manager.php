@@ -44,10 +44,11 @@ class Comment_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Comment_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Comment_Query';
 
-		$this->table_name     = 'comments';
-		$this->cache_group    = 'comment';
-		$this->meta_type      = 'comment';
-		$this->fetch_callback = 'get_comment';
+		$this->table_name       = 'comments';
+		$this->cache_group      = 'comment';
+		$this->meta_type        = 'comment';
+		$this->fetch_callback   = 'get_comment';
+		$this->primary_property = 'comment_ID';
 
 		parent::__construct( $prefix, $services, $translations );
 	}

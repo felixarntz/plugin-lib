@@ -96,12 +96,6 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertNull( $model->pending_properties );
 	}
 
-	public function test_get_primary_property() {
-		$model = new Sample( self::$manager );
-
-		$this->assertSame( 'id', $model->get_primary_property() );
-	}
-
 	public function test_get_type_property() {
 		$model = new Sample( self::$manager );
 

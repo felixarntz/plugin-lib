@@ -55,7 +55,6 @@ class Comment extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->primary_property = 'comment_ID';
 		$this->redundant_prefix = 'comment_';
 	}
 

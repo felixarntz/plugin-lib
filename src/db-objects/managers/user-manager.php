@@ -49,6 +49,7 @@ class User_Manager extends Core_Manager {
 		$this->cache_group    = 'users';
 		$this->meta_type      = 'user';
 		$this->fetch_callback = 'get_userdata';
+		$this->primary_property = 'ID';
 
 		Storage::register_global_group( $this->cache_group );
 

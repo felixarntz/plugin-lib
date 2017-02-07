@@ -48,15 +48,6 @@ abstract class Model {
 	protected $manager;
 
 	/**
-	 * The primary property of the model.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $primary_property = 'id';
-
-	/**
 	 * Constructor.
 	 *
 	 * Sets the ID and fetches relevant data.
@@ -78,20 +69,6 @@ abstract class Model {
 		if ( $db_obj ) {
 			$this->set( $db_obj );
 		}
-	}
-
-	/**
-	 * Returns the name of the primary property that identifies the model.
-	 *
-	 * This is usually an integer ID denoting the database row.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @return string Name of the primary property.
-	 */
-	public function get_primary_property() {
-		return $this->primary_property;
 	}
 
 	/**
@@ -193,7 +170,7 @@ abstract class Model {
 	 * @param mixed  $value    Property value.
 	 */
 	public function __set( $property, $value ) {
-		if ( $property === $this->get_primary_property() ) {
+		if ( $property === $this->manager->get_primary_property() ) {
 			return;
 		}
 
@@ -249,7 +226,7 @@ abstract class Model {
 		if ( ! $this->primary_property_value() ) {
 			$args = $this->get_property_values();
 
-			unset( $args[ $this->get_primary_property() ] );
+			unset( $args[ $this->manager->get_primary_property() ] );
 
 			$result = $this->manager->add( $args );
 			if ( ! $result ) {
@@ -449,7 +426,7 @@ abstract class Model {
 	 * @return return int Current value of the primary property.
 	 */
 	protected function primary_property_value( $value = null ) {
-		$primary_property = $this->get_primary_property();
+		$primary_property = $this->manager->get_primary_property();
 
 		if ( is_int( $value ) ) {
 			$this->$primary_property = $value;
@@ -495,7 +472,6 @@ abstract class Model {
 			'pending_properties',
 			'pending_meta',
 			'manager',
-			'primary_property',
 		);
 
 		if ( property_exists( $this, 'type_property' ) ) {

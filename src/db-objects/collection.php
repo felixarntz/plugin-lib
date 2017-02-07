@@ -353,7 +353,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 			return 0;
 		}
 
-		$primary_property = $model->get_primary_property();
+		$primary_property = $this->manager->get_primary_property();
 
 		return $model->$primary_property;
 	}

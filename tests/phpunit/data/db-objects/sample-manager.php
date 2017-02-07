@@ -20,9 +20,10 @@ class Sample_Manager extends Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Sample_DB_Objects\Sample_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Sample_DB_Objects\Sample_Query';
 
-		$this->table_name  = $name . 's';
-		$this->cache_group = $name . 's';
-		$this->meta_type   = $name;
+		$this->table_name       = $name . 's';
+		$this->cache_group      = $name . 's';
+		$this->meta_type        = $name;
+		$this->primary_property = 'id';
 	}
 
 	public function get_sample_name() {

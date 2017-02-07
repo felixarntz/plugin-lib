@@ -45,10 +45,11 @@ class Site_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query';
 
-		$this->table_name     = 'blogs';
-		$this->cache_group    = 'sites';
-		$this->meta_type      = 'site';
-		$this->fetch_callback = 'get_site';
+		$this->table_name       = 'blogs';
+		$this->cache_group      = 'sites';
+		$this->meta_type        = 'site';
+		$this->fetch_callback   = 'get_site';
+		$this->primary_property = 'blog_id';
 
 		Storage::register_global_group( $this->cache_group );
 

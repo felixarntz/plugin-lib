@@ -51,7 +51,6 @@ class Term extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->primary_property = 'term_id';
 		$this->type_property    = 'taxonomy';
 		$this->redundant_prefix = 'term_';
 	}
