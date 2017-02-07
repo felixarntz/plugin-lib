@@ -94,6 +94,20 @@ abstract class Capabilities extends Service {
 	}
 
 	/**
+	 * Checks whether a user can read items.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int $user_id Optional. User ID. Default is the current user.
+	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
+	 * @return bool True if the user can read items, false otherwise.
+	 */
+	public function user_can_read( $user_id = null, $item_id = null ) {
+		return $this->user_can_perform_item_action( 'read', $user_id, $item_id );
+	}
+
+	/**
 	 * Checks whether a user can create items.
 	 *
 	 * @since 1.0.0
