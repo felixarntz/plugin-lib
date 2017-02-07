@@ -96,26 +96,6 @@ class Tests_Element extends Unit_Test_Case {
 		$this->assertNull( $model->pending_properties );
 	}
 
-	public function test_get_type_property() {
-		$model = new Sample( self::$manager );
-
-		$this->assertSame( 'type', $model->get_type_property() );
-	}
-
-	public function test_get_type_object() {
-		$model = new Sample( self::$manager );
-
-		self::$manager->register_type( 'foo' );
-
-		$model->type = 'invalid';
-		$this->assertNull( $model->get_type_object() );
-
-		$model->type = 'foo';
-		$this->assertInstanceOf( 'Leaves_And_Love\Sample_DB_Objects\Sample_Type', $model->get_type_object() );
-
-		self::$manager->unregister_type( 'foo' );
-	}
-
 	public function test_sync_upstream() {
 		$model = new Sample( self::$manager );
 

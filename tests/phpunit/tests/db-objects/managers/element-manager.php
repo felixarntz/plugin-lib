@@ -160,6 +160,10 @@ class Tests_Element_Manager extends Unit_Test_Case {
 		$this->assertSame( 'id', self::$manager->get_primary_property() );
 	}
 
+	public function test_get_type_property() {
+		$this->assertSame( 'type', self::$manager->get_type_property() );
+	}
+
 	public function test_get_message() {
 		$message = self::$manager->get_message( 'db_insert_error' );
 		$this->assertSame( 'Could not insert m_element into the database.', $message );

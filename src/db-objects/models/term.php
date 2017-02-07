@@ -9,7 +9,6 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
-use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Model_Trait;
 use WP_Term;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term' ) ) :
@@ -34,7 +33,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term' ) ) :
  * @property-read int $object_id
  */
 class Term extends Core_Model {
-	use Sitewide_Model_Trait, Type_Model_Trait;
+	use Sitewide_Model_Trait;
 
 	/**
 	 * Constructor.
@@ -51,7 +50,6 @@ class Term extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->type_property    = 'taxonomy';
 		$this->redundant_prefix = 'term_';
 	}
 

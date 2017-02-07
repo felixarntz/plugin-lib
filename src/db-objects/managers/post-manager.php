@@ -51,6 +51,7 @@ class Post_Manager extends Core_Manager {
 		$this->meta_type        = 'post';
 		$this->fetch_callback   = 'get_post';
 		$this->primary_property = 'ID';
+		$this->type_property    = 'post_type';
 
 		parent::__construct( $prefix, $services, $translations );
 	}

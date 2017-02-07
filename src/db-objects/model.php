@@ -474,10 +474,6 @@ abstract class Model {
 			'manager',
 		);
 
-		if ( property_exists( $this, 'type_property' ) ) {
-			$blacklist[] = 'type_property';
-		}
-
 		if ( property_exists( $this, '__site_id' ) ) {
 			$blacklist[] = '__site_id';
 			$blacklist[] = '__switched';

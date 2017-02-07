@@ -4,10 +4,9 @@ namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Model;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
-use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Model_Trait;
 
 class Sample extends Model {
-	use Sitewide_Model_Trait, Type_Model_Trait;
+	use Sitewide_Model_Trait;
 
 	protected $id = 0;
 
@@ -25,7 +24,5 @@ class Sample extends Model {
 
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
-
-		$this->type_property    = 'type';
 	}
 }

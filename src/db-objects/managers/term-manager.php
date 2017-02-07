@@ -51,6 +51,7 @@ class Term_Manager extends Core_Manager {
 		$this->meta_type        = 'term';
 		$this->fetch_callback   = 'get_term';
 		$this->primary_property = 'term_id';
+		$this->type_property    = 'taxonomy';
 
 		parent::__construct( $prefix, $services, $translations );
 	}

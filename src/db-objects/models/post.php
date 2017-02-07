@@ -9,7 +9,6 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
-use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Model_Trait;
 use WP_Post;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post' ) ) :
@@ -47,7 +46,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post' ) ) :
  * @property-read int $comment_count
  */
 class Post extends Core_Model {
-	use Sitewide_Model_Trait, Type_Model_Trait;
+	use Sitewide_Model_Trait;
 
 	/**
 	 * Constructor.
@@ -64,7 +63,6 @@ class Post extends Core_Model {
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );
 
-		$this->type_property    = 'post_type';
 		$this->redundant_prefix = 'post_';
 	}
 

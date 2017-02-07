@@ -19,6 +19,15 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_
  */
 trait Type_Manager_Trait {
 	/**
+	 * The type property of the model.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $type_property = 'type';
+
+	/**
 	 * The type manager service definition.
 	 *
 	 * @since 1.0.0
@@ -79,6 +88,20 @@ trait Type_Manager_Trait {
 	 */
 	public function unregister_type( $slug ) {
 		return $this->types()->unregister( $slug );
+	}
+
+	/**
+	 * Returns the name of the type property that identifies the model.
+	 *
+	 * This is usually the unique type identifier.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Name of the primary property.
+	 */
+	public function get_type_property() {
+		return $this->type_property;
 	}
 }
 

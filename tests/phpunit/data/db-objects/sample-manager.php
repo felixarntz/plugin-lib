@@ -24,6 +24,7 @@ class Sample_Manager extends Manager {
 		$this->cache_group      = $name . 's';
 		$this->meta_type        = $name;
 		$this->primary_property = 'id';
+		$this->type_property    = 'type';
 	}
 
 	public function get_sample_name() {
