@@ -91,14 +91,12 @@ trait Type_Manager_Trait {
 	}
 
 	/**
-	 * Returns the name of the type property that identifies the model.
-	 *
-	 * This is usually the unique type identifier.
+	 * Returns the name of the type property in a model.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return string Name of the primary property.
+	 * @return string Name of the type property.
 	 */
 	public function get_type_property() {
 		return $this->type_property;
