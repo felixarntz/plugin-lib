@@ -488,7 +488,7 @@ abstract class Query {
 		$args = array();
 
 		if ( ! empty( $this->singular_slug ) ) {
-			list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'id', $this->singular_slug, '%d', 'absint' );
+			list( $where, $args ) = $this->parse_list_where_field( $where, $args, $this->manager->get_primary_property(), $this->singular_slug, '%d', 'absint' );
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
