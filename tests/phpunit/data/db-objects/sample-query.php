@@ -9,13 +9,11 @@ class Sample_Query extends Query {
 		$name = $manager->get_sample_name();
 
 		$this->table_name = $name . 's';
+		$this->singular_slug = $name;
 
 		parent::__construct( $manager );
 
 		$query_vars = array(
-			$name . '__in',
-			$name . '__not_in',
-			'type',
 			'title',
 			'parent',
 			'parent__in',
@@ -29,32 +27,6 @@ class Sample_Query extends Query {
 
 	protected function parse_where() {
 		list( $where, $args ) = parent::parse_where();
-
-		$name = $this->manager->get_sample_name();
-
-		if ( ! empty( $this->query_vars[ $name . '__in' ] ) ) {
-			$ids = array_map( 'absint', $this->query_vars[ $name . '__in' ] );
-			$where[ $name . '__in' ] = "%{$this->table_name}%.id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
-			$args = array_merge( $args, $ids );
-		}
-
-		if ( ! empty( $this->query_vars[ $name . '__not_in' ] ) ) {
-			$ids = array_map( 'absint', $this->query_vars[ $name . '__not_in' ] );
-			$where[ $name . '__not_in' ] = "%{$this->table_name}%.id NOT IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
-			$args = array_merge( $args, $ids );
-		}
-
-		if ( ! empty( $this->query_vars['type'] ) ) {
-			if ( is_array( $this->query_vars['type'] ) ) {
-				$types = array_map( 'sanitize_key', $this->query_vars['type'] );
-				$where['type'] = "%{$this->table_name}%.type IN ( " . implode( ',', array_fill( 0, count( $types ), '%s' ) ) . ' )';
-				$args = array_merge( $args, $types );
-			} else {
-				$type = sanitize_key( $this->query_vars['type'] );
-				$where['type'] = "%{$this->table_name}%.type = %s";
-				$args[] = $type;
-			}
-		}
 
 		if ( ! empty( $this->query_vars['title'] ) ) {
 			$title = $this->query_vars['title'];
@@ -84,13 +56,6 @@ class Sample_Query extends Query {
 	}
 
 	protected function parse_single_orderby( $orderby ) {
-		$name = $this->manager->get_sample_name();
-
-		if ( $name . '__in' === $orderby ) {
-			$ids = implode( ',', array_map( 'absint', $this->query_vars[ $name . '__in' ] ) );
-			return "FIELD( %{$this->table_name}%.id, $ids )";
-		}
-
 		if ( 'parent__in' === $orderby ) {
 			$ids = implode( ',', array_map( 'absint', $this->query_vars['parent__in'] ) );
 			return "FIELD( %{$this->table_name}%.parent_id, $ids )";
@@ -100,9 +65,7 @@ class Sample_Query extends Query {
 	}
 
 	protected function parse_single_order( $order, $orderby ) {
-		$name = $this->manager->get_sample_name();
-
-		if ( in_array( $orderby, array( $name . '__in', 'parent__in' ), true ) ) {
+		if ( 'parent__in' === $orderby ) {
 			return '';
 		}
 
@@ -110,11 +73,9 @@ class Sample_Query extends Query {
 	}
 
 	protected function get_valid_orderby_fields() {
-		$name = $this->manager->get_sample_name();
-
 		$orderby_fields = parent::get_valid_orderby_fields();
 
-		$orderby_fields = array_merge( $orderby_fields, array( 'type', 'title', 'parent_id', $name . '__in', 'parent__in' ) );
+		$orderby_fields = array_merge( $orderby_fields, array( 'title', 'parent_id', 'parent__in' ) );
 
 		return $orderby_fields;
 	}

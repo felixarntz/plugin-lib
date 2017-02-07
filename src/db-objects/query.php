@@ -46,6 +46,15 @@ abstract class Query {
 	protected $table_name = 'models';
 
 	/**
+	 * Singular slug to use for capability names.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $singular_slug = '';
+
+	/**
 	 * SQL for database query.
 	 *
 	 * Contains placeholders that need to be filled with `$request_args`.
@@ -146,6 +155,23 @@ abstract class Query {
 			'no_found_rows' => null,
 			'orderby'       => array( 'id' => 'ASC' ),
 		);
+
+		if ( ! empty( $this->singular_slug ) ) {
+			$this->query_var_defaults[ $this->singular_slug . '__in' ]     = '';
+			$this->query_var_defaults[ $this->singular_slug . '__not_in' ] = '';
+		}
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$this->query_var_defaults[ $this->manager->get_type_property() ] = '';
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$this->query_var_defaults[ $this->manager->get_status_property() ] = '';
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$this->query_var_defaults[ $this->manager->get_author_property() ] = '';
+		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 			$this->query_var_defaults['meta_key']   = '';
@@ -346,12 +372,12 @@ abstract class Query {
 	}
 
 	/**
-	 * Used internally to get a list of model IDs or model types matching the query vars.
+	 * Used internally to get a list of model IDs matching the query vars.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return array Array of model IDs or model types (if the $fields query var is set to 'types').
+	 * @return array Array of model IDs.
 	 */
 	protected function query_results() {
 		list( $fields, $distinct ) = $this->parse_fields();
@@ -459,13 +485,75 @@ abstract class Query {
 	 */
 	protected function parse_where() {
 		$where = array();
-		$where_args = array();
+		$args = array();
+
+		if ( ! empty( $this->singular_slug ) ) {
+			if ( ! empty( $this->query_vars[ $this->singular_slug . '__in' ] ) ) {
+				$ids = array_map( 'absint', $this->query_vars[ $this->singular_slug . '__in' ] );
+				$where[ $this->singular_slug . '__in' ] = "%{$this->table_name}%.id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
+				$args = array_merge( $args, $ids );
+			}
+
+			if ( ! empty( $this->query_vars[ $this->singular_slug . '__not_in' ] ) ) {
+				$ids = array_map( 'absint', $this->query_vars[ $this->singular_slug . '__not_in' ] );
+				$where[ $this->singular_slug . '__not_in' ] = "%{$this->table_name}%.id NOT IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
+				$args = array_merge( $args, $ids );
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$type_property = $this->manager->get_type_property();
+
+			if ( ! empty( $this->query_vars[ $type_property ] ) ) {
+				if ( is_array( $this->query_vars[ $type_property ] ) ) {
+					$types = array_map( 'sanitize_key', $this->query_vars[ $type_property ] );
+					$where[ $type_property ] = "%{$this->table_name}%.{$type_property} IN ( " . implode( ',', array_fill( 0, count( $types ), '%s' ) ) . ' )';
+					$args = array_merge( $args, $types );
+				} else {
+					$type = sanitize_key( $this->query_vars[ $type_property ] );
+					$where[ $type_property ] = "%{$this->table_name}%.{$type_property} = %s";
+					$args[] = $type;
+				}
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$status_property = $this->manager->get_status_property();
+
+			if ( ! empty( $this->query_vars[ $status_property ] ) ) {
+				if ( is_array( $this->query_vars[ $status_property ] ) ) {
+					$statuses = array_map( 'sanitize_key', $this->query_vars[ $status_property ] );
+					$where[ $status_property ] = "%{$this->table_name}%.{$status_property} IN ( " . implode( ',', array_fill( 0, count( $statuses ), '%s' ) ) . ' )';
+					$args = array_merge( $args, $statuses );
+				} else {
+					$status = sanitize_key( $this->query_vars[ $status_property ] );
+					$where[ $status_property ] = "%{$this->table_name}%.{$status_property} = %s";
+					$args[] = $status;
+				}
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! empty( $this->query_vars[ $author_property ] ) ) {
+				if ( is_array( $this->query_vars[ $author_property ] ) ) {
+					$authors = array_map( 'absint', $this->query_vars[ $author_property ] );
+					$where[ $author_property ] = "%{$this->table_name}%.{$author_property} IN ( " . implode( ',', array_fill( 0, count( $authors ), '%d' ) ) . ' )';
+					$args = array_merge( $args, $authors );
+				} else {
+					$author = absint( $this->query_vars[ $author_property ] );
+					$where[ $author_property ] = "%{$this->table_name}%.{$author_property} = %d";
+					$args[] = $author;
+				}
+			}
+		}
 
 		if ( ! empty( $this->meta_query_clauses ) ) {
 			$where['meta_query'] = preg_replace( '/^\s*AND\s*/', '', $this->meta_query_clauses['where'] );
 		}
 
-		return array( $where, $where_args );
+		return array( $where, $args );
 	}
 
 	/**
@@ -530,6 +618,12 @@ abstract class Query {
 	 * @return string The parsed orderby SQL string.
 	 */
 	protected function parse_single_orderby( $orderby ) {
+		if ( ! empty( $this->singular_slug ) && $this->singular_slug . '__in' === $orderby ) {
+			$ids = implode( ',', array_map( 'absint', $this->query_vars[ $this->singular_slug . '__in' ] ) );
+
+			return "FIELD( %{$this->table_name}%.id, $ids )";
+		}
+
 		if ( method_exists( $this->manager, 'get_meta_type' ) && in_array( $orderby, $this->get_meta_orderby_fields(), true ) ) {
 			$meta_table = _get_meta_table( $this->manager->db()->get_prefix() . $this->manager->get_meta_type() );
 
@@ -560,6 +654,10 @@ abstract class Query {
 	 * @return string The parsed order SQL string, or empty if not necessary.
 	 */
 	protected function parse_single_order( $order, $orderby ) {
+		if ( ! empty( $this->singular_slug ) && $this->singular_slug . '__in' === $orderby ) {
+			return '';
+		}
+
 		return 'DESC' === strtoupper( $order ) ? 'DESC' : 'ASC';
 	}
 
@@ -573,6 +671,22 @@ abstract class Query {
 	 */
 	protected function get_valid_orderby_fields() {
 		$orderby_fields = array( 'id' );
+
+		if ( ! empty( $this->singular_slug ) ) {
+			$orderby_fields[] = $this->singular_slug . '__in';
+		}
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$orderby_fields[] = $this->manager->get_type_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$orderby_fields[] = $this->manager->get_status_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$orderby_fields[] = $this->manager->get_author_property();
+		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 			$orderby_fields = array_merge( $orderby_fields, $this->get_meta_orderby_fields() );

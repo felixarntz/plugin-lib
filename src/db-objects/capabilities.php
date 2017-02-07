@@ -30,7 +30,7 @@ abstract class Capabilities extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $singular = '';
+	protected $singular_slug = '';
 
 	/**
 	 * Plural slug to use for capability names.
@@ -39,7 +39,7 @@ abstract class Capabilities extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $plural = '';
+	protected $plural_slug = '';
 
 	/**
 	 * Base capabilities.
@@ -296,25 +296,25 @@ abstract class Capabilities extends Service {
 		$prefix = $this->get_prefix();
 
 		$this->base_capabilities = array(
-			'create_items' => sprintf( 'create_%s', $prefix . $this->plural ),
-			'edit_items'   => sprintf( 'edit_%s', $prefix . $this->plural ),
-			'delete_items' => sprintf( 'delete_%s', $prefix . $this->plural ),
+			'create_items' => sprintf( 'create_%s', $prefix . $this->plural_slug ),
+			'edit_items'   => sprintf( 'edit_%s', $prefix . $this->plural_slug ),
+			'delete_items' => sprintf( 'delete_%s', $prefix . $this->plural_slug ),
 		);
 
 		$this->meta_capabilities = array(
-			'edit_item'    => sprintf( 'edit_%s', $prefix . $this->singular ),
-			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular ),
+			'edit_item'    => sprintf( 'edit_%s', $prefix . $this->singular_slug ),
+			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular_slug ),
 		);
 
 		if ( null !== $this->manager ) {
 			if ( method_exists( $this->manager, 'get_status_property' ) ) {
-				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural );
-				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular );
+				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural_slug );
+				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular_slug );
 			}
 
 			if ( method_exists( $this->manager, 'get_author_property' ) ) {
-				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural );
-				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural );
+				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural_slug );
+				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural_slug );
 			}
 		}
 	}
