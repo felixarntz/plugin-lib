@@ -67,6 +67,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			"id bigint(20) unsigned NOT NULL auto_increment",
 			"type varchar(32) NOT NULL default ''",
 			"status varchar(32) NOT NULL default ''",
+			"author_id bigint(20) unsigned NOT NULL default '0'",
 			"title text NOT NULL",
 			"content longtext NOT NULL",
 			"parent_id bigint(20) unsigned NOT NULL default '0'",
@@ -85,7 +86,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			"KEY {$prefix}{$id_field_name} ({$prefix}{$id_field_name})",
 			"KEY meta_key (meta_key($max_index_length))",
 		) );
-		$db->set_version( 20161130 );
+		$db->set_version( 20170207 );
 
 		$db->check();
 

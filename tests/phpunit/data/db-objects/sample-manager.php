@@ -6,9 +6,10 @@ use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Author_Manager_Trait;
 
 class Sample_Manager extends Manager {
-	use Meta_Manager_Trait, Type_Manager_Trait, Status_Manager_Trait;
+	use Meta_Manager_Trait, Type_Manager_Trait, Status_Manager_Trait, Author_Manager_Trait;
 
 	protected $name = '';
 
@@ -27,6 +28,7 @@ class Sample_Manager extends Manager {
 		$this->primary_property = 'id';
 		$this->type_property    = 'type';
 		$this->status_property  = 'status';
+		$this->author_property  = 'author_id';
 	}
 
 	public function get_sample_name() {

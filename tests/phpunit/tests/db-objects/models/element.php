@@ -189,6 +189,8 @@ class Tests_Element extends Unit_Test_Case {
 	public function test_to_json() {
 		$properties = array(
 			'type'      => 'foo',
+			'status'    => 'bar',
+			'author_id' => 22,
 			'title'     => 'Hello',
 			'content'   => rand_long_str( 500 ),
 			'parent_id' => 3,
@@ -216,6 +218,8 @@ class Tests_Element extends Unit_Test_Case {
 		$db_obj = new \stdClass();
 		$db_obj->id        = '23';
 		$db_obj->type      = 'foo';
+		$db_obj->status    = 'bar';
+		$db_obj->author_id = '13';
 		$db_obj->title     = 'Foo';
 		$db_obj->content   = 'Some text content.';
 		$db_obj->parent_id = '11';
@@ -228,6 +232,8 @@ class Tests_Element extends Unit_Test_Case {
 		$model = new Sample( self::$manager, $db_obj );
 		$this->assertSame( 23,                   $model->id );
 		$this->assertSame( 'foo',                $model->type );
+		$this->assertSame( 'bar',                $model->status );
+		$this->assertSame( 13,                   $model->author_id );
 		$this->assertSame( 'Foo',                $model->title );
 		$this->assertSame( 'Some text content.', $model->content );
 		$this->assertSame( 11,                   $model->parent_id );

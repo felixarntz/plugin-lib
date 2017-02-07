@@ -42,15 +42,6 @@ abstract class Capabilities extends Service {
 	protected $plural = '';
 
 	/**
-	 * Name of the author ID field on DB objects, if applicable.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $author_id_field = '';
-
-	/**
 	 * Base capabilities.
 	 *
 	 * @since 1.0.0
@@ -320,11 +311,11 @@ abstract class Capabilities extends Service {
 				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural );
 				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular );
 			}
-		}
 
-		if ( ! empty( $this->author_id_field ) ) {
-			$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural );
-			$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural );
+			if ( method_exists( $this->manager, 'get_author_property' ) ) {
+				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural );
+				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural );
+			}
 		}
 	}
 
@@ -454,10 +445,10 @@ abstract class Capabilities extends Service {
 			return 'do_not_allow';
 		}
 
-		if ( ! empty( $this->author_id_field ) ) {
-			$author_id_field = $this->author_id_field;
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
 
-			$author_id = $item->$author_id_field;
+			$author_id = $item->$author_property;
 			if ( $author_id !== $user_id ) {
 				return $this->base_capabilities[ $action . '_others_items' ];
 			}

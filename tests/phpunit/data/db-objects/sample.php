@@ -14,6 +14,8 @@ class Sample extends Model {
 
 	protected $status = '';
 
+	protected $author_id = 0;
+
 	protected $title = '';
 
 	protected $content = '';

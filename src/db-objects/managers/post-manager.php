@@ -11,6 +11,7 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Author_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager' ) ) :
 
@@ -22,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manage
  * @since 1.0.0
  */
 class Post_Manager extends Core_Manager {
-	use Meta_Manager_Trait, Type_Manager_Trait, Status_Manager_Trait;
+	use Meta_Manager_Trait, Type_Manager_Trait, Status_Manager_Trait, Author_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -55,6 +56,7 @@ class Post_Manager extends Core_Manager {
 		$this->primary_property = 'ID';
 		$this->type_property    = 'post_type';
 		$this->status_property  = 'post_status';
+		$this->author_property  = 'post_author';
 
 		parent::__construct( $prefix, $services, $translations );
 	}
