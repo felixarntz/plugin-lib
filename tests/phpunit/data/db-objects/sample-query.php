@@ -28,29 +28,9 @@ class Sample_Query extends Query {
 	protected function parse_where() {
 		list( $where, $args ) = parent::parse_where();
 
-		if ( ! empty( $this->query_vars['title'] ) ) {
-			$title = $this->query_vars['title'];
-			$where['title'] = "%{$this->table_name}%.title = %s";
-			$args[] = $title;
-		}
-
-		if ( ! empty( $this->query_vars['parent'] ) ) {
-			$parent_id = absint( $this->query_vars['parent'] );
-			$where['parent'] = "%{$this->table_name}%.parent_id = %d";
-			$args[] = $parent_id;
-		}
-
-		if ( ! empty( $this->query_vars['parent__in'] ) ) {
-			$parent_ids = array_map( 'absint', $this->query_vars['parent__in'] );
-			$where['parent__in'] = "%{$this->table_name}%.parent_id IN ( " . implode( ',', array_fill( 0, count( $parent_ids ), '%d' ) ) . ' )';
-			$args = array_merge( $args, $parent_ids );
-		}
-
-		if ( ! empty( $this->query_vars['parent__not_in'] ) ) {
-			$parent_ids = array_map( 'absint', $this->query_vars['parent__not_in'] );
-			$where['parent__not_in'] = "%{$this->table_name}%.parent_id NOT IN ( " . implode( ',', array_fill( 0, count( $parent_ids ), '%d' ) ) . ' )';
-			$args = array_merge( $args, $parent_ids );
-		}
+		list( $where, $args ) = $this->parse_default_where_field( $where, $args, 'title', 'title', '%s', null, false );
+		list( $where, $args ) = $this->parse_default_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint', false );
+		list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint' );
 
 		return array( $where, $args );
 	}

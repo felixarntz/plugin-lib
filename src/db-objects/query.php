@@ -488,65 +488,25 @@ abstract class Query {
 		$args = array();
 
 		if ( ! empty( $this->singular_slug ) ) {
-			if ( ! empty( $this->query_vars[ $this->singular_slug . '__in' ] ) ) {
-				$ids = array_map( 'absint', $this->query_vars[ $this->singular_slug . '__in' ] );
-				$where[ $this->singular_slug . '__in' ] = "%{$this->table_name}%.id IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
-				$args = array_merge( $args, $ids );
-			}
-
-			if ( ! empty( $this->query_vars[ $this->singular_slug . '__not_in' ] ) ) {
-				$ids = array_map( 'absint', $this->query_vars[ $this->singular_slug . '__not_in' ] );
-				$where[ $this->singular_slug . '__not_in' ] = "%{$this->table_name}%.id NOT IN ( " . implode( ',', array_fill( 0, count( $ids ), '%d' ) ) . ' )';
-				$args = array_merge( $args, $ids );
-			}
+			list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'id', $this->singular_slug, '%d', 'absint' );
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
 			$type_property = $this->manager->get_type_property();
 
-			if ( ! empty( $this->query_vars[ $type_property ] ) ) {
-				if ( is_array( $this->query_vars[ $type_property ] ) ) {
-					$types = array_map( 'sanitize_key', $this->query_vars[ $type_property ] );
-					$where[ $type_property ] = "%{$this->table_name}%.{$type_property} IN ( " . implode( ',', array_fill( 0, count( $types ), '%s' ) ) . ' )';
-					$args = array_merge( $args, $types );
-				} else {
-					$type = sanitize_key( $this->query_vars[ $type_property ] );
-					$where[ $type_property ] = "%{$this->table_name}%.{$type_property} = %s";
-					$args[] = $type;
-				}
-			}
+			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $type_property, $type_property, '%s', 'sanitize_key', true );
 		}
 
 		if ( method_exists( $this->manager, 'get_status_property' ) ) {
 			$status_property = $this->manager->get_status_property();
 
-			if ( ! empty( $this->query_vars[ $status_property ] ) ) {
-				if ( is_array( $this->query_vars[ $status_property ] ) ) {
-					$statuses = array_map( 'sanitize_key', $this->query_vars[ $status_property ] );
-					$where[ $status_property ] = "%{$this->table_name}%.{$status_property} IN ( " . implode( ',', array_fill( 0, count( $statuses ), '%s' ) ) . ' )';
-					$args = array_merge( $args, $statuses );
-				} else {
-					$status = sanitize_key( $this->query_vars[ $status_property ] );
-					$where[ $status_property ] = "%{$this->table_name}%.{$status_property} = %s";
-					$args[] = $status;
-				}
-			}
+			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $status_property, $status_property, '%s', 'sanitize_key', true );
 		}
 
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$author_property = $this->manager->get_author_property();
 
-			if ( ! empty( $this->query_vars[ $author_property ] ) ) {
-				if ( is_array( $this->query_vars[ $author_property ] ) ) {
-					$authors = array_map( 'absint', $this->query_vars[ $author_property ] );
-					$where[ $author_property ] = "%{$this->table_name}%.{$author_property} IN ( " . implode( ',', array_fill( 0, count( $authors ), '%d' ) ) . ' )';
-					$args = array_merge( $args, $authors );
-				} else {
-					$author = absint( $this->query_vars[ $author_property ] );
-					$where[ $author_property ] = "%{$this->table_name}%.{$author_property} = %d";
-					$args[] = $author;
-				}
-			}
+			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $author_property, $author_property, '%d', 'absint', false );
 		}
 
 		if ( ! empty( $this->meta_query_clauses ) ) {
@@ -659,6 +619,103 @@ abstract class Query {
 		}
 
 		return 'DESC' === strtoupper( $order ) ? 'DESC' : 'ASC';
+	}
+
+	/**
+	 * Parses a default field for an argument in the WHERE clause.
+	 *
+	 * This utility method can be used inside the `Leaves_And_Love\Plugin_Lib\DB_Objects\Query::parse_where()`
+	 * method to created clauses for individual database properties.
+	 *
+	 * Clauses created by this method support an exact match search for a specific value, or a whitelist of
+	 * values if $support_array is specified as true.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array         $where             The input where array to modify.
+	 * @param array         $args              The input arguments array to modify.
+	 * @param string        $property          Name of the property in the database.
+	 * @param string        $query_var         Name of the query variable to check for.
+	 * @param string        $placeholder       Optional. Placeholder for the SQL statement. Either '%s',
+	 *                                         '%d' or '%f'. Default '%s'.
+	 * @param callable|null $sanitize_callback Optional. Callback to sanitize each value passed in the query.
+	 *                                         Default null.
+	 * @param bool          $support_array     Optional. Whether to support array values for an IN clause.
+	 *                                         Default false.
+	 * @return array Array with the first element being the array of SQL where clauses and the second
+	 *               being the array of arguments for those where clauses.
+	 */
+	protected function parse_default_where_field( $where, $args, $property, $query_var, $placeholder = '%s', $sanitize_callback = null, $support_array = false ) {
+		if ( ! empty( $this->query_vars[ $query_var ] ) ) {
+			if ( $support_array && is_array( $this->query_vars[ $query_var ] ) ) {
+				$values = $this->query_vars[ $query_var ];
+				if ( $sanitize_callback ) {
+					$values = array_map( $sanitize_callback, $values );
+				}
+
+				$where[ $query_var ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+				$args = array_merge( $args, $values );
+			} else {
+				$value = $this->query_vars[ $query_var ];
+				if ( $sanitize_callback ) {
+					$value = call_user_func( $sanitize_callback, $value );
+				}
+
+				$where[ $query_var ] = "%{$this->table_name}%.{$property} = {$placeholder}";
+				$args[] = $value;
+			}
+		}
+
+		return array( $where, $args );
+	}
+
+	/**
+	 * Parses a whitelist or blacklist field for an argument in the WHERE clause.
+	 *
+	 * This utility method can be used inside the `Leaves_And_Love\Plugin_Lib\DB_Objects\Query::parse_where()`
+	 * method to created clauses for individual database properties.
+	 *
+	 * This method creates two clauses, one for the `$property . '__in'` and one for the `$property . '__not_in'`
+	 * query variable. Both of these must contain an array with a whitelist or blacklist respectively.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array         $where             The input where array to modify.
+	 * @param array         $args              The input arguments array to modify.
+	 * @param string        $property          Name of the property in the database.
+	 * @param string        $query_var         Name of the query variable to check for. Will be suffixed with
+	 *                                         '__in' and '__not_in' respectively.
+	 * @param string        $placeholder       Optional. Placeholder for the SQL statement. Either '%s',
+	 *                                         '%d' or '%f'. Default '%s'.
+	 * @param callable|null $sanitize_callback Optional. Callback to sanitize each value passed in the query.
+	 *                                         Default null.
+	 * @return array Array with the first element being the array of SQL where clauses and the second
+	 *               being the array of arguments for those where clauses.
+	 */
+	protected function parse_list_where_field( $where, $args, $property, $query_var, $placeholder = '%s', $sanitize_callback = null ) {
+		if ( ! empty( $this->query_vars[ $query_var . '__in' ] ) ) {
+			$values = $this->query_vars[ $query_var . '__in' ];
+			if ( $sanitize_callback ) {
+				$values = array_map( $sanitize_callback, $values );
+			}
+
+			$where[ $query_var . '__in' ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$args = array_merge( $args, $values );
+		}
+
+		if ( ! empty( $this->query_vars[ $query_var . '__not_in' ] ) ) {
+			$values = $this->query_vars[ $query_var . '__not_in' ];
+			if ( $sanitize_callback ) {
+				$values = array_map( $sanitize_callback, $values );
+			}
+
+			$where[ $query_var . '__not_in' ] = "%{$this->table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$args = array_merge( $args, $values );
+		}
+
+		return array( $where, $args );
 	}
 
 	/**
