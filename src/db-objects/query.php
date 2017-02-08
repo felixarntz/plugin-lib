@@ -143,7 +143,7 @@ abstract class Query {
 
 		$this->query_var_defaults = array(
 			'fields'        => 'objects',
-			'number'        => -1,
+			'number'        => 10,
 			'offset'        => 0,
 			'no_found_rows' => null,
 			'orderby'       => array( $primary_property => 'ASC' ),
