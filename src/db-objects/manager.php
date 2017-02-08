@@ -178,6 +178,20 @@ abstract class Manager extends Service {
 	}
 
 	/**
+	 * Creates a query instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Query Query instance.
+	 */
+	public function create_query_object() {
+		$class_name = $this->query_class_name;
+
+		return new $class_name( $this );
+	}
+
+	/**
 	 * Queries models for specific criteria.
 	 *
 	 * @since 1.0.0
@@ -189,9 +203,7 @@ abstract class Manager extends Service {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
 	 */
 	public function query( $query = array() ) {
-		$class_name = $this->query_class_name;
-
-		$query_instance = new $class_name( $this );
+		$query_instance = $this->create_query_object();
 
 		return $query_instance->query( $query );
 	}
