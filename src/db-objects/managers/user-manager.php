@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Storage;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Title_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manager' ) ) :
 
@@ -21,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\User_Manage
  * @since 1.0.0
  */
 class User_Manager extends Core_Manager {
-	use Meta_Manager_Trait;
+	use Meta_Manager_Trait, Title_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -45,11 +46,12 @@ class User_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\User_Query';
 
-		$this->table_name     = 'users';
-		$this->cache_group    = 'users';
-		$this->meta_type      = 'user';
-		$this->fetch_callback = 'get_userdata';
+		$this->table_name       = 'users';
+		$this->cache_group      = 'users';
+		$this->meta_type        = 'user';
+		$this->fetch_callback   = 'get_userdata';
 		$this->primary_property = 'ID';
+		$this->title_property   = 'display_name';
 
 		Storage::register_global_group( $this->cache_group );
 

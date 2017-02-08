@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Title_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager' ) ) :
@@ -21,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manage
  * @since 1.0.0
  */
 class Term_Manager extends Core_Manager {
-	use Meta_Manager_Trait, Type_Manager_Trait;
+	use Meta_Manager_Trait, Title_Manager_Trait, Type_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -51,6 +52,7 @@ class Term_Manager extends Core_Manager {
 		$this->meta_type        = 'term';
 		$this->fetch_callback   = 'get_term';
 		$this->primary_property = 'term_id';
+		$this->title_property   = 'name';
 		$this->type_property    = 'taxonomy';
 
 		parent::__construct( $prefix, $services, $translations );

@@ -10,13 +10,13 @@ class Sample extends Model {
 
 	protected $id = 0;
 
+	protected $title = '';
+
 	protected $type = '';
 
 	protected $status = '';
 
 	protected $author_id = 0;
-
-	protected $title = '';
 
 	protected $content = '';
 

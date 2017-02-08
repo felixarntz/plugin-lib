@@ -4,6 +4,7 @@ namespace Leaves_And_Love\Sample_DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Title_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Author_Manager_Trait;
@@ -26,6 +27,7 @@ class Sample_Manager extends Manager {
 		$this->cache_group      = $name . 's';
 		$this->meta_type        = $name;
 		$this->primary_property = 'id';
+		$this->title_property   = 'title';
 		$this->type_property    = 'type';
 		$this->status_property  = 'status';
 		$this->author_property  = 'author_id';
