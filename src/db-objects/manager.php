@@ -184,7 +184,7 @@ abstract class Manager extends Service {
 	 * @access public
 	 *
 	 * @param string|array $query Array or query string of model query arguments. See
-	 *                            `Leaves_And_Love\Content_Organizer\Base\Item_Query::query()` for
+	 *                            `Leaves_And_Love\Plugin_Lib\DB_Objects\Query::query()` for
 	 *                            more information.
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
 	 */
