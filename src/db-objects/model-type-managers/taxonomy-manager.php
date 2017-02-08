@@ -30,6 +30,8 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 		parent::__construct( $prefix );
 
 		$this->model_type_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Taxonomy';
+
+		$this->default = 'category';
 	}
 
 	/**

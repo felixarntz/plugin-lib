@@ -30,6 +30,8 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 		parent::__construct( $prefix );
 
 		$this->model_status_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Statuses\Post_Status';
+
+		$this->default = 'draft';
 	}
 
 	/**
