@@ -28,7 +28,6 @@ class Sample_Query extends Query {
 	protected function parse_where() {
 		list( $where, $args ) = parent::parse_where();
 
-		list( $where, $args ) = $this->parse_default_where_field( $where, $args, 'title', 'title', '%s', null, false );
 		list( $where, $args ) = $this->parse_default_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint', false );
 		list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint' );
 
@@ -55,7 +54,7 @@ class Sample_Query extends Query {
 	protected function get_valid_orderby_fields() {
 		$orderby_fields = parent::get_valid_orderby_fields();
 
-		$orderby_fields = array_merge( $orderby_fields, array( 'title', 'parent_id', 'parent__in' ) );
+		$orderby_fields = array_merge( $orderby_fields, array( 'parent_id', 'parent__in' ) );
 
 		return $orderby_fields;
 	}
