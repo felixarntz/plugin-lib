@@ -724,7 +724,7 @@ abstract class Query {
 	 *
 	 * @return array Array of valid orderby fields.
 	 */
-	protected function get_valid_orderby_fields() {
+	public function get_valid_orderby_fields() {
 		$orderby_fields = array( 'id', 'include' );
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {

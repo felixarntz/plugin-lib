@@ -49,7 +49,7 @@ class Sample_Query extends Query {
 		return parent::parse_single_order( $order, $orderby );
 	}
 
-	protected function get_valid_orderby_fields() {
+	public function get_valid_orderby_fields() {
 		$orderby_fields = parent::get_valid_orderby_fields();
 
 		$orderby_fields = array_merge( $orderby_fields, array( 'parent_id', 'parent_include' ) );
