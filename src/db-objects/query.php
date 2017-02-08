@@ -46,15 +46,6 @@ abstract class Query {
 	protected $table_name = 'models';
 
 	/**
-	 * Singular slug to use for capability names.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $singular_slug = '';
-
-	/**
 	 * SQL for database query.
 	 *
 	 * Contains placeholders that need to be filled with `$request_args`.
@@ -148,18 +139,17 @@ abstract class Query {
 	public function __construct( $manager ) {
 		$this->manager = $manager;
 
+		$primary_property = $this->manager->get_primary_property();
+
 		$this->query_var_defaults = array(
 			'fields'        => 'objects',
 			'number'        => -1,
 			'offset'        => 0,
 			'no_found_rows' => null,
-			'orderby'       => array( 'id' => 'ASC' ),
+			'orderby'       => array( $primary_property => 'ASC' ),
+			'include'       => '',
+			'exclude'       => '',
 		);
-
-		if ( ! empty( $this->singular_slug ) ) {
-			$this->query_var_defaults[ $this->singular_slug . '__in' ]     = '';
-			$this->query_var_defaults[ $this->singular_slug . '__not_in' ] = '';
-		}
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$this->query_var_defaults[ $this->manager->get_title_property() ] = '';
@@ -491,9 +481,7 @@ abstract class Query {
 		$where = array();
 		$args = array();
 
-		if ( ! empty( $this->singular_slug ) ) {
-			list( $where, $args ) = $this->parse_list_where_field( $where, $args, $this->manager->get_primary_property(), $this->singular_slug, '%d', 'absint' );
-		}
+		list( $where, $args ) = $this->parse_list_where_field( $where, $args, $this->manager->get_primary_property(), 'include', 'exclude', '%d', 'absint' );
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$title_property = $this->manager->get_title_property();
@@ -588,8 +576,8 @@ abstract class Query {
 	 * @return string The parsed orderby SQL string.
 	 */
 	protected function parse_single_orderby( $orderby ) {
-		if ( ! empty( $this->singular_slug ) && $this->singular_slug . '__in' === $orderby ) {
-			$ids = implode( ',', array_map( 'absint', $this->query_vars[ $this->singular_slug . '__in' ] ) );
+		if ( 'include' === $orderby ) {
+			$ids = implode( ',', array_map( 'absint', $this->query_vars['include'] ) );
 
 			return "FIELD( %{$this->table_name}%.id, $ids )";
 		}
@@ -624,7 +612,7 @@ abstract class Query {
 	 * @return string The parsed order SQL string, or empty if not necessary.
 	 */
 	protected function parse_single_order( $order, $orderby ) {
-		if ( ! empty( $this->singular_slug ) && $this->singular_slug . '__in' === $orderby ) {
+		if ( 'include' === $orderby ) {
 			return '';
 		}
 
@@ -695,8 +683,8 @@ abstract class Query {
 	 * @param array         $where             The input where array to modify.
 	 * @param array         $args              The input arguments array to modify.
 	 * @param string        $property          Name of the property in the database.
-	 * @param string        $query_var         Name of the query variable to check for. Will be suffixed with
-	 *                                         '__in' and '__not_in' respectively.
+	 * @param string        $include_query_var Name of the query variable to check for included values.
+	 * @param string        $exclude_query_var Name of the query variable to check for excluded values.
 	 * @param string        $placeholder       Optional. Placeholder for the SQL statement. Either '%s',
 	 *                                         '%d' or '%f'. Default '%s'.
 	 * @param callable|null $sanitize_callback Optional. Callback to sanitize each value passed in the query.
@@ -704,24 +692,24 @@ abstract class Query {
 	 * @return array Array with the first element being the array of SQL where clauses and the second
 	 *               being the array of arguments for those where clauses.
 	 */
-	protected function parse_list_where_field( $where, $args, $property, $query_var, $placeholder = '%s', $sanitize_callback = null ) {
-		if ( ! empty( $this->query_vars[ $query_var . '__in' ] ) ) {
-			$values = $this->query_vars[ $query_var . '__in' ];
+	protected function parse_list_where_field( $where, $args, $property, $include_query_var, $exclude_query_var, $placeholder = '%s', $sanitize_callback = null ) {
+		if ( ! empty( $this->query_vars[ $include_query_var ] ) ) {
+			$values = $this->query_vars[ $include_query_var ];
 			if ( $sanitize_callback ) {
 				$values = array_map( $sanitize_callback, $values );
 			}
 
-			$where[ $query_var . '__in' ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$where[ $include_query_var ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
 			$args = array_merge( $args, $values );
 		}
 
-		if ( ! empty( $this->query_vars[ $query_var . '__not_in' ] ) ) {
-			$values = $this->query_vars[ $query_var . '__not_in' ];
+		if ( ! empty( $this->query_vars[ $exclude_query_var ] ) ) {
+			$values = $this->query_vars[ $exclude_query_var ];
 			if ( $sanitize_callback ) {
 				$values = array_map( $sanitize_callback, $values );
 			}
 
-			$where[ $query_var . '__not_in' ] = "%{$this->table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$where[ $exclude_query_var ] = "%{$this->table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
 			$args = array_merge( $args, $values );
 		}
 
@@ -737,11 +725,7 @@ abstract class Query {
 	 * @return array Array of valid orderby fields.
 	 */
 	protected function get_valid_orderby_fields() {
-		$orderby_fields = array( 'id' );
-
-		if ( ! empty( $this->singular_slug ) ) {
-			$orderby_fields[] = $this->singular_slug . '__in';
-		}
+		$orderby_fields = array( 'id', 'include' );
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$orderby_fields[] = $this->manager->get_title_property();

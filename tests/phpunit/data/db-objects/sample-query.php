@@ -9,15 +9,13 @@ class Sample_Query extends Query {
 		$name = $manager->get_sample_name();
 
 		$this->table_name = $name . 's';
-		$this->singular_slug = $name;
 
 		parent::__construct( $manager );
 
 		$query_vars = array(
-			'title',
 			'parent',
-			'parent__in',
-			'parent__not_in',
+			'parent_include',
+			'parent_exclude',
 		);
 
 		foreach ( $query_vars as $query_var ) {
@@ -29,14 +27,14 @@ class Sample_Query extends Query {
 		list( $where, $args ) = parent::parse_where();
 
 		list( $where, $args ) = $this->parse_default_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint', false );
-		list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'parent_id', 'parent', '%d', 'absint' );
+		list( $where, $args ) = $this->parse_list_where_field( $where, $args, 'parent_id', 'parent_include', 'parent_exclude', '%d', 'absint' );
 
 		return array( $where, $args );
 	}
 
 	protected function parse_single_orderby( $orderby ) {
-		if ( 'parent__in' === $orderby ) {
-			$ids = implode( ',', array_map( 'absint', $this->query_vars['parent__in'] ) );
+		if ( 'parent_include' === $orderby ) {
+			$ids = implode( ',', array_map( 'absint', $this->query_vars['parent_include'] ) );
 			return "FIELD( %{$this->table_name}%.parent_id, $ids )";
 		}
 
@@ -44,7 +42,7 @@ class Sample_Query extends Query {
 	}
 
 	protected function parse_single_order( $order, $orderby ) {
-		if ( 'parent__in' === $orderby ) {
+		if ( 'parent_include' === $orderby ) {
 			return '';
 		}
 
@@ -54,7 +52,7 @@ class Sample_Query extends Query {
 	protected function get_valid_orderby_fields() {
 		$orderby_fields = parent::get_valid_orderby_fields();
 
-		$orderby_fields = array_merge( $orderby_fields, array( 'parent_id', 'parent__in' ) );
+		$orderby_fields = array_merge( $orderby_fields, array( 'parent_id', 'parent_include' ) );
 
 		return $orderby_fields;
 	}
