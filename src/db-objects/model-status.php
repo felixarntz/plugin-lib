@@ -141,6 +141,18 @@ abstract class Model_Status {
 	 */
 	protected function set_args( $args ) {
 		$this->args = wp_parse_args( $args, $this->get_defaults() );
+
+		if ( ! isset( $this->args['public'] ) ) {
+			$this->args['public'] = false;
+		}
+
+		if ( ! isset( $this->args['internal'] ) ) {
+			$this->args['internal'] = false;
+		}
+
+		if ( ! isset( $this->args['default'] ) ) {
+			$this->args['default'] = false;
+		}
 	}
 
 	/**

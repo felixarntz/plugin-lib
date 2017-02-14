@@ -857,7 +857,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 					'type' => 'string',
 					'enum' => array_keys( $this->manager->statuses()->query() ),
 				),
-				'default'           => $this->manager->statuses()->get_default(),
+				'default'           => $this->manager->statuses()->get_public(),
 				'sanitize_callback' => array( $this, 'sanitize_statuses' ),
 			);
 		}
@@ -949,9 +949,9 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	public function sanitize_set_status( $status, $request, $parameter ) {
 		$capabilities = $this->manager->capabilities();
 
-		$default_status = $this->manager->statuses()->get_default();
+		$public_statuses = $this->manager->statuses()->get_public();
 
-		if ( $status !== $default_status ) {
+		if ( in_array( $status, $public_statuses, true ) ) {
 			$id = isset( $request['id'] ) ? absint( $request['id'] ) : null;
 
 			if ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) {
@@ -976,12 +976,12 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	public function sanitize_statuses( $statuses, $request, $parameter ) {
 		$capabilities = $this->manager->capabilities();
 
-		$default_status = $this->manager->statuses()->get_default();
+		$public_statuses = $this->manager->statuses()->get_public();
 
 		$statuses = wp_parse_slug_list( $statuses );
 
 		foreach ( $statuses as $status ) {
-			if ( $status === $default_status ) {
+			if ( in_array( $status, $public_statuses, true ) ) {
 				continue;
 			}
 
