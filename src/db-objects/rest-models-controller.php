@@ -644,7 +644,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			$type = $model->$type_property;
 			if ( ! empty( $type ) ) {
 				$links['about'] = array(
-					'href' => rest_url( trailingslashit( $base ) . 'types/' . $type );
+					'href' => rest_url( trailingslashit( $base ) . 'types/' . $type ),
 				);
 			}
 		}
