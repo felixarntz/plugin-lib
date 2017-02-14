@@ -118,6 +118,15 @@ abstract class Query {
 	private $meta_query;
 
 	/**
+	 * Date query container.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 * @var WP_Date_Query
+	 */
+	private $date_query;
+
+	/**
 	 * Metadata query clauses.
 	 *
 	 * @since 1.0.0
@@ -167,6 +176,10 @@ abstract class Query {
 			$this->query_var_defaults[ $this->manager->get_author_property() ] = '';
 		}
 
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$this->query_var_defaults['date_query'] = null;
+		}
+
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 			$this->query_var_defaults['meta_key']   = '';
 			$this->query_var_defaults['meta_value'] = '';
@@ -191,11 +204,17 @@ abstract class Query {
 			case 'query_var_defaults':
 			case 'results':
 				return true;
+			case 'date_query':
+				if ( method_exists( $this->manager, 'get_date_property' ) ) {
+					return true;
+				}
+				return false;
 			case 'meta_query':
 			case 'meta_query_clauses':
 				if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 					return true;
 				}
+				return false;
 		}
 
 		return false;
@@ -218,11 +237,17 @@ abstract class Query {
 			case 'query_var_defaults':
 			case 'results':
 				return $this->$property;
+			case 'date_query':
+				if ( method_exists( $this->manager, 'get_date_property' ) ) {
+					return $this->$property;
+				}
+				return null;
 			case 'meta_query':
 			case 'meta_query_clauses':
 				if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 					return $this->$property;
 				}
+				return null;
 		}
 
 		return null;
@@ -285,6 +310,10 @@ abstract class Query {
 			} else {
 				$this->query_vars['no_found_rows'] = false;
 			}
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) && ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
+			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->manager->get_date_property() );
 		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
@@ -505,6 +534,10 @@ abstract class Query {
 			$author_property = $this->manager->get_author_property();
 
 			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $author_property, $author_property, '%d', 'absint', false );
+		}
+
+		if ( $this->date_query ) {
+			$where['date_query'] = preg_replace( '/^\s*AND\s*/', '', $this->date_query->get_sql() );
 		}
 
 		if ( ! empty( $this->meta_query_clauses ) ) {
@@ -741,6 +774,10 @@ abstract class Query {
 
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$orderby_fields[] = $this->manager->get_author_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$orderby_fields[] = $this->manager->get_date_property();
 		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {

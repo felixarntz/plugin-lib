@@ -155,9 +155,40 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			'order'    => 'asc',
 		);
 
+		$date_query = array();
+		$date_query_map = array();
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+			$secondary_date_properties = $this->get_secondary_date_properties();
+		}
+
 		foreach ( $registered_args as $property => $params ) {
 			if ( ! isset( $request[ $property ] ) ) {
 				continue;
+			}
+
+			if ( isset( $date_property ) && isset( $params['format'] ) && 'date-time' === $params['format'] ) {
+				$date_column = '';
+				$mode = '';
+
+				if ( '_before' === substr( $property, -7 ) ) {
+					$date_column = substr( $property, 0, -7 );
+					$mode = 'before';
+				} elseif ( '_after' === substr( $property, -6 ) ) {
+					$date_column = substr( $property, -6 );
+					$mode = 'after';
+				}
+
+				if ( ! empty( $date_column ) && ! empty( $mode ) && ( $date_column === $date_property || in_array( $date_column, $secondary_date_properties, true ) ) ) {
+					if ( ! isset( $date_query_map[ $date_column ] ) ) {
+						$date_query_map[ $date_column ] = count( $date_query );
+						$date_query[ $date_query_map[ $date_column ] ]['column'] = $date_column;
+					}
+
+					$date_query[ $date_query_map[ $date_column ] ][ $mode ] = $request[ $property ];
+					continue;
+				}
 			}
 
 			if ( isset( $special_args[ $property ] ) ) {
@@ -165,6 +196,10 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			} else {
 				$args[ $property ] = $request[ $property ];
 			}
+		}
+
+		if ( ! empty( $date_query ) ) {
+			$args['date_query'] = $date_query;
 		}
 
 		$args['number'] = $special_args['per_page'];
@@ -495,7 +530,33 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 				continue;
 			}
 
-			if ( isset( $request[ $property ] ) ) {
+			if ( ! isset( $request[ $property ] ) ) {
+				continue;
+			}
+
+			if ( isset( $params['format'] ) && 'date-time' === $params['format'] ) {
+				if ( '_gmt' === substr( $property, -4 ) ) {
+					$date_data = rest_get_date_with_gmt( $request[ $property ], true );
+					if ( ! empty( $date_data ) ) {
+						$model->$property = $date_data[1];
+
+						$property_no_gmt = substr( $property, 0, -4 );
+						if ( isset( $model->$property_no_gmt ) ) {
+							$model->$property_no_gmt = $date_data[0];
+						}
+					}
+				} else {
+					$date_data = rest_get_date_with_gmt( $request[ $property ] );
+					if ( ! empty( $date_data ) ) {
+						$model->$property = $date_data[0];
+
+						$property_gmt = $property . '_gmt';
+						if ( isset( $model->$property_gmt ) ) {
+							$model->$property_gmt = $date_data[1];
+						}
+					}
+				}
+			} else {
 				$model->$property = $request[ $property ];
 			}
 		}
@@ -519,7 +580,11 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$data = array();
 
 		foreach ( $schema['properties'] as $property => $params ) {
-			$data[ $property ] = $model->$property;
+			if ( isset( $params['format'] ) && 'date-time' === $params['format'] ) {
+				$data[ $property ] = $this->prepare_date_for_response( $model->$property );
+			} else {
+				$data[ $property ] = $model->$property;
+			}
 		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
@@ -531,6 +596,23 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$response->add_links( $this->prepare_links( $model ) );
 
 		return $response;
+	}
+
+	/**
+	 * Prepares a date for response.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $date The datetime string to prepare.
+	 * @return string|null ISO8601/RFC3339 formatted datetime.
+	 */
+	protected function prepare_date_for_response( $date ) {
+		if ( '0000-00-00 00:00:00' === $date ) {
+			return null;
+		}
+
+		return mysql_to_rfc3339( $date );
 	}
 
 	/**
@@ -663,6 +745,33 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			);
 		}
 
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$schema['properties'][ $date_property ] = array(
+				'description' => $this->manager->get_message( 'rest_item_date_description' ),
+				'type'        => 'string',
+				'format'      => 'date-time',
+				'context'     => array( 'view', 'edit', 'embed' ),
+				/* Sanitization is handled directly in the prepare methods. */
+			);
+
+			foreach ( $this->manager->get_secondary_date_properties() as $secondary_date_property ) {
+				$description = $this->manager->get_message( 'rest_item_date_' . $secondary_date_property . '_description' );
+				if ( empty( $description ) ) {
+					continue;
+				}
+
+				$schema['properties'][ $secondary_date_property ] = array(
+					'description' => $description,
+					'type'        => 'string',
+					'format'      => 'date-time',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					/* Sanitization is handled directly in the prepare methods. */
+				);
+			}
+		}
+
 		return $schema;
 	}
 
@@ -761,6 +870,42 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 				'type'              => 'integer',
 				'sanitize_callback' => array( $this, 'sanitize_author' ),
 			);
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$query_params[ $date_property . '_after' ] = array(
+				'description' => $this->manager->get_message( 'rest_collection_date_after_description' ),
+				'type'        => 'string',
+				'format'      => 'date-time',
+			);
+
+			$query_params[ $date_property . '_before' ] = array(
+				'description' => $this->manager->get_message( 'rest_collection_date_before_description' ),
+				'type'        => 'string',
+				'format'      => 'date-time',
+			);
+
+			foreach ( $this->manager->get_secondary_date_properties() as $secondary_date_property ) {
+				$after_description = $this->manager->get_message( 'rest_collection_date_' . $secondary_date_property . '_after_description' );
+				if ( ! empty( $after_description ) ) {
+					$query_params[ $secondary_date_property . '_after' ] = array(
+						'description' => $after_description,
+						'type'        => 'string',
+						'format'      => 'date-time',
+					);
+				}
+
+				$before_description = $this->manager->get_message( 'rest_collection_date_' . $secondary_date_property . '_before_description' );
+				if ( ! empty( $before_description ) ) {
+					$query_params[ $secondary_date_property . '_before' ] = array(
+						'description' => $before_description,
+						'type'        => 'string',
+						'format'      => 'date-time',
+					);
+				}
+			}
 		}
 
 		return $query_params;
