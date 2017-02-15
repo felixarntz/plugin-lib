@@ -346,6 +346,50 @@ abstract class Manager extends Service {
 	}
 
 	/**
+	 * Counts all existing models for this manager.
+	 *
+	 * If the manager supports statuses, individual counts for each status
+	 * are returned as well.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of `$status => $count` pairs. In addition, the array
+	 *               always includes a key called '_total', containing the overall
+	 *               count. If the manager does not support statuses, the array
+	 *               only contains the '_total' key.
+	 */
+	public function count() {
+		$counts = $this->cache()->get( $this->plural_slug, 'counts' );
+		if ( false !== $counts ) {
+			return $counts;
+		}
+
+		if ( method_exists( $this, 'get_status_property' ) ) {
+			$status_property = $this->get_status_property();
+
+			$results = $this->db()->get_results( "SELECT $status_property, COUNT( * ) AS num_models FROM %{$this->table_name}% GROUP BY $status_property" );
+
+			$total = 0;
+			$counts = array_fill_keys( $this->statuses()->query(), 0 );
+			foreach ( $results as $row ) {
+				$counts[ $row->$status_property ] = $row->num_models;
+				$total += $row->num_models;
+			}
+
+			$counts['_total'] = $total;
+		} else {
+			$total = $this->db()->get_var( "SELECT COUNT( * ) FROM %{$this->table_name}%" );
+
+			$counts = array( '_total' => $total );
+		}
+
+		$this->cache()->set( $this->plural_slug, $counts, 'counts' );
+
+		return $counts;
+	}
+
+	/**
 	 * Returns the name of the primary property that identifies each model.
 	 *
 	 * This is usually an integer ID denoting the database row.
@@ -500,6 +544,12 @@ abstract class Manager extends Service {
 	 */
 	protected function clean_cache( $model_id ) {
 		$model_id = absint( $model_id );
+
+		$this->cache()->delete( $this->plural_slug, 'counts' );
+
+		if ( method_exists( $this, 'get_meta_type' ) ) {
+			$this->cache()->delete( $model_id, $this->get_meta_type() . '_meta' );
+		}
 
 		$this->delete_from_cache( $model_id );
 
