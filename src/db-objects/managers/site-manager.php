@@ -46,6 +46,9 @@ class Site_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query';
 
+		$this->singular_slug = 'site';
+		$this->plural_slug   = 'sites';
+
 		$this->table_name       = 'blogs';
 		$this->cache_group      = 'sites';
 		$this->meta_type        = 'site';

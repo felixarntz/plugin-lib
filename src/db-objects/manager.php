@@ -55,6 +55,24 @@ abstract class Manager extends Service {
 	protected $query_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query';
 
 	/**
+	 * Singular slug to use.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $singular_slug = 'model';
+
+	/**
+	 * Plural slug to use.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $plural_slug = 'models';
+
+	/**
 	 * The model database table name.
 	 *
 	 * @since 1.0.0
@@ -121,6 +139,11 @@ abstract class Manager extends Service {
 		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 		$this->set_translations( $translations );
+
+		$capabilities = $this->capabilities();
+		if ( $capabilities ) {
+			$capabilities->set_manager( $this );
+		}
 	}
 
 	/**
@@ -334,6 +357,30 @@ abstract class Manager extends Service {
 	 */
 	public function get_primary_property() {
 		return $this->primary_property;
+	}
+
+	/**
+	 * Returns the singular slug.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Singular slug.
+	 */
+	public function get_singular_slug() {
+		return $this->singular_slug;
+	}
+
+	/**
+	 * Returns the plural slug.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Plural slug.
+	 */
+	public function get_plural_slug() {
+		return $this->plural_slug;
 	}
 
 	/**

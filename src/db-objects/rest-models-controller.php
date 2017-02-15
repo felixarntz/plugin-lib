@@ -22,15 +22,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
  */
 abstract class REST_Models_Controller extends WP_REST_Controller {
 	/**
-	 * Title for the model schema.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $title = '';
-
-	/**
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
@@ -675,7 +666,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	public function get_item_schema() {
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/schema#',
-			'title'      => $this->title,
+			'title'      => $this->manager->get_singular_slug(),
 			'type'       => 'object',
 			'properties' => array(),
 		);

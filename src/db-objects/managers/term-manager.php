@@ -47,6 +47,9 @@ class Term_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query';
 
+		$this->singular_slug = 'term';
+		$this->plural_slug   = 'terms';
+
 		$this->table_name       = 'terms';
 		$this->cache_group      = 'terms';
 		$this->meta_type        = 'term';

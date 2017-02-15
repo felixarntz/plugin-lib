@@ -51,6 +51,9 @@ class Post_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Post_Query';
 
+		$this->singular_slug = 'post';
+		$this->plural_slug   = 'posts';
+
 		$this->table_name       = 'posts';
 		$this->cache_group      = 'posts';
 		$this->meta_type        = 'post';

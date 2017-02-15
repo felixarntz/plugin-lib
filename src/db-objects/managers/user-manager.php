@@ -47,6 +47,9 @@ class User_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\User_Query';
 
+		$this->singular_slug = 'user';
+		$this->plural_slug   = 'users';
+
 		$this->table_name       = 'users';
 		$this->cache_group      = 'users';
 		$this->meta_type        = 'user';
