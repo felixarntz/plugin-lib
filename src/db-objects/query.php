@@ -176,6 +176,10 @@ abstract class Query {
 			$this->query_var_defaults[ $this->manager->get_author_property() ] = '';
 		}
 
+		if ( ! empty( $this->get_search_fields() ) ) {
+			$this->query_var_defaults['search'] = '';
+		}
+
 		if ( method_exists( $this->manager, 'get_date_property' ) ) {
 			$this->query_var_defaults['date_query'] = null;
 		}
@@ -536,6 +540,11 @@ abstract class Query {
 			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $author_property, $author_property, '%d', 'absint', false );
 		}
 
+		$search_fields = $this->get_search_fields();
+		if ( ! empty( $search_fields ) && ! empty( $this->query_vars['search'] ) ) {
+			$where['search'] = $this->get_search_sql( $this->query_vars['search'], $search_fields );
+		}
+
 		if ( $this->date_query ) {
 			$where['date_query'] = preg_replace( '/^\s*AND\s*/', '', $this->date_query->get_sql() );
 		}
@@ -785,6 +794,53 @@ abstract class Query {
 		}
 
 		return $orderby_fields;
+	}
+
+	/**
+	 * Returns the fields that are searchable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of database column names.
+	 */
+	public function get_search_fields() {
+		$search_fields = array();
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$search_fields[] = $this->manager->get_title_property();
+		}
+
+		return $search_fields;
+	}
+
+	/**
+	 * Used internally to generate an SQL string for searching across multiple columns.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @global wpdb  $wpdb WordPress database abstraction object.
+	 *
+	 * @param string $string Search string.
+	 * @param array  $fields Database columns to search.
+	 * @return string Search SQL.
+	 */
+	protected function get_search_sql( $string, $fields ) {
+		global $wpdb;
+
+		if ( false !== strpos( $string, '*' ) ) {
+			$like = '%' . implode( '%', array_map( array( $wpdb, 'esc_like' ), explode( '*', $string ) ) ) . '%';
+		} else {
+			$like = '%' . $wpdb->esc_like( $string ) . '%';
+		}
+
+		$searches = array();
+		foreach ( $fields as $field ) {
+			$searches[] = $wpdb->prepare( "%{$this->table_name}%.{$field} LIKE %s", $like );
+		}
+
+		return '(' . implode( ' OR ', $searches ) . ')';
 	}
 
 	/**
