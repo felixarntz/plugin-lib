@@ -261,11 +261,7 @@ class DB extends Service {
 	 * @return int|bool The number of rows updated, or false on error.
 	 */
 	public function update( $table, $data, $where ) {
-		if ( isset( $this->tables[ $table ] ) ) {
-			$table = $this->table_to_db_table( $this->tables[ $table ] );
-		}
-
-		return $this->wpdb->update( $table, $data, $where, $this->create_format_from_data( $data ), $this->create_format_from_data( $where ) );
+		return $this->update_helper( $table, $data, $where );
 	}
 
 	/**
@@ -459,7 +455,23 @@ class DB extends Service {
 			$query = $this->wpdb->prepare( $query, $args );
 		}
 
-		return call_user_func( array( $this->wpdb, $method_name ), $query );
+		$result = call_user_func( array( $this->wpdb, $method_name ), $query );
+
+		if ( empty( $result ) ) {
+			return $result;
+		}
+
+		if ( is_array( $result ) ) {
+			$results = array();
+
+			foreach ( $result as $key => $value ) {
+				$results[ $key ] = $this->prepare_data_from_database( $value );
+			}
+
+			return $results;
+		}
+
+		return $this->prepare_data_from_database( $result );
 	}
 
 	/**
@@ -480,7 +492,77 @@ class DB extends Service {
 			$table = $this->table_to_db_table( $this->tables[ $table ] );
 		}
 
+		$data = $this->prepare_data_for_database( $data );
+
 		return call_user_func( array( $this->wpdb, $method_name ), $table, $data, $this->create_format_from_data( $data ) );
+	}
+
+	/**
+	 * Handles update queries to the database.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
+	 * @param array  $data  Data to update (in column => value pairs).
+	 *                      Both $data columns and $data values should be "raw" (neither should be SQL escaped).
+	 *                      Sending a null value will cause the column to be set to NULL.
+	 * @param array  $where A named array of WHERE clauses (in column => value pairs). Multiple clauses will be
+	 *                      joined with ANDs. Both $where columns and $where values should be "raw".
+	 *                      Sending a null value will create an IS NULL comparison.
+	 * @return int|bool The number of rows updated, or false on error.
+	 */
+	protected function update_helper( $table, $data, $where ) {
+		if ( isset( $this->tables[ $table ] ) ) {
+			$table = $this->table_to_db_table( $this->tables[ $table ] );
+		}
+
+		$data = $this->prepare_data_for_database( $data );
+		$where = $this->prepare_data_for_database( $where );
+
+		return $this->wpdb->update( $table, $data, $where, $this->create_format_from_data( $data ), $this->create_format_from_data( $where ) );
+	}
+
+	/**
+	 * Prepares data prior to setting it in the database.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $data Data as $column => $value pairs.
+	 * @return array Prepared data.
+	 */
+	protected function prepare_data_for_database( $data ) {
+		$prepared_data = array();
+
+		foreach ( $data as $column => $value ) {
+			$prepared_data[ $column ] = maybe_serialize( $value );
+		}
+
+		return $prepared_data;
+	}
+
+	/**
+	 * Prepares data after retrieving it from the database.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param object|string $data Database object or column value.
+	 * @return object|string|array Prepared database object or column value.
+	 */
+	protected function prepare_data_from_database( $data ) {
+		if ( is_object( $data ) ) {
+			$prepared_data = new \stdClass();
+
+			foreach ( get_object_vars( $data ) as $column => $value ) {
+				$prepared_data->$column = maybe_unserialize( $value );
+			}
+
+			return $prepared_data;
+		}
+
+		return maybe_unserialize( $data );
 	}
 
 	/**
