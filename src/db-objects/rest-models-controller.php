@@ -629,17 +629,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			),
 		);
 
-		if ( method_exists( $this->manager, 'get_type_property' ) ) {
-			$type_property = $this->manager->get_type_property();
-
-			$type = $model->$type_property;
-			if ( ! empty( $type ) ) {
-				$links['about'] = array(
-					'href' => rest_url( trailingslashit( $base ) . 'types/' . $type ),
-				);
-			}
-		}
-
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$author_property = $this->manager->get_author_property();
 
