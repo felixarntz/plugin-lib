@@ -37,15 +37,6 @@ abstract class Query {
 	protected $manager;
 
 	/**
-	 * The model database table name.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $table_name = 'models';
-
-	/**
 	 * SQL for database query.
 	 *
 	 * Contains placeholders that need to be filled with `$request_args`.
@@ -328,7 +319,9 @@ abstract class Query {
 				$prefix = $this->manager->db()->get_prefix();
 				$name   = $this->manager->get_meta_type();
 
-				$this->meta_query_clauses = $this->meta_query->get_sql( $prefix . $name, "%{$this->table_name}%", 'id', $this );
+				$table_name = $this->manager->get_table_name();
+
+				$this->meta_query_clauses = $this->meta_query->get_sql( $prefix . $name, "%{$table_name}%", 'id', $this );
 			}
 		}
 	}
@@ -407,6 +400,8 @@ abstract class Query {
 	 * @return array Array of model IDs.
 	 */
 	protected function query_results() {
+		$table_name = $this->manager->get_table_name();
+
 		list( $fields, $distinct ) = $this->parse_fields();
 		if ( is_bool( $distinct ) ) {
 			$distinct = $distinct ? 'DISTINCT' : '';
@@ -462,7 +457,7 @@ abstract class Query {
 		}
 
 		$this->sql_clauses['select']  = "SELECT $distinct $found_rows $fields";
-		$this->sql_clauses['from']    = "FROM %{$this->table_name}% $join";
+		$this->sql_clauses['from']    = "FROM %{$table_name}% $join";
 		$this->sql_clauses['groupby'] = $groupby;
 		$this->sql_clauses['orderby'] = $orderby;
 		$this->sql_clauses['limits']  = $limits;
@@ -482,7 +477,9 @@ abstract class Query {
 	 *               being a boolean specifying whether to use the DISTINCT keyword.
 	 */
 	protected function parse_fields() {
-		return array( '%' . $this->table_name . '%.id', false );
+		$table_name = $this->manager->get_table_name();
+
+		return array( '%' . $table_name . '%.id', false );
 	}
 
 	/**
@@ -566,7 +563,9 @@ abstract class Query {
 	 */
 	protected function parse_groupby() {
 		if ( ! empty( $this->meta_query_clauses ) ) {
-			return '%' . $this->table_name . '%.id';
+			$table_name = $this->manager->get_table_name();
+
+			return '%' . $table_name . '%.id';
 		}
 
 		return '';
@@ -587,7 +586,9 @@ abstract class Query {
 		}
 
 		if ( empty( $orderby ) ) {
-			return '%' . $this->table_name . '%.id ASC';
+			$table_name = $this->manager->get_table_name();
+
+			return '%' . $table_name . '%.id ASC';
 		}
 
 		$orderby_array = array();
@@ -618,10 +619,12 @@ abstract class Query {
 	 * @return string The parsed orderby SQL string.
 	 */
 	protected function parse_single_orderby( $orderby ) {
+		$table_name = $this->manager->get_table_name();
+
 		if ( 'include' === $orderby ) {
 			$ids = implode( ',', array_map( 'absint', $this->query_vars['include'] ) );
 
-			return "FIELD( %{$this->table_name}%.id, $ids )";
+			return "FIELD( %{$table_name}%.id, $ids )";
 		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) && in_array( $orderby, $this->get_meta_orderby_fields(), true ) ) {
@@ -640,7 +643,7 @@ abstract class Query {
 			return sprintf( "CAST(%s.meta_value AS %s)", esc_sql( $meta_query_clauses[ $orderby ]['alias'] ), esc_sql( $meta_query_clauses[ $orderby ]['cast'] ) );
 		}
 
-		return '%' . $this->table_name . '%.' . $orderby;
+		return '%' . $table_name . '%.' . $orderby;
 	}
 
 	/**
@@ -688,13 +691,15 @@ abstract class Query {
 	 */
 	protected function parse_default_where_field( $where, $args, $property, $query_var, $placeholder = '%s', $sanitize_callback = null, $support_array = false ) {
 		if ( ! empty( $this->query_vars[ $query_var ] ) ) {
+			$table_name = $this->manager->get_table_name();
+
 			if ( $support_array && is_array( $this->query_vars[ $query_var ] ) ) {
 				$values = $this->query_vars[ $query_var ];
 				if ( $sanitize_callback ) {
 					$values = array_map( $sanitize_callback, $values );
 				}
 
-				$where[ $query_var ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+				$where[ $query_var ] = "%{$table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
 				$args = array_merge( $args, $values );
 			} else {
 				$value = $this->query_vars[ $query_var ];
@@ -702,7 +707,7 @@ abstract class Query {
 					$value = call_user_func( $sanitize_callback, $value );
 				}
 
-				$where[ $query_var ] = "%{$this->table_name}%.{$property} = {$placeholder}";
+				$where[ $query_var ] = "%{$table_name}%.{$property} = {$placeholder}";
 				$args[] = $value;
 			}
 		}
@@ -735,13 +740,15 @@ abstract class Query {
 	 *               being the array of arguments for those where clauses.
 	 */
 	protected function parse_list_where_field( $where, $args, $property, $include_query_var, $exclude_query_var, $placeholder = '%s', $sanitize_callback = null ) {
+		$table_name = $this->manager->get_table_name();
+
 		if ( ! empty( $this->query_vars[ $include_query_var ] ) ) {
 			$values = $this->query_vars[ $include_query_var ];
 			if ( $sanitize_callback ) {
 				$values = array_map( $sanitize_callback, $values );
 			}
 
-			$where[ $include_query_var ] = "%{$this->table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$where[ $include_query_var ] = "%{$table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
 			$args = array_merge( $args, $values );
 		}
 
@@ -751,7 +758,7 @@ abstract class Query {
 				$values = array_map( $sanitize_callback, $values );
 			}
 
-			$where[ $exclude_query_var ] = "%{$this->table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
+			$where[ $exclude_query_var ] = "%{$table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
 			$args = array_merge( $args, $values );
 		}
 
@@ -829,6 +836,8 @@ abstract class Query {
 	protected function get_search_sql( $string, $fields ) {
 		global $wpdb;
 
+		$table_name = $this->manager->get_table_name();
+
 		if ( false !== strpos( $string, '*' ) ) {
 			$like = '%' . implode( '%', array_map( array( $wpdb, 'esc_like' ), explode( '*', $string ) ) ) . '%';
 		} else {
@@ -837,7 +846,7 @@ abstract class Query {
 
 		$searches = array();
 		foreach ( $fields as $field ) {
-			$searches[] = $wpdb->prepare( "%{$this->table_name}%.{$field} LIKE %s", $like );
+			$searches[] = $wpdb->prepare( "%{$table_name}%.{$field} LIKE %s", $like );
 		}
 
 		return '(' . implode( ' OR ', $searches ) . ')';

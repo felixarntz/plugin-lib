@@ -384,6 +384,18 @@ abstract class Manager extends Service {
 	}
 
 	/**
+	 * Returns the database table name.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Table name.
+	 */
+	public function get_table_name() {
+		return $this->table_name;
+	}
+
+	/**
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0

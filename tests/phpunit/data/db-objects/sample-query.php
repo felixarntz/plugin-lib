@@ -8,8 +8,6 @@ class Sample_Query extends Query {
 	public function __construct( $manager ) {
 		$name = $manager->get_sample_name();
 
-		$this->table_name = $name . 's';
-
 		parent::__construct( $manager );
 
 		$query_vars = array(
@@ -34,8 +32,10 @@ class Sample_Query extends Query {
 
 	protected function parse_single_orderby( $orderby ) {
 		if ( 'parent_include' === $orderby ) {
+			$table_name = $this->manager->get_table_name();
+
 			$ids = implode( ',', array_map( 'absint', $this->query_vars['parent_include'] ) );
-			return "FIELD( %{$this->table_name}%.parent_id, $ids )";
+			return "FIELD( %{$table_name}%.parent_id, $ids )";
 		}
 
 		return parent::parse_single_orderby( $orderby );
