@@ -41,15 +41,6 @@ abstract class Model_Type_Manager extends Service {
 	protected $model_type_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type';
 
 	/**
-	 * Slug of the default type.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $default = '';
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -203,11 +194,12 @@ abstract class Model_Type_Manager extends Service {
 	 * @return string Default type.
 	 */
 	public function get_default() {
-		if ( ! empty( $this->default ) && null !== $this->get( $this->default ) ) {
-			return $this->default;
+		$results = $this->query( array( 'default' => true ) );
+		if ( empty( $results ) ) {
+			return '';
 		}
 
-		return '';
+		return key( $results );
 	}
 
 	/**

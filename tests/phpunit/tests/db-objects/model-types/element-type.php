@@ -64,7 +64,7 @@ class Tests_Element_Type extends Unit_Test_Case {
 
 		$type = new Sample_Type( 'foo', $args );
 
-		$expected = array_merge( array( 'slug' => 'foo' ), $args );
+		$expected = array_merge( array( 'slug' => 'foo' ), $args, array( 'default' => false ) );
 		$result = $type->to_json();
 		$this->assertEquals( $expected, $result );
 	}
