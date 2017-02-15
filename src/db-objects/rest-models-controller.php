@@ -766,7 +766,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	public function get_collection_params() {
 		$query_params = parent::get_collection_params();
 
+		$primary_property = $this->manager->get_primary_property();
+		$query_object     = $this->manager->create_query_object();
+
 		$query_params['context']['default'] = 'view';
+
+		if ( empty( $query_object->get_search_fields() ) ) {
+			unset( $query_params['search'] );
+		}
 
 		$query_params['include'] = array(
 			'description' => $this->manager->get_message( 'rest_collection_include_description' ),
@@ -785,9 +792,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			),
 			'default'     => array(),
 		);
-
-		$primary_property = $this->manager->get_primary_property();
-		$query_object     = $this->manager->create_query_object();
 
 		$query_params['orderby'] = array(
 			'description'        => $this->manager->get_message( 'rest_collection_orderby_description' ),
