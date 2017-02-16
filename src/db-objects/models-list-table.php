@@ -88,7 +88,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	public function prepare_items() {
 		$capabilities = $this->manager->capabilities();
 
-		$per_page = $this->get_items_per_page( 'list_table_' . $this->_args['plural'] . '_per_page' );
+		$per_page = $this->get_items_per_page( 'list_' . $this->_args['plural'] . '_per_page' );
 
 		$paged = $this->get_pagenum();
 
@@ -194,6 +194,24 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 */
 	public function no_items() {
 		echo $this->manager->get_message( 'list_table_no_items' );
+	}
+
+	/**
+	 * Displays the search box.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $text     The 'submit' button label.
+	 * @param string $input_id ID attribute value for the search input field.
+	 */
+	public function search_box( $text, $input_id ) {
+		$query_object = $this->manager->create_query_object();
+		if ( empty( $query_object->get_search_fields() ) ) {
+			return;
+		}
+
+		parent::search_box( $text, $input_id );
 	}
 
 	/**
