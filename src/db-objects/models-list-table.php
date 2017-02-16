@@ -630,11 +630,11 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$columns['title'] = $this->manager->get_message( 'list_table_column_label_title' );
 		}
 
-		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$columns['author'] = $this->manager->get_message( 'list_table_column_label_author' );
 		}
 
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
 			$columns['date'] = $this->manager->get_message( 'list_table_column_label_date' );
 		}
 
