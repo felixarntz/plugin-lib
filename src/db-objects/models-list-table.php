@@ -655,11 +655,11 @@ abstract class Models_List_Table extends \WP_List_Table {
 	protected function build_sortable_columns() {
 		$sortable_columns = array();
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$sortable_columns['title'] = $this->manager->get_title_property();
 		}
 
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
 			$sortable_columns['date'] = array( $this->manager->get_date_property(), true );
 		}
 
