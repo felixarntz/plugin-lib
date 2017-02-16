@@ -771,7 +771,8 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 
 		$query_params['context']['default'] = 'view';
 
-		if ( empty( $query_object->get_search_fields() ) ) {
+		$search_fields = $query_object->get_search_fields();
+		if ( empty( $search_fields ) ) {
 			unset( $query_params['search'] );
 		}
 
