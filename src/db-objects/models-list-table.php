@@ -423,11 +423,13 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$links = array();
 
+		$nonce = wp_create_nonce( 'row-' . $this->_args['singular'] );
+
 		foreach ( $actions as $slug => $data ) {
 			$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
 			$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
 
-			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $data['url'] ), $class, $aria_label, $data['label'] );
+			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( add_query_arg( '_wpnonce', $nonce, $data['url'] ) ), $class, $aria_label, $data['label'] );
 		}
 
 		return $this->row_actions( $links );
