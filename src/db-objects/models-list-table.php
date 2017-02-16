@@ -626,7 +626,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		$columns = array();
 		$columns['cb'] = '<input type="checkbox" />';
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$columns['title'] = $this->manager->get_message( 'list_table_column_label_title' );
 		}
 
