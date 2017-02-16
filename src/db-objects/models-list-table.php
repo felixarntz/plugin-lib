@@ -97,6 +97,14 @@ abstract class Models_List_Table extends \WP_List_Table {
 			'offset' => ( $paged - 1 ) * $per_page,
 		);
 
+		$default_orderby = $this->manager->get_primary_property();
+		$default_order   = 'ASC';
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$default_orderby = $this->manager->get_title_property();
+			$default_order   = 'ASC';
+		}
+
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
 			$type_property = $this->manager->get_type_property();
 
@@ -108,7 +116,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		if ( method_exists( $this->manager, 'get_status_property' ) ) {
 			$status_property = $this->manager->get_status_property();
 
-			$internal_statuses = $this->manager->statuses()->query( array( 'internal' => true ) );
+			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
 
 			if ( isset( $_REQUEST[ $status_property ] ) ) {
 				$query_params[ $status_property ] = (array) $_REQUEST[ $status_property ];
@@ -116,9 +124,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 			if ( ! empty( $internal_statuses ) ) {
 				if ( isset( $query_params[ $status_property ] ) ) {
-					$query_params[ $status_property ] = array_diff( $query_params[ $status_property ], array_keys( $internal_statuses ) );
+					$query_params[ $status_property ] = array_diff( $query_params[ $status_property ], $internal_statuses );
 				} else {
-					$query_params[ $status_property ] = array_diff( array_keys( $this->manager->statuses()->query() ), array_keys( $internal_statuses ) );
+					$query_params[ $status_property ] = array_diff( array_keys( $this->manager->statuses()->query() ), $internal_statuses );
 				}
 			}
 		}
@@ -133,12 +141,31 @@ abstract class Models_List_Table extends \WP_List_Table {
 			}
 		}
 
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$default_orderby = $date_property;
+			$default_order   = 'DESC';
+
+			if ( isset( $_REQUEST['m'] ) ) {
+				$query_params['date_query'] = array(
+					array(
+						'year'   => substr( $_REQUEST['m'], 0, 4 ),
+						'month'  => substr( $_REQUEST['m'], 4, 2 ),
+						'column' => $date_property,
+					),
+				);
+			}
+		}
+
 		if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
 			$query_params['orderby'] = array( $_REQUEST['orderby'] => $_REQUEST['order'] );
 		} elseif ( isset( $_REQUEST['orderby'] ) ) {
-			$query_params['orderby'] = array( $_REQUEST['orderby'] => 'ASC' );
+			$query_params['orderby'] = array( $_REQUEST['orderby'] => $default_order );
 		} elseif ( isset( $_REQUEST['order'] ) ) {
-			$query_params['orderby'] = array( $this->manager->get_primary_property() => $_REQUEST['order'] );
+			$query_params['orderby'] = array( $default_orderby => $_REQUEST['order'] );
+		} else {
+			$query_params['orderby'] = array( $default_orderby => $default_order );
 		}
 
 		$query_object = $this->manager->create_query_object();
@@ -324,6 +351,109 @@ abstract class Models_List_Table extends \WP_List_Table {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Prints extra controls to be displayed between bulk actions and pagination.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $which Either 'top' or 'bottom'.
+	 */
+	protected function extra_tablenav( $which ) {
+		echo '<div class="alignleft actions">';
+
+		if ( 'top' === $which ) {
+			ob_start();
+
+			$this->print_filters();
+
+			$output = ob_get_clean();
+
+			if ( ! empty( $output ) ) {
+				echo $output;
+				submit_button( $this->manager->get_message( 'list_table_filter_button_label' ), '', 'filter_action', false, array( 'id' => $this->_args['singular'] . '-query-submit' ) );
+			}
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Prints input fields for filtering.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function print_filters() {
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$this->months_dropdown( $this->manager->get_date_property() );
+		}
+	}
+
+	/**
+	 * Displays a monthly dropdown for filtering.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @global WP_Locale $wp_locale
+	 *
+	 * @param string $date_property The date property.
+	 */
+	protected function months_dropdown( $date_property ) {
+		global $wp_locale;
+
+		$where = '';
+		$where_args = array();
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
+				$where .= " AND $author_property = %d";
+				$where_args[] = get_current_user_id();
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$status_property = $this->manager->get_status_property();
+			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
+
+			if ( ! empty( $internal_statuses ) ) {
+				$where .= " AND $status_property NOT IN (" . implode( ',', array_fill( 0, count( $internal_statuses ), '%s' ) ) . ")";
+				$where_args = array_merge( $where_args, $internal_statuses );
+			}
+		}
+
+		$table_name = $this->manager->get_table_name();
+
+		$months = $this->db->get_results( "SELECT DISTINCT YEAR( $date_property ) AS year, MONTH( $date_property ) AS month FROM %{$table_name}% WHERE 1=1 $where ORDER BY $date_property DESC", $where_args );
+
+		$month_count = count( $months );
+
+		if ( ! $month_count || ( 1 === $month_count && 0 == $months[0]->month ) ) {
+			return;
+		}
+
+		$m = isset( $_REQUEST['m'] ) ? (int) $_REQUEST['m'] : 0;
+
+		echo '<label for="filter-by-date" class="screen-reader-text">' . $this->manager->get_message( 'list_table_filter_by_date_label' ) . '</label>';
+		echo '<select id="filter-by-date" name="m">';
+
+		foreach ( $months as $row ) {
+			if ( 0 == $row->year ) {
+				continue;
+			}
+
+			$month = zeroise( $row->month, 2 );
+			$year  = $row->year;
+
+			printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $year . $month ), selected( $m, $year . $month, false ), sprintf( $this->manager->get_message( 'list_table_month_year' ), $wp_locale->get_month( $month ), $year ) );
+		}
+
+		echo '</select>';
 	}
 
 	/**
