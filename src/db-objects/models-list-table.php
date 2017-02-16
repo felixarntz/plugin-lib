@@ -170,6 +170,68 @@ abstract class Models_List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Gets a list of columns.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Columns as `$slug => $label` pairs.
+	 */
+	public function get_columns() {
+		$columns = array();
+		$columns['cb'] = '<input type="checkbox" />';
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$title_property = $this->manager->get_title_property();
+
+			$columns[ $title_property ] = $this->manager->get_message( 'list_table_column_label_title' );
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			$columns[ $author_property ] = $this->manager->get_message( 'list_table_column_label_author' );
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$columns[ $date_property ] = $this->manager->get_message( 'list_table_column_label_date' );
+		}
+
+		return $columns;
+	}
+
+	/**
+	 * Gets a list of sortable columns.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Sortable columns as `$slug => $orderby` pairs. $orderby
+	 *               can be a plain string or an array with the first element
+	 *               being the field slug and the second being true to make the
+	 *               initial sorting order descending.
+	 */
+	protected function get_sortable_columns() {
+		$sortable_columns = array();
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$title_property = $this->manager->get_title_property();
+
+			$sortable_columns[ $title_property ] = $title_property;
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$sortable_columns[ $date_property ] = array( $date_property, true );
+		}
+
+		return $sortable_columns;
+	}
+
+	/**
 	 * Generates and display row actions links for the list table.
 	 *
 	 * @since 1.0.0
@@ -216,7 +278,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return array Views as `$id => $link` pairs.
+	 * @return array Views as `$slug => $link` pairs.
 	 */
 	protected function get_views() {
 		$current = '';
@@ -250,7 +312,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return array Bulk actions as `$name => $title` pairs.
+	 * @return array Bulk actions as `$slug => $label` pairs.
 	 */
 	protected function get_bulk_actions() {
 		$actions = $this->build_bulk_actions();
