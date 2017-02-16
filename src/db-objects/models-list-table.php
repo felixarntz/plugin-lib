@@ -195,7 +195,18 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$edit_url = add_query_arg( 'id', $model_id, $this->_args['model_page'] );
 		}
 
-		return $this->row_actions( $this->get_row_actions( $model, $model_id, $view_url, $edit_url ) );
+		$actions = $this->build_row_actions( $model, $model_id, $view_url, $edit_url, $this->_args['models_page'] );
+
+		$links = array();
+
+		foreach ( $actions as $slug => $data ) {
+			$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
+			$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
+
+			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $data['url'] ), $class, $aria_label, $data['label'] );
+		}
+
+		return $this->row_actions( $links );
 	}
 
 	/**
@@ -208,12 +219,71 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @return array Views as `$id => $link` pairs.
 	 */
 	protected function get_views() {
+		$current = '';
+
+		$views = $this->build_views( $current, $this->_args['models_page'], $this->_args['model_page'] );
+
+		$links = array();
+
+		foreach ( $views as $slug => $data ) {
+			if ( $current === $slug ) {
+				if ( ! empty( $data['class'] ) ) {
+					$data['class'] .= ' current';
+				} else {
+					$data['class'] = 'current';
+				}
+			}
+
+			$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
+			$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
+
+			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $data['url'] ), $class, $aria_label, $data['label'] );
+		}
+
+		return $links;
+	}
+
+	/**
+	 * Gets an associative array with the list of bulk actions available
+	 * on this table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Bulk actions as `$name => $title` pairs.
+	 */
+	protected function get_bulk_actions() {
+		$actions = $this->build_bulk_actions();
+
+		$options = array();
+
+		foreach ( $actions as $slug => $data ) {
+			$options[ $slug ] = $data['label'];
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Returns the available views for the list table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string &$current Slug of the current view, passed by reference. Should be
+	 *                         set properly in the method.
+	 * @param string $list_url Optional. The URL to the list page. Default empty.
+	 * @param string $edit_url Optional. The base URL to the edit page. Default empty.
+	 * @return array Views as `$slug => $data` pairs. The $data array must have keys 'url'
+	 *               and 'label' and may additionally have 'class' and 'aria_label'.
+	 */
+	protected function build_views( &$current, $list_url = '', $edit_url = '' ) {
 		$capabilities = $this->manager->capabilities();
 
 		$current = 'all';
 		$total = 0;
 
-		$status_links = array();
+		$views = array();
 
 		$user_id = null;
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
@@ -228,10 +298,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 					$current = 'mine'
 				}
 
-				$status_links['mine'] = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( $author_property, get_current_user_id(), $this->_args['models_page'] ) ),
-					sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_mine' ), $user_counts['_total'] ), number_format_i18n( $user_counts['_total'] ) )
+				$views['mine'] = array(
+					'url'   => add_query_arg( $author_property, get_current_user_id(), $list_url ),
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_mine' ), $user_counts['_total'] ), number_format_i18n( $user_counts['_total'] ) ),
 				);
 			}
 		}
@@ -251,10 +320,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 					continue;
 				}
 
-				$status_links[ $status ] = sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url( add_query_arg( $status_property, $status, $this->_args['models_page'] ) ),
-					sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_status_' . $status ), $number ), number_format_i18n( $number ) )
+				$views[ $status ] = array(
+					'url'   => add_query_arg( $status_property, $status, $list_url ),
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_status_' . $status ), $number ), number_format_i18n( $number ) ),
 				);
 
 				$total += $number;
@@ -268,51 +336,45 @@ abstract class Models_List_Table extends \WP_List_Table {
 		}
 
 		if ( isset( $user_counts ) && absint( $user_counts['_total'] ) === absint( $total ) ) {
-			unset( $status_links['mine'] );
+			unset( $views['mine'] );
 		}
 
-		if ( ! empty( $status_links ) ) {
-			$status_links = array_merge( array(
-				'all' => sprintf(
-					'<a href="%1$s">%2$s</a>',
-					esc_url( $this->_args['models_page'] ),
-					sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_all' ), $total ), number_format_i18n( $total ) )
+		if ( ! empty( $views ) ) {
+			$views = array_merge( array(
+				'all' => array(
+					'url'   => $list_url,
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_all' ), $total ), number_format_i18n( $total ) ),
 				),
-			), $status_links );
-
-			if ( ! isset( $status_links[ $current ] ) ) {
-				$current = key( $status_links );
-			}
-
-			$status_links[ $current ] = str_replace( '">', '" class="current">', $status_links[ $current ] );
+			), $views );
 		}
 
-		return $status_links;
+		return $views;
 	}
 
 	/**
-	 * Gets an associative array with the list of bulk actions available
-	 * on this table.
+	 * Returns the available bulk actions for the list table.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return array Bulk actions as `$name => $title` pairs.
+	 * @return array Actions as `$slug => $data` pairs. The $data array must have the key
+	 *               'label'.
 	 */
-	protected function get_bulk_actions() {
+	protected function build_bulk_actions() {
 		$actions = array();
 
 		$capabilities = $this->manager->capabilities();
 		if ( $capabilities && $capabilities->user_can_delete() ) {
-			$actions['delete'] = $this->manager->get_message( 'list_table_bulk_action_delete' );
+			$actions['delete'] = array(
+				'label' => $this->manager->get_message( 'list_table_bulk_action_delete' ),
+			);
 		}
 
 		return $actions;
 	}
 
 	/**
-	 * Gets an associative array with the list of row actions available
-	 * on this table.
+	 * Returns the available row actions for a given item in the list table.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -323,9 +385,11 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 *                                                              frontend. Default empty.
 	 * @param string                                      $edit_url Optional. The URL to edit the model in the
 	 *                                                              backend. Default empty.
+	 * @param string                                      $list_url Optional. The URL to the list page. Default
+	 *                                                              empty.
 	 * @return array Row actions as `$id => $link` pairs.
 	 */
-	protected function get_row_actions( $model, $model_id, $view_url = '', $edit_url = '' ) {
+	protected function build_row_actions( $model, $model_id, $view_url = '', $edit_url = '', $list_url = '' ) {
 		$actions = array();
 
 		$title = null;
@@ -342,11 +406,10 @@ abstract class Models_List_Table extends \WP_List_Table {
 					$aria_label = sprintf( $this->manager->get_message( 'list_table_row_action_edit_item_title' ), $title );
 				}
 
-				$actions['edit'] = sprintf(
-					'<a href="%1$s" aria-label="%2$s">%3$s</a>',
-					esc_url( $edit_url ),
-					esc_attr( $aria_label ),
-					$this->manager->get_message( 'list_table_row_action_edit' )
+				$actions['edit'] = array(
+					'url'        => $edit_url,
+					'label'      => $this->manager->get_message( 'list_table_row_action_edit' ),
+					'aria_label' => $aria_label,
 				);
 			}
 
@@ -356,11 +419,11 @@ abstract class Models_List_Table extends \WP_List_Table {
 					$aria_label = sprintf( $this->manager->get_message( 'list_table_row_action_delete_item_title' ), $title );
 				}
 
-				$actions['delete'] = sprintf(
-					'<a href="%1$s" class="submitdelete" aria-label="%2$s">%3$s</a>',
-					esc_url( add_query_arg( 'action', 'delete', $edit_url ) ),
-					esc_attr( $aria_label ),
-					$this->manager->get_message( 'list_table_row_action_delete' )
+				$actions['delete'] = array(
+					'url'        => add_query_arg( 'action', 'delete', $edit_url ),
+					'label'      => $this->manager->get_message( 'list_table_row_action_delete' ),
+					'aria_label' => $aria_label,
+					'class'      => 'submitdelete',
 				);
 			}
 		}
@@ -384,11 +447,10 @@ abstract class Models_List_Table extends \WP_List_Table {
 					$aria_label = sprintf( $this->manager->get_message( 'list_table_row_action_view_item_title' ), $title );
 				}
 
-				$actions['view'] = sprintf(
-					'<a href="%1$s" aria-label="%2$s">%3$s</a>',
-					esc_url( $view_url ),
-					esc_attr( $aria_label ),
-					$this->manager->get_message( 'list_table_row_action_view' )
+				$actions['view'] = array(
+					'url'        => $view_url,
+					'label'      => $this->manager->get_message( 'list_table_row_action_view' ),
+					'aria_label' => $aria_label,
 				);
 			}
 		}
