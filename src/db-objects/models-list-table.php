@@ -197,6 +197,152 @@ abstract class Models_List_Table extends \WP_List_Table {
 	}
 
 	/**
+	 * Handles the checkbox column output.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 */
+	public function column_cb( $model ) {
+		$primary_property = $this->manager->get_primary_property();
+		$model_id = $model->$primary_property;
+
+		$capabilities = $this->manager->capabilities();
+
+		if ( ! $capabilities || ! $capabilities->user_can_edit( null, $model_id ) ) {
+			return;
+		}
+
+		$screen_reader_label = $this->manager->get_message( 'list_table_cb_select_label' );
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$title_property = $this->manager->get_title_property();
+			$screen_reader_label = sprintf( $this->manager->get_message( 'list_table_cb_select_item_label' ), $model->$title_property );
+		}
+
+		echo '<label for="cb-select-' . $model_id . '" class="screen-reader-text">' . $screen_reader_label . '</label>';
+		echo '<input type="checkbox" id="cb-select-' . $model_id . '" name="' . $this->manager->get_plural_slug() . '[]" value="' . $model_id . '" />';
+	}
+
+	/**
+	 * Handles the title column output.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 */
+	public function column_title( $model ) {
+		$title_property = $this->manager->get_title_property();
+		$title = $model->$title_property;
+
+		$primary_property = $this->manager->get_primary_property();
+		$model_id = $model->$primary_property;
+
+		$capabilities = $this->manager->capabilities();
+
+		if ( ! empty( $this->_args['model_page'] ) && $capabilities && $capabilities->user_can_edit( null, $model_id ) ) {
+			$edit_url   = add_query_arg( 'id', $model_id, $this->_args['model_page'] );
+			$aria_label = sprintf( $this->manager->get_message( 'list_table_title_edit_label' ), $title );
+
+			$title = sprintf( '<a href="%1$s" class="row-title" aria-label="%2$s">%3$s</a>', esc_url( $edit_url ), esc_attr( $aria_label ), $title );
+		}
+
+		echo '<strong>' . $title . '</strong>';
+	}
+
+	/**
+	 * Handles the author column output.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 */
+	public function column_author( $model ) {
+		$author_property = $this->manager->get_author_property();
+
+		$user = get_userdata( $model->$author_property );
+		if ( ! $user ) {
+			return;
+		}
+
+		printf( '<a href="%1$s">%2$s</a>', esc_url( add_query_arg( $author_property, $user->ID, $this->_args['models_page'] ) ), $user->display_name );
+	}
+
+	/**
+	 * Handles the date column output.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 */
+	public function column_date( $model ) {
+		$date_property = $this->manager->get_date_property();
+		$date = $model->$date_property;
+
+		if ( empty( $date ) || '0000-00-00 00:00:00' === $date ) {
+			return;
+		}
+
+		echo mysql2date( get_option( 'date_format' ), $date );
+	}
+
+	/**
+	 * Handles the default column output.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model       The current model object.
+	 * @param string                                      $column_name The current column name.
+	 */
+	public function column_default( $model, $column_name ) {
+		if ( has_action( "{$this->_args['plural']}_list_table_column_{$column_name}" ) ) {
+			/**
+			 * Fires when a column without a specific callback should be rendered.
+			 *
+			 * The dynamic parts of the action refer to the manager's plural slug and
+			 * to the column name respectively.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The current model object.
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+			 */
+			do_action( "{$this->_args['plural']}_list_table_column_{$column_name}", $model, $this->manager );
+			return;
+		}
+
+		if ( ! isset( $model->$column_name ) ) {
+			return;
+		}
+
+		$value = $model->$column_name;
+
+		if ( is_array( $value ) || is_object( $value ) ) {
+			return;
+		}
+
+		if ( is_string( $value ) && preg_match( '/^\d\d\d\d-(\d)?\d-(\d)?\d \d\d:\d\d:\d\d$/', $value ) ) {
+			if ( '0000-00-00 00:00:00' === $value ) {
+				return;
+			}
+
+			$value = mysql2date( get_option( 'date_format' ), $value );
+		} elseif ( is_int( $value ) ) {
+			$value = number_format_i18n( $value );
+		} elseif ( is_float( $value ) ) {
+			$value = number_format_i18n( $value, 2 );
+		} elseif ( is_bool( $value ) ) {
+			$value = $value ? $this->manager->get_message( 'list_table_yes' ) : $this->manager->get_message( 'list_table_no' );
+		}
+
+		echo $value;
+	}
+
+	/**
 	 * Gets a list of columns.
 	 *
 	 * @since 1.0.0
@@ -205,28 +351,19 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @return array Columns as `$slug => $label` pairs.
 	 */
 	public function get_columns() {
-		$columns = array();
-		$columns['cb'] = '<input type="checkbox" />';
+		$columns = $this->build_columns();
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
-			$title_property = $this->manager->get_title_property();
-
-			$columns[ $title_property ] = $this->manager->get_message( 'list_table_column_label_title' );
-		}
-
-		if ( method_exists( $this->manager, 'get_author_property' ) ) {
-			$author_property = $this->manager->get_author_property();
-
-			$columns[ $author_property ] = $this->manager->get_message( 'list_table_column_label_author' );
-		}
-
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
-			$date_property = $this->manager->get_date_property();
-
-			$columns[ $date_property ] = $this->manager->get_message( 'list_table_column_label_date' );
-		}
-
-		return $columns;
+		/**
+		 * Filters the list table columns.
+		 *
+		 * The dynamic part of the filter refers to the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array                                         $columns Columns as `$slug => $label` pairs.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 */
+		return apply_filters( "{$this->_args['plural']}_list_table_columns", $columns, $this->manager );
 	}
 
 	/**
@@ -241,21 +378,19 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 *               initial sorting order descending.
 	 */
 	protected function get_sortable_columns() {
-		$sortable_columns = array();
+		$columns = $this->build_columns();
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
-			$title_property = $this->manager->get_title_property();
-
-			$sortable_columns[ $title_property ] = $title_property;
-		}
-
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
-			$date_property = $this->manager->get_date_property();
-
-			$sortable_columns[ $date_property ] = array( $date_property, true );
-		}
-
-		return $sortable_columns;
+		/**
+		 * Filters the sortable list table columns.
+		 *
+		 * The dynamic part of the filter refers to the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array                                         $columns Sortable columns as `$slug => $orderby` pairs.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 */
+		return apply_filters( "{$this->_args['plural']}_list_table_sortable_columns", $columns, $this->manager );
 	}
 
 	/**
@@ -454,6 +589,58 @@ abstract class Models_List_Table extends \WP_List_Table {
 		}
 
 		echo '</select>';
+	}
+
+	/**
+	 * Returns the available columns for the list table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Columns as `$slug => $label` pairs.
+	 */
+	protected function build_columns() {
+		$columns = array();
+		$columns['cb'] = '<input type="checkbox" />';
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$columns['title'] = $this->manager->get_message( 'list_table_column_label_title' );
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$columns['author'] = $this->manager->get_message( 'list_table_column_label_author' );
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$columns['date'] = $this->manager->get_message( 'list_table_column_label_date' );
+		}
+
+		return $columns;
+	}
+
+	/**
+	 * Returns the sortable columns for the list table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Sortable columns as `$slug => $orderby` pairs. $orderby
+	 *               can be a plain string or an array with the first element
+	 *               being the field slug and the second being true to make the
+	 *               initial sorting order descending.
+	 */
+	protected function build_sortable_columns() {
+		$sortable_columns = array();
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$sortable_columns['title'] = $this->manager->get_title_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$sortable_columns['date'] = array( $this->manager->get_date_property(), true );
+		}
+
+		return $sortable_columns;
 	}
 
 	/**
