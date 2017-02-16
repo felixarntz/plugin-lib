@@ -697,7 +697,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 				$user_counts = $this->manager->count( get_current_user_id() );
 
 				if ( isset( $_REQUEST[ $author_property ] ) && get_current_user_id() === absint( $_REQUEST[ $author_property ] ) ) {
-					$current = 'mine'
+					$current = 'mine';
 				}
 
 				$views['mine'] = array(
