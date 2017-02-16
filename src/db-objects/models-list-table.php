@@ -442,6 +442,24 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$actions = $this->build_row_actions( $model, $model_id, $view_url, $edit_url, $this->_args['models_page'] );
 
+		/**
+		 * Filters the list of available row actions.
+		 *
+		 * The dynamic part of the filter refers to the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array                                         $actions  Row actions as `$slug => $data` pairs.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model    The current model.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager  The manager instance.
+		 * @param string                                        $view_url The URL to view the model in the frontend,
+		 *                                                                if available.
+		 * @param string                                        $edit_url The URL to edit the model in the backend,
+		 *                                                                if available.
+		 * @param string                                        $list_url The URL to the list page.
+		 */
+		$actions = apply_filters( "{$this->_args['plural']}_list_table_row_actions", $actions, $model, $this->manager, $view_url, $edit_url, $this->_args['models_page'] );
+
 		$links = array();
 
 		$nonce = wp_create_nonce( 'row-' . $this->_args['singular'] );
@@ -468,7 +486,20 @@ abstract class Models_List_Table extends \WP_List_Table {
 	protected function get_views() {
 		$current = '';
 
-		$views = $this->build_views( $current, $this->_args['models_page'], $this->_args['model_page'] );
+		$views = $this->build_views( $current, $this->_args['models_page'] );
+
+		/**
+		 * Filters the list of available views.
+		 *
+		 * The dynamic part of the filter refers to the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array                                         $views    Views as `$slug => $data` pairs.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager  The manager instance.
+		 * @param string                                        $list_url The URL to the list page.
+		 */
+		$views = apply_filters( "{$this->_args['plural']}_list_table_views", $views, $this->manager, $this->_args['models_page'] );
 
 		$links = array();
 
@@ -501,6 +532,18 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 */
 	protected function get_bulk_actions() {
 		$actions = $this->build_bulk_actions();
+
+		/**
+		 * Filters the list of available bulk actions.
+		 *
+		 * The dynamic part of the filter refers to the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array                                         $actions Bulk actions as `$slug => $data` pairs.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 */
+		$actions = apply_filters( "{$this->_args['plural']}_list_table_bulk_actions", $actions, $this->manager );
 
 		$options = array();
 
@@ -675,11 +718,10 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @param string &$current Slug of the current view, passed by reference. Should be
 	 *                         set properly in the method.
 	 * @param string $list_url Optional. The URL to the list page. Default empty.
-	 * @param string $edit_url Optional. The base URL to the edit page. Default empty.
 	 * @return array Views as `$slug => $data` pairs. The $data array must have keys 'url'
 	 *               and 'label' and may additionally have 'class' and 'aria_label'.
 	 */
-	protected function build_views( &$current, $list_url = '', $edit_url = '' ) {
+	protected function build_views( &$current, $list_url = '' ) {
 		$capabilities = $this->manager->capabilities();
 
 		$current = 'all';
