@@ -167,7 +167,8 @@ abstract class Query {
 			$this->query_var_defaults[ $this->manager->get_author_property() ] = '';
 		}
 
-		if ( ! empty( $this->get_search_fields() ) ) {
+		$search_fields = $this->get_search_fields();
+		if ( ! empty( $search_fields ) ) {
 			$this->query_var_defaults['search'] = '';
 		}
 

@@ -170,7 +170,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$query_object = $this->manager->create_query_object();
 
-		if ( ! empty( $query_object->get_search_fields() ) && isset( $_REQUEST['s'] ) ) {
+		$search_fields = $query_object->get_search_fields();
+		if ( ! empty( $search_fields ) && isset( $_REQUEST['s'] ) ) {
 			$query_params['search'] = wp_unslash( trim( $_REQUEST['s'] ) );
 		}
 
@@ -207,7 +208,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 */
 	public function search_box( $text, $input_id ) {
 		$query_object = $this->manager->create_query_object();
-		if ( empty( $query_object->get_search_fields() ) ) {
+		$search_fields = $query_object->get_search_fields();
+
+		if ( empty( $search_fields ) ) {
 			return;
 		}
 
