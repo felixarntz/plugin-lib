@@ -60,13 +60,14 @@ abstract class Models_List_Page extends Admin_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug    Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager Admin page manager instance.
+	 * @param string                                            $slug          Page slug.
+	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager       Admin page manager instance.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager     $model_manager Model manager instance.
 	 */
-	public function __construct( $slug, $manager ) {
+	public function __construct( $slug, $manager, $model_manager ) {
 		parent::__construct( $slug, $manager );
 
-		$this->set_model_manager();
+		$this->model_manager = $model_manager;
 
 		if ( empty( $this->edit_page_slug ) ) {
 			$this->edit_page_slug = $this->manager->get_prefix() . 'edit_' . $this->model_manager->get_singular_slug();
@@ -334,8 +335,6 @@ abstract class Models_List_Page extends Admin_Page {
 			'option'  => 'list_' . $this->model_manager->get_prefix() . $this->model_manager->get_plural_slug() . '_per_page',
 		) );
 	}
-
-	protected abstract function set_model_manager();
 }
 
 endif;
