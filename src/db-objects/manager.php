@@ -267,7 +267,9 @@ abstract class Manager extends Service {
 
 		$id = absint( $this->db()->insert_id );
 
-		$this->clean_cache( $id );
+		$new_db_object = $this->fetch( $id );
+
+		$this->clean_cache( $id, $new_db_object, null );
 
 		return $id;
 	}
@@ -285,12 +287,16 @@ abstract class Manager extends Service {
 	public function update( $model_id, $args ) {
 		$model_id = absint( $model_id );
 
+		$old_db_object = $this->fetch( $model_id );
+
 		$result = $this->db()->update( $this->table_name, $args, array( 'id' => $model_id ) );
 		if ( ! $result ) {
 			return false;
 		}
 
-		$this->clean_cache( $model_id );
+		$new_db_object = $this->fetch( $model_id );
+
+		$this->clean_cache( $model_id, $new_db_object, $old_db_object );
 
 		return true;
 	}
@@ -307,12 +313,14 @@ abstract class Manager extends Service {
 	public function delete( $model_id ) {
 		$model_id = absint( $model_id );
 
+		$old_db_object = $this->fetch( $model_id );
+
 		$result = $this->db()->delete( $this->table_name, array( 'id' => $model_id ) );
 		if ( ! $result ) {
 			return false;
 		}
 
-		$this->clean_cache( $model_id );
+		$this->clean_cache( $model_id, null, $old_db_object );
 
 		$this->storage_unset( $model_id );
 
@@ -354,21 +362,39 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
+	 * @param int $user_id Optional. If provided and the manager supports authors,
+	 *                     only models by that user are counted. Default 0 (ignored).
 	 * @return array Array of `$status => $count` pairs. In addition, the array
 	 *               always includes a key called '_total', containing the overall
 	 *               count. If the manager does not support statuses, the array
 	 *               only contains the '_total' key.
 	 */
-	public function count() {
-		$counts = $this->cache()->get( $this->plural_slug, 'counts' );
+	public function count( $user_id = 0 ) {
+		$user_id = absint( $user_id );
+
+		$cache_key = $this->plural_slug;
+		if ( method_exists( $this, 'get_author_property' ) && $user_id > 0 ) {
+			$cache_key .= '-' . $user_id;
+		}
+
+		$counts = $this->cache()->get( $cache_key, 'counts' );
 		if ( false !== $counts ) {
 			return $counts;
+		}
+
+		$where = '';
+		$where_args = array();
+		if ( method_exists( $this, 'get_author_property' ) && $user_id > 0 ) {
+			$author_property = $this->get_author_property();
+
+			$where = " WHERE $author_property = %d";
+			$where_args[] = $user_id;
 		}
 
 		if ( method_exists( $this, 'get_status_property' ) ) {
 			$status_property = $this->get_status_property();
 
-			$results = $this->db()->get_results( "SELECT $status_property, COUNT( * ) AS num_models FROM %{$this->table_name}% GROUP BY $status_property" );
+			$results = $this->db()->get_results( "SELECT $status_property, COUNT( * ) AS num_models FROM %{$this->table_name}% $where GROUP BY $status_property", $where_args );
 
 			$total = 0;
 			$counts = array_fill_keys( $this->statuses()->query(), 0 );
@@ -379,12 +405,12 @@ abstract class Manager extends Service {
 
 			$counts['_total'] = $total;
 		} else {
-			$total = $this->db()->get_var( "SELECT COUNT( * ) FROM %{$this->table_name}%" );
+			$total = $this->db()->get_var( "SELECT COUNT( * ) FROM %{$this->table_name}% $where", $where_args );
 
 			$counts = array( '_total' => $total );
 		}
 
-		$this->cache()->set( $this->plural_slug, $counts, 'counts' );
+		$this->cache()->set( $cache_key, $counts, 'counts' );
 
 		return $counts;
 	}
@@ -540,12 +566,14 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int $model_id ID of the model to clean the cache for.
+	 * @param int         $model_id      ID of the model to clean the cache for.
+	 * @param object|null $new_db_object The new raw database object, or null if deleted.
+	 * @param object|null $old_db_object The old raw database object, or null if added.
 	 */
-	protected function clean_cache( $model_id ) {
+	protected function clean_cache( $model_id, $new_db_object, $old_db_object ) {
 		$model_id = absint( $model_id );
 
-		$this->cache()->delete( $this->plural_slug, 'counts' );
+		$this->maybe_clean_count_cache( $new_db_object, $old_db_object );
 
 		if ( method_exists( $this, 'get_meta_type' ) ) {
 			$this->cache()->delete( $model_id, $this->get_meta_type() . '_meta' );
@@ -554,6 +582,46 @@ abstract class Manager extends Service {
 		$this->delete_from_cache( $model_id );
 
 		$this->set_in_cache( 'last_changed', microtime() );
+	}
+
+	/**
+	 * Cleans the count cache for a model if relevant changes have been applied.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param object|null $new_db_object The new raw database object, or null if deleted.
+	 * @param object|null $old_db_object The old raw database object, or null if added.
+	 */
+	protected function maybe_clean_count_cache( $new_db_object, $old_db_object ) {
+		$status_property = method_exists( $this, 'get_status_property' ) ? $this->get_status_property() : '';
+		$author_property = method_exists( $this, 'get_author_property' ) ? $this->get_author_property() : '';
+
+		$delete_author_count = false;
+
+		if ( null === $new_db_object || null === $old_db_object || ( ! empty( $status_property ) && $new_db_object->$status_property !== $old_db_object->$status_property ) ) {
+			$this->cache()->delete( $this->plural_slug, 'counts' );
+
+			if ( ! empty( $author_property ) ) {
+				$delete_author_count = true;
+			}
+		} elseif ( null !== $new_db_object && null !== $old_db_object && ! empty( $author_property ) && $new_db_object->$author_property !== $old_db_object->$author_property ) {
+			$delete_author_count = true;
+		}
+
+		if ( $delete_author_count ) {
+			$user_ids = array();
+			if ( null !== $new_db_object ) {
+				$user_ids[] = absint( $new_db_object->$author_property );
+			}
+			if ( null !== $old_db_object && ! in_array( absint( $old_db_object->$author_property ), $user_ids, true ) ) {
+				$user_ids[] = absint( $old_db_object->$author_property );
+			}
+
+			foreach ( $user_ids as $user_id ) {
+				$this->cache()->delete( $this->plural_slug . '-' . $user_id, 'counts' );
+			}
+		}
 	}
 
 	/**

@@ -347,7 +347,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$views = array();
 
-		$user_id = null;
+		$user_id = 0;
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$author_property = $this->manager->get_author_property();
 
