@@ -161,6 +161,8 @@ abstract class Manager_Page extends Admin_Page {
 	 * @return string Nonce action name.
 	 */
 	protected function get_nonce_action( $action_type = 'action', $model_id = null ) {
+		/* Let's be careful with this method, since the list table class still handles these nonces manually. */
+
 		$prefix = $this->model_manager->get_prefix();
 
 		if ( 'bulk_action' === $action_type ) {
