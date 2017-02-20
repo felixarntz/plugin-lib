@@ -44,6 +44,33 @@ abstract class Model_Edit_Page extends Manager_Page {
 	protected $list_page_slug = '';
 
 	/**
+	 * Array of tabs as `$id => $args` pairs.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $tabs = array();
+
+	/**
+	 * Array of sections as `$id => $args` pairs.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $sections = array();
+
+	/**
+	 * Field manager instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 */
+	protected $field_manager = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -76,6 +103,125 @@ abstract class Model_Edit_Page extends Manager_Page {
 		if ( empty( $this->list_page_slug ) ) {
 			$this->list_page_slug = $this->manager->get_prefix() . 'list_' . $this->model_manager->get_plural_slug();
 		}
+
+		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), array(
+			'assets'        => $this->manager->assets(),
+			'error_handler' => $this->manager->error_handler(),
+		), array(
+			'get_value_callback'         => array( $this, 'get_model_field_value' ),
+			'get_value_callback_args'    => array( '{id}' ),
+			'update_value_callback'      => array( $this, 'update_model_field_value' ),
+			'update_value_callback_args' => array( '{id}', '{value}' ),
+			'name_prefix'                => '',
+		) );
+	}
+
+	/**
+	 * Adds a tab to the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id   Section identifier.
+	 * @param array  $args {
+	 *     Optional. Section arguments.
+	 *
+	 *     @type string $title       Section title.
+	 *     @type string $description Section description. Default empty.
+	 * }
+	 */
+	public function add_tab( $id, $args = array() ) {
+		$this->tabs[ $id ] = wp_parse_args( $args, array(
+			'title'       => '',
+			'description' => '',
+		) );
+	}
+
+	/**
+	 * Adds a section to the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id   Section identifier.
+	 * @param array  $args {
+	 *     Optional. Section arguments.
+	 *
+	 *     @type string $tab         Tab identifier this field belongs to. Default empty.
+	 *     @type string $title       Section title.
+	 *     @type string $description Section description. Default empty.
+	 * }
+	 */
+	public function add_section( $id, $args = array() ) {
+		$this->sections[ $id ] = wp_parse_args( $args, array(
+			'tab'         => '',
+			'title'       => '',
+			'description' => '',
+		) );
+	}
+
+	/**
+	 * Adds a field control to the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $id      Field identifier.
+	 * @param string $type    Identifier of the type.
+	 * @param array  $args    {
+	 *     Optional. Field arguments. See the field class constructor for further arguments.
+	 *
+	 *     @type string $section       Section identifier this field belongs to. The section must be
+	 *                                 already added prior to adding the field. Default empty.
+	 *     @type string $label         Field label. Default empty.
+	 *     @type string $description   Field description. Default empty.
+	 *     @type mixed  $default       Default value for the field. Default null.
+	 *     @type array  $input_classes Array of CSS classes for the field input. Default empty array.
+	 *     @type array  $label_classes Array of CSS classes for the field label. Default empty array.
+	 *     @type array  $input_attrs   Array of additional input attributes as `$key => $value` pairs.
+	 *                                 Default empty array.
+	 * }
+	 */
+	public function add_field( $id, $type, $args = array() ) {
+		if ( empty( $args['section'] ) || ! isset( $this->sections[ $args['section'] ] ) ) {
+			return;
+		}
+
+		if ( 0 !== strpos( $args['section'], $this->sections[ $args['section'] ]['tab'] . '-' ) ) {
+			$args['section'] = $this->sections[ $args['section'] ]['tab'] . '-' . $args['section'];
+		}
+
+		$this->field_manager->add( $id, $type, $args );
+	}
+
+	/**
+	 * Returns a specific field value of the current model.
+	 *
+	 * Used as callback for the field manager.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $field_slug Field slug to retrieve its value.
+	 * @return mixed Field value, or null if not set.
+	 */
+	public function get_model_field_value( $field_slug ) {
+		return $this->model->$field_slug;
+	}
+
+	/**
+	 * Updates a specific field value of the current model.
+	 *
+	 * Used as callback for the field manager.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $field_slug Field slug to update its value.
+	 * @param mixed  $value      Field value to set.
+	 */
+	public function update_model_field_value( $field_slug, $value ) {
+		$this->model->$field_slug = $value;
 	}
 
 	/**
@@ -131,7 +277,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @access public
 	 */
 	public function enqueue_assets() {
-		// Empty method body.
+		$this->field_manager->enqueue();
+
+		//TODO: scripts and styles for tabs
 	}
 
 	/**
@@ -185,6 +333,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
 					<div id="post-body-content">
+						<?php $this->render_form_header(); ?>
 						<?php $this->render_form_content(); ?>
 					</div>
 					<div id="postbox-container-1" class="postbox-container">
@@ -201,12 +350,12 @@ abstract class Model_Edit_Page extends Manager_Page {
 	}
 
 	/**
-	 * Renders the edit page main form content.
+	 * Renders the edit page main form header.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function render_form_content() {
+	protected function render_form_header() {
 		if ( method_exists( $this->model_manager, 'get_title_property' ) ) {
 			$title_property = $this->model_manager->get_title_property();
 
@@ -219,6 +368,67 @@ abstract class Model_Edit_Page extends Manager_Page {
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Renders the edit page main form content.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function render_form_content() {
+		if ( empty( $this->tabs ) ) {
+			return;
+		}
+
+		$current_tab_id = key( $this->tabs );
+
+		$use_tabs = count( $this->tabs ) > 1;
+		?>
+
+		<div class="form-content<?php echo $use_tabs ? 'tabbed' : 'no-tabs'; ?>">
+
+			<?php if ( $use_tabs ) : ?>
+				<h2 class="nav-tab-wrapper" role="tablist">
+					<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
+						<a id="<?php echo esc_attr( 'tab-label-' . $tab_id ); ?>" class="nav-tab" href="<?php echo esc_attr( '#tab-' . $tab_id ); ?>" aria-controls="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" aria-selected="<?php echo $tab_id === $current_tab_id ? 'true' : 'false'; ?>" role="tab">
+							<?php echo $tab_args['title']; ?>
+						</a>
+					<?php endforeach; ?>
+				</h2>
+			<?php else : ?>
+				<h2 class="screen-reader-text"><?php echo $this->tabs[ $current_tab_id ]['title']; ?></h2>
+			<?php endif; ?>
+
+			<?php foreach ( $this->tabs as $tab_id => $tab_args );
+				$atts = $use_tabs ? ' aria-labelledby="' . esc_attr( 'tab-label-' . $tab_id ) . '" aria-hidden="' . ( $tab_id === $current_tab_id ? 'false' : 'true' ) . '" role="tabpanel"' : '';
+				$sections = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
+				?>
+				<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; ?>>
+
+					<?php if ( ! empty( $tab_args['description'] ) ) : ?>
+						<p class="description"><?php echo $tab_args['description']; ?></p>
+					<?php endif; ?>
+
+					<?php foreach ( $sections as $section_id => $section_args ) : ?>
+						<div class="section">
+							<h3><?php echo $section_args['title']; ?></h3>
+
+							<?php if ( ! empty( $section_args['description'] ) ) : ?>
+								<p class="description"><?php echo $section_args['description']; ?></p>
+							<?php endif; ?>
+
+							<table class="form-table">
+								<?php $this->field_manager->render( $tab_id . '-' . $section_id ); ?>
+							</table>
+						</div>
+					<?php endforeach; ?>
+
+				</div>
+			<?php endforeach; ?>
+
+		</div>
+		<?php
 	}
 
 	/**
@@ -285,7 +495,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 				<div id="submitpost" class="submitbox">
 					<div id="minor-publishing">
 						<div id="minor-publishing-actions">
-							<!-- TODO -->
+							<!-- TODO: frontend view/preview -->
 							<div class="clear"></div>
 						</div>
 						<div id="misc-publishing-actions">
@@ -445,11 +655,37 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int $id ID of the model to update.
+	 * @param int $id ID of the model to update. Might be empty when creating.
 	 * @return string|WP_Error Feedback message, or error object on failure.
 	 */
 	protected function action_edit( $id ) {
+		//TODO: implement
+	}
 
+	/**
+	 * Handles the 'delete' action.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int $id ID of the model to delete.
+	 * @return string|WP_Error Feedback message, or error object on failure.
+	 */
+	protected function action_delete( $id ) {
+		//TODO: implement
+	}
+
+	/**
+	 * Handles the 'delete' row action.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int $id ID of the model to delete.
+	 * @return string|WP_Error Feedback message, or error object on failure.
+	 */
+	protected function row_action_delete( $id ) {
+		return $this->action_delete( $id );
 	}
 }
 
