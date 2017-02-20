@@ -8,8 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
-use Leaves_And_Love\Plugin_Lib\Components\Admin_Page;
-
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) ) :
 
 /**
@@ -17,16 +15,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
  *
  * @since 1.0.0
  */
-abstract class Models_List_Page extends Admin_Page {
-	/**
-	 * The manager instance for the models.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
-	 */
-	protected $model_manager;
-
+abstract class Models_List_Page extends Manager_Page {
 	/**
 	 * The list table.
 	 *
@@ -65,9 +54,7 @@ abstract class Models_List_Page extends Admin_Page {
 	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager     $model_manager Model manager instance.
 	 */
 	public function __construct( $slug, $manager, $model_manager ) {
-		parent::__construct( $slug, $manager );
-
-		$this->model_manager = $model_manager;
+		parent::__construct( $slug, $manager, $model_manager );
 
 		if ( empty( $this->title ) ) {
 			$this->title = $this->model_manager->get_message( 'list_page_items' );
@@ -100,14 +87,14 @@ abstract class Models_List_Page extends Admin_Page {
 	public function handle_request() {
 		$capabilities = $this->model_manager->capabilities();
 		if ( ! $capabilities || ! $capabilities->user_can_edit() ) {
-			wp_die( $this->model_manager->get_message( 'list_page_cannot_edit' ), 403 );
+			wp_die( $this->model_manager->get_message( 'list_page_cannot_edit_items' ), 403 );
 		}
 
 		$this->setup_list_table();
-		$this->handle_bulk_actions();
+		$this->handle_actions();
 		$this->clean_referer();
 		$this->prepare_list_table();
-		$this->setup_screen();
+		$this->setup_screen( get_current_screen() );
 	}
 
 	/**
@@ -121,22 +108,6 @@ abstract class Models_List_Page extends Admin_Page {
 	}
 
 	/**
-	 * Renders the list page content.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 */
-	public function render() {
-		?>
-		<div class="wrap">
-			<?php $this->render_header(); ?>
-
-			<?php $this->render_form(); ?>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Renders the list page header.
 	 *
 	 * @since 1.0.0
@@ -145,9 +116,9 @@ abstract class Models_List_Page extends Admin_Page {
 	protected function render_header() {
 		$capabilities = $this->model_manager->capabilities();
 
-		$edit_page_url = '';
+		$new_page_url = '';
 		if ( ! empty( $this->edit_page_slug ) ) {
-			$edit_page_url = add_query_arg( 'page', $this->edit_page_slug, $this->url );
+			$new_page_url = add_query_arg( 'page', $this->edit_page_slug, $this->url );
 		}
 
 		?>
@@ -155,8 +126,8 @@ abstract class Models_List_Page extends Admin_Page {
 			<?php echo $this->title; ?>
 		</h1>
 
-		<?php if ( ! empty( $edit_page_url ) && $capabilities && $capabilities->user_can_create() ) : ?>
-			<a href="<?php echo esc_url( $edit_page_url ); ?>" class="page-title-action"><?php echo $this->model_manager->get_message( 'list_page_add_new' ); ?></a>
+		<?php if ( ! empty( $new_page_url ) && $capabilities && $capabilities->user_can_create() ) : ?>
+			<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo $this->model_manager->get_message( 'list_page_add_new' ); ?></a>
 		<?php endif; ?>
 
 		<?php if ( isset( $_REQUEST['s'] ) && strlen( $_REQUEST['s'] ) ) : ?>
@@ -167,19 +138,8 @@ abstract class Models_List_Page extends Admin_Page {
 
 		<?php
 
-		if ( isset( $_REQUEST['bulk_action_result'] ) ) {
-			$transient_name = $this->model_manager->get_prefix() . $this->model_manager->get_plural_slug() . '_bulk_action_result';
-			$message = get_transient( $transient_name );
-			if ( false !== $message ) {
-				delete_transient( $transient_name );
-
-				$class = 'true' === $_REQUEST['bulk_action_result'] ? 'notice-success' : 'notice-error';
-
-				echo '<div id="message" class="notice ' . $class . ' is-dismissible">' . wpautop( $message ) . '</div>';
-			}
-
-			$_SERVER['REQUEST_URI'] = remove_query_arg( array( 'bulk_action_result' ), $_SERVER['REQUEST_URI'] );
-		}
+		$this->print_current_message( 'bulk_action' );
+		$this->print_current_message( 'row_action' );
 	}
 
 	/**
@@ -234,7 +194,7 @@ abstract class Models_List_Page extends Admin_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function handle_bulk_actions() {
+	protected function handle_actions() {
 		$doaction = $this->list_table->current_action();
 
 		if ( ! $doaction ) {
@@ -246,11 +206,7 @@ abstract class Models_List_Page extends Admin_Page {
 
 		check_admin_referer( 'bulk-' . $prefix . $plural_slug );
 
-		$sendback = wp_get_referer();
-		if ( ! $sendback ) {
-			$sendback = $this->url;
-		}
-
+		$sendback = $this->get_referer();
 		$sendback = add_query_arg( 'paged', $this->list_table->get_pagenum(), $sendback );
 
 		$ids = array();
@@ -288,35 +244,10 @@ abstract class Models_List_Page extends Admin_Page {
 		$sendback = remove_query_arg( array( 'action', 'action2', $plural_slug ), $sendback );
 
 		if ( $message ) {
-			$result = 'true';
-			if ( is_wp_error( $message ) ) {
-				$result = 'false';
-				$message = $message->get_error_message();
-			}
-
-			$transient_name = $prefix . $plural_slug . '_bulk_action_result';
-
-			set_transient( $transient_name, $message, 30 );
-
-			$sendback = add_query_arg( 'bulk_action_result', $result, $sendback );
+			$sendback = $this->redirect_with_message( $sendback, $message, 'bulk_action' );
 		}
 
 		wp_redirect( $sendback );
-		exit;
-	}
-
-	/**
-	 * Redirects to a clean URL if the referer is part of the current URL.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function clean_referer() {
-		if ( empty( $_REQUEST['_wp_http_referer'] ) ) {
-			return;
-		}
-
-		wp_redirect( remove_query_arg( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) );
 		exit;
 	}
 
@@ -335,10 +266,10 @@ abstract class Models_List_Page extends Admin_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @param WP_Screen Current screen.
 	 */
-	protected function setup_screen() {
-		$screen = get_current_screen();
-
+	protected function setup_screen( $screen ) {
 		$screen->set_screen_reader_content( array(
 			'heading_views'      => $this->model_manager->get_message( 'list_page_filter_items_list' ),
 			'heading_pagination' => $this->model_manager->get_message( 'list_page_items_list_navigation' ),
