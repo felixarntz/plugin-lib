@@ -282,6 +282,19 @@ abstract class Models_List_Page extends Manager_Page {
 			'option'  => 'list_' . $this->model_manager->get_prefix() . $this->model_manager->get_plural_slug() . '_per_page',
 		) );
 	}
+
+	/**
+	 * Handles the 'delete' bulk action.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int $id ID of the model to delete.
+	 * @return string|WP_Error Feedback message, or error object on failure.
+	 */
+	protected function bulk_action_delete( $id ) {
+		//TODO: implement
+	}
 }
 
 endif;
