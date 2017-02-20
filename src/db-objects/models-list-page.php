@@ -127,8 +127,6 @@ abstract class Models_List_Page extends Admin_Page {
 	 * @access public
 	 */
 	public function render() {
-		$this->current_values = $this->field_manager->get_values();
-
 		?>
 		<div class="wrap">
 			<?php $this->render_header(); ?>
