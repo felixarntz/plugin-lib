@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Storage;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Date_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Site_Manager' ) ) :
@@ -21,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Site_Manage
  * @since 1.0.0
  */
 class Site_Manager extends Core_Manager {
-	use Meta_Manager_Trait;
+	use Date_Manager_Trait, Meta_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -45,11 +46,15 @@ class Site_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query';
 
+		$this->singular_slug = 'site';
+		$this->plural_slug   = 'sites';
+
 		$this->table_name       = 'blogs';
 		$this->cache_group      = 'sites';
 		$this->meta_type        = 'site';
 		$this->fetch_callback   = 'get_site';
 		$this->primary_property = 'blog_id';
+		$this->date_property    = 'registered';
 
 		Storage::register_global_group( $this->cache_group );
 

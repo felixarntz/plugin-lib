@@ -24,24 +24,6 @@ abstract class Capabilities extends Service {
 	use Hook_Service_Trait;
 
 	/**
-	 * Singular slug to use for capability names.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $singular_slug = '';
-
-	/**
-	 * Plural slug to use for capability names.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var string
-	 */
-	protected $plural_slug = '';
-
-	/**
 	 * Base capabilities.
 	 *
 	 * @since 1.0.0
@@ -87,10 +69,6 @@ abstract class Capabilities extends Service {
 	 */
 	public function __construct( $prefix ) {
 		$this->set_prefix( $prefix );
-		$this->set_slugs();
-		$this->set_capabilities();
-
-		$this->setup_hooks();
 	}
 
 	/**
@@ -293,15 +271,10 @@ abstract class Capabilities extends Service {
 	 */
 	public function set_manager( $manager ) {
 		$this->manager = $manager;
-	}
 
-	/**
-	 * Sets the singular and plural slugs to use for capabilities.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected abstract function set_slugs();
+		$this->set_capabilities();
+		$this->setup_hooks();
+	}
 
 	/**
 	 * Sets the supported capabilities.
@@ -312,30 +285,31 @@ abstract class Capabilities extends Service {
 	protected function set_capabilities() {
 		$prefix = $this->get_prefix();
 
+		$singular_slug = $this->manager->get_singular_slug();
+		$plural_slug   = $this->manager->get_plural_slug();
+
 		$this->base_capabilities = array(
-			'read_items'   => sprintf( 'read_%s', $prefix . $this->plural_slug ),
-			'create_items' => sprintf( 'create_%s', $prefix . $this->plural_slug ),
-			'edit_items'   => sprintf( 'edit_%s', $prefix . $this->plural_slug ),
-			'delete_items' => sprintf( 'delete_%s', $prefix . $this->plural_slug ),
+			'read_items'   => sprintf( 'read_%s', $prefix . $plural_slug ),
+			'create_items' => sprintf( 'create_%s', $prefix . $plural_slug ),
+			'edit_items'   => sprintf( 'edit_%s', $prefix . $plural_slug ),
+			'delete_items' => sprintf( 'delete_%s', $prefix . $plural_slug ),
 		);
 
 		$this->meta_capabilities = array(
-			'read_item'    => sprintf( 'read_%s', $prefix . $this->singular_slug ),
-			'edit_item'    => sprintf( 'edit_%s', $prefix . $this->singular_slug ),
-			'delete_item'  => sprintf( 'delete_%s', $prefix . $this->singular_slug ),
+			'read_item'    => sprintf( 'read_%s', $prefix . $singular_slug ),
+			'edit_item'    => sprintf( 'edit_%s', $prefix . $singular_slug ),
+			'delete_item'  => sprintf( 'delete_%s', $prefix . $singular_slug ),
 		);
 
-		if ( null !== $this->manager ) {
-			if ( method_exists( $this->manager, 'get_status_property' ) ) {
-				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $this->plural_slug );
-				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $this->singular_slug );
-			}
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $plural_slug );
+			$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $singular_slug );
+		}
 
-			if ( method_exists( $this->manager, 'get_author_property' ) ) {
-				$this->base_capabilities['read_others_items'] = sprintf( 'read_others_%s', $prefix . $this->plural_slug );
-				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $this->plural_slug );
-				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $this->plural_slug );
-			}
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$this->base_capabilities['read_others_items'] = sprintf( 'read_others_%s', $prefix . $plural_slug );
+			$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $plural_slug );
+			$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $plural_slug );
 		}
 	}
 
@@ -471,10 +445,6 @@ abstract class Capabilities extends Service {
 	protected function map_item_action( $action, $user_id, $args ) {
 		/* Require an ID to be passed to this capability check. */
 		if ( ! isset( $args[0] ) || ! is_numeric( $args[0] ) ) {
-			return 'do_not_allow';
-		}
-
-		if ( null === $this->manager ) {
 			return 'do_not_allow';
 		}
 

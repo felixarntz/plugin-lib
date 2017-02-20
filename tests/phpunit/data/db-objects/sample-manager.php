@@ -23,9 +23,12 @@ class Sample_Manager extends Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Sample_DB_Objects\Sample_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Sample_DB_Objects\Sample_Query';
 
-		$this->table_name       = $name . 's';
-		$this->cache_group      = $name . 's';
-		$this->meta_type        = $name;
+		$this->singular_slug = $name;
+		$this->plural_slug   = 'y' === substr( $name, -1 ) ? substr( $name, 0, -1 ) . 'ies' : $name . 's';
+
+		$this->table_name       = $this->plural_slug;
+		$this->cache_group      = $this->plural_slug;
+		$this->meta_type        = $this->singular_slug;
 		$this->primary_property = 'id';
 		$this->title_property   = 'title';
 		$this->type_property    = 'type';

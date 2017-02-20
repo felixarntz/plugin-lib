@@ -46,6 +46,9 @@ class Network_Manager extends Core_Manager {
 		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection';
 		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Network_Query';
 
+		$this->singular_slug = 'network';
+		$this->plural_slug   = 'networks';
+
 		$this->table_name       = 'site';
 		$this->cache_group      = 'networks';
 		$this->meta_type        = 'network';

@@ -26,6 +26,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Page' ) ) :
  * @property-read string $title      Page title.
  * @property-read string $capability Required capability to access the page.
  * @property-read string $icon_url   Icon URL for the page.
+ * @property-read string $url        URL to the page.
  */
 abstract class Admin_Page {
 	/**
@@ -45,6 +46,15 @@ abstract class Admin_Page {
 	 * @var string
 	 */
 	protected $title = '';
+
+	/**
+	 * Menu title.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $menu_title = '';
 
 	/**
 	 * Required capability to access the page.
@@ -101,6 +111,15 @@ abstract class Admin_Page {
 	protected $hook_suffix = '';
 
 	/**
+	 * URL to the page.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $url = '';
+
+	/**
 	 * Parent manager for admin pages.
 	 *
 	 * @since 1.0.0
@@ -121,6 +140,10 @@ abstract class Admin_Page {
 	public function __construct( $slug, $manager ) {
 		$this->slug = $slug;
 		$this->manager = $manager;
+
+		if ( ! empty( $this->title ) && empty( $this->menu_title ) ) {
+			$this->menu_title = $this->title;
+		}
 	}
 
 	/**
@@ -202,6 +225,46 @@ abstract class Admin_Page {
 		}
 
 		$this->$property = $value;
+
+		if ( in_array( $property, array( 'slug', 'parent_slug', 'administration_panel' ), true ) ) {
+			$this->update_url();
+		}
+	}
+
+	/**
+	 * Sets the URL to the admin page based on other class properties.
+	 *
+	 * The URL can be retrieved by accessing the class property $url.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function update_url() {
+		$parent_file = 'admin.php';
+
+		if ( false !== strpos( $this->parent_slug, '?' ) ) {
+			list( $base_slug, $query ) = explode( '?', $this->parent_slug, 2 );
+		} else {
+			$base_slug = $this->parent_slug;
+		}
+
+		if ( '.php' === substr( $base_slug, -4 ) ) {
+			$parent_file = $this->parent_slug;
+		}
+
+		$base_url = '';
+		switch ( $this->administration_panel ) {
+			case 'user':
+				$base_url = user_admin_url( $parent_file );
+				break;
+			case 'network':
+				$base_url = network_admin_url( $parent_file );
+				break;
+			default:
+				$base_url = admin_url( $parent_file );
+		}
+
+		$this->url = add_query_arg( 'page', $this->slug, $base_url );
 	}
 
 	/**
@@ -213,7 +276,7 @@ abstract class Admin_Page {
 	 * @return array Array of property names.
 	 */
 	protected function get_read_properties() {
-		return array( 'slug', 'title', 'capability', 'icon_url', 'administration_panel', 'parent_slug', 'hook_suffix' );
+		return array( 'slug', 'title', 'capability', 'icon_url', 'administration_panel', 'parent_slug', 'hook_suffix', 'url' );
 	}
 
 	/**

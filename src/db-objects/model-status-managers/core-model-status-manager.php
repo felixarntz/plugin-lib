@@ -21,6 +21,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager
  */
 abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	/**
+	 * Slug of the default status.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $default = '';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -157,6 +166,22 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Returns the slug of the default status.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Default status.
+	 */
+	public function get_default() {
+		if ( ! empty( $this->default ) && null !== $this->get( $this->default ) ) {
+			return $this->default;
+		}
+
+		return '';
 	}
 
 	/**

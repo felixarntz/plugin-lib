@@ -58,7 +58,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			'error_handler' => $error_handler,
 		), new Translations_DB() );
 
-		$table_name = $name . 's';
+		$table_name = 'y' === substr( $name, -1 ) ? substr( $name, 0, -1 ) . 'ies' : $name . 's';
 		$meta_table_name = $name . 'meta';
 		$id_field_name = $name . '_id';
 

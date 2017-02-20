@@ -81,12 +81,14 @@ class Admin_Pages extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string      $slug                 Page slug.
-	 * @param string      $class_name           Name of the class to handle the page.
-	 * @param string|null $parent_slug          Optional. Parent page slug. Default null.
-	 * @param int|null    $position             Optional. Page position index. Default null.
-	 * @param string      $administration_panel Optional. Either 'site', 'network' or 'user'.
-	 *                                          Default 'site'.
+	 * @param string                                                  $slug                 Page slug.
+	 * @param string|Leaves_And_Love\Plugin_Lib\Components\Admin_Page $class_name           Either the name of the class to handle the
+	 *                                                                                      page, or an already instantiated object of
+	 *                                                                                      that class.
+	 * @param string|null                                             $parent_slug          Optional. Parent page slug. Default null.
+	 * @param int|null                                                $position             Optional. Page position index. Default null.
+	 * @param string                                                  $administration_panel Optional. Either 'site', 'network' or 'user'.
+	 *                                                                                      Default 'site'.
 	 * @return bool True on success, false on failure.
 	 */
 	public function add( $slug, $class_name, $parent_slug = null, $position = null, $administration_panel = 'site' ) {
@@ -104,6 +106,19 @@ class Admin_Pages extends Service {
 
 		$slug = $this->get_prefix() . $slug;
 
+		if ( is_object( $class_name ) ) {
+			$page = $class_name;
+			if ( $page->slug !== $slug ) {
+				return false;
+			}
+		} else {
+			$page = new $class_name( $slug, $this );
+		}
+
+		$page->administration_panel = $administration_panel;
+		$page->parent_slug          = $parent_slug;
+		$page->position             = $position;
+
 		if ( ! isset( $this->pages[ $administration_panel ] ) ) {
 			$this->pages[ $administration_panel ] = array();
 		}
@@ -111,11 +126,6 @@ class Admin_Pages extends Service {
 		if ( ! isset( $this->hook_suffix_map[ $administration_panel ] ) ) {
 			$this->hook_suffix_map[ $administration_panel ] = array();
 		}
-
-		$page = new $class_name( $slug, $this );
-		$page->administration_panel = $administration_panel;
-		$page->parent_slug          = $parent_slug;
-		$page->position             = $position;
 
 		$this->pages[ $administration_panel ][ $slug ] = $page;
 
@@ -208,7 +218,7 @@ class Admin_Pages extends Service {
 			$callback = 'add_menu_page';
 			$args = array(
 				$page->title,
-				$page->title,
+				$page->menu_title,
 				$page->capability,
 				$slug,
 				array( $page, 'render' ),
