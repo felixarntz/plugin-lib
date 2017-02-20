@@ -433,6 +433,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		$primary_property = $this->manager->get_primary_property();
 		$model_id = $model->$primary_property;
 
+		//TODO: handle this
 		$view_url = '';
 
 		$edit_url = '';
@@ -468,7 +469,15 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
 			$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
 
-			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( add_query_arg( '_wpnonce', $nonce, $data['url'] ) ), $class, $aria_label, $data['label'] );
+			$action_url = $data['url'];
+			if ( 0 === strpos( $action_url, $edit_url ) ) {
+				$action_url = add_query_arg( array(
+					'_wpnonce'         => $nonce,
+					'_wp_http_referer' => urlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ),
+				), $action_url );
+			}
+
+			$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $action_url ), $class, $aria_label, $data['label'] );
 		}
 
 		return $this->row_actions( $links );

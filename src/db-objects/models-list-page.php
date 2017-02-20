@@ -201,13 +201,12 @@ abstract class Models_List_Page extends Manager_Page {
 			return;
 		}
 
-		$prefix      = $this->model_manager->get_prefix();
-		$plural_slug = $this->model_manager->get_plural_slug();
-
-		check_admin_referer( 'bulk-' . $prefix . $plural_slug );
+		check_admin_referer( $this->get_nonce_action( 'bulk_action' ) );
 
 		$sendback = $this->get_referer();
 		$sendback = add_query_arg( 'paged', $this->list_table->get_pagenum(), $sendback );
+
+		$plural_slug = $this->model_manager->get_plural_slug();
 
 		$ids = array();
 		if ( isset( $_REQUEST[ $plural_slug ] ) ) {
@@ -223,6 +222,8 @@ abstract class Models_List_Page extends Manager_Page {
 		if ( method_exists( $this, 'bulk_action_' . $doaction ) ) {
 			$message = call_user_func( array( $this, 'bulk_action_' . $doaction ), $ids );
 		} else {
+			$prefix = $this->model_manager->get_prefix();
+
 			/**
 			 * Fires when a custom bulk action should be handled.
 			 *

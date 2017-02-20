@@ -150,6 +150,30 @@ abstract class Manager_Page extends Admin_Page {
 	}
 
 	/**
+	 * Returns the nonce action name for a given action type and model ID.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $action_type Optional. Action type. Either 'bulk_action', 'row_action' or 'action'.
+	 *                            Default 'action'.
+	 * @param int    $model_id    Optional. Model ID. Default null.
+	 * @return string Nonce action name.
+	 */
+	protected function get_nonce_action( $action_type = 'action', $model_id = null ) {
+		$prefix = $this->model_manager->get_prefix();
+
+		if ( 'bulk_action' === $action_type ) {
+			return 'bulk-' . $prefix . $this->model_manager->get_plural_slug();
+		}
+
+		$base = 'row_action' === $action_type ? 'row-' : 'edit-';
+		$model_id = ! empty( $model_id ) ? '-' . absint( $model_id ) : '';
+
+		return $base . $prefix . $this->model_manager->get_singular_slug() . $model_id;
+	}
+
+	/**
 	 * Renders the page header.
 	 *
 	 * @since 1.0.0
