@@ -263,7 +263,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		$capabilities = $this->manager->capabilities();
 
 		if ( ! empty( $this->_args['model_page'] ) && $capabilities && $capabilities->user_can_edit( null, $model_id ) ) {
-			$edit_url   = add_query_arg( 'id', $model_id, $this->_args['model_page'] );
+			$edit_url   = add_query_arg( $primary_property, $model_id, $this->_args['model_page'] );
 			$aria_label = sprintf( $this->manager->get_message( 'list_table_title_edit_label' ), $title );
 
 			$title = sprintf( '<a href="%1$s" class="row-title" aria-label="%2$s">%3$s</a>', esc_url( $edit_url ), esc_attr( $aria_label ), $title );
@@ -437,7 +437,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$edit_url = '';
 		if ( ! empty( $this->_args['model_page'] ) ) {
-			$edit_url = add_query_arg( 'id', $model_id, $this->_args['model_page'] );
+			$edit_url = add_query_arg( $primary_property, $model_id, $this->_args['model_page'] );
 		}
 
 		$actions = $this->build_row_actions( $model, $model_id, $view_url, $edit_url, $this->_args['models_page'] );
