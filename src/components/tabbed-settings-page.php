@@ -155,6 +155,13 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @access public
 	 */
 	public function render() {
+		if ( empty( $this->tabs ) ) {
+			?>
+			<div class="wrap"><?php $this->render_header(); ?></div>
+			<?php
+			return;
+		}
+
 		$current_tab_id = $this->get_current_tab();
 
 		$this->current_values = $this->tabs[ $current_tab_id ]['field_manager']->get_values();
@@ -227,15 +234,17 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @param string $current_tab_id Identifier of the current tab.
 	 */
 	protected function render_tab_navigation( $current_tab_id ) {
-		?>
-		<h2 class="nav-tab-wrapper">
-			<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
-				<a class="nav-tab<?php echo $tab_id === $current_tab_id ? ' nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( 'tab', $tab_id ); ?>">
-					<?php echo $tab_args['title']; ?>
-				</a>
-			<?php endforeach; ?>
-		</h2>
-		<?php
+		if ( count( $this->tabs ) > 1 ) : ?>
+			<h2 class="nav-tab-wrapper">
+				<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
+					<a class="nav-tab<?php echo $tab_id === $current_tab_id ? ' nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( 'tab', $tab_id ); ?>">
+						<?php echo $tab_args['title']; ?>
+					</a>
+				<?php endforeach; ?>
+			</h2>
+		<?php else : ?>
+			<h2 class="screen-reader-text"><?php echo $this->tabs[ $current_tab_id ]['title']; ?></h2>
+		<?php endif;
 	}
 
 	/**
