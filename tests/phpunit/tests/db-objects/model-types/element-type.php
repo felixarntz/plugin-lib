@@ -53,6 +53,7 @@ class Tests_Element_Type extends Unit_Test_Case {
 
 	public function test_to_json() {
 		$args = array(
+			'label'   => 'Foos',
 			'labels'  => array(
 				'name'          => 'Foos',
 				'singular_name' => 'Foo',
