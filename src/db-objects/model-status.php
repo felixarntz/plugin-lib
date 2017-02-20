@@ -142,6 +142,10 @@ abstract class Model_Status {
 	protected function set_args( $args ) {
 		$this->args = wp_parse_args( $args, $this->get_defaults() );
 
+		if ( ! isset( $this->args['label'] ) ) {
+			$this->args['label'] = '';
+		}
+
 		if ( ! isset( $this->args['public'] ) ) {
 			$this->args['public'] = false;
 		}
