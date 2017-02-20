@@ -218,7 +218,7 @@ class Admin_Pages extends Service {
 			$callback = 'add_menu_page';
 			$args = array(
 				$page->title,
-				$page->title,
+				$page->menu_title,
 				$page->capability,
 				$slug,
 				array( $page, 'render' ),

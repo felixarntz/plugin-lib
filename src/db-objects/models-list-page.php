@@ -69,6 +69,23 @@ abstract class Models_List_Page extends Admin_Page {
 
 		$this->model_manager = $model_manager;
 
+		if ( empty( $this->title ) ) {
+			$this->title = $this->model_manager->get_message( 'list_page_title' );
+		}
+
+		if ( empty( $this->menu_title ) ) {
+			$this->menu_title = $this->model_manager->get_message( 'list_page_menu_title' );
+		}
+
+		if ( empty( $this->capability ) ) {
+			$capabilities = $this->model_manager->capabilities();
+			if ( $capabilities ) {
+				$base_capabilities = $capabilities->get_capabilities( 'base' );
+
+				$this->capability = $base_capabilities['edit_items'];
+			}
+		}
+
 		if ( empty( $this->edit_page_slug ) ) {
 			$this->edit_page_slug = $this->manager->get_prefix() . 'edit_' . $this->model_manager->get_singular_slug();
 		}

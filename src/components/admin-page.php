@@ -48,6 +48,15 @@ abstract class Admin_Page {
 	protected $title = '';
 
 	/**
+	 * Menu title.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $menu_title = '';
+
+	/**
 	 * Required capability to access the page.
 	 *
 	 * @since 1.0.0
@@ -131,6 +140,10 @@ abstract class Admin_Page {
 	public function __construct( $slug, $manager ) {
 		$this->slug = $slug;
 		$this->manager = $manager;
+
+		if ( ! empty( $this->title ) && empty( $this->menu_title ) ) {
+			$this->menu_title = $this->title;
+		}
 	}
 
 	/**
