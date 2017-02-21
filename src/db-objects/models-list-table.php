@@ -753,7 +753,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 				$views['mine'] = array(
 					'url'   => add_query_arg( $author_property, get_current_user_id(), $list_url ),
-					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_mine' ), $user_counts['_total'] ), number_format_i18n( $user_counts['_total'] ) ),
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_mine', true ), $user_counts['_total'] ), number_format_i18n( $user_counts['_total'] ) ),
 				);
 			}
 		}
@@ -775,7 +775,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 				$views[ $status ] = array(
 					'url'   => add_query_arg( $status_property, $status, $list_url ),
-					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_status_' . $status ), $number ), number_format_i18n( $number ) ),
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_status_' . $status, true ), $number ), number_format_i18n( $number ) ),
 				);
 
 				$total += $number;
@@ -796,7 +796,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$views = array_merge( array(
 				'all' => array(
 					'url'   => $list_url,
-					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_all' ), $total ), number_format_i18n( $total ) ),
+					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_all', true ), $total ), number_format_i18n( $total ) ),
 				),
 			), $views );
 		}

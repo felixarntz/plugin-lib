@@ -47,10 +47,23 @@ abstract class Translations {
 	 * @access public
 	 *
 	 * @param string $identifier Translation string identifier.
-	 * @return string Translation string or empty string if invalid identifier.
+	 * @param bool   $noop       Optional. Whether this is a noop string. Default false.
+	 * @return string|array Translation string, or array if $noop, or empty string if
+	 *                      invalid identifier.
 	 */
-	public function get( $identifier ) {
+	public function get( $identifier, $noop = false ) {
 		if ( ! isset( $this->translations[ $identifier ] ) ) {
+			if ( $noop ) {
+				return array(
+					0          => '',
+					1          => '',
+					'singular' => '',
+					'plural'   => '',
+					'context'  => null,
+					'domain'   => '',
+				);
+			}
+
 			return '';
 		}
 

@@ -21,9 +21,9 @@ trait Translations_Service_Trait {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var array
+	 * @var Leaves_And_Love\Plugin_Lib\Translations\Translations
 	 */
-	protected $translations = array();
+	protected $translations;
 
 	/**
 	 * Returns a translated message for a specific identifier.
@@ -32,10 +32,12 @@ trait Translations_Service_Trait {
 	 * @access protected
 	 *
 	 * @param string $identifier Translated message identifier.
-	 * @return string Translated message or empty string if invalid identifier.
+	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
+	 * @return string|array Translated message, or array if $noop, or empty string if
+	 *                      invalid identifier.
 	 */
-	protected function get_translation( $identifier ) {
-		return $this->translations->get( $identifier );
+	protected function get_translation( $identifier, $noop = false ) {
+		return $this->translations->get( $identifier, $noop );
 	}
 
 	/**

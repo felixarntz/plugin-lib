@@ -325,18 +325,18 @@ abstract class Models_List_Page extends Manager_Page {
 		if ( ! empty( $errors->errors ) ) {
 			$error_count = count( $errors->errors );
 
-			$message = '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_has_errors' ), $error_count ), number_format_i18n( $error_count ) ) . '</p>';
+			$message = '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_has_errors', true ), $error_count ), number_format_i18n( $error_count ) ) . '</p>';
 			$message .= '<ul>';
 			foreach ( $errors->get_error_messages() as $error_message ) {
 				$message .= '<li>' . $error_message . '</li>';
 			}
 			$message .= '</ul>';
-			$message .= '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_other_items_success' ), $total_count - $error_count ), number_format_i18n( $total_count - $error_count ) ) . '</p>';
+			$message .= '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_other_items_success', true ), $total_count - $error_count ), number_format_i18n( $total_count - $error_count ) ) . '</p>';
 
 			return new WP_Error( 'bulk_action_delete_has_errors', $message );
 		}
 
-		return sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_success' ), $total_count ), number_format_i18n( $total_count ) );
+		return sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_success', true ), $total_count ), number_format_i18n( $total_count ) );
 	}
 }
 

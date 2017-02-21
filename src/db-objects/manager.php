@@ -472,10 +472,12 @@ abstract class Manager extends Service {
 	 * @access public
 	 *
 	 * @param string $identifier Identifier for the message.
-	 * @return string The message, or an empty string if not found.
+	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
+	 * @return string|array Translated message, or array if $noop, or empty string if
+	 *                      invalid identifier.
 	 */
-	public function get_message( $identifier ) {
-		return $this->get_translation( $identifier );
+	public function get_message( $identifier, $noop = false ) {
+		return $this->get_translation( $identifier, $noop );
 	}
 
 	/**
