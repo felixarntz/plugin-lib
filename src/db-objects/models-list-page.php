@@ -289,11 +289,54 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int $id ID of the model to delete.
+	 * @param array $ids IDs of the models to delete.
 	 * @return string|WP_Error Feedback message, or error object on failure.
 	 */
-	protected function bulk_action_delete( $id ) {
-		//TODO: implement
+	protected function bulk_action_delete( $ids ) {
+		$errors = new WP_Error();
+
+		$capabilities = $this->model_manager->capabilities();
+		$title_property = method_exists( $this->model_manager, 'get_title_property' ) ? $this->model_manager->get_title_property() : '';
+
+		foreach ( $ids as $id ) {
+			$model = $this->model_manager->get( $id );
+			if ( ! $model ) {
+				continue;
+			}
+
+			$model_name = $id;
+			if ( ! empty( $title_property ) ) {
+				$model_name = $model->$title_property;
+			}
+
+			if ( ! $capabilities || ! $capabilities->user_can_delete( null, $id ) ) {
+				$errors->add( 'bulk_action_cannot_delete_item', sprintf( $this->model_manager->get_message( 'bulk_action_cannot_delete_item' ), $model_name ) );
+				continue;
+			}
+
+			$result = $model->delete();
+			if ( is_wp_error( $result ) ) {
+				$errors->add( 'bulk_action_delete_item_internal_error', sprintf( $this->model_manager->get_message( 'bulk_action_delete_item_internal_error' ), $model_name ) );
+			}
+		}
+
+		$total_count = count( $ids );
+
+		if ( ! empty( $errors->errors ) ) {
+			$error_count = count( $errors->errors );
+
+			$message = '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_has_errors' ), $error_count ), number_format_i18n( $error_count ) ) . '</p>';
+			$message .= '<ul>';
+			foreach ( $errors->get_error_messages() as $error_message ) {
+				$message .= '<li>' . $error_message . '</li>';
+			}
+			$message .= '</ul>';
+			$message .= '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_other_items_success' ), $total_count - $error_count ), number_format_i18n( $total_count - $error_count ) ) . '</p>';
+
+			return new WP_Error( 'bulk_action_delete_has_errors', $message );
+		}
+
+		return sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_success' ), $total_count ), number_format_i18n( $total_count ) );
 	}
 }
 

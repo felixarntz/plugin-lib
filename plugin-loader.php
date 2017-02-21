@@ -17,6 +17,13 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin_Loader' ) ) :
  */
 final class Leaves_And_Love_Plugin_Loader {
 	/**
+	 * Version number of the library.
+	 *
+	 * @since 1.0.0
+	 */
+	const VERSION = '1.0.0';
+
+	/**
 	 * Whether the loader has been initialized.
 	 *
 	 * @since 1.0.0

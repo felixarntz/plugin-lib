@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
+use WP_Error;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) ) :
 
 /**
@@ -114,6 +116,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 			'update_value_callback_args' => array( '{id}', '{value}' ),
 			'name_prefix'                => '',
 		) );
+
+		$this->add_page_content();
 	}
 
 	/**
@@ -279,7 +283,17 @@ abstract class Model_Edit_Page extends Manager_Page {
 	public function enqueue_assets() {
 		$this->field_manager->enqueue();
 
-		//TODO: scripts and styles for tabs
+		$this->manager->assets()->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
+			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'enqueue' => true,
+		) );
+
+		$this->manager->assets()->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
+			'deps'      => array( 'jquery' ),
+			'ver'       => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'in_footer' => true,
+			'enqueue'   => true,
+		) );
 	}
 
 	/**
@@ -598,7 +612,13 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		if ( 'action' === $action_type ) {
-			$sendback = add_query_arg( $primary_property, $this->model->$primary_property, $sendback );
+			$id = $this->model->$primary_property;
+			if ( $id > 0 ) {
+				$sendback = add_query_arg( $primary_property, $id, $sendback );
+			} else {
+				$action_type = 'row_action';
+				$sendback = add_query_arg( 'page', $this->list_page_slug, $this->url );
+			}
 		}
 
 		$sendback = remove_query_arg( array( 'action' ), $sendback );
@@ -659,7 +679,42 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @return string|WP_Error Feedback message, or error object on failure.
 	 */
 	protected function action_edit( $id ) {
-		//TODO: implement
+		if ( ! $id ) {
+			$id = null;
+		}
+
+		$form_data = wp_unslash( $_POST );
+
+		$result = $this->field_manager->update_values( $form_data );
+		if ( ! is_wp_error( $result ) ) {
+			$result = new WP_Error();
+		}
+
+		if ( method_exists( $this->model_manager, 'get_status_property' ) ) {
+			$status_property = $this->model_manager->get_status_property();
+
+			if ( isset( $form_data[ $status_property ] ) && $form_data[ $status_property ] !== $this->model->$status_property ) {
+				$public_statuses = $this->model_manager->statuses()->get_public();
+				$capabilities = $this->model_manager->capabilities();
+				if ( in_array( $form_data[ $status_property ], $public_statuses, true ) && ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) ) {
+					$result->add( 'action_cannot_publish_item', $this->model_manager->get_message( 'action_cannot_publish_item' ) );
+				}
+			}
+		}
+
+		if ( ! empty( $result->errors ) ) {
+			$message = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
+			$message .= '<ul>';
+			foreach ( $result->get_error_messages() as $error_message ) {
+				$message .= '<li>' . $error_message . '</li>';
+			}
+			$message .= '</ul>';
+			$message .= '<p>' . $this->model_manager->get_message( 'action_edit_item_other_fields_success' ) . '</p>';
+
+			return new WP_Error( 'action_edit_item_has_errors', $message );
+		}
+
+		return $this->model_manager->get_message( 'action_edit_item_success' );
 	}
 
 	/**
@@ -672,7 +727,24 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @return string|WP_Error Feedback message, or error object on failure.
 	 */
 	protected function action_delete( $id ) {
-		//TODO: implement
+		/* $id is always the ID of $this->model. */
+		$model_name = $id;
+		if ( method_exists( $this->model_manager, 'get_title_property' ) ) {
+			$title_property = $this->model_manager->get_title_property();
+			$model_name = $this->model->$title_property;
+		}
+
+		$capabilities = $this->model_manager->capabilities();
+		if ( ! $capabilities || ! $capabilities->user_can_delete( null, $id ) ) {
+			return new WP_Error( 'action_cannot_delete_item', sprintf( $this->model_manager->get_message( 'action_cannot_delete_item' ), $model_name ) );
+		}
+
+		$result = $this->model->delete();
+		if ( is_wp_error( $result ) ) {
+			return new WP_Error( 'action_delete_item_internal_error', sprintf( $this->model_manager->get_message( 'action_delete_item_internal_error' ), $model_name ) );
+		}
+
+		return sprintf( $this->model_manager->get_message( 'action_delete_item_success' ), $model_name );
 	}
 
 	/**
@@ -687,6 +759,17 @@ abstract class Model_Edit_Page extends Manager_Page {
 	protected function row_action_delete( $id ) {
 		return $this->action_delete( $id );
 	}
+
+	/**
+	 * Adds tabs, sections and fields to the model edit page.
+	 *
+	 * This method should call the methods `add_tabs()`, `add_section()` and
+	 * `add_field()` to populate the page.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected abstract function add_page_content();
 }
 
 endif;
