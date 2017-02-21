@@ -690,16 +690,11 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$result = new WP_Error();
 		}
 
-		if ( method_exists( $this->model_manager, 'get_status_property' ) ) {
-			$status_property = $this->model_manager->get_status_property();
+		$this->validate_custom_data( $form_data, $result );
 
-			if ( isset( $form_data[ $status_property ] ) && $form_data[ $status_property ] !== $this->model->$status_property ) {
-				$public_statuses = $this->model_manager->statuses()->get_public();
-				$capabilities = $this->model_manager->capabilities();
-				if ( in_array( $form_data[ $status_property ], $public_statuses, true ) && ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) ) {
-					$result->add( 'action_cannot_publish_item', $this->model_manager->get_message( 'action_cannot_publish_item' ) );
-				}
-			}
+		$update_result = $this->model->sync_upstream();
+		if ( is_wp_error( $update_result ) ) {
+			return new WP_Error( 'action_edit_item_internal_error', $this->model_manager->get_message( 'action_edit_item_internal_error' ) );
 		}
 
 		if ( ! empty( $result->errors ) ) {
@@ -715,6 +710,50 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		return $this->model_manager->get_message( 'action_edit_item_success' );
+	}
+
+	/**
+	 * Validates custom model data that is not handled by the field manager.
+	 *
+	 * This method is called from within the 'edit' action.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array    $form_data Form POST data.
+	 * @param WP_Error $error     Error object to add errors to.
+	 */
+	protected function validate_custom_data( $form_data, $error ) {
+		if ( method_exists( $this->model_manager, 'get_type_property' ) ) {
+			$type_property = $this->model_manager->get_type_property();
+
+			if ( isset( $form_data[ $type_property ] ) && $form_data[ $type_property ] !== $this->model->$type_property ) {
+				if ( ! in_array( $form_data[ $type_property ], array_keys( $this->model_manager->types()->query() ), true ) ) {
+					$error->add( 'action_edit_item_invalid_type', $this->model_manager->get_message( 'action_edit_item_invalid_type' ) );
+				} else {
+					$this->model->$type_property = $form_data[ $type_property ];
+				}
+			}
+		}
+
+		if ( method_exists( $this->model_manager, 'get_status_property' ) ) {
+			$status_property = $this->model_manager->get_status_property();
+
+			if ( isset( $form_data[ $status_property ] ) && $form_data[ $status_property ] !== $this->model->$status_property ) {
+				if ( ! in_array( $form_data[ $status_property ], array_keys( $this->model_manager->statuses()->query() ), true ) ) {
+					$error->add( 'action_edit_item_invalid_status', $this->model_manager->get_message( 'action_edit_item_invalid_status' ) );
+				} else {
+					$public_statuses = $this->model_manager->statuses()->get_public();
+
+					$capabilities = $this->model_manager->capabilities();
+					if ( in_array( $form_data[ $status_property ], $public_statuses, true ) && ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) ) {
+						$error->add( 'action_edit_item_cannot_publish', $this->model_manager->get_message( 'action_edit_item_cannot_publish' ) );
+					} else {
+						$this->model->$status_property = $form_data[ $status_property ];
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -736,7 +775,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$capabilities = $this->model_manager->capabilities();
 		if ( ! $capabilities || ! $capabilities->user_can_delete( null, $id ) ) {
-			return new WP_Error( 'action_cannot_delete_item', sprintf( $this->model_manager->get_message( 'action_cannot_delete_item' ), $model_name ) );
+			return new WP_Error( 'action_delete_item_cannot_delete', sprintf( $this->model_manager->get_message( 'action_delete_item_cannot_delete' ), $model_name ) );
 		}
 
 		$result = $this->model->delete();
