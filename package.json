@@ -12,7 +12,7 @@
     "email": "felix-arntz@leaves-and-love.net",
     "url": "https://leaves-and-love.net"
   },
-  "homepage": "https://leaves-and-love.net",
+  "homepage": "https://github.com/felixarntz/plugin-lib",
   "repository": {
     "type": "git",
     "url": "git://github.com/felixarntz/plugin-lib.git"
