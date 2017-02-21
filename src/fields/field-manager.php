@@ -81,6 +81,17 @@ class Field_Manager extends Service {
 	 */
 	protected static $service_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
 
+
+	/**
+	 * Translations to print to the user.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var Leaves_And_Love\Plugin_Lib\Translations\Translations
+	 */
+	protected static $translations;
+
 	/**
 	 * Constructor.
 	 *
@@ -239,14 +250,23 @@ class Field_Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string|array|null $sections Optional. Section identifier(s), to only render
-	 *                                    fields that belong to this section. Default null.
+	 * @param string|array|null $sections        Optional. Section identifier(s), to only render
+	 *                                           fields that belong to this section. Default null.
+	 * @param callable|null     $render_callback Optional. Callback to use for rendering a single
+	 *                                           field. It will be passed the field instance and
+	 *                                           the field's current value. Default is the callback
+	 *                                           specified through the class' $render_mode argument.
 	 */
-	public function render( $sections = null ) {
+	public function render( $sections = null, $render_callback = null ) {
 		$field_instances = $this->get_fields( $sections );
 
-		$render_callback = array( $this, 'render_form_table_row' );
-		//TODO: Implement more render callbacks.
+		if ( ! $render_callback || ! is_callable( $render_callback ) ) {
+			switch ( $this->render_mode ) {
+				case 'form-table':
+				default:
+					$render_callback = array( $this, 'render_form_table_row' );
+			}
+		}
 
 		$values = $this->get_values( $sections );
 
@@ -404,6 +424,21 @@ class Field_Manager extends Service {
 		}
 
 		return $this->name_prefix . '[' . $id . ']';
+	}
+
+	/**
+	 * Returns a specific manager message.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $identifier Identifier for the message.
+	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
+	 * @return string|array Translated message, or array if $noop, or empty string if
+	 *                      invalid identifier.
+	 */
+	public function get_message( $identifier, $noop = false ) {
+		return self::$translations->get( $identifier, $noop );
 	}
 
 	/**
@@ -570,6 +605,18 @@ class Field_Manager extends Service {
 		}
 
 		self::$defaults_registered = true;
+	}
+
+	/**
+	 * Sets the translations instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 */
+	public static function set_translations( $translations ) {
+		self::$translations = $translations;
 	}
 
 	/**

@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
+use WP_Error;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 
 /**
@@ -98,6 +100,15 @@ abstract class Field {
 	protected $input_attrs = array();
 
 	/**
+	 * Custom validation callback.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var callable|null
+	 */
+	protected $validate = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -108,14 +119,16 @@ abstract class Field {
 	 * @param array                                           $args    {
 	 *     Optional. Field arguments. Default empty array.
 	 *
-	 *     @type string $section       Section identifier this field belongs to. Default empty.
-	 *     @type string $label         Field label. Default empty.
-	 *     @type string $description   Field description. Default empty.
-	 *     @type mixed  $default       Default value for the field. Default null.
-	 *     @type array  $input_classes Array of CSS classes for the field input. Default empty array.
-	 *     @type array  $label_classes Array of CSS classes for the field label. Default empty array.
-	 *     @type array  $input_attrs   Array of additional input attributes as `$key => $value` pairs.
-	 *                                 Default empty array.
+	 *     @type string   $section       Section identifier this field belongs to. Default empty.
+	 *     @type string   $label         Field label. Default empty.
+	 *     @type string   $description   Field description. Default empty.
+	 *     @type mixed    $default       Default value for the field. Default null.
+	 *     @type array    $input_classes Array of CSS classes for the field input. Default empty array.
+	 *     @type array    $label_classes Array of CSS classes for the field label. Default empty array.
+	 *     @type array    $input_attrs   Array of additional input attributes as `$key => $value` pairs.
+	 *                                   Default empty array.
+	 *     @type callable $validate      Custom validation callback. Will be executed after doing the regular
+	 *                                   validation if no errors occurred in the meantime. Default none.
 	 * }
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
@@ -246,7 +259,61 @@ abstract class Field {
 	 * @return mixed|WP_Error The validated value on success, or an error
 	 *                        object on failure.
 	 */
-	public abstract function validate( $value = null );
+	public function validate( $value = null ) {
+		$this->pre_validate( $value );
+		$this->post_validate( $value );
+	}
+
+	/**
+	 * Handles pre-validation of a value.
+	 *
+	 * This method returns an error if the value of a required field is empty.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed $value Vaule to handle pre-validation for.
+	 * @return mixed|WP_Error The value on success, or an error object on failure.
+	 */
+	protected function pre_validate( $value ) {
+		if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] && $this->is_value_empty( $value ) ) {
+			return new WP_Error( 'field_empty_required', sprintf( $this->manager->get_message( 'field_empty_required' ), $this->label ) );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Handles post-validation of a value.
+	 *
+	 * This method checks whether a custom validation callback is set and executes it.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed $value Vaule to handle post-validation for.
+	 * @return mixed|WP_Error The value on success, or an error object on failure.
+	 */
+	protected function post_validate( $value ) {
+		if ( $this->validate && is_callable( $this->validate ) ) {
+			return call_user_func( $this->validate, $value );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Checks whether a value is considered empty.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed $value Value to check whether its empty.
+	 * @return bool True if the value is considered empty, false otherwise.
+	 */
+	protected function is_value_empty( $value ) {
+		return empty( $value );
+	}
 
 	/**
 	 * Returns the attributes for the field's label.
