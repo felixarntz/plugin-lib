@@ -146,6 +146,10 @@ abstract class Model_Type {
 			$this->args['label'] = '';
 		}
 
+		if ( ! isset( $this->args['public'] ) ) {
+			$this->args['public'] = false;
+		}
+
 		if ( ! isset( $this->args['default'] ) ) {
 			$this->args['default'] = false;
 		}

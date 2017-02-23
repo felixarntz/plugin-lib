@@ -203,6 +203,23 @@ abstract class Model_Type_Manager extends Service {
 	}
 
 	/**
+	 * Returns the slugs of all public types.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of public types.
+	 */
+	public function get_public() {
+		$results = $this->query( array( 'public' => true ) );
+		if ( empty( $results ) ) {
+			return array();
+		}
+
+		return array_keys( $results );
+	}
+
+	/**
 	 * Transforms a list of type objects into a list of type arrays.
 	 *
 	 * @since 1.0.0
