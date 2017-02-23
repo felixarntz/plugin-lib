@@ -141,6 +141,7 @@ class Translations_Manager extends Translations {
 			'rest_cannot_delete_item'                               => $this->__translate( 'Sorry, you are not allowed to delete this model.', 'textdomain' ),
 			'rest_cannot_publish_item'                              => $this->__translate( 'Sorry, you are not allowed to publish this model.', 'textdomain' ),
 			'rest_cannot_view_status'                               => $this->__translate( 'Sorry, you are not allowed to view models of this status.', 'textdomain' ),
+			'rest_cannot_view_type'                                 => $this->__translate( 'Sorry, you are not allowed to view models of this type.', 'textdomain' ),
 			'rest_item_id_description'                              => $this->__translate( 'Unique identifier for the model.', 'textdomain' ),
 			'rest_item_title_description'                           => $this->__translate( 'The title for the model.', 'textdomain' ),
 			'rest_item_type_description'                            => $this->__translate( 'The type of the model.', 'textdomain' ),
