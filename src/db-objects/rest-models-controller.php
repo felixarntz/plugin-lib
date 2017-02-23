@@ -317,7 +317,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$capabilities = $this->manager->capabilities();
 
 		if ( ! $capabilities || ! $capabilities->user_can_create() ) {
-			return new WP_Error( 'rest_cannot_create_item', $this->manager->get_message( 'rest_cannot_create_item' ), array( 'status' => rest_authorization_required_code() ) );
+			return new WP_Error( 'rest_cannot_create_items', $this->manager->get_message( 'rest_cannot_create_items' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;
@@ -940,7 +940,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			$id = isset( $request['id'] ) ? absint( $request['id'] ) : null;
 
 			if ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) {
-				return new WP_Error( 'rest_cannot_modify_status', $this->manager->get_message( 'rest_cannot_modify_status' ), rest_authorization_required_code() );
+				return new WP_Error( 'rest_cannot_publish_item', $this->manager->get_message( 'rest_cannot_publish_item' ), rest_authorization_required_code() );
 			}
 		}
 
