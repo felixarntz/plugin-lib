@@ -110,12 +110,18 @@ abstract class Translations {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $message    Untranslated string.
-	 * @param string $textdomain Textdomain for the translation.
-	 * @return string The unmodified string.
+	 * @param string $singular_message Untranslated string.
+	 * @param string $plural_message   Untranslated string.
+	 * @param int    $number           Number to determine message.
+	 * @param string $textdomain       Textdomain for the translation.
+	 * @return string The unmodified singular or plural string.
 	 */
-	protected function _ntranslate( $message, $textdomain ) {
-		return $message;
+	protected function _ntranslate( $singular_message, $plural_message, $number, $textdomain ) {
+		if ( $number > 1 ) {
+			return $plural_message;
+		}
+
+		return $singular_message;
 	}
 
 	/**
@@ -125,10 +131,11 @@ abstract class Translations {
 	 * @access protected
 	 *
 	 * @param string $message    Untranslated string.
+	 * @param string $context    Context information for translators.
 	 * @param string $textdomain Textdomain for the translation.
 	 * @return string The unmodified string.
 	 */
-	protected function _xtranslate( $message, $textdomain ) {
+	protected function _xtranslate( $message, $context, $textdomain ) {
 		return $message;
 	}
 
@@ -138,12 +145,19 @@ abstract class Translations {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $message    Untranslated string.
-	 * @param string $textdomain Textdomain for the translation.
-	 * @return string The unmodified string.
+	 * @param string $singular_message Untranslated string.
+	 * @param string $plural_message   Untranslated string.
+	 * @param int    $number           Number to determine message.
+	 * @param string $context          Context information for translators.
+	 * @param string $textdomain       Textdomain for the translation.
+	 * @return string The unmodified singular or plural string.
 	 */
-	protected function _nxtranslate( $message, $textdomain ) {
-		return $message;
+	protected function _nxtranslate( $singular_message, $plural_message, $number, $context, $textdomain ) {
+		if ( $number > 1 ) {
+			return $plural_message;
+		}
+
+		return $singular_message;
 	}
 
 	/**
@@ -152,12 +166,20 @@ abstract class Translations {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $message    Untranslated string.
-	 * @param string $textdomain Textdomain for the translation.
-	 * @return string The unmodified string.
+	 * @param string $singular_message Untranslated string.
+	 * @param string $plural_message   Untranslated string.
+	 * @param string $textdomain       Textdomain for the translation.
+	 * @return array Input for `translate_nooped_plural()`.
 	 */
-	protected function _n_nooptranslate( $message, $textdomain ) {
-		return $message;
+	protected function _n_nooptranslate( $singular_message, $plural_message, $textdomain ) {
+		return array(
+			0          => $singular_message,
+			1          => $plural_message,
+			'singular' => $singular_message,
+			'plural'   => $plural_message,
+			'context'  => null,
+			'domain'   => $textdomain,
+		);
 	}
 
 	/**
@@ -166,12 +188,22 @@ abstract class Translations {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $message    Untranslated string.
-	 * @param string $textdomain Textdomain for the translation.
-	 * @return string The unmodified string.
+	 * @param string $singular_message Untranslated string.
+	 * @param string $plural_message   Untranslated string.
+	 * @param string $context          Context information for translators.
+	 * @param string $textdomain       Textdomain for the translation.
+	 * @return array Input for `translate_nooped_plural()`.
 	 */
-	protected function _nx_nooptranslate( $message, $textdomain ) {
-		return $message;
+	protected function _nx_nooptranslate( $singular_message, $plural_message, $context, $textdomain ) {
+		return array(
+			0          => $singular_message,
+			1          => $plural_message,
+			2          => $context,
+			'singular' => $singular_message,
+			'plural'   => $plural_message,
+			'context'  => $context,
+			'domain'   => $textdomain,
+		);
 	}
 }
 
