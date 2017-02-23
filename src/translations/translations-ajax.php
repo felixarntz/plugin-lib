@@ -24,6 +24,7 @@ class Translations_AJAX extends Translations {
 	 */
 	protected function init() {
 		$this->translations = array(
+			/* translators: %s: admin_init */
 			'ajax_registered_too_late'      => $this->__translate( 'AJAX actions must be registered before the %s hook.', 'textdomain' ),
 			'ajax_invalid_action_name'      => $this->__translate( 'Invalid AJAX action name.', 'textdomain' ),
 			'ajax_request_invalid_action'   => $this->__translate( 'Invalid action.', 'textdomain' ),

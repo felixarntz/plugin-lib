@@ -24,9 +24,12 @@ class Translations_Extensions extends Translations {
 	 */
 	protected function init() {
 		$this->translations = array(
+			/* translators: %s: class name */
 			'extension_class_not_exist'    => $this->__translate( 'The extension class %s does not exist.', 'textdomain' ),
+			/* translators: 1: class name, 2: other class name */
 			'extension_class_invalid'      => $this->__translate( 'The extension class %1$s is invalid, as it does not inherit the %2$s class.', 'textdomain' ),
-			'extension_already_registered' => $this->__translate( 'An extension with the name %s is already registered.', 'textdomain' ),
+			/* translators: %s: extension name */
+			'extension_already_registered' => $this->__translate( 'An extension with the name &#8220;%s&#8221; is already registered.', 'textdomain' ),
 		);
 	}
 }

@@ -24,7 +24,8 @@ class Translations_DB extends Translations {
 	 */
 	protected function init() {
 		$this->translations = array(
-			'table_already_exist' => $this->__translate( 'The table %s already exists.', 'textdomain' ),
+			/* translators: %s: table name */
+			'table_already_exist' => $this->__translate( 'The table &#8220;%s&#8221; already exists.', 'textdomain' ),
 			'schema_empty'        => $this->__translate( 'You cannot add a table without a schema.', 'textdomain' ),
 		);
 	}

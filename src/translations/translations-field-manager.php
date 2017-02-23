@@ -24,7 +24,8 @@ class Translations_Field_Manager extends Translations {
 	 */
 	protected function init() {
 		$this->translations = array(
-			'field_empty_required' => $this->__translate( 'No value was given for the required field %s.', 'textdomain' ),
+			/* translators: %s: field label */
+			'field_empty_required' => $this->__translate( 'No value was given for the required field &#8220;%s&#8221;.', 'textdomain' ),
 		);
 	}
 }

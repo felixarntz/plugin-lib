@@ -26,8 +26,10 @@ class Translations_Term_Manager extends Translations {
 		$this->translations = array(
 			'db_insert_error'            => $this->__translate( 'Could not insert term into the database.', 'textdomain' ),
 			'db_update_error'            => $this->__translate( 'Could not update term in the database.', 'textdomain' ),
-			'meta_delete_error'          => $this->__translate( 'Could not delete term metadata for key %s.', 'textdomain' ),
-			'meta_update_error'          => $this->__translate( 'Could not update term metadata for key %s.', 'textdomain' ),
+			/* translators: %s: meta key */
+			'meta_delete_error'          => $this->__translate( 'Could not delete term metadata for key &#8220;%s&#8221;.', 'textdomain' ),
+			/* translators: %s: meta key */
+			'meta_update_error'          => $this->__translate( 'Could not update term metadata for key &#8220;%s&#8221;.', 'textdomain' ),
 			'db_fetch_error_missing_id'  => $this->__translate( 'Could not fetch term from the database because it is missing an ID.', 'textdomain' ),
 			'db_fetch_error'             => $this->__translate( 'Could not fetch term from the database.', 'textdomain' ),
 			'db_delete_error_missing_id' => $this->__translate( 'Could not delete term from the database because it is missing an ID.', 'textdomain' ),
