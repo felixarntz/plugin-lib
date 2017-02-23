@@ -408,16 +408,16 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			return $model;
 		}
 
-		$status = $model->sync_upstream();
+		$result = $model->sync_upstream();
 
-		if ( is_wp_error( $status ) ) {
-			if ( 'db_insert_error' === $status->get_error_code() ) {
-				$status->add_data( array( 'status' => 500 ) );
+		if ( is_wp_error( $result ) ) {
+			if ( 'db_insert_error' === $result->get_error_code() ) {
+				$result->add_data( array( 'status' => 500 ) );
 			} else {
-				$status->add_data( array( 'status' => 400 ) );
+				$result->add_data( array( 'status' => 400 ) );
 			}
 
-			return $status;
+			return $result;
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -472,16 +472,16 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			return $model;
 		}
 
-		$status = $model->sync_upstream();
+		$result = $model->sync_upstream();
 
-		if ( is_wp_error( $status ) ) {
-			if ( 'db_update_error' === $status->get_error_code() ) {
-				$status->add_data( array( 'status' => 500 ) );
+		if ( is_wp_error( $result ) ) {
+			if ( 'db_update_error' === $result->get_error_code() ) {
+				$result->add_data( array( 'status' => 500 ) );
 			} else {
-				$status->add_data( array( 'status' => 400 ) );
+				$result->add_data( array( 'status' => 400 ) );
 			}
 
-			return $status;
+			return $result;
 		}
 
 		$request->set_param( 'context', 'edit' );
@@ -539,16 +539,16 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 
 		$previous = $this->prepare_item_for_response( $model, $request );
 
-		$status = $model->delete();
+		$result = $model->delete();
 
-		if ( is_wp_error( $status ) ) {
-			if ( 'db_delete_error' === $status->get_error_code() ) {
-				$status->add_data( array( 'status' => 500 ) );
+		if ( is_wp_error( $result ) ) {
+			if ( 'db_delete_error' === $result->get_error_code() ) {
+				$result->add_data( array( 'status' => 500 ) );
 			} else {
-				$status->add_data( array( 'status' => 400 ) );
+				$result->add_data( array( 'status' => 400 ) );
 			}
 
-			return $status;
+			return $result;
 		}
 
 		$response = new WP_REST_Response();
@@ -903,8 +903,8 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 					'type' => 'string',
 					'enum' => array_keys( $this->manager->types()->query() ),
 				),
-				'default'           => $this->manager->types()->get_default(),
-				'sanitize_callback' => 'wp_parse_slug_list',
+				'default'           => $this->manager->types()->get_public(),
+				'sanitize_callback' => array( $this, 'sanitize_types' ),
 			);
 		}
 
@@ -1057,6 +1057,42 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		}
 
 		return $statuses;
+	}
+
+	/**
+	 * Sanitizes and validates the list of model types.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string|array    $types     One or more model types.
+	 * @param WP_REST_Request $request   Full details about the request.
+	 * @param string          $parameter Additional parameter to pass to validation.
+	 * @return array|WP_Error A list of valid types, otherwise WP_Error object.
+	 */
+	public function sanitize_types( $types, $request, $parameter ) {
+		$capabilities = $this->manager->capabilities();
+
+		$public_types = $this->manager->types()->get_public();
+
+		$types = wp_parse_slug_list( $types );
+
+		foreach ( $types as $type ) {
+			if ( in_array( $type, $public_types, true ) ) {
+				continue;
+			}
+
+			if ( ! $capabilities || ! $capabilities->user_can_edit() ) {
+				return new WP_Error( 'rest_cannot_view_type', $this->manager->get_message( 'rest_cannot_view_type' ), rest_authorization_required_code() );
+			}
+
+			$result = rest_validate_request_arg( $type, $request, $parameter );
+			if ( is_wp_error( $result ) ) {
+				return $result;
+			}
+		}
+
+		return $types;
 	}
 }
 
