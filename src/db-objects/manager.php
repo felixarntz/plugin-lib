@@ -156,7 +156,22 @@ abstract class Manager extends Service {
 	 */
 	public function create() {
 		$class_name = $this->class_name;
-		return new $class_name( $this );
+
+		$model = new $class_name( $this );
+
+		if ( method_exists( $this, 'get_type_property' ) ) {
+			$type_property = $this->get_type_property();
+
+			$model->$type_property = $this->types()->get_default();
+		}
+
+		if ( method_exists( $this, 'get_status_property' ) ) {
+			$status_property = $this->get_status_property();
+
+			$model->$status_property = $this->statuses()->get_default();
+		}
+
+		return $model;
 	}
 
 	/**
