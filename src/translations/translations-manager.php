@@ -160,6 +160,31 @@ class Translations_Manager extends Translations {
 			'rest_collection_date_before_description'               => $this->__translate( 'Limit result set to models created before a given ISO8601 compliant date.', 'textdomain' ),
 			'rest_collection_date_date_modified_after_description'  => $this->__translate( 'Limit result set to models last modified after a given ISO8601 compliant date..', 'textdomain' ),
 			'rest_collection_date_date_modified_before_description' => $this->__translate( 'Limit result set to models last modified before a given ISO8601 compliant date.', 'textdomain' ),
+
+			/* --- REST Model types controller --- */
+
+			'rest_invalid_type_slug'                                => $this->__translate( 'Invalid model type slug.', 'textdomain' ),
+			'rest_cannot_edit_types'                                => $this->__translate( 'Sorry, you are not allowed to edit models and their types.', 'textdomain' ),
+			'rest_cannot_read_types'                                => $this->__translate( 'Sorry, you are not allowed to view models and their types.', 'textdomain' ),
+			'rest_cannot_edit_type'                                 => $this->__translate( 'Sorry, you are not allowed to edit models of this type.', 'textdomain' ),
+			'rest_cannot_read_type'                                 => $this->__translate( 'Sorry, you are not allowed to view models of this type.', 'textdomain' ),
+			'rest_type_slug_description'                            => $this->__translate( 'An alphanumeric identifier for the model type.', 'textdomain' ),
+			'rest_type_label_description'                           => $this->__translate( 'The title for the model type.', 'textdomain' ),
+			'rest_type_public_description'                          => $this->__translate( 'Whether or not models of that type are publicly accessible.', 'textdomain' ),
+			'rest_type_default_description'                         => $this->__translate( 'Whether or not this is the default model type.', 'textdomain' ),
+
+			/* --- REST Model statuses controller --- */
+
+			'rest_invalid_status_slug'                              => $this->__translate( 'Invalid model status slug.', 'textdomain' ),
+			'rest_cannot_edit_statuses'                             => $this->__translate( 'Sorry, you are not allowed to edit models and their statuses.', 'textdomain' ),
+			'rest_cannot_read_statuses'                             => $this->__translate( 'Sorry, you are not allowed to view models and their statuses.', 'textdomain' ),
+			'rest_cannot_edit_status'                               => $this->__translate( 'Sorry, you are not allowed to edit models of this status.', 'textdomain' ),
+			'rest_cannot_read_status'                               => $this->__translate( 'Sorry, you are not allowed to view models of this status.', 'textdomain' ),
+			'rest_status_slug_description'                          => $this->__translate( 'An alphanumeric identifier for the model status.', 'textdomain' ),
+			'rest_status_label_description'                         => $this->__translate( 'The title for the model status.', 'textdomain' ),
+			'rest_status_public_description'                        => $this->__translate( 'Whether or not models of that status are publicly accessible.', 'textdomain' ),
+			'rest_status_internal_description'                      => $this->__translate( 'Whether or not this status is intended for internal usage only.', 'textdomain' ),
+			'rest_status_default_description'                       => $this->__translate( 'Whether or not this is the default model status.', 'textdomain' ),
 		);
 	}
 }

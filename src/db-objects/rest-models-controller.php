@@ -1,6 +1,6 @@
 <?php
 /**
- * REST controller class
+ * REST models controller class
  *
  * @package LeavesAndLovePluginLib
  * @since 1.0.0
@@ -31,6 +31,42 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	protected $manager;
 
 	/**
+	 * Model types controller class name.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $types_controller_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Controller';
+
+	/**
+	 * Model statuses controller class name.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $statuses_controller_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_Controller';
+
+	/**
+	 * REST model types controller.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Controller
+	 */
+	protected $types_controller;
+
+	/**
+	 * REST model statuses controller.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_Controller
+	 */
+	protected $statuses_controller;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -40,6 +76,26 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
+
+		$prefix = $this->manager->get_prefix();
+		if ( '_' === substr( $prefix, -1 ) ) {
+			$prefix = substr( $prefix, 0, -1 );
+		}
+
+		$this->namespace = $prefix;
+		$this->rest_base = $this->manager->get_plural_slug();
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$class_name = $this->types_controller_class_name;
+
+			$this->types_controller = new $class_name( $this->manager );
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$class_name = $this->statuses_controller_class_name;
+
+			$this->statuses_controller = new $class_name( $this->manager );
+		}
 	}
 
 	/**
@@ -96,6 +152,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
 		) );
+
+		if ( isset( $this->types_controller ) ) {
+			$this->types_controller->register_routes();
+		}
+
+		if ( isset( $this->statuses_controller ) ) {
+			$this->statuses_controller->register_routes();
+		}
 	}
 
 	/**
@@ -628,6 +692,18 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 				'href'   => rest_url( $base ),
 			),
 		);
+
+		if ( method_exists( $this->manager, 'get_type_property' ) && isset( $this->types_controller ) ) {
+			$type_property = $this->manager->get_type_property();
+
+			$type = $model->$type_property;
+
+			if ( ! empty( $type ) ) {
+				$links['about'] = array(
+					'href' => rest_url( trailingslashit( $base ) . 'types/' . $type ),
+				);
+			}
+		}
 
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$author_property = $this->manager->get_author_property();
