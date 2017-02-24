@@ -115,6 +115,10 @@ class Admin_Pages extends Service {
 			$page = new $class_name( $slug, $this );
 		}
 
+		if ( $parent_slug && isset( $this->pages[ $administration_panel ][ $this->get_prefix() . $parent_slug ] ) ) {
+			$parent_slug = $this->get_prefix() . $parent_slug;
+		}
+
 		$page->administration_panel = $administration_panel;
 		$page->parent_slug          = $parent_slug;
 		$page->position             = $position;
