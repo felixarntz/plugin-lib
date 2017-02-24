@@ -90,7 +90,7 @@ class Assets extends Service {
 	 * }
 	 */
 	public function register_script( $handle, $src, $args = array() ) {
-		$args = wp_parse_args( array(
+		$args = wp_parse_args( $args, array(
 			'deps'          => array(),
 			'ver'           => false,
 			'in_footer'     => false,
@@ -149,7 +149,7 @@ class Assets extends Service {
 	 * }
 	 */
 	public function register_style( $handle, $src, $args = array() ) {
-		$args = wp_parse_args( array(
+		$args = wp_parse_args( $args, array(
 			'deps'          => array(),
 			'ver'           => false,
 			'media'         => 'all',
