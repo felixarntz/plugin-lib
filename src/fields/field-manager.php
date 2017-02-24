@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
 use Leaves_And_Love\Plugin_Lib\Service;
+use Leaves_And_Love\Plugin_Lib\Assets;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
 use WP_Error;
@@ -81,6 +82,16 @@ class Field_Manager extends Service {
 	 */
 	protected static $service_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
 
+	/**
+	 * The Assets API service definition for the library itself.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_library_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
+
 
 	/**
 	 * Translations to print to the user.
@@ -122,6 +133,10 @@ class Field_Manager extends Service {
 	 * }
 	 */
 	public function __construct( $prefix, $services, $args ) {
+		if ( ! isset( $services['library_assets'] ) ) {
+			$services['library_assets'] = Assets::get_library_instance();
+		}
+
 		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 		$this->set_args( $args );

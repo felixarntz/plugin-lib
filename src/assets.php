@@ -39,6 +39,16 @@ class Assets extends Service {
 	protected $third_party_styles = array();
 
 	/**
+	 * Assets instance for the library itself.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var Leaves_And_Love\Plugin_Lib\Assets
+	 */
+	protected static $library_instance = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -245,6 +255,26 @@ class Assets extends Service {
 		}
 
 		return call_user_func( $this->url_callback, $src );
+	}
+
+	/**
+	 * Returns the assets instance for the library itself.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 * @static
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\Assets The library assets instance.
+	 */
+	public static function get_library_instance() {
+		if ( null === self::$library_instance ) {
+			self::$library_instance = new Assets( 'pluginlib_', array(
+				'path_callback' => function( $rel_path ) { return plugin_dir_path( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
+				'url_callback'  => function( $rel_path ) { return plugin_dir_url( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
+			) );
+		}
+
+		return self::$library_instance;
 	}
 
 	/**

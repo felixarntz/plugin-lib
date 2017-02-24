@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Fields\Field_Manager;
+use Leaves_And_Love\Plugin_Lib\Assets;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) ) :
@@ -284,12 +285,14 @@ abstract class Model_Edit_Page extends Manager_Page {
 	public function enqueue_assets() {
 		$this->field_manager->enqueue();
 
-		$this->manager->assets()->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
+		$assets = Assets::get_library_instance();
+
+		$assets->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
 			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'enqueue' => true,
 		) );
 
-		$this->manager->assets()->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
+		$assets->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
 			'deps'      => array( 'jquery' ),
 			'ver'       => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'in_footer' => true,

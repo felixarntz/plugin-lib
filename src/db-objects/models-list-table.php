@@ -621,6 +621,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		if ( method_exists( $this->manager, 'get_author_property' ) ) {
 			$author_property = $this->manager->get_author_property();
 
+			$capabilities = $this->manager->capabilities();
 			if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
 				$where .= " AND $author_property = %d";
 				$where_args[] = get_current_user_id();
@@ -639,7 +640,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$table_name = $this->manager->get_table_name();
 
-		$months = $this->db->get_results( "SELECT DISTINCT YEAR( $date_property ) AS year, MONTH( $date_property ) AS month FROM %{$table_name}% WHERE 1=1 $where ORDER BY $date_property DESC", $where_args );
+		$months = $this->manager->db()->get_results( "SELECT DISTINCT YEAR( $date_property ) AS year, MONTH( $date_property ) AS month FROM %{$table_name}% WHERE 1=1 $where ORDER BY $date_property DESC", $where_args );
 
 		$month_count = count( $months );
 

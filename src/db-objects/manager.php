@@ -414,7 +414,7 @@ abstract class Manager extends Service {
 			$results = $this->db()->get_results( "SELECT $status_property, COUNT( * ) AS num_models FROM %{$this->table_name}% $where GROUP BY $status_property", $where_args );
 
 			$total = 0;
-			$counts = array_fill_keys( $this->statuses()->query(), 0 );
+			$counts = array_fill_keys( array_keys( $this->statuses()->query() ), 0 );
 			foreach ( $results as $row ) {
 				$counts[ $row->$status_property ] = $row->num_models;
 				$total += $row->num_models;
