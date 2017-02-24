@@ -276,7 +276,7 @@ abstract class Admin_Page {
 	 * @return array Array of property names.
 	 */
 	protected function get_read_properties() {
-		return array( 'slug', 'title', 'menu_title', 'capability', 'icon_url', 'administration_panel', 'parent_slug', 'hook_suffix', 'url' );
+		return array( 'slug', 'title', 'menu_title', 'capability', 'icon_url', 'position', 'administration_panel', 'parent_slug', 'hook_suffix', 'url' );
 	}
 
 	/**
@@ -288,7 +288,7 @@ abstract class Admin_Page {
 	 * @return array Array of property names.
 	 */
 	protected function get_write_properties() {
-		return array( 'administration_panel', 'parent_slug', 'hook_suffix' );
+		return array( 'administration_panel', 'parent_slug', 'position', 'hook_suffix' );
 	}
 }
 
