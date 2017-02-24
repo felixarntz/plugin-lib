@@ -755,6 +755,16 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			);
 		}
 
+		if ( method_exists( $this->manager, 'get_content_property' ) ) {
+			$content_property = $this->manager->get_content_property();
+
+			$schema['properties'][ $content_property ] = array(
+				'description' => $this->manager->get_message( 'rest_item_content_description' ),
+				'type'        => 'string',
+				'context'     => array( 'view', 'edit', 'embed' ),
+			);
+		}
+
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
 			$type_property = $this->manager->get_type_property();
 

@@ -819,6 +819,10 @@ abstract class Query {
 			$search_fields[] = $this->manager->get_title_property();
 		}
 
+		if ( method_exists( $this->manager, 'get_content_property' ) ) {
+			$search_fields[] = $this->manager->get_content_property();
+		}
+
 		return $search_fields;
 	}
 

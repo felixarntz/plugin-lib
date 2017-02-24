@@ -144,6 +144,7 @@ class Translations_Manager extends Translations {
 			'rest_cannot_view_type'                                 => $this->__translate( 'Sorry, you are not allowed to view models of this type.', 'textdomain' ),
 			'rest_item_id_description'                              => $this->__translate( 'Unique identifier for the model.', 'textdomain' ),
 			'rest_item_title_description'                           => $this->__translate( 'The title for the model.', 'textdomain' ),
+			'rest_item_content_description'                         => $this->__translate( 'The main content of the model.', 'textdomain' ),
 			'rest_item_type_description'                            => $this->__translate( 'The type of the model.', 'textdomain' ),
 			'rest_item_status_description'                          => $this->__translate( 'The status of the model.', 'textdomain' ),
 			'rest_item_author_description'                          => $this->__translate( 'The ID for the author of the model.', 'textdomain' ),

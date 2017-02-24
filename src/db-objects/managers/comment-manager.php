@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Content_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Date_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Author_Manager_Trait;
@@ -22,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Comment_Man
  * @since 1.0.0
  */
 class Comment_Manager extends Core_Manager {
-	use Date_Manager_Trait, Meta_Manager_Trait, Author_Manager_Trait;
+	use Content_Manager_Trait, Date_Manager_Trait, Meta_Manager_Trait, Author_Manager_Trait;
 
 	/**
 	 * Constructor.
@@ -54,6 +55,7 @@ class Comment_Manager extends Core_Manager {
 		$this->meta_type        = 'comment';
 		$this->fetch_callback   = 'get_comment';
 		$this->primary_property = 'comment_ID';
+		$this->content_property = 'comment_content';
 		$this->date_property    = 'comment_date';
 		$this->author_property  = 'user_id';
 
