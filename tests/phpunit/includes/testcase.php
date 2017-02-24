@@ -80,7 +80,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 		global $wpdb;
 
 		$prefixed_table_names = array(
-			$prefix . $name . 's',
+			$prefix . ( 'y' === substr( $name, -1 ) ? substr( $name, 0, -1 ) . 'ies' : $name . 's' ),
 			$prefix . $name . 'meta',
 		);
 
