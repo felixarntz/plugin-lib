@@ -39,8 +39,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 */
 	public function __construct( $prefix ) {
 		parent::__construct( $prefix );
-
-		$this->model_status_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Statuses\Core_Model_Status';
 	}
 
 	/**
@@ -182,6 +180,16 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Registers default statuses.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function register_defaults() {
+		/* Default core statuses already exist. */
 	}
 
 	/**

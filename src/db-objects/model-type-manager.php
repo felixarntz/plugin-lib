@@ -50,6 +50,8 @@ abstract class Model_Type_Manager extends Service {
 	 */
 	public function __construct( $prefix ) {
 		$this->set_prefix( $prefix );
+
+		$this->register_defaults();
 	}
 
 	/**
@@ -260,6 +262,14 @@ abstract class Model_Type_Manager extends Service {
 
 		return $model_types;
 	}
+
+	/**
+	 * Registers default types.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected abstract function register_defaults();
 }
 
 endif;
