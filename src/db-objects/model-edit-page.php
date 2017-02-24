@@ -414,7 +414,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 				<h2 class="screen-reader-text"><?php echo $this->tabs[ $current_tab_id ]['title']; ?></h2>
 			<?php endif; ?>
 
-			<?php foreach ( $this->tabs as $tab_id => $tab_args );
+			<?php foreach ( $this->tabs as $tab_id => $tab_args ) :
 				$atts = $use_tabs ? ' aria-labelledby="' . esc_attr( 'tab-label-' . $tab_id ) . '" aria-hidden="' . ( $tab_id === $current_tab_id ? 'false' : 'true' ) . '" role="tabpanel"' : '';
 				$sections = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
 				?>
