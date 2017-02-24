@@ -37,16 +37,17 @@ abstract class Core_Model_Status extends Model_Status {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string       $slug Status slug.
-	 * @param array|object $args Optional. Status arguments. Default empty.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Core_Model_Status_Manager $owner Parent registry.
+	 * @param string                                                                                $slug  Status slug.
+	 * @param array|object                                                                          $args  Optional. Status arguments. Default empty.
 	 */
-	public function __construct( $slug, $args = array() ) {
+	public function __construct( $owner, $slug, $args = array() ) {
 		if ( is_object( $args ) ) {
 			$this->original = $args;
 			$args = array();
 		}
 
-		parent::__construct( $slug, $args );
+		parent::__construct( $owner, $slug, $args );
 	}
 
 	/**

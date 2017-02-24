@@ -33,7 +33,7 @@ class Tests_Element_Type extends Unit_Test_Case {
 	}
 
 	public function test_setgetisset() {
-		$type = new Sample_Type( 'foo', new \stdClass() );
+		$type = new Sample_Type( self::$manager->types(), 'foo', new \stdClass() );
 
 		$this->assertTrue( isset( $type->slug ) );
 		$this->assertTrue( isset( $type->public ) );
@@ -63,7 +63,7 @@ class Tests_Element_Type extends Unit_Test_Case {
 			'show_ui' => true,
 		);
 
-		$type = new Sample_Type( 'foo', $args );
+		$type = new Sample_Type( self::$manager->types(), 'foo', $args );
 
 		$expected = array_merge( array( 'slug' => 'foo' ), $args, array( 'default' => false ) );
 		$result = $type->to_json();

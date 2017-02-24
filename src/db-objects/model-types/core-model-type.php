@@ -37,16 +37,17 @@ abstract class Core_Model_Type extends Model_Type {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string       $slug Type slug.
-	 * @param array|object $args Optional. Type arguments. Default empty.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Core_Model_Type_Manager $owner Parent registry.
+	 * @param string                                                                            $slug  Type slug.
+	 * @param array|object                                                                      $args  Optional. Type arguments. Default empty.
 	 */
-	public function __construct( $slug, $args = array() ) {
+	public function __construct( $owner, $slug, $args = array() ) {
 		if ( is_object( $args ) ) {
 			$this->original = $args;
 			$args = array();
 		}
 
-		parent::__construct( $slug, $args );
+		parent::__construct( $owner, $slug, $args );
 	}
 
 	/**

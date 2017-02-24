@@ -52,7 +52,7 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * @return bool True on success, false on failure.
 	 */
 	public function register( $slug, $args = array() ) {
-		if ( isset( $this->model_types[ $slug ] ) ) {
+		if ( isset( $this->items[ $slug ] ) ) {
 			return false;
 		}
 
@@ -76,8 +76,8 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
 	 */
 	public function get( $slug ) {
-		if ( isset( $this->model_types[ $slug ] ) ) {
-			return $this->model_types[ $slug ];
+		if ( isset( $this->items[ $slug ] ) ) {
+			return $this->items[ $slug ];
 		}
 
 		$type_object = $this->get_from_core( $slug );
@@ -85,11 +85,11 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 			return null;
 		}
 
-		$class_name = $this->model_type_class_name;
+		$class_name = $this->item_class_name;
 
-		$this->model_types[ $slug ] = new $class_name( $slug, $type_object );
+		$this->items[ $slug ] = new $class_name( $this, $slug, $type_object );
 
-		return $this->model_types[ $slug ];
+		return $this->items[ $slug ];
 	}
 
 	/**
@@ -159,8 +159,8 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 			return false;
 		}
 
-		if ( isset( $this->model_types[ $slug ] ) ) {
-			unset( $this->model_types[ $slug ] );
+		if ( isset( $this->items[ $slug ] ) ) {
+			unset( $this->items[ $slug ] );
 		}
 
 		return true;

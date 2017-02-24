@@ -52,7 +52,7 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * @return bool True on success, false on failure.
 	 */
 	public function register( $slug, $args = array() ) {
-		if ( isset( $this->model_statuses[ $slug ] ) ) {
+		if ( isset( $this->items[ $slug ] ) ) {
 			return false;
 		}
 
@@ -76,8 +76,8 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status|null Status object, or null it it does not exist.
 	 */
 	public function get( $slug ) {
-		if ( isset( $this->model_statuses[ $slug ] ) ) {
-			return $this->model_statuses[ $slug ];
+		if ( isset( $this->items[ $slug ] ) ) {
+			return $this->items[ $slug ];
 		}
 
 		$status_object = $this->get_from_core( $slug );
@@ -85,11 +85,11 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 			return null;
 		}
 
-		$class_name = $this->model_status_class_name;
+		$class_name = $this->item_class_name;
 
-		$this->model_statuses[ $slug ] = new $class_name( $slug, $status_object );
+		$this->items[ $slug ] = new $class_name( $this, $slug, $status_object );
 
-		return $this->model_statuses[ $slug ];
+		return $this->items[ $slug ];
 	}
 
 	/**
@@ -159,8 +159,8 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 			return false;
 		}
 
-		if ( isset( $this->model_statuses[ $slug ] ) ) {
-			unset( $this->model_statuses[ $slug ] );
+		if ( isset( $this->items[ $slug ] ) ) {
+			unset( $this->items[ $slug ] );
 		}
 
 		return true;
