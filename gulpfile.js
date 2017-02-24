@@ -3,7 +3,7 @@ var pkg = require( './package.json' );
 var assetBanner =	'/*!\n' +
 					' * ' + pkg.name + ' (' + pkg.homepage + ')\n' +
 					' * By ' + pkg.author.name + ' (' + pkg.author.url + ')\n' +
-					' * Licensed under ' + config.license + '\n' +
+					' * Licensed under ' + pkg.license + '\n' +
 					' */\n';
 
 var gulp = require( 'gulp' );
@@ -16,7 +16,6 @@ var banner = require( 'gulp-banner' );
 var sass = require( 'gulp-sass' );
 var csscomb = require( 'gulp-csscomb' );
 var cleanCss = require( 'gulp-clean-css' );
-var rtlcss = require( 'gulp-rtlcss' );
 var concat = require( 'gulp-concat' );
 var jshint = require( 'gulp-jshint' );
 var uglify = require( 'gulp-uglify' );
