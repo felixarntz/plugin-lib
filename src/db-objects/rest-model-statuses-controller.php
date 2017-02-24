@@ -140,7 +140,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|true True if the request has read access, WP_Error object otherwise.
 	 */
-	public function get_items_permissions_check( $request ) {
+	public function get_item_permissions_check( $request ) {
 		$capabilities = $this->manager->capabilities();
 
 		if ( 'edit' === $request['context'] && ( ! $capabilities || ! $capabilities->user_can_edit() ) ) {
