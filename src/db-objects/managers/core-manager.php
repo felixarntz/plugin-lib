@@ -186,6 +186,16 @@ abstract class Core_Manager extends Manager {
 	}
 
 	/**
+	 * Adds the database table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_database_table() {
+		/* Core tables already exist. */
+	}
+
+	/**
 	 * Internal method to insert a new model into the database.
 	 *
 	 * @since 1.0.0

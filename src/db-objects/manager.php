@@ -144,6 +144,8 @@ abstract class Manager extends Service {
 		if ( $capabilities ) {
 			$capabilities->set_manager( $this );
 		}
+
+		$this->add_database_table( $this->table_name );
 	}
 
 	/**
@@ -693,6 +695,14 @@ abstract class Manager extends Service {
 	protected function storage_unset( $model_id ) {
 		return $this->storage_set( $model_id, null );
 	}
+
+	/**
+	 * Adds the database table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected abstract function add_database_table();
 }
 
 endif;

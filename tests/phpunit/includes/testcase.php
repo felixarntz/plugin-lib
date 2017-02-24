@@ -58,39 +58,7 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			'error_handler' => $error_handler,
 		), new Translations_DB() );
 
-		$table_name = 'y' === substr( $name, -1 ) ? substr( $name, 0, -1 ) . 'ies' : $name . 's';
-		$meta_table_name = $name . 'meta';
-		$id_field_name = $name . '_id';
-
-		$max_index_length = 191;
-		$db->add_table( $table_name, array(
-			"id bigint(20) unsigned NOT NULL auto_increment",
-			"type varchar(32) NOT NULL default ''",
-			"status varchar(32) NOT NULL default ''",
-			"author_id bigint(20) unsigned NOT NULL default '0'",
-			"title text NOT NULL",
-			"content longtext NOT NULL",
-			"parent_id bigint(20) unsigned NOT NULL default '0'",
-			"priority float NOT NULL",
-			"active boolean NOT NULL",
-			"PRIMARY KEY  (id)",
-			"KEY type (type)",
-			"KEY status (status)",
-		) );
-		$db->add_table( $meta_table_name, array(
-			"meta_id bigint(20) unsigned NOT NULL auto_increment",
-			"{$prefix}{$id_field_name} bigint(20) unsigned NOT NULL default '0'",
-			"meta_key varchar(255) default NULL",
-			"meta_value longtext",
-			"PRIMARY KEY  (meta_id)",
-			"KEY {$prefix}{$id_field_name} ({$prefix}{$id_field_name})",
-			"KEY meta_key (meta_key($max_index_length))",
-		) );
-		$db->set_version( 20170207 );
-
-		$db->check();
-
-		return new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( $prefix, array(
+		$manager = new \Leaves_And_Love\Sample_DB_Objects\Sample_Manager( $prefix, array(
 			'db'            => $db,
 			'cache'         => new Cache( $prefix ),
 			'meta'          => new Meta( $prefix, array(
@@ -101,6 +69,11 @@ class Unit_Test_Case extends WP_UnitTestCase {
 			'statuses'      => new \Leaves_And_Love\Sample_DB_Objects\Sample_Status_Manager( $prefix ),
 			'error_handler' => $error_handler,
 		), new \Leaves_And_Love\Sample_DB_Objects\Translations\Translations_Sample_Manager( $name ), $name );
+
+		$db->set_version( 20170207 );
+		$db->check();
+
+		return $manager;
 	}
 
 	protected static function tearDownSampleManager( $prefix, $name ) {

@@ -152,6 +152,31 @@ trait Meta_Manager_Trait {
 	public function get_meta_type() {
 		return $this->meta_type;
 	}
+
+	/**
+	 * Adds the meta database table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_meta_database_table() {
+		$prefix = $this->db()->get_prefix();
+
+		$meta_table_name = $this->meta_type . 'meta';
+		$id_field_name   = $this->meta_type . '_id';
+
+		$max_index_length = 191;
+
+		$this->db()->add_table( $meta_table_name, array(
+			"meta_id bigint(20) unsigned NOT NULL auto_increment",
+			"{$prefix}{$id_field_name} bigint(20) unsigned NOT NULL default '0'",
+			"meta_key varchar(255) default NULL",
+			"meta_value longtext",
+			"PRIMARY KEY  (meta_id)",
+			"KEY {$prefix}{$id_field_name} ({$prefix}{$id_field_name})",
+			"KEY meta_key (meta_key($max_index_length))",
+		) );
+	}
 }
 
 endif;

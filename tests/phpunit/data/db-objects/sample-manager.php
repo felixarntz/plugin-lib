@@ -15,8 +15,6 @@ class Sample_Manager extends Manager {
 	protected $name = '';
 
 	public function __construct( $prefix, $services, $translations, $name = '' ) {
-		parent::__construct( $prefix, $services, $translations );
-
 		$this->name = $name;
 
 		$this->class_name            = 'Leaves_And_Love\Sample_DB_Objects\Sample';
@@ -34,9 +32,36 @@ class Sample_Manager extends Manager {
 		$this->type_property    = 'type';
 		$this->status_property  = 'status';
 		$this->author_property  = 'author_id';
+
+		parent::__construct( $prefix, $services, $translations );
 	}
 
 	public function get_sample_name() {
 		return $this->name;
+	}
+
+	/**
+	 * Adds the database table.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function add_database_table() {
+		$this->db()->add_table( $this->table_name, array(
+			"id bigint(20) unsigned NOT NULL auto_increment",
+			"type varchar(32) NOT NULL default ''",
+			"status varchar(32) NOT NULL default ''",
+			"author_id bigint(20) unsigned NOT NULL default '0'",
+			"title text NOT NULL",
+			"content longtext NOT NULL",
+			"parent_id bigint(20) unsigned NOT NULL default '0'",
+			"priority float NOT NULL",
+			"active boolean NOT NULL",
+			"PRIMARY KEY  (id)",
+			"KEY type (type)",
+			"KEY status (status)",
+		) );
+
+		$this->add_meta_database_table();
 	}
 }
