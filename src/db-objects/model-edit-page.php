@@ -518,13 +518,15 @@ abstract class Model_Edit_Page extends Manager_Page {
 						</div>
 						<div id="misc-publishing-actions">
 							<?php if ( ! empty( $status_property ) && ! empty( $statuses ) ) : ?>
-								<div id="post-status-select">
-									<label for="post-status"><?php echo $this->model_manager->get_message( 'edit_page_status_label' ); ?></label>
-									<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
-										<?php foreach ( $statuses as $status ) : ?>
-											<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
-										<?php endforeach; ?>
-									</select>
+								<div class="misc-pub-section">
+									<div id="post-status-select">
+										<label for="post-status"><?php echo $this->model_manager->get_message( 'edit_page_status_label' ); ?></label>
+										<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
+											<?php foreach ( $statuses as $status ) : ?>
+												<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
 								</div>
 							<?php endif; ?>
 						</div>
