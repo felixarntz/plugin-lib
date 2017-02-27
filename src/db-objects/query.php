@@ -309,7 +309,10 @@ abstract class Query {
 		}
 
 		if ( method_exists( $this->manager, 'get_date_property' ) && ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
-			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $this->manager->get_date_property() );
+			$full_table_name = $this->manager->db()->get_table( $this->manager->get_table_name(), 'full' );
+
+			$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $full_table_name . '.' . $this->manager->get_date_property() );
+			$this->date_query->column = $this->manager->get_date_property();
 		}
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
