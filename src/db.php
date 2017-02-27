@@ -423,6 +423,34 @@ class DB extends Service {
 	}
 
 	/**
+	 * Returns the name of a registered table in a specific format.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $table Unprefixed table name.
+	 * @param string $mode  Optional. Either 'raw', 'prefixed' or 'full'. Default 'raw'.
+	 * @return string|null The table name according to $mode, or null if table not registered.
+	 */
+	public function get_table( $table, $mode = 'raw' ) {
+		if ( ! $this->table_exists( $table ) ) {
+			return null;
+		}
+
+		if ( 'raw' === $mode ) {
+			return $table;
+		}
+
+		$prefixed_table_name = $this->tables[ $table ];
+
+		if ( 'prefixed' === $mode ) {
+			return $prefixed_table_name;
+		}
+
+		return $this->wpdb->$prefixed_table_name;
+	}
+
+	/**
 	 * Checks whether a specific plugin database table is registered.
 	 *
 	 * @since 1.0.0
