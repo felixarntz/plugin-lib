@@ -568,26 +568,26 @@ abstract class Field {
 	 *                          Default false.
 	 */
 	protected final function render_repeatable_add_button( $hide_button = false ) {
-		$this->render_repeatable_button( 'add', $this->manager->get_message( 'field_repeatable_add_button' ), $hide_button );
+		$this->render_repeatable_button( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ) $this->label ), $hide_button );
 	}
 
 	/**
-	 * Renders a button to delete an existing item from a repeatable field list.
+	 * Renders a button to remove an existing item from a repeatable field list.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function render_repeatable_delete_button() {
-		$this->render_repeatable_button( 'delete', $this->manager->get_message( 'field_repeatable_delete_button' ) );
+	protected final function render_repeatable_remove_button() {
+		$this->render_repeatable_button( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), $this->label ) );
 	}
 
 	/**
-	 * Renders an add or delete button for a repeatable field.
+	 * Renders an add or remove button for a repeatable field.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $mode        Either 'add' or 'delete'.
+	 * @param string $mode        Either 'add' or 'remove'.
 	 * @param string $message     The message to display on the button.
 	 * @param bool   $hide_button Optional. Whether to initially hide the button.
 	 *                            Default false.
@@ -599,7 +599,7 @@ abstract class Field {
 
 		$id = $this->get_id_attribute();
 
-		if ( 'delete' === $mode ) {
+		if ( 'remove' === $mode ) {
 			$core_class  = 'button-link-delete';
 			$target_mode = 'item';
 		} else {
