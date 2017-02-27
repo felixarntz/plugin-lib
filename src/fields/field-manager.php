@@ -496,23 +496,16 @@ class Field_Manager extends Service {
 
 		$validated_value = $field->validate( $value );
 		if ( is_wp_error( $validated_value ) ) {
-			$this->merge_errors( $errors, $validated_value );
+			$error = $validated_value;
+			$error_data = $error->get_error_data();
+			if ( isset( $error_data['validated'] ) ) {
+				$validated_value = $error_data['validated'];
+			}
+
+			$errors->add( $error->get_error_code(), $error->get_error_message() );
 		}
 
 		return $validated_value;
-	}
-
-	/**
-	 * Merges an error object into another error object.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param WP_Error $errors The main error object.
-	 * @param WP_Error $error  The error object to merge into the other one.
-	 */
-	protected function merge_errors( $errors, $error ) {
-		$errors->add( $error->get_error_code(), $error->get_error_message(), $error->get_error_data() );
 	}
 
 	/**
