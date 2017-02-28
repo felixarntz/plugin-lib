@@ -563,13 +563,25 @@ abstract class Field {
 			$validated = array();
 			$errors = new WP_Error();
 			foreach ( $value as $single_value ) {
-				$validated_single = $this->validate_single( $single_value );
-				if ( is_wp_error( $validated_single ) ) {
-					$errors->add( $validated_single->get_error_code(), $validated_single->get_error_message(), $validated_single->get_error_data() );
+				$single_value = $this->pre_validate_single( $single_value );
+				if ( is_wp_error( $single_value ) ) {
+					$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
 					continue;
 				}
 
-				$validated[] = $validated_single;
+				$single_value = $this->validate_single( $single_value );
+				if ( is_wp_error( $single_value ) ) {
+					$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
+					continue;
+				}
+
+				$single_value = $this->post_validate_single( $single_value );
+				if ( is_wp_error( $single_value ) ) {
+					$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
+					continue;
+				}
+
+				$validated[] = $single_value;
 			}
 
 			if ( ! empty( $errors->errors ) ) {
@@ -584,7 +596,17 @@ abstract class Field {
 			return $validated;
 		}
 
-		return $this->validate_single( $value );
+		$value = $this->pre_validate_single( $value );
+		if ( is_wp_error( $value ) ) {
+			return $value;
+		}
+
+		$value = $this->validate_single( $value );
+		if ( is_wp_error( $value ) ) {
+			return $value;
+		}
+
+		return $this->post_validate_single( $value );
 	}
 
 	/**
@@ -624,8 +646,8 @@ abstract class Field {
 			'label_mode'    => $this->label_mode,
 			'default'       => $this->default,
 			'fieldset'      => $this->fieldset,
-			'input_attrs'   => $this->get_input_attrs(),
-			'label_attrs'   => $this->get_label_attrs(),
+			'input_attrs'   => $this->get_input_attrs( array(), false ),
+			'label_attrs'   => $this->get_label_attrs( array(), false ),
 			'current_value' => $current_value,
 		);
 	}
@@ -641,14 +663,7 @@ abstract class Field {
 	 * @return mixed|WP_Error The validated value on success, or an error
 	 *                        object on failure.
 	 */
-	protected function validate_single( $value = null ) {
-		$value = $this->pre_validate_single( $value );
-		if ( is_wp_error( $value ) ) {
-			return $value;
-		}
-
-		return $this->post_validate_single( $value );
-	}
+	protected abstract function validate_single( $value = null );
 
 	/**
 	 * Handles pre-validation of a single value.
