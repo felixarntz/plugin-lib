@@ -109,6 +109,17 @@ abstract class Field {
 	protected $label_classes = array();
 
 	/**
+	 * Label mode for this field's label.
+	 *
+	 * Accepts values 'explicit', 'implicit', 'no_assoc', 'aria_hidden' and 'skip'.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $label_mode = 'explicit';
+
+	/**
 	 * Array of additional input attributes as `$key => $value` pairs.
 	 *
 	 * @since 1.0.0
@@ -186,7 +197,7 @@ abstract class Field {
 		$this->manager = $manager;
 		$this->id = $id;
 
-		$forbidden_keys = array( 'manager', 'id', 'slug', 'index' );
+		$forbidden_keys = array( 'manager', 'id', 'slug', 'label_mode', 'index' );
 
 		foreach ( $args as $key => $value ) {
 			if ( in_array( $key, $forbidden_keys, true ) ) {
@@ -200,8 +211,17 @@ abstract class Field {
 			}
 		}
 
+		$this->input_classes[] = 'plugin-lib-' . $this->slug . '-control';
+
 		if ( ! empty( $this->description ) ) {
 			$this->input_attrs['aria-describedby'] = $this->get_id() . '-description';
+		}
+
+		/* Repeatable is not allowed when the $label_mode is not 'explicit'. */
+		if ( 'explicit' !== $this->label_mode ) {
+			$this->repeatable = false;
+		} elseif ( $this->is_repeatable() ) {
+			$this->label_mode = 'no_assoc';
 		}
 	}
 
@@ -264,11 +284,11 @@ abstract class Field {
 	 * @access public
 	 */
 	public final function render_label() {
-		if ( empty( $this->label ) ) {
+		if ( empty( $this->label ) || 'skip' === $this->label_mode ) {
 			return;
 		}
 
-		if ( $this->is_repeatable() && null === $this->index ) {
+		if ( in_array( $this->label_mode, array( 'no_assoc', 'aria_hidden' ), true ) ) {
 			?>
 			<span<?php echo $this->get_label_attrs(); ?>>
 				<?php echo $this->label; ?>
@@ -340,6 +360,8 @@ abstract class Field {
 				$srt_added = true;
 			}
 
+			$this->label_mode = 'explicit';
+
 			$this->index = 0;
 			foreach ( $current_value as $single_value ) {
 				$this->open_repeatable_item_wrap();
@@ -352,6 +374,8 @@ abstract class Field {
 				$this->index++;
 			}
 			$this->index = null;
+
+			$this->label_mode = 'no_assoc';
 
 			if ( $srt_added ) {
 				$key = array_search( 'screen-reader-text', $this->label_classes, true );
@@ -374,11 +398,11 @@ abstract class Field {
 	 */
 	public final function print_label_template() {
 		?>
-		<# if ( data.label ) { #>
-			<# if ( data.repeatable ) { #>
-				<span class="{{ data.label_classes.join( ' ' ) }}">{{ data.label }}</span>
+		<# if ( data.label && 'skip' != data.label_mode ) { #>
+			<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.label_mode ) ) { #>
+				<span{{ _.attrs( data.label_attrs ) }}>{{ data.label }}</span>
 			<# } else { #>
-				<label for="{{ data.id }}" class="{{ data.label_classes.join( ' ' ) }}">{{ data.label }}</label>
+				<label{{ _.attrs( data.label_attrs ) }}>{{ data.label }}</label>
 			<# } #>
 		<# } #>
 		<?php
@@ -454,6 +478,7 @@ abstract class Field {
 				'slug'             => $this->slug,
 				'id'               => $this->get_id_attribute(),
 				'label'            => $this->label,
+				'label_mode'       => $this->label_mode,
 				'items'            => array(),
 				'repeatable'       => true,
 				'repeatable_limit' => $this->get_repeatable_limit(),
@@ -465,6 +490,8 @@ abstract class Field {
 				$srt_added = true;
 			}
 
+			$this->label_mode = 'explicit';
+
 			$this->index = 0;
 			foreach ( $current_value as $single_value ) {
 				$data['items'][] = $this->single_to_json( $single_value );
@@ -472,6 +499,8 @@ abstract class Field {
 				$this->index++;
 			}
 			$this->index = null;
+
+			$this->label_mode = 'no_assoc';
 
 			if ( $srt_added ) {
 				$key = array_search( 'screen-reader-text', $this->label_classes, true );
@@ -588,10 +617,11 @@ abstract class Field {
 			'name'          => $this->get_name_attribute(),
 			'section'       => $this->section,
 			'label'         => $this->label,
+			'label_mode'    => $this->label_mode,
 			'default'       => $this->default,
-			'input_classes' => $this->input_classes,
-			'label_classes' => $this->label_classes,
-			'input_attrs'   => $this->input_attrs,
+			'fieldset'      => $this->fieldset,
+			'input_attrs'   => $this->get_input_attrs(),
+			'label_attrs'   => $this->get_label_attrs(),
 			'current_value' => $current_value,
 		);
 	}
@@ -960,12 +990,16 @@ abstract class Field {
 	protected function get_label_attrs( $label_attrs = array(), $as_string = true ) {
 		$base_label_attrs = array();
 
-		if ( ! $this->is_repeatable() || null !== $this->index ) {
+		if ( 'explicit' === $this->label_mode ) {
 			$base_label_attrs['for'] = $this->get_id_attribute();
 		}
 
 		if ( ! empty( $this->label_classes ) ) {
 			$base_label_attrs['class'] = implode( ' ', $this->label_classes );
+		}
+
+		if ( 'aria_hidden' === $this->label_mode ) {
+			$base_label_attrs['aria-hidden'] = 'true';
 		}
 
 		$all_label_attrs = array_merge( $base_label_attrs, $label_attrs );
