@@ -197,7 +197,7 @@ abstract class Field {
 		$this->manager = $manager;
 		$this->id = $id;
 
-		$forbidden_keys = array( 'manager', 'id', 'slug', 'label_mode', 'index' );
+		$forbidden_keys = $this->get_forbidden_keys();
 
 		foreach ( $args as $key => $value ) {
 			if ( in_array( $key, $forbidden_keys, true ) ) {
@@ -1084,6 +1084,18 @@ abstract class Field {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Returns names of the properties that must not be set through constructor arguments.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Array of forbidden properties.
+	 */
+	protected function get_forbidden_keys() {
+		return array( 'manager', 'id', 'slug', 'label_mode', 'index' );
 	}
 }
 
