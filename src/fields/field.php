@@ -272,9 +272,12 @@ abstract class Field {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
+	 * @return array Array where the first element is an array of script handles and the second element
+	 *               is an associative array of data to pass to the main script.
 	 */
 	public function enqueue() {
-		// Empty method body.
+		return array( array(), array() );
 	}
 
 	/**
@@ -748,7 +751,7 @@ abstract class Field {
 			'data-limit'   => $this->get_repeatable_limit(),
 		);
 
-		echo '<div' . $this->attrs( $wrap_attrs ) . '>';
+		echo '<span' . $this->attrs( $wrap_attrs ) . '>';
 	}
 
 	/**
@@ -758,7 +761,7 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function close_repeatable_wrap() {
-		echo '</div>';
+		echo '</span>';
 	}
 
 	/**
@@ -775,7 +778,7 @@ abstract class Field {
 			'class'        => 'plugin-lib-repeatable-item',
 		);
 
-		echo '<div' . $this->attrs( $wrap_attrs ) . '>';
+		echo '<span' . $this->attrs( $wrap_attrs ) . '>';
 	}
 
 	/**
@@ -785,7 +788,7 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function close_repeatable_item_wrap() {
-		echo '</div>';
+		echo '</span>';
 	}
 
 	/**
@@ -858,7 +861,7 @@ abstract class Field {
 	 */
 	protected final function print_open_repeatable_wrap_template() {
 		?>
-		<div id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatable_limit }}">
+		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatable_limit }}">
 		<?php
 	}
 
@@ -870,7 +873,7 @@ abstract class Field {
 	 */
 	protected final function print_close_repeatable_wrap_template() {
 		?>
-		</div>
+		</span>
 		<?php
 	}
 
@@ -882,7 +885,7 @@ abstract class Field {
 	 */
 	protected final function print_open_repeatable_item_wrap_template() {
 		?>
-		<div id="{{ data.id }}-repeatable-item" class="plugin-lib-repeatable-item">
+		<span id="{{ data.id }}-repeatable-item" class="plugin-lib-repeatable-item">
 		<?php
 	}
 
@@ -894,7 +897,7 @@ abstract class Field {
 	 */
 	protected final function print_close_repeatable_item_wrap_template() {
 		?>
-		</div>
+		</span>
 		<?php
 	}
 
@@ -1055,8 +1058,10 @@ abstract class Field {
 		$output = '';
 
 		foreach ( $attrs as $attr => $value ) {
-			if ( is_bool( $value ) && $value ) {
-				$output .= ' ' . $attr;
+			if ( is_bool( $value ) ) {
+				if ( $value ) {
+					$output .= ' ' . $attr;
+				}
 			} else {
 				$output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
 			}

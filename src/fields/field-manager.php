@@ -247,15 +247,44 @@ class Field_Manager extends Service {
 	public function enqueue( $sections = null ) {
 		$field_instances = $this->get_fields( $sections );
 
+		$main_dependencies = array( 'jquery', 'underscore', 'wp-util' );
+		$localize_data     = array();
+
 		foreach ( $field_instances as $id => $field_instance ) {
 			$type = array_search( get_class( $field_instance ), self::$field_types, true );
 			if ( isset( self::$enqueued[ $type ] ) && self::$enqueued[ $type ] ) {
 				continue;
 			}
 
-			$field_instance->enqueue();
+			list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+
+			if ( ! empty( $new_dependencies ) ) {
+				$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+			}
+
+			if ( ! empty( $new_localize_data ) ) {
+				$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+			}
 
 			self::$enqueued[ $type ] = true;
+		}
+
+		if ( ! isset( self::$enqueued['_core'] ) || ! self::$enqueued['_core'] ) {
+			$this->library_assets()->register_style( 'plugin-lib-field-manager', 'assets/dist/css/field-manager.css', array(
+				'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
+				'enqueue' => true,
+			) );
+
+			$this->library_assets()->register_script( 'plugin-lib-field-manager', 'assets/dist/js/field-manager.js', array(
+				'deps'          => $main_dependencies,
+				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+				'in_footer'     => true,
+				'enqueue'       => true,
+				'localize_name' => 'pluginLibFieldManagerData',
+				'localize_data' => $localize_data,
+			) );
+
+			self::$enqueued['_core'] = true;
 		}
 	}
 

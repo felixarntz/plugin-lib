@@ -1,0 +1,13 @@
+/*!
+ * plugin-lib (https://github.com/felixarntz/plugin-lib)
+ * By Felix Arntz (https://leaves-and-love.net)
+ * Licensed under GPL-3.0
+ */
+.plugin-lib-repeatable-wrap {
+	display: block;
+}
+
+.plugin-lib-repeatable-item {
+	display: block;
+	clear: both;
+}
