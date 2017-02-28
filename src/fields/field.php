@@ -173,7 +173,8 @@ abstract class Field {
 	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $manager Field manager instance.
 	 * @param string                                          $id      Field identifier.
 	 * @param array                                           $args    {
-	 *     Optional. Field arguments. Default empty array.
+	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
+	 *     will be used as an attribute on the input. Default empty array.
 	 *
 	 *     @type string          $section       Section identifier this field belongs to. Default empty.
 	 *     @type string          $label         Field label. Default empty.
@@ -183,8 +184,6 @@ abstract class Field {
 	 *                                          be passed to set the limit of repetitions allowed. Default false.
 	 *     @type array           $input_classes Array of CSS classes for the field input. Default empty array.
 	 *     @type array           $label_classes Array of CSS classes for the field label. Default empty array.
-	 *     @type array           $input_attrs   Array of additional input attributes as `$key => $value` pairs.
-	 *                                          Default empty array.
 	 *     @type callable        $validate      Custom validation callback. Will be executed after doing the regular
 	 *                                          validation if no errors occurred in the meantime. Default none.
 	 *     @type callable|string $before        Callback or string that should be used to generate output that will
@@ -1095,7 +1094,7 @@ abstract class Field {
 	 * @return array Array of forbidden properties.
 	 */
 	protected function get_forbidden_keys() {
-		return array( 'manager', 'id', 'slug', 'label_mode', 'index' );
+		return array( 'manager', 'id', 'slug', 'label_mode', 'input_attrs', 'index' );
 	}
 }
 
