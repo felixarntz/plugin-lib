@@ -199,6 +199,10 @@ abstract class Field {
 				$this->input_attrs[ $key ] = $value;
 			}
 		}
+
+		if ( ! empty( $this->description ) ) {
+			$this->input_attrs['aria-describedby'] = $this->get_id() . '-description';
+		}
 	}
 
 	/**
@@ -299,9 +303,9 @@ abstract class Field {
 		$this->render_input( $current_value );
 
 		if ( ! empty( $this->description ) ) : ?>
-		<p class="description">
-			<?php echo $this->description; ?>
-		</p>
+			<p id="<?php echo $this->get_id(); ?>-description" class="description">
+				<?php echo $this->description; ?>
+			</p>
 		<?php endif;
 
 		if ( ! empty( $this->after ) ) {
@@ -395,7 +399,7 @@ abstract class Field {
 		<?php $this->print_input_template(); ?>
 
 		<# if ( data.description ) { #>
-			<p class="description">{{ data.description }}</p>
+			<p id="{{ data.id }}-description" class="description">{{ data.description }}</p>
 		<# } #>
 
 		<# if ( data.after ) { #>
