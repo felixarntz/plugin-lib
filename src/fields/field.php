@@ -259,7 +259,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public function render_label() {
+	public final function render_label() {
 		if ( empty( $this->label ) ) {
 			return;
 		}
@@ -287,7 +287,7 @@ abstract class Field {
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 */
-	public function render_content( $current_value ) {
+	public final function render_content( $current_value ) {
 		if ( ! empty( $this->before ) ) {
 			if ( is_callable( $this->before ) ) {
 				call_user_func( $this->before );
@@ -363,6 +363,146 @@ abstract class Field {
 	}
 
 	/**
+	 * Prints a label template.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function print_label_template() {
+		?>
+		<# if ( data.label ) { #>
+			<# if ( data.repeatable ) { #>
+				<span class="{{ data.label_classes.join( ' ' ) }}">{{ data.label }}</span>
+			<# } else { #>
+				<label for="{{ data.id }}" class="{{ data.label_classes.join( ' ' ) }}">{{ data.label }}</label>
+			<# } #>
+		<# } #>
+		<?php
+	}
+
+	/**
+	 * Prints a content template including the input.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function print_content_template() {
+		?>
+		<# if ( data.before ) { #>
+			{{ data.before }}
+		<# } #>
+
+		<?php $this->print_input_template(); ?>
+
+		<# if ( data.description ) { #>
+			<p class="description">{{ data.description }}</p>
+		<# } #>
+
+		<# if ( data.after ) { #>
+			{{ data.after }}
+		<# } #>
+		<?php
+	}
+
+	/**
+	 * Prints an input template.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function print_input_template() {
+		?>
+		<# if ( data.repeatable ) { #>
+			<?php $this->print_open_repeatable_wrap_template(); ?>
+
+			<# _.each( data.items, function( data ) { #>
+				<?php $this->print_open_repeatable_item_wrap_template(); ?>
+
+				<?php $this->print_label_template(); ?>
+				<?php $this->print_single_input_template(); ?>
+
+				<?php $this->print_close_repeatable_item_wrap_template(); ?>
+			<# } ) #>
+
+			<?php $this->print_close_repeatable_wrap_template(); ?>
+
+			<?php $this->print_repeatable_add_button_template(); ?>
+		<# } else { #>
+			<?php $this->print_single_input_template(); ?>
+		<# } #>
+		<?php
+	}
+
+	/**
+	 * Transforms all field data into an array to be passed to JavaScript applications.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param mixed $current_value Current value of the field.
+	 * @return array Field data to be JSON-encoded.
+	 */
+	public final function to_json( $current_value ) {
+		if ( $this->is_repeatable() ) {
+			$current_value = (array) $current_value;
+
+			$data = array(
+				'slug'             => $this->slug,
+				'id'               => $this->get_id_attribute(),
+				'label'            => $this->label,
+				'items'            => array(),
+				'repeatable'       => true,
+				'repeatable_limit' => $this->get_repeatable_limit(),
+			);
+
+			$srt_added = false;
+			if ( ! in_array( 'screen-reader-text', $this->label_classes, true ) ) {
+				$this->label_classes[] = 'screen-reader-text';
+				$srt_added = true;
+			}
+
+			$this->index = 0;
+			foreach ( $current_value as $single_value ) {
+				$data['items'][] = $this->single_to_json( $single_value );
+
+				$this->index++;
+			}
+			$this->index = null;
+
+			if ( $srt_added ) {
+				$key = array_search( 'screen-reader-text', $this->label_classes, true );
+				unset( $this->label_classes[ $key ] );
+			}
+		} else {
+			$data = $this->single_to_json( $current_value );
+		}
+
+		$data['description'] = $this->description;
+
+		if ( ! empty( $this->before ) ) {
+			if ( is_callable( $this->before ) ) {
+				ob_start();
+				call_user_func( $this->before );
+				$data['before'] = ob_get_clean();
+			} elseif ( is_string( $this->before ) ) {
+				$data['before'] = $this->before;
+			}
+		}
+
+		if ( ! empty( $this->after ) ) {
+			if ( is_callable( $this->after ) ) {
+				ob_start();
+				call_user_func( $this->after );
+				$data['after'] = ob_get_clean();
+			} elseif ( is_string( $this->after ) ) {
+				$data['after'] = $this->after;
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Validates a value for the field.
 	 *
 	 * @since 1.0.0
@@ -419,6 +559,38 @@ abstract class Field {
 	 * @param mixed $current_value Current field value.
 	 */
 	protected abstract function render_single_input( $current_value );
+
+	/**
+	 * Prints a single input template.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected abstract function render_single_input_template();
+
+	/**
+	 * Transforms single field data into an array to be passed to JavaScript applications.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed $current_value Current value of the field.
+	 * @return array Field data to be JSON-encoded.
+	 */
+	protected function single_to_json( $current_value ) {
+		return array(
+			'slug'          => $this->slug,
+			'id'            => $this->get_id_attribute(),
+			'name'          => $this->get_name_attribute(),
+			'section'       => $this->section,
+			'label'         => $this->label,
+			'default'       => $this->default,
+			'input_classes' => $this->input_classes,
+			'label_classes' => $this->label_classes,
+			'input_attrs'   => $this->input_attrs,
+			'current_value' => $current_value,
+		);
+	}
 
 	/**
 	 * Validates a single value for the field.
@@ -534,10 +706,6 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function open_repeatable_wrap() {
-		if ( ! $this->is_repeatable() ) {
-			return;
-		}
-
 		$id = $this->get_id_attribute();
 
 		$wrap_attrs = array(
@@ -556,10 +724,6 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function close_repeatable_wrap() {
-		if ( ! $this->is_repeatable() ) {
-			return;
-		}
-
 		echo '</div>';
 	}
 
@@ -570,10 +734,6 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function open_repeatable_item_wrap() {
-		if ( ! $this->is_repeatable() ) {
-			return;
-		}
-
 		$id = $this->get_id_attribute();
 
 		$wrap_attrs = array(
@@ -591,10 +751,6 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function close_repeatable_item_wrap() {
-		if ( ! $this->is_repeatable() ) {
-			return;
-		}
-
 		echo '</div>';
 	}
 
@@ -608,7 +764,7 @@ abstract class Field {
 	 *                          Default false.
 	 */
 	protected final function render_repeatable_add_button( $hide_button = false ) {
-		$this->render_repeatable_button( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ) $this->label ), $hide_button );
+		$this->render_repeatable_button( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), $this->label ), $hide_button );
 	}
 
 	/**
@@ -658,6 +814,102 @@ abstract class Field {
 		}
 
 		echo '<button' . $this->attrs( $button_attrs ) . '>' . $message . '</button>';
+	}
+
+	/**
+	 * Prints an open wrap template for a repeatable field list.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_open_repeatable_wrap_template() {
+		?>
+		<div id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatable_limit }}">
+		<?php
+	}
+
+	/**
+	 * Prints an close wrap template for a repeatable field list.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_close_repeatable_wrap_template() {
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Prints an open wrap template for a repeatable field list item.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_open_repeatable_item_wrap_template() {
+		?>
+		<div id="{{ data.id }}-repeatable-item" class="plugin-lib-repeatable-item">
+		<?php
+	}
+
+	/**
+	 * Prints an close wrap template for a repeatable field list item.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_close_repeatable_item_wrap_template() {
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Prints a button template to add a new item to a repeatable field list.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_repeatable_add_button_template() {
+		?>
+		<# if ( ! data.repeatable_limit || data.repeatable_limit > data.items.length ) { #>
+			<?php $this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ ' . 'data.label' . ' }}' ) ); ?>
+		<# } #>
+		<?php
+	}
+
+	/**
+	 * Prints a button template to remove an existing item from a repeatable field list.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_repeatable_remove_button_template() {
+		$this->print_repeatable_button_template( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), '{{ ' . 'data.label' . ' }}' ) );
+	}
+
+	/**
+	 * Prints an add or remove button template for a repeatable field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected final function print_repeatable_button_template( $mode, $message ) {
+		if ( 'remove' === $mode ) {
+			$core_class  = 'button-link-delete';
+			$target_mode = 'item';
+		} else {
+			$mode        = 'add';
+			$core_class  = 'button';
+			$target_mode = 'wrap';
+		}
+
+		?>
+
+		<button id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
+			<?php echo $message; ?>
+		</button>
+		<?php
 	}
 
 	/**
