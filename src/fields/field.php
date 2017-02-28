@@ -127,6 +127,24 @@ abstract class Field {
 	protected $validate = null;
 
 	/**
+	 * Callback or string for output to print before the field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var callable|string|null
+	 */
+	protected $before = null;
+
+	/**
+	 * Callback or string for output to print after the field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var callable|string|null
+	 */
+	protected $after = null;
+
+	/**
 	 * Internal index counter for repeatable fields.
 	 *
 	 * @since 1.0.0
@@ -146,16 +164,22 @@ abstract class Field {
 	 * @param array                                           $args    {
 	 *     Optional. Field arguments. Default empty array.
 	 *
-	 *     @type string   $section       Section identifier this field belongs to. Default empty.
-	 *     @type string   $label         Field label. Default empty.
-	 *     @type string   $description   Field description. Default empty.
-	 *     @type mixed    $default       Default value for the field. Default null.
-	 *     @type array    $input_classes Array of CSS classes for the field input. Default empty array.
-	 *     @type array    $label_classes Array of CSS classes for the field label. Default empty array.
-	 *     @type array    $input_attrs   Array of additional input attributes as `$key => $value` pairs.
-	 *                                   Default empty array.
-	 *     @type callable $validate      Custom validation callback. Will be executed after doing the regular
-	 *                                   validation if no errors occurred in the meantime. Default none.
+	 *     @type string          $section       Section identifier this field belongs to. Default empty.
+	 *     @type string          $label         Field label. Default empty.
+	 *     @type string          $description   Field description. Default empty.
+	 *     @type mixed           $default       Default value for the field. Default null.
+	 *     @type bool|int        $repeatable    Whether this should be a repeatable field. An integer can also
+	 *                                          be passed to set the limit of repetitions allowed. Default false.
+	 *     @type array           $input_classes Array of CSS classes for the field input. Default empty array.
+	 *     @type array           $label_classes Array of CSS classes for the field label. Default empty array.
+	 *     @type array           $input_attrs   Array of additional input attributes as `$key => $value` pairs.
+	 *                                          Default empty array.
+	 *     @type callable        $validate      Custom validation callback. Will be executed after doing the regular
+	 *                                          validation if no errors occurred in the meantime. Default none.
+	 *     @type callable|string $before        Callback or string that should be used to generate output that will
+	 *                                          be printed before the field. Default none.
+	 *     @type callable|string $after         Callback or string that should be used to generate output that will
+	 *                                          be printed after the field. Default none.
 	 * }
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
@@ -264,6 +288,14 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 */
 	public function render_content( $current_value ) {
+		if ( ! empty( $this->before ) ) {
+			if ( is_callable( $this->before ) ) {
+				call_user_func( $this->before );
+			} elseif ( is_string( $this->before ) ) {
+				echo $this->before;
+			}
+		}
+
 		$this->render_input( $current_value );
 
 		if ( ! empty( $this->description ) ) : ?>
@@ -271,6 +303,14 @@ abstract class Field {
 			<?php echo $this->description; ?>
 		</p>
 		<?php endif;
+
+		if ( ! empty( $this->after ) ) {
+			if ( is_callable( $this->after ) ) {
+				call_user_func( $this->after );
+			} elseif ( is_string( $this->after ) ) {
+				echo $this->after;
+			}
+		}
 	}
 
 	/**
