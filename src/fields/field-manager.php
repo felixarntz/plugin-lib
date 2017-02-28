@@ -635,7 +635,17 @@ class Field_Manager extends Service {
 			return;
 		}
 
-		$default_field_types = array();
+		$default_field_types = array(
+			'text'        => 'Leaves_And_Love\Plugin_Lib\Fields\Text',
+			'email'       => 'Leaves_And_Love\Plugin_Lib\Fields\Email',
+			'url'         => 'Leaves_And_Love\Plugin_Lib\Fields\URL',
+			'textarea'    => 'Leaves_And_Love\Plugin_Lib\Fields\Textarea',
+			'number'      => 'Leaves_And_Love\Plugin_Lib\Fields\Number',
+			'range'       => 'Leaves_And_Love\Plugin_Lib\Fields\Range',
+			'checkbox'    => 'Leaves_And_Love\Plugin_Lib\Fields\Checkbox',
+			'select'      => 'Leaves_And_Love\Plugin_Lib\Fields\Select',
+			'multiselect' => 'Leaves_And_Love\Plugin_Lib\Fields\Multiselect',
+		);
 
 		foreach ( $default_field_types as $type => $class_name ) {
 			self::register_field_type( $type, $class_name );

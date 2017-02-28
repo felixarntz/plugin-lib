@@ -34,6 +34,22 @@ class Translations_Field_Manager extends Translations {
 			'field_repeatable_add_button'    => $this->__translate( 'Add<span class="screen-reader-text"> another item to the &#8220;%s&#8221; list</span>', 'textdomain' ),
 			/* translators: %s: field label */
 			'field_repeatable_remove_button' => $this->__translate( 'Remove<span class="screen-reader-text"> this item from the &#8220;%s&#8221; list</span>', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label, 3: character limit */
+			'field_text_too_long'            => $this->_n_nooptranslate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is longer than the allowed limit of %3$s character.', 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is longer than the allowed limit of %3$s characters.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label, 3: regex pattern */
+			'field_text_no_pattern_match'    => $this->__translate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; does not match the pattern %3$s.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_email_invalid'            => $this->__translate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is not a valid email address.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_url_invalid'              => $this->__translate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is not a valid URL.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label, 3: minimum allowed value */
+			'field_number_lower_than'        => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is lower than the required minimum of %3$s.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label, 3: maximum allowed value */
+			'field_number_greater_than'      => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is greater than the required maximum of %3$s.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_select_invalid'           => $this->__translate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is not one of the available choices.', 'textdomain' ),
+			/* translators: 1: comma-separated list of values, 2: field label */
+			'field_select_invalid_multi'     => $this->__translate( 'Some of the values &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; are not part of the available choices.', 'textdomain' ),
 		);
 	}
 }
