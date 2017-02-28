@@ -211,6 +211,7 @@ abstract class Field {
 			}
 		}
 
+		$this->input_classes[] = 'plugin-lib-control';
 		$this->input_classes[] = 'plugin-lib-' . $this->slug . '-control';
 
 		if ( ! empty( $this->description ) ) {
