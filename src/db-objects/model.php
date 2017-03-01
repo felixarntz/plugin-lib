@@ -223,14 +223,21 @@ abstract class Model {
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
 	public function sync_upstream() {
-		if ( ! $this->primary_property_value() ) {
+		$add = $this->primary_property_value() ? false : true;
+
+		$pre = $this->pre_sync_upstream( null, $add );
+		if ( null !== $pre ) {
+			return $pre;
+		}
+
+		if ( $add ) {
 			$args = $this->get_property_values();
 
 			unset( $args[ $this->manager->get_primary_property() ] );
 
 			$result = $this->manager->add( $args );
 			if ( ! $result ) {
-				return new WP_Error( 'db_insert_error', $this->manager->get_message( 'db_insert_error' ) );
+				return $this->post_sync_upstream( new WP_Error( 'db_insert_error', $this->manager->get_message( 'db_insert_error' ) ), $add );
 			}
 
 			$this->primary_property_value( $result );
@@ -241,7 +248,7 @@ abstract class Model {
 
 			$result = $this->manager->update( $this->primary_property_value(), $args );
 			if ( ! $result ) {
-				return new WP_Error( 'db_update_error', $this->manager->get_message( 'db_update_error' ) );
+				return $this->post_sync_upstream( new WP_Error( 'db_update_error', $this->manager->get_message( 'db_update_error' ) ), $add );
 			}
 		}
 
@@ -254,12 +261,12 @@ abstract class Model {
 				if ( null === $meta_value ) {
 					$result = $this->manager->delete_meta( $this->primary_property_value(), $meta_key );
 					if ( ! $result ) {
-						return new WP_Error( 'meta_delete_error', sprintf( $this->manager->get_message( 'meta_delete_error' ), $meta_key ) );
+						return $this->post_sync_upstream( new WP_Error( 'meta_delete_error', sprintf( $this->manager->get_message( 'meta_delete_error' ), $meta_key ) ), $add );
 					}
 				} else {
 					$result = $this->manager->update_meta( $this->primary_property_value(), $meta_key, $meta_value );
 					if ( ! $result ) {
-						return new WP_Error( 'meta_update_error', sprintf( $this->manager->get_message( 'meta_update_error' ), $meta_key ) );
+						return $this->post_sync_upstream( new WP_Error( 'meta_update_error', sprintf( $this->manager->get_message( 'meta_update_error' ), $meta_key ) ), $add );
 					}
 				}
 
@@ -267,7 +274,7 @@ abstract class Model {
 			}
 		}
 
-		return true;
+		return $this->post_sync_upstream( true, $add );
 	}
 
 	/**
@@ -366,6 +373,102 @@ abstract class Model {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Runs a filter before a model will be synced upstream with the database.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param null $pre Value to allow short-circuiting the process.
+	 * @param bool $add Optional. Whether the model is being added. Default false.
+	 * @return null|mixed If a value other than null is returned, the sync process will be short-circuited.
+	 */
+	protected function pre_sync_upstream( $pre, $add = false ) {
+		$prefix        = $this->manager->get_prefix();
+		$singular_slug = $this->manager->get_singular_slug();
+
+		if ( $add ) {
+			/**
+			 * Fires right before a new model will be added.
+			 *
+			 * If the initial parameters is returned as anything other than 'null', it will be returned,
+			 * effectively short-circuiting the method.
+			 *
+			 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+			 * respectively.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param null                                          $pre     Value to allow short-circuiting.
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model to add.
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+			 */
+			return apply_filters( "{$prefix}_pre_add_{$singular_slug}", $pre, $this, $this->manager );
+		}
+
+		/**
+		 * Fires right before an existing model will be updated.
+		 *
+		 * If the initial parameters is returned as anything other than 'null', it will be returned,
+		 * effectively short-circuiting the method.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param null                                          $pre     Value to allow short-circuiting.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model to update.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+		 */
+		return apply_filters( "{$prefix}_pre_update_{$singular_slug}", $pre, $this, $this->manager );
+	}
+
+	/**
+	 * Runs a filter after a model has been synced upstream with the database.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param true|WP_Error $result Result of the sync process.
+	 * @param bool          $add    Optional. Whether the model is being added. Default false.
+	 * @return true|WP_Error A modified value can be returned to modify the $result.
+	 */
+	protected function post_sync_upstream( $result, $add = false ) {
+		$prefix        = $this->manager->get_prefix();
+		$singular_slug = $this->manager->get_singular_slug();
+
+		if ( $add ) {
+			/**
+			 * Fires right after a new model has been added.
+			 *
+			 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+			 * respectively.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param bool|WP_Error                                 $result  Result of the sync process.
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model that has been added.
+			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+			 */
+			return apply_filters( "{$prefix}_post_add_{$singular_slug}", $result, $this, $this->manager );
+		}
+
+		/**
+		 * Fires right after an existing model has been updated.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool|WP_Error                                 $result  Result of the sync process.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model that has been updated.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+		 */
+		return apply_filters( "{$prefix}_post_update_{$singular_slug}", $result, $this, $this->manager );
 	}
 
 	/**
