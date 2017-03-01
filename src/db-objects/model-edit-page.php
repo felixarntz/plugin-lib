@@ -443,7 +443,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 			<div id="titlediv">
 				<div id="titlewrap">
 					<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); ?></label>
-					<input type="text" id="title" name="post_title" value="<?php echo esc_attr( $this->model->$title_property ); ?>" placeholder="<?php echo esc_attr( $this->model_manager->get_message( 'edit_page_title_placeholder' ) ); ?>" size="30" />
+					<input type="text" id="title" name="<?php echo esc_attr( $title_property ); ?>" value="<?php echo esc_attr( $this->model->$title_property ); ?>" placeholder="<?php echo esc_attr( $this->model_manager->get_message( 'edit_page_title_placeholder' ) ); ?>" size="30" />
 				</div>
 			</div>
 			<?php
@@ -790,7 +790,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
 		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
 		 */
-		do_action( "{$prefix}_before_{$singular_slug}_update", $result, $id, $this->model, $this->model_manager );
+		do_action( "{$prefix}_edit_{$singular_slug}_before_update", $result, $id, $this->model, $this->model_manager );
 
 		$update_result = $this->model->sync_upstream();
 		if ( is_wp_error( $update_result ) ) {
@@ -813,7 +813,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
 		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
 		 */
-		do_action( "{$prefix}_after_{$singular_slug}_update", $result, $id, $this->model, $this->model_manager );
+		do_action( "{$prefix}_edit_{$singular_slug}_after_update", $result, $id, $this->model, $this->model_manager );
 
 		if ( ! empty( $result->errors ) ) {
 			$message = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
@@ -870,6 +870,14 @@ abstract class Model_Edit_Page extends Manager_Page {
 						$this->model->$status_property = $form_data[ $status_property ];
 					}
 				}
+			}
+		}
+
+		if ( method_exists( $this->model_manager, 'get_title_property' ) ) {
+			$title_property = $this->model_manager->get_title_property();
+
+			if ( isset( $form_data[ $title_property ] ) ) {
+				$this->model->$title_property = strip_tags( $form_data[ $title_property ] );
 			}
 		}
 	}

@@ -898,8 +898,9 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			$title_property = $this->manager->get_title_property();
 
 			$query_params[ $title_property ] = array(
-				'description' => $this->manager->get_message( 'rest_collection_title_description' ),
-				'type'        => 'string',
+				'description'       => $this->manager->get_message( 'rest_collection_title_description' ),
+				'type'              => 'string',
+				'sanitize_callback' => 'strip_tags',
 			);
 		}
 
