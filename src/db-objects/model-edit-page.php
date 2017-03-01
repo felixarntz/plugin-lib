@@ -301,6 +301,68 @@ abstract class Model_Edit_Page extends Manager_Page {
 	}
 
 	/**
+	 * Renders buttons for frontend viewing and previewing.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int|null                                      $id      Current model ID, or null if new model.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+	 */
+	public function view_buttons( $id, $model, $manager ) {
+		//TODO: frontend (pre-)view buttons
+	}
+
+	/**
+	 * Renders a status select field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int|null                                      $id      Current model ID, or null if new model.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+	 */
+	public function status_select( $id, $model, $manager ) {
+		if ( ! method_exists( $manager, 'get_status_property' ) ) {
+			return;
+		}
+
+		$capabilities = $manager->capabilities();
+
+		$status_property = $manager->get_status_property();
+		$current_status = $model->$status_property;
+
+		if ( $capabilities && $capabilities->user_can_publish( null, $id ) ) {
+			$statuses = $manager->statuses()->query();
+		} else {
+			$statuses = $manager->statuses()->query( array(
+				'public'   => false,
+				'slug'     => $current_status,
+				'operator' => 'OR',
+			) );
+		}
+
+		if ( empty( $statuses ) ) {
+			return;
+		}
+
+		?>
+		<div class="misc-pub-section">
+			<div id="post-status-select">
+				<label for="post-status"><?php echo $manager->get_message( 'edit_page_status_label' ); ?></label>
+				<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
+					<?php foreach ( $statuses as $status ) : ?>
+						<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Renders the edit page header.
 	 *
 	 * @since 1.0.0
@@ -486,24 +548,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 			}
 		}
 
-		$statuses = array();
-		$status_property = '';
-		$current_status = '';
-		if ( method_exists( $this->model_manager, 'get_status_property' ) ) {
-			$status_property = $this->model_manager->get_status_property();
-			$current_status = $this->model->$status_property;
-
-			if ( $capabilities && $capabilities->user_can_publish( null, $id ) ) {
-				$statuses = $this->model_manager->statuses()->query();
-			} else {
-				$statuses = $this->model_manager->statuses()->query( array(
-					'public'   => false,
-					'slug'     => $current_status,
-					'operator' => 'OR',
-				) );
-			}
-		}
-
 		?>
 		<div id="submitdiv" class="postbox">
 			<h2 class="hndle">
@@ -513,22 +557,57 @@ abstract class Model_Edit_Page extends Manager_Page {
 				<div id="submitpost" class="submitbox">
 					<div id="minor-publishing">
 						<div id="minor-publishing-actions">
-							<!-- TODO: frontend view/preview -->
+							<?php
+
+							$prefix        = $this->model_manager->get_prefix();
+							$singular_slug = $this->model_manager->get_singular_slug();
+
+							if ( has_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions" ) ) {
+								/**
+								 * Fires when the #minor-publishing-actions content for a model edit page should be rendered.
+								 *
+								 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+								 * respectively.
+								 *
+								 * @since 1.0.0
+								 *
+								 * @param int|null                                      $id      Current model ID, or null if new model.
+								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+								 */
+								do_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
+							} else {
+								$this->view_buttons( $id, $this->model, $this->model_manager );
+							}
+
+							?>
 							<div class="clear"></div>
 						</div>
 						<div id="misc-publishing-actions">
-							<?php if ( ! empty( $status_property ) && ! empty( $statuses ) ) : ?>
-								<div class="misc-pub-section">
-									<div id="post-status-select">
-										<label for="post-status"><?php echo $this->model_manager->get_message( 'edit_page_status_label' ); ?></label>
-										<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
-											<?php foreach ( $statuses as $status ) : ?>
-												<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
-								</div>
-							<?php endif; ?>
+							<?php
+
+							$prefix        = $this->model_manager->get_prefix();
+							$singular_slug = $this->model_manager->get_singular_slug();
+
+							if ( has_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions" ) ) {
+								/**
+								 * Fires when the #misc-publishing-actions content for a model edit page should be rendered.
+								 *
+								 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+								 * respectively.
+								 *
+								 * @since 1.0.0
+								 *
+								 * @param int|null                                      $id      Current model ID, or null if new model.
+								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+								 */
+								do_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
+							} else {
+								$this->status_select( $id, $this->model, $this->model_manager );
+							}
+
+							?>
 						</div>
 						<div class="clear"></div>
 					</div>
@@ -698,10 +777,43 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$this->validate_custom_data( $form_data, $result );
 
+		/**
+		 * Fires right before the current model will be updated.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Error                                      $result  Current error object. Might be empty.
+		 * @param int|null                                      $id      Current model ID, or null if new model.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+		 */
+		do_action( "{$prefix}_before_{$singular_slug}_update", $result, $id, $this->model, $this->model_manager );
+
 		$update_result = $this->model->sync_upstream();
 		if ( is_wp_error( $update_result ) ) {
 			return new WP_Error( 'action_edit_item_internal_error', $this->model_manager->get_message( 'action_edit_item_internal_error' ) );
 		}
+
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+
+		/**
+		 * Fires after the current model has been updated.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param WP_Error                                      $result  Current error object. Might be empty.
+		 * @param int|null                                      $id      Current model ID, or null if new model.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
+		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+		 */
+		do_action( "{$prefix}_after_{$singular_slug}_update", $result, $id, $this->model, $this->model_manager );
 
 		if ( ! empty( $result->errors ) ) {
 			$message = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
