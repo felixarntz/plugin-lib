@@ -38,6 +38,26 @@ trait Author_Manager_Trait {
 	public function get_author_property() {
 		return $this->author_property;
 	}
+
+	/**
+	 * Sets the author property on a model if it isn't set already.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param null                                        $pre   Null value from the pre-filter.
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to modify.
+	 * @return null The unmodified pre-filter value.
+	 */
+	public function maybe_set_author_property( $pre, $model ) {
+		$author_property = $this->get_author_property();
+
+		if ( empty( $model->$author_property ) ) {
+			$model->$author_property = get_current_user_id();
+		}
+
+		return $pre;
+	}
 }
 
 endif;

@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
@@ -25,7 +26,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
  * @method Leaves_And_Love\Plugin_Lib\Cache cache()
  */
 abstract class Manager extends Service {
-	use Container_Service_Trait, Translations_Service_Trait;
+	use Container_Service_Trait, Hook_Service_Trait, Translations_Service_Trait;
 
 	/**
 	 * The model class name.
@@ -146,6 +147,8 @@ abstract class Manager extends Service {
 		}
 
 		$this->add_database_table( $this->table_name );
+
+		$this->setup_hooks();
 	}
 
 	/**
@@ -703,6 +706,28 @@ abstract class Manager extends Service {
 	 * @access protected
 	 */
 	protected abstract function add_database_table();
+
+	/**
+	 * Sets up all action and filter hooks for the service.
+	 *
+	 * This method must be implemented and then be called from the constructor.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function setup_hooks() {
+		if ( method_exists( $this, 'maybe_set_author_property' ) ) {
+			$prefix        = $this->get_prefix();
+			$singular_slug = $this->get_singular_slug();
+
+			$this->filters[] = array(
+				'name'     => "{$prefix}_pre_add_{$singular_slug}",
+				'callback' => array( $this, 'maybe_set_author_property' ),
+				'priority' => 10,
+				'num_args' => 2,
+			);
+		}
+	}
 }
 
 endif;
