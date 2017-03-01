@@ -3,6 +3,14 @@
  * By Felix Arntz (https://leaves-and-love.net)
  * Licensed under GPL-3.0
  */
+#poststuff h2.nav-tab-wrapper {
+	border-bottom: 1px solid #cccccc;
+	margin: 0;
+	padding-top: 9px;
+	padding-bottom: 0;
+	line-height: inherit;
+}
+
 .nav-tab[aria-selected="true"] {
 	margin-bottom: -1px;
 	color: #444444;
