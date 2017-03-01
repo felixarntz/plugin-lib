@@ -667,7 +667,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$message = '';
 
 		if ( $id || ( 'action' === $action_type && 'edit' === $doaction ) ) {
-			check_admin_referer( $action_type, $id );
+			check_admin_referer( $this->get_nonce_action( $action_type, $id ) );
 
 			if ( method_exists( $this, $action_type . '_' . $doaction ) ) {
 				$message = call_user_func( array( $this, $action_type . '_' . $doaction ), $id );
