@@ -333,6 +333,42 @@ abstract class Leaves_And_Love_Plugin {
 	}
 
 	/**
+	 * Instantiates a specific plugin class.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $class_name The class name, without basic namespace.
+	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
+	 * @return object The class instance.
+	 */
+	protected function instantiate_plugin_class( $class_name ) {
+		$params = func_get_args();
+
+		$params[0] = $this->vendor_name . '\\' . $this->project_name . '\\' . $class_name;
+
+		return $this->instantiate_class( $params );
+	}
+
+	/**
+	 * Instantiates a specific library class.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $class_name The class name, without basic namespace.
+	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
+	 * @return object The class instance.
+	 */
+	protected function instantiate_library_class( $class_name ) {
+		$params = func_get_args();
+
+		$params[0] = 'Leaves_And_Love\\Plugin_Lib\\' . $class_name;
+
+		return $this->instantiate_class( $params );
+	}
+
+	/**
 	 * Loads the base properties of the class.
 	 *
 	 * @since 1.0.0
@@ -413,6 +449,28 @@ abstract class Leaves_And_Love_Plugin {
 		}
 
 		return call_user_func_array( array( 'Leaves_And_Love\Plugin_Lib\Service_Instantiator', 'instantiate' ), $params );
+	}
+
+	/**
+	 * Instantiates a specific class.
+	 *
+	 * This private method is called only internally.
+	 *
+	 * @since 1.0.0
+	 * @access private
+	 *
+	 * @param array $params Array of parameters for the originally called method.
+	 * @return object The class instance.
+	 */
+	private function instantiate_class( $params ) {
+		$class_name = array_shift( $params );
+
+		if ( ! empty( $params ) ) {
+			$reflected_class = new ReflectionClass( $class_name );
+			return $reflected_class->newInstanceArgs( $params );
+		}
+
+		return new $class_name();
 	}
 }
 
