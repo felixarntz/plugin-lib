@@ -54,7 +54,7 @@ class Checkbox extends Field {
 		);
 		?>
 		<input<?php echo $this->get_input_attrs( $input_attrs ); ?>>
-		<label for="<?php echo esc_attr( $this->get_id() ); ?>"><?php echo $this->label; ?></label>
+		<label for="<?php echo esc_attr( $this->get_id_attribute() ); ?>"><?php echo $this->label; ?></label>
 		<?php
 		$this->render_repeatable_remove_button();
 	}

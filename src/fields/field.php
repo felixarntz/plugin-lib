@@ -214,7 +214,7 @@ abstract class Field {
 		$this->input_classes[] = 'plugin-lib-' . $this->slug . '-control';
 
 		if ( ! empty( $this->description ) ) {
-			$this->input_attrs['aria-describedby'] = $this->get_id() . '-description';
+			$this->input_attrs['aria-describedby'] = $this->get_id_attribute() . '-description';
 		}
 
 		/* Repeatable is not allowed when the $label_mode is not 'explicit'. */
@@ -326,7 +326,7 @@ abstract class Field {
 		$this->render_input( $current_value );
 
 		if ( ! empty( $this->description ) ) : ?>
-			<p id="<?php echo $this->get_id(); ?>-description" class="description">
+			<p id="<?php echo $this->get_id_attribute(); ?>-description" class="description">
 				<?php echo $this->description; ?>
 			</p>
 		<?php endif;
