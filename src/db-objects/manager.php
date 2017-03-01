@@ -716,14 +716,23 @@ abstract class Manager extends Service {
 	 * @access protected
 	 */
 	protected function setup_hooks() {
-		if ( method_exists( $this, 'maybe_set_author_property' ) ) {
-			$prefix        = $this->get_prefix();
-			$singular_slug = $this->get_singular_slug();
+		$prefix        = $this->get_prefix();
+		$singular_slug = $this->get_singular_slug();
 
+		if ( method_exists( $this, 'maybe_set_author_property' ) ) {
 			$this->filters[] = array(
 				'name'     => "{$prefix}_pre_add_{$singular_slug}",
 				'callback' => array( $this, 'maybe_set_author_property' ),
-				'priority' => 10,
+				'priority' => 100,
+				'num_args' => 2,
+			);
+		}
+
+		if ( method_exists( $this, 'maybe_set_date_property' ) ) {
+			$this->filters[] = array(
+				'name'     => "{$prefix}_pre_add_{$singular_slug}",
+				'callback' => array( $this, 'maybe_set_date_property' ),
+				'priority' => 100,
 				'num_args' => 2,
 			);
 		}
