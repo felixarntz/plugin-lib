@@ -409,6 +409,28 @@ abstract class Leaves_And_Love_Plugin {
 	protected abstract function add_hooks();
 
 	/**
+	 * Loads the plugin textdomain file.
+	 *
+	 * This is a helper method that wraps WordPress' `load_plugin_textdomain()`.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $textdomain Textdomain to load.
+	 * @param string $rel_path   Optional. Relative path to the languages directory. Default empty.
+	 * @return bool True if the textdomain file could be loaded, false otherwise.
+	 */
+	protected function load_plugin_textdomain( $textdomain, $rel_path = '' ) {
+		if ( empty( $rel_path ) ) {
+			return load_plugin_textdomain( $textdomain );
+		}
+
+		$plugin_rel_path = dirname( plugin_basename( $this->main_file ) ) . '/' . $this->basedir_relative . trim( $rel_path, '/' );
+
+		return load_plugin_textdomain( $textdomain, false, $plugin_rel_path );
+	}
+
+	/**
 	 * Checks whether the dependencies have been loaded.
 	 *
 	 * If this method returns false, the plugin will attempt to require the composer-generated
