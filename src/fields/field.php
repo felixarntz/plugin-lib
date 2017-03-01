@@ -203,7 +203,7 @@ abstract class Field {
 				continue;
 			}
 
-			if ( isset( $this->$key ) ) {
+			if ( property_exists( $this, $key ) ) {
 				$this->$key = $value;
 			} else {
 				$this->input_attrs[ $key ] = $value;
