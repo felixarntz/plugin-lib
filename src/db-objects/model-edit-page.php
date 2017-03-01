@@ -406,7 +406,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		?>
-		<form id="post" action="<?php echo esc_url( $this->get_model_edit_url() ); ?>" method="post">
+		<form id="post" action="<?php echo esc_url( $this->get_model_edit_url() ); ?>" method="post" novalidate>
 			<?php wp_nonce_field( $this->get_nonce_action( 'action', $id ) ); ?>
 			<input type="hidden" name="action" value="edit" />
 
