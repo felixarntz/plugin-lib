@@ -635,6 +635,8 @@ class Field_Manager extends Service {
 			return;
 		}
 
+		self::$defaults_registered = true;
+
 		$default_field_types = array(
 			'text'        => 'Leaves_And_Love\Plugin_Lib\Fields\Text',
 			'email'       => 'Leaves_And_Love\Plugin_Lib\Fields\Email',
@@ -650,8 +652,6 @@ class Field_Manager extends Service {
 		foreach ( $default_field_types as $type => $class_name ) {
 			self::register_field_type( $type, $class_name );
 		}
-
-		self::$defaults_registered = true;
 	}
 
 	/**
