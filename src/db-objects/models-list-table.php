@@ -43,26 +43,27 @@ abstract class Models_List_Table extends \WP_List_Table {
 	public function __construct( $manager, $args = array() ) {
 		$this->manager = $manager;
 
-		$new_args = array(
-			'singular' => $this->manager->get_prefix() . $this->manager->get_singular_slug(),
-			'plural'   => $this->manager->get_prefix() . $this->manager->get_plural_slug(),
-			'ajax'     => false,
-			'screen'   => isset( $args['screen'] ) ? $args['screen'] : null,
-		);
-
-		parent::__construct( $new_args );
-
-		if ( ! isset( $this->_args['models_page'] ) ) {
-			$this->_args['models_page'] = add_query_arg( 'page', $_GET['page'], self_admin_url( $this->screen->parent_file ) );
+		if ( empty( $args['singular'] ) ) {
+			$args['singular'] = $this->manager->get_prefix() . $this->manager->get_singular_slug();
 		}
 
-		if ( ! isset( $this->_args['model_page'] ) ) {
-			if ( false !== strpos( $this->_args['models_page'], $this->manager->get_plural_slug() ) ) {
-				$this->_args['model_page'] = str_replace( $this->manager->get_plural_slug(), $this->manager->get_singular_slug(), $this->_args['models_page'] );
+		if ( empty( $args['plural'] ) ) {
+			$args['plural'] = $this->manager->get_prefix() . $this->manager->get_plural_slug();
+		}
+
+		if ( ! isset( $args['models_page'] ) ) {
+			$args['models_page'] = add_query_arg( 'page', $_GET['page'], self_admin_url( $this->screen->parent_file ) );
+		}
+
+		if ( ! isset( $args['model_page'] ) ) {
+			if ( false !== strpos( $args['models_page'], $this->manager->get_plural_slug() ) ) {
+				$args['model_page'] = str_replace( $this->manager->get_plural_slug(), $this->manager->get_singular_slug(), $args['models_page'] );
 			} else {
-				$this->_args['model_page'] = '';
+				$args['model_page'] = '';
 			}
 		}
+
+		parent::__construct( $args );
 	}
 
 	/**
