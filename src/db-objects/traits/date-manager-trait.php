@@ -103,7 +103,7 @@ trait Date_Manager_Trait {
 	}
 
 	/**
-	 * Sets the author property on a model if it isn't set already.
+	 * Sets the date property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
 	 * @access public
