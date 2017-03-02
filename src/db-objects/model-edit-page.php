@@ -445,6 +445,25 @@ abstract class Model_Edit_Page extends Manager_Page {
 					<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); ?></label>
 					<input type="text" id="title" name="<?php echo esc_attr( $title_property ); ?>" value="<?php echo esc_attr( $this->model->$title_property ); ?>" placeholder="<?php echo esc_attr( $this->model_manager->get_message( 'edit_page_title_placeholder' ) ); ?>" size="30" />
 				</div>
+				<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
+					$slug_property = $this->model_manager->get_slug_property();
+					?>
+					<div class="inside">
+						<div id="edit-slug-box" class="hide-if-no-js">
+							<strong><?php echo $this->model_manager->get_message( 'edit_page_slug_label' ); ?></strong>
+							<?php if ( $this->model->$slug_property ) : ?>
+								<span id="edit-slug-buttons">
+									<button type="button" class="edit-slug button button-small hide-if-no-js">
+										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
+									</button>
+								</span>
+								<span id="editable-post-name-full">
+									<?php echo esc_html( $this->model->$slug_property ); ?>
+								</span>
+							<?php endif; ?>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 			<?php
 		}
@@ -878,6 +897,14 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 			if ( isset( $form_data[ $title_property ] ) ) {
 				$this->model->$title_property = strip_tags( $form_data[ $title_property ] );
+			}
+		}
+
+		if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
+			$slug_property = $this->model_manager->get_slug_property();
+
+			if ( isset( $form_data[ $slug_property ] ) ) {
+				$this->model->$slug_property = sanitize_title( $form_data[ $slug_property ] );
 			}
 		}
 	}
