@@ -196,6 +196,20 @@ abstract class Core_Manager extends Manager {
 	}
 
 	/**
+	 * Sets up all action and filter hooks for the service.
+	 *
+	 * This method must be implemented and then be called from the constructor.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function setup_hooks() {
+		/* No hooks should be executed for core models. */
+		$this->actions = array();
+		$this->filters = array();
+	}
+
+	/**
 	 * Internal method to insert a new model into the database.
 	 *
 	 * @since 1.0.0
