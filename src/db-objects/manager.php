@@ -726,6 +726,12 @@ abstract class Manager extends Service {
 				'priority' => 100,
 				'num_args' => 2,
 			);
+			$this->filters[] = array(
+				'name'     => "{$prefix}_pre_update_{$singular_slug}",
+				'callback' => array( $this, 'maybe_set_slug_property' ),
+				'priority' => 100,
+				'num_args' => 2,
+			);
 		}
 
 		if ( method_exists( $this, 'maybe_set_author_property' ) ) {
