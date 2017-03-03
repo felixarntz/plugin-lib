@@ -120,6 +120,11 @@ abstract class Model_Edit_Page extends Manager_Page {
 			'name_prefix'                => '',
 		) );
 
+		if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
+			$this->manager->ajax()->register_action( 'model_generate_slug', array( $this, 'ajax_model_generate_slug' ) );
+			$this->manager->ajax()->register_action( 'model_verify_slug', array( $this, 'ajax_model_verify_slug' ) );
+		}
+
 		$this->add_page_content();
 	}
 
@@ -291,10 +296,19 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$primary_property = $this->model_manager->get_primary_property();
 
 		$data = array(
-			'id' => $this->model->$primary_property,
+			'ajax_prefix'            => $this->manager->ajax()->get_prefix(),
+			'primary_property'       => $primary_property,
+			'primary_property_value' => $this->model->$primary_property,
+			'i18n'                   => array(
+				'ok'     => $this->model_manager->get_message( 'edit_page_ok' ),
+				'cancel' => $this->model_manager->get_message( 'edit_page_cancel' ),
+			),
 		);
-		if ( method_exists( $this->model_manager, 'get_slug_generator_dependencies' ) ) {
-			$data['slug_dependencies'] = $this->model_manager->get_slug_generator_dependencies();
+		if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
+			$data['generate_slug_nonce'] = $this->manager->ajax()->get_nonce( 'model_generate_slug' );
+			$data['verify_slug_nonce']   = $this->manager->ajax()->get_nonce( 'model_verify_slug' );
+			$data['slug_property']       = $this->model_manager->get_slug_property();
+			$data['slug_dependencies']   = $this->model_manager->get_slug_generator_dependencies();
 		}
 
 		$assets->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
@@ -375,6 +389,85 @@ abstract class Model_Edit_Page extends Manager_Page {
 	}
 
 	/**
+	 * AJAX callback to generate a model slug.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $request_data Request data.
+	 * @return array|WP_Error Response data, or error object on failure.
+	 */
+	public function ajax_model_generate_slug( $request_data ) {
+		if ( ! method_exists( $this->model_manager, 'get_slug_property' ) ) {
+			return new WP_Error( 'ajax_item_slug_not_supported', $this->model_manager->get_message( 'ajax_item_slug_not_supported' ) );
+		}
+
+		$primary_property = $this->model_manager->get_primary_property();
+		$slug_property    = $this->model_manager->get_slug_property();
+
+		if ( isset( $request_data[ $primary_property ] ) && absint( $request_data[ $primary_property ] ) > 0 ) {
+			$model = $this->model_manager->create();
+		} else {
+			$model = $this->model_manager->get( $request_data[ $primary_property ] );
+		}
+
+		foreach ( $this->get_slug_generator_dependencies() as $property ) {
+			if ( isset( $request_data[ $property ] ) ) {
+				$model->$property = $request_data[ $property ];
+			}
+		}
+
+		$generated_slug = $this->model_manager->generate_slug( $model );
+		if ( empty( $generated_slug ) ) {
+			return array(
+				'generated' => '',
+				'verified'  => '',
+			);
+		}
+
+		$this->model_manager->set_unique_slug( $model, $generated_slug );
+
+		return array(
+			'generated' => $generated_slug,
+			'verified'  => $model->$slug_property,
+		);
+	}
+
+	/**
+	 * AJAX callback to verify a model slug.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $request_data Request data.
+	 * @return array|WP_Error Response data, or error object on failure.
+	 */
+	public function ajax_model_verify_slug( $request_data ) {
+		if ( ! method_exists( $this->model_manager, 'get_slug_property' ) ) {
+			return new WP_Error( 'ajax_item_slug_not_supported', $this->model_manager->get_message( 'ajax_item_slug_not_supported' ) );
+		}
+
+		$primary_property = $this->model_manager->get_primary_property();
+		$slug_property    = $this->model_manager->get_slug_property();
+
+		if ( ! isset( $request_data[ $slug_property ] ) ) {
+			return new WP_Error( 'ajax_item_slug_not_passed', $this->model_manager->get_message( 'ajax_item_slug_not_passed' ) );
+		}
+
+		if ( isset( $request_data[ $primary_property ] ) && absint( $request_data[ $primary_property ] ) > 0 ) {
+			$model = $this->model_manager->create();
+		} else {
+			$model = $this->model_manager->get( $request_data[ $primary_property ] );
+		}
+
+		$this->model_manager->set_unique_slug( $model, $request_data[ $slug_property ] );
+
+		return array(
+			'verified' => $model->$slug_property,
+		);
+	}
+
+	/**
 	 * Renders the edit page header.
 	 *
 	 * @since 1.0.0
@@ -421,6 +514,11 @@ abstract class Model_Edit_Page extends Manager_Page {
 		<form id="post" action="<?php echo esc_url( $this->get_model_edit_url() ); ?>" method="post" novalidate>
 			<?php wp_nonce_field( $this->get_nonce_action( 'action', $id ) ); ?>
 			<input type="hidden" name="action" value="edit" />
+			<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
+				$slug_property = $this->model_manager->get_slug_property();
+				?>
+				<input type="hidden" id="post_name" name="<?php echo esc_attr( $slug_property ); ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
+			<?php endif; ?>
 
 			<div id="poststuff">
 				<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
