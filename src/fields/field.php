@@ -82,6 +82,15 @@ abstract class Field {
 	protected $default = null;
 
 	/**
+	 * Whether to display this field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $display = true;
+
+	/**
 	 * Whether this is a repeatable field.
 	 *
 	 * @since 1.0.0
@@ -676,7 +685,7 @@ abstract class Field {
 	 * @return mixed|WP_Error The value on success, or an error object on failure.
 	 */
 	protected function pre_validate_single( $value ) {
-		if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] && $this->is_value_empty( $value ) ) {
+		if ( $this->display && isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] && $this->is_value_empty( $value ) ) {
 			return new WP_Error( 'field_empty_required', sprintf( $this->manager->get_message( 'field_empty_required' ), $this->label ) );
 		}
 
@@ -994,6 +1003,35 @@ abstract class Field {
 	}
 
 	/**
+	 * Returns the attributes for the field's wrap element.
+	 *
+	 * The wrap element is controlled by the field manager, so this method needs to be public.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param bool $as_string Optional. Whether to return the attributes as an attribute string.
+	 *                        Default true.
+	 * @return array|string Either an array of `$key => $value` pairs, or an attribute string if
+	 *                      `$as_string` is true.
+	 */
+	public function get_wrap_attrs( $as_string = true ) {
+		$wrap_attrs = array(
+			'id' => $this->get_id_attribute() . '-wrap',
+		);
+
+		if ( ! $this->display ) {
+			$wrap_attrs['style'] = 'display:none;';
+		}
+
+		if ( $as_string ) {
+			return $this->attrs( $wrap_attrs );
+		}
+
+		return $wrap_attrs;
+	}
+
+	/**
 	 * Returns the attributes for the field's label.
 	 *
 	 * @since 1.0.0
@@ -1052,6 +1090,10 @@ abstract class Field {
 		}
 
 		$all_input_attrs = array_merge( $base_input_attrs, $input_attrs, $this->input_attrs );
+
+		if ( ! $this->display && isset( $all_input_attrs['required'] ) && $all_input_attrs['required'] ) {
+			$all_input_attrs['required'] = false;
+		}
 
 		if ( $as_string ) {
 			return $this->attrs( $all_input_attrs );

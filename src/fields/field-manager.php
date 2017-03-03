@@ -522,7 +522,7 @@ class Field_Manager extends Service {
 	 */
 	protected function render_form_table_row( $field, $value ) {
 		?>
-		<tr>
+		<tr<?php echo $field->get_wrap_attrs(); ?>>
 			<th scope="row">
 				<?php $field->render_label(); ?>
 			</th>
