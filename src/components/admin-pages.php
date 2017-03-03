@@ -53,6 +53,16 @@ class Admin_Pages extends Service {
 	protected static $service_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
 
 	/**
+	 * AJAX service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_ajax = 'Leaves_And_Love\Plugin_Lib\AJAX';
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.0.0
@@ -63,6 +73,7 @@ class Admin_Pages extends Service {
 	 *     Array of service instances.
 	 *
 	 *     @type Leaves_And_Love\Plugin_Lib\Assets        $assets        The Assets API instance.
+	 *     @type Leaves_And_Love\Plugin_Lib\AJAX          $ajax          The AJAX API instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
