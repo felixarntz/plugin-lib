@@ -3,7 +3,7 @@
  * By Felix Arntz (https://leaves-and-love.net)
  * Licensed under GPL-3.0
  */
-( function( exports, $, _, wp, pluginLibData ) {
+( function( exports, $, _, Backbone, wp, pluginLibData ) {
 
 	_.mixin({
 		attrs: function( attrs ) {
@@ -31,7 +31,7 @@
 		return selection.text;
 	}
 
-	var FieldManager = {
+	var fieldManager = {
 		data: {},
 
 		select2Enabled: 'undefined' !== typeof $.fn.select2,
@@ -39,7 +39,7 @@
 		select2Options: {},
 
 		init: function( data ) {
-			var self = FieldManager;
+			var self = fieldManager;
 
 			self.data = data;
 
@@ -53,8 +53,8 @@
 		}
 	};
 
-	FieldManager.init( pluginLibData );
+	fieldManager.init( pluginLibData );
 
-	exports.pluginLibFieldManager = FieldManager;
+	exports.pluginLibFieldManager = fieldManager;
 
-}( window, jQuery, _, wp, pluginLibFieldManagerData ) );
+}( window, jQuery, _, Backbone, wp, pluginLibFieldManagerData ) );

@@ -251,14 +251,11 @@ class Field_Manager extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access public
-	 *
-	 * @param string|array|null $sections Optional. Section identifier(s), to only enqueue for
-	 *                                    fields that belong to this section. Default null.
 	 */
-	public function enqueue( $sections = null ) {
-		$field_instances = $this->get_fields( $sections );
+	public function enqueue() {
+		$field_instances = $this->get_fields();
 
-		$main_dependencies = array( 'jquery', 'underscore', 'wp-util' );
+		$main_dependencies = array( 'jquery', 'underscore', 'backbone', 'wp-util' );
 		$localize_data     = array();
 
 		foreach ( $field_instances as $id => $field_instance ) {
