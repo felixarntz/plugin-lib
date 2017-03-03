@@ -406,9 +406,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$slug_property    = $this->model_manager->get_slug_property();
 
 		if ( isset( $request_data[ $primary_property ] ) && absint( $request_data[ $primary_property ] ) > 0 ) {
-			$model = $this->model_manager->create();
-		} else {
 			$model = $this->model_manager->get( $request_data[ $primary_property ] );
+		} else {
+			$model = $this->model_manager->create();
 		}
 
 		foreach ( $this->model_manager->get_slug_generator_dependencies() as $property ) {
