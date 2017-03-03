@@ -287,16 +287,27 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$assets = Assets::get_library_instance();
 
+		$primary_property = $this->model_manager->get_primary_property();
+
+		$data = array(
+			'id' => $this->model->$primary_property,
+		);
+		if ( method_exists( $this->model_manager, 'get_slug_generator_dependencies' ) ) {
+			$data['slug_dependencies'] = $this->model_manager->get_slug_generator_dependencies();
+		}
+
 		$assets->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
 			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'enqueue' => true,
 		) );
 
 		$assets->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
-			'deps'      => array( 'jquery' ),
-			'ver'       => \Leaves_And_Love_Plugin_Loader::VERSION,
-			'in_footer' => true,
-			'enqueue'   => true,
+			'deps'          => array( 'jquery' ),
+			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'in_footer'     => true,
+			'enqueue'       => true,
+			'localize_name' => 'pluginLibEditModelData',
+			'localize_data' => $data,
 		) );
 	}
 

@@ -3,7 +3,7 @@
  * By Felix Arntz (https://leaves-and-love.net)
  * Licensed under GPL-3.0
  */
-( function( $ ) {
+( function( $, pluginLibData ) {
 
 	$( '.nav-tab' ).on( 'click', function( e ) {
 		var $this = $( this );
@@ -24,4 +24,6 @@
 		$( $this.attr( 'href' ) ).attr( 'aria-hidden', 'false' );
 	});
 
-}( jQuery ) );
+	//TODO: handle slug
+
+}( jQuery, pluginLibEditModelData ) );

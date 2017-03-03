@@ -1,4 +1,4 @@
-( function( $ ) {
+( function( $, pluginLibData ) {
 
 	$( '.nav-tab' ).on( 'click', function( e ) {
 		var $this = $( this );
@@ -19,4 +19,6 @@
 		$( $this.attr( 'href' ) ).attr( 'aria-hidden', 'false' );
 	});
 
-}( jQuery ) );
+	//TODO: handle slug
+
+}( jQuery, pluginLibEditModelData ) );
