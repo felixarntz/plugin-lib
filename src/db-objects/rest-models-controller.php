@@ -745,6 +745,19 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			'readonly'    => true,
 		);
 
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$slug_property = $this->manager->get_slug_property();
+
+			$schema['properties'][ $slug_property ] = array(
+				'description' => $this->manager->get_message( 'rest_item_slug_description' ),
+				'type'        => 'string',
+				'context'     => array( 'view', 'edit', 'embed' ),
+				'arg_options' => array(
+					'sanitize_callback' => array( $this, 'sanitize_slug' ),
+				),
+			);
+		}
+
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$title_property = $this->manager->get_title_property();
 
@@ -805,8 +818,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 				'context'     => array( 'view', 'edit', 'embed' ),
 				'arg_options' => array(
 					'sanitize_callback' => array( $this, 'sanitize_author' ),
-					'default'           => get_current_user_id(),
-					'required'          => true,
 				),
 			);
 		}
@@ -893,6 +904,19 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			'default'            => 'asc',
 			'enum'               => array( 'asc', 'desc' ),
 		);
+
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$slug_property = $this->manager->get_slug_property();
+
+			$query_params[ $slug_property ] = array(
+				'description'       => $this->manager->get_message( 'rest_collection_slug_description' ),
+				'type'              => 'array',
+				'items'             => array(
+					'type' => 'string',
+				),
+				'sanitize_callback' => 'wp_parse_slug_list',
+			);
+		}
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$title_property = $this->manager->get_title_property();
