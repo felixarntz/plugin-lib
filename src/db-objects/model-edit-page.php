@@ -447,20 +447,20 @@ abstract class Model_Edit_Page extends Manager_Page {
 				</div>
 				<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
 					$slug_property = $this->model_manager->get_slug_property();
+					$style = $this->model->$slug_property ? '' : ' style="display:none;"';
+
 					?>
 					<div class="inside">
-						<div id="edit-slug-box" class="hide-if-no-js">
+						<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; ?>>
 							<strong><?php echo $this->model_manager->get_message( 'edit_page_slug_label' ); ?></strong>
-							<?php if ( $this->model->$slug_property ) : ?>
-								<span id="edit-slug-buttons">
-									<button type="button" class="edit-slug button button-small hide-if-no-js">
-										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
-									</button>
-								</span>
-								<span id="editable-post-name-full">
-									<?php echo esc_html( $this->model->$slug_property ); ?>
-								</span>
-							<?php endif; ?>
+							<span id="edit-slug-buttons">
+								<button type="button" class="edit-slug button button-small hide-if-no-js">
+									<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
+								</button>
+							</span>
+							<span id="editable-post-name-full">
+								<?php echo esc_html( $this->model->$slug_property ); ?>
+							</span>
 						</div>
 					</div>
 				<?php endif; ?>
