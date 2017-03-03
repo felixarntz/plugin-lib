@@ -43,6 +43,15 @@ class Field_Manager extends Service {
 	protected $section_lookup = array();
 
 	/**
+	 * Array of current values.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $current_values = array();
+
+	/**
 	 * Array of registered field types, as `$type => $class_name` pairs.
 	 *
 	 * @since 1.0.0
@@ -327,7 +336,7 @@ class Field_Manager extends Service {
 			}
 		}
 
-		$values = $this->get_values( $sections );
+		$values = $this->get_values();
 
 		foreach ( $field_instances as $id => $field_instance ) {
 			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
@@ -337,33 +346,35 @@ class Field_Manager extends Service {
 	}
 
 	/**
-	 * Gets the current values for a list of fields.
+	 * Gets the current values for all fields of this manager.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string|array|null $sections Optional. Section identifier(s), to only get values for
-	 *                                    fields that belong to this section. Default null.
 	 * @return array Array of values as `$id => $current_value` pairs.
 	 */
-	public function get_values( $sections = null ) {
-		$field_instances = $this->get_fields( $sections );
+	public function get_values() {
+		if ( empty( $this->current_values ) ) {
+			$field_instances = $this->get_fields();
 
-		$id_key = array_search( '{id}', $this->get_value_callback_args, true );
-		if ( false !== $id_key ) {
-			$values = array();
+			$id_key = array_search( '{id}', $this->get_value_callback_args, true );
+			if ( false !== $id_key ) {
+				$values = array();
 
-			foreach ( $field_instances as $id => $field_instance ) {
-				$args = $this->get_value_callback_args;
-				$args[ $id_key ] = $id;
+				foreach ( $field_instances as $id => $field_instance ) {
+					$args = $this->get_value_callback_args;
+					$args[ $id_key ] = $id;
 
-				$values[ $id ] = call_user_func_array( $this->get_value_callback, $args );
+					$values[ $id ] = call_user_func_array( $this->get_value_callback, $args );
+				}
+
+				$this->current_values = $values;
+			} else {
+				$this->current_values = call_user_func_array( $this->get_value_callback, $this->get_value_callback_args );
 			}
-
-			return $values;
 		}
 
-		return call_user_func_array( $this->get_value_callback, $this->get_value_callback_args );
+		return $this->current_values;
 	}
 
 	/**
@@ -400,7 +411,7 @@ class Field_Manager extends Service {
 				call_user_func_array( $this->update_value_callback, $args );
 			}
 		} else {
-			$validated_values = $this->get_values( $sections );
+			$validated_values = $this->get_values();
 
 			foreach ( $field_instances as $id => $field_instance ) {
 				$validated_value = $this->validate_value( $field_instance, $values, $errors );
