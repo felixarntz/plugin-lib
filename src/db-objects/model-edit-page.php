@@ -411,7 +411,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$model = $this->model_manager->get( $request_data[ $primary_property ] );
 		}
 
-		foreach ( $this->get_slug_generator_dependencies() as $property ) {
+		foreach ( $this->model_manager->get_slug_generator_dependencies() as $property ) {
 			if ( isset( $request_data[ $property ] ) ) {
 				$model->$property = $request_data[ $property ];
 			}
