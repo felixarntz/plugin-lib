@@ -464,7 +464,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$links = array();
 
-		$nonce = wp_create_nonce( 'row-' . $this->_args['singular'] . $model_id );
+		$nonce = wp_create_nonce( 'row-' . $this->_args['singular'] . '-' . $model_id );
 
 		foreach ( $actions as $slug => $data ) {
 			$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';

@@ -671,8 +671,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 			if ( $capabilities && $capabilities->user_can_delete( null, $id ) ) {
 				$delete_url = add_query_arg( array(
-					'action' => 'delete',
-					'nonce'  => wp_create_nonce( $this->get_nonce_action( 'action', $id ) ),
+					'action'   => 'delete',
+					'_wpnonce' => wp_create_nonce( $this->get_nonce_action( 'action', $id ) ),
 				), $this->get_model_edit_url() );
 			}
 		}
