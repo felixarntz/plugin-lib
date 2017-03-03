@@ -455,9 +455,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		if ( isset( $request_data[ $primary_property ] ) && absint( $request_data[ $primary_property ] ) > 0 ) {
-			$model = $this->model_manager->create();
-		} else {
 			$model = $this->model_manager->get( $request_data[ $primary_property ] );
+		} else {
+			$model = $this->model_manager->create();
 		}
 
 		$this->model_manager->set_unique_slug( $model, $request_data[ $slug_property ] );
