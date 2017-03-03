@@ -155,6 +155,10 @@ abstract class Query {
 			$this->query_var_defaults[ $this->manager->get_title_property() ] = '';
 		}
 
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$this->query_var_defaults[ $this->manager->get_slug_property() ] = '';
+		}
+
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
 			$this->query_var_defaults[ $this->manager->get_type_property() ] = '';
 		}
@@ -523,6 +527,12 @@ abstract class Query {
 			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $title_property, $title_property, '%s', null, false );
 		}
 
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$slug_property = $this->manager->get_slug_property();
+
+			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $slug_property, $slug_property, '%s', null, false );
+		}
+
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
 			$type_property = $this->manager->get_type_property();
 
@@ -782,6 +792,10 @@ abstract class Query {
 
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$orderby_fields[] = $this->manager->get_title_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$orderby_fields[] = $this->manager->get_slug_property();
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
