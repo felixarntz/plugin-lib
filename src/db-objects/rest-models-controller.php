@@ -213,9 +213,8 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$date_query = array();
 		$date_query_map = array();
 
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
-			$date_property = $this->manager->get_date_property();
-			$secondary_date_properties = $this->get_secondary_date_properties();
+		if ( method_exists( $this->manager, 'get_all_date_properties' ) ) {
+			$date_properties = $this->manager->get_all_date_properties();
 		}
 
 		foreach ( $registered_args as $property => $params ) {
@@ -223,7 +222,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 				continue;
 			}
 
-			if ( isset( $date_property ) && isset( $params['format'] ) && 'date-time' === $params['format'] ) {
+			if ( isset( $date_properties ) && isset( $params['format'] ) && 'date-time' === $params['format'] ) {
 				$date_column = '';
 				$mode = '';
 
@@ -235,7 +234,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 					$mode = 'after';
 				}
 
-				if ( ! empty( $date_column ) && ! empty( $mode ) && ( $date_column === $date_property || in_array( $date_column, $secondary_date_properties, true ) ) ) {
+				if ( ! empty( $date_column ) && ! empty( $mode ) && in_array( $date_column, $date_properties, true ) ) {
 					if ( ! isset( $date_query_map[ $date_column ] ) ) {
 						$date_query_map[ $date_column ] = count( $date_query );
 						$date_query[ $date_query_map[ $date_column ] ]['column'] = $date_column;
