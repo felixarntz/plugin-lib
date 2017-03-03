@@ -109,6 +109,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), array(
+			'ajax'          => $this->manager->ajax(),
 			'assets'        => $this->manager->assets(),
 			'error_handler' => $this->manager->error_handler(),
 		), array(

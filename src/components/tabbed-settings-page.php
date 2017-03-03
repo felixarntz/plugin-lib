@@ -66,6 +66,7 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 		) );
 
 		$this->tabs[ $id ]['field_manager'] = new Field_Manager( $this->manager->get_prefix(), array(
+			'ajax'          => $this->manager->ajax(),
 			'assets'        => $this->manager->assets(),
 			'error_handler' => $this->manager->error_handler(),
 		), array(

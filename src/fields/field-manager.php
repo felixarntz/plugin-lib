@@ -73,6 +73,16 @@ class Field_Manager extends Service {
 	protected static $enqueued = array();
 
 	/**
+	 * The AJAX API service definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var string
+	 */
+	protected static $service_ajax = 'Leaves_And_Love\Plugin_Lib\AJAX';
+
+	/**
 	 * The Assets API service definition.
 	 *
 	 * @since 1.0.0
@@ -113,6 +123,7 @@ class Field_Manager extends Service {
 	 * @param array                                                              $services     {
 	 *     Array of service instances.
 	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\AJAX          $ajax          The AJAX API class instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Assets        $assets        The Assets API class instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }

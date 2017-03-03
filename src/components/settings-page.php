@@ -69,6 +69,7 @@ abstract class Settings_Page extends Admin_Page {
 		parent::__construct( $slug, $manager );
 
 		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), array(
+			'ajax'          => $this->manager->ajax(),
 			'assets'        => $this->manager->assets(),
 			'error_handler' => $this->manager->error_handler(),
 		), array(
