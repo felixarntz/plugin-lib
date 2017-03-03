@@ -76,6 +76,8 @@ class Translations_Manager extends Translations {
 			'edit_page_delete'                                      => $this->_xtranslate( 'Delete', 'model button', 'textdomain' ),
 			'edit_page_submit_box_title'                            => $this->_xtranslate( 'Publish', 'model submit box title', 'textdomain' ),
 			'edit_page_status_label'                                => $this->_xtranslate( 'Status', 'model status label', 'textdomain' ),
+			'edit_page_ok'                                          => $this->_xtranslate( 'OK', 'model slug buttons', 'textdomain' ),
+			'edit_page_cancel'                                      => $this->_xtranslate( 'Cancel', 'model slug buttons', 'textdomain' ),
 			'action_edit_item_invalid_type'                         => $this->__translate( 'The model type is invalid.', 'textdomain' ),
 			'action_edit_item_invalid_status'                       => $this->__translate( 'The model status is invalid.', 'textdomain' ),
 			'action_edit_item_cannot_publish'                       => $this->__translate( 'You are not allowed to publish this model.', 'textdomain' ),
@@ -89,6 +91,8 @@ class Translations_Manager extends Translations {
 			'action_delete_item_internal_error'                     => $this->__translate( 'An internal error occurred while trying to delete the model &#8220;%s&#8221;.', 'textdomain' ),
 			/* translators: %s: model title */
 			'action_delete_item_success'                            => $this->__translate( 'Model &#8220;%s&#8221; successfully deleted.', 'textdomain' ),
+			'ajax_item_slug_not_supported'                          => $this->__translate( 'Model slugs are not supported.', 'textdomain' ),
+			'ajax_item_slug_not_passed'                             => $this->__translate( 'No model slug was passed.', 'textdomain' ),
 
 			/* --- Models list table --- */
 
