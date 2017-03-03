@@ -256,25 +256,32 @@ class Field_Manager extends Service {
 		$field_instances = $this->get_fields();
 
 		$main_dependencies = array( 'jquery', 'underscore', 'backbone', 'wp-util' );
-		$localize_data     = array();
+		$localize_data     = array(
+			'fields' => array(),
+		);
+
+		$values = $this->get_values();
 
 		foreach ( $field_instances as $id => $field_instance ) {
 			$type = array_search( get_class( $field_instance ), self::$field_types, true );
-			if ( isset( self::$enqueued[ $type ] ) && self::$enqueued[ $type ] ) {
-				continue;
+
+			if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
+				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+
+				if ( ! empty( $new_dependencies ) ) {
+					$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+				}
+
+				if ( ! empty( $new_localize_data ) ) {
+					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+				}
+
+				self::$enqueued[ $type ] = true;
 			}
 
-			list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
 
-			if ( ! empty( $new_dependencies ) ) {
-				$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
-			}
-
-			if ( ! empty( $new_localize_data ) ) {
-				$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
-			}
-
-			self::$enqueued[ $type ] = true;
+			$localize_data['fields'][ $id ] = $field_instance->to_json( $value );
 		}
 
 		if ( ! isset( self::$enqueued['_core'] ) || ! self::$enqueued['_core'] ) {
