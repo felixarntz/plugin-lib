@@ -115,6 +115,25 @@ trait Slug_Manager_Trait {
 	}
 
 	/**
+	 * Returns the property dependencies that affect the generated slug.
+	 *
+	 * This method can be overridden in combination with the `generate_slug()` method. By default
+	 * the generated slug depends on the title if present.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of property names.
+	 */
+	public function get_slug_generator_dependencies() {
+		if ( ! method_exists( $this, 'get_title_property' ) ) {
+			return array();
+		}
+
+		return array( $this->get_title_property() );
+	}
+
+	/**
 	 * Sets the slug property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
