@@ -70,10 +70,12 @@ class AJAX extends Service {
 			return new WP_Error( 'ajax_invalid_action_name', $this->get_translation( 'ajax_invalid_action_name' ) );
 		}
 
+		$nonce = function_exists( 'wp_create_nonce' ) ? wp_create_nonce( $this->get_nonce_action( $name ) ) : '';
+
 		$args = wp_parse_args( $args, array(
 			'callback' => $callback,
 			'nopriv'   => false,
-			'nonce'    => wp_create_nonce( $this->get_nonce_action( $name ) ),
+			'nonce'    => $nonce,
 		) );
 
 		$this->actions[ $name ] = $args;
@@ -132,6 +134,14 @@ class AJAX extends Service {
 	public function get_nonce( $action ) {
 		if ( ! isset( $this->actions[ $action ] ) ) {
 			return '';
+		}
+
+		if ( empty( $this->actions[ $action ]['nonce'] ) ) {
+			if ( ! function_exists( 'wp_create_nonce' ) ) {
+				return '';
+			}
+
+			$this->actions[ $action ]['nonce'] = wp_create_nonce( $this->get_nonce_action( $action ) );
 		}
 
 		return $this->actions[ $action ]['nonce'];
