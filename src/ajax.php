@@ -29,7 +29,7 @@ class AJAX extends Service {
 	 * @access protected
 	 * @var array
 	 */
-	protected $actions = array();
+	protected $ajax_actions = array();
 
 	/**
 	 * Constructor.
@@ -66,7 +66,7 @@ class AJAX extends Service {
 			return new WP_Error( 'ajax_registered_too_late', sprintf( $this->get_translation( 'ajax_registered_too_late' ), '<code>admin_init</code>' ) );
 		}
 
-		if ( ! $name || isset( $this->actions[ $name ] ) ) {
+		if ( ! $name || isset( $this->ajax_actions[ $name ] ) ) {
 			return new WP_Error( 'ajax_invalid_action_name', $this->get_translation( 'ajax_invalid_action_name' ) );
 		}
 
@@ -78,7 +78,7 @@ class AJAX extends Service {
 			'nonce'    => $nonce,
 		) );
 
-		$this->actions[ $name ] = $args;
+		$this->ajax_actions[ $name ] = $args;
 
 		return true;
 	}
@@ -94,13 +94,13 @@ class AJAX extends Service {
 
 		$name = str_replace( $this->get_prefix(), '', $request_data['action'] );
 
-		if ( ! isset( $this->actions[ $name ] ) ) {
+		if ( ! isset( $this->ajax_actions[ $name ] ) ) {
 			wp_send_json_error( $this->get_translation( 'ajax_request_invalid_action' ) );
 		}
 
-		$callback = $this->actions[ $name ]['callback'];
+		$callback = $this->ajax_actions[ $name ]['callback'];
 		if ( is_string( $callback ) && ! is_callable( $callback ) ) {
-			$callback = array( $this, 'ajax_' . $this->actions[ $name ]['callback'] );
+			$callback = array( $this, 'ajax_' . $this->ajax_actions[ $name ]['callback'] );
 		}
 
 		if ( ! is_callable( $callback ) ) {
@@ -132,19 +132,19 @@ class AJAX extends Service {
 	 * @return string Nonce for the action, or empty string if action not registered.
 	 */
 	public function get_nonce( $action ) {
-		if ( ! isset( $this->actions[ $action ] ) ) {
+		if ( ! isset( $this->ajax_actions[ $action ] ) ) {
 			return '';
 		}
 
-		if ( empty( $this->actions[ $action ]['nonce'] ) ) {
+		if ( empty( $this->ajax_actions[ $action ]['nonce'] ) ) {
 			if ( ! function_exists( 'wp_create_nonce' ) ) {
 				return '';
 			}
 
-			$this->actions[ $action ]['nonce'] = wp_create_nonce( $this->get_nonce_action( $action ) );
+			$this->ajax_actions[ $action ]['nonce'] = wp_create_nonce( $this->get_nonce_action( $action ) );
 		}
 
-		return $this->actions[ $action ]['nonce'];
+		return $this->ajax_actions[ $action ]['nonce'];
 	}
 
 	/**
@@ -160,7 +160,7 @@ class AJAX extends Service {
 
 		$prefix = $this->get_prefix();
 
-		foreach ( $this->actions as $name => $args ) {
+		foreach ( $this->ajax_actions as $name => $args ) {
 			add_action( 'wp_ajax_' . $prefix . $name, array( $this, 'request' ) );
 
 			if ( $args['nopriv'] ) {
