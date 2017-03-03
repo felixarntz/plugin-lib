@@ -89,6 +89,32 @@ trait Slug_Manager_Trait {
 	}
 
 	/**
+	 * Generates a model slug.
+	 *
+	 * This method can be overridden to adjust its behavior. By default it generates the slug from
+	 * the title if present.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to generate the slug for.
+	 * @return string Generated slug, or empty string if no slug could be generated.
+	 */
+	public function generate_slug( $model ) {
+		if ( ! method_exists( $this, 'get_title_property' ) ) {
+			return '';
+		}
+
+		$title_property = $this->get_title_property();
+
+		if ( empty( $model->$title_property ) ) {
+			return '';
+		}
+
+		return sanitize_title( $model->$title_property );
+	}
+
+	/**
 	 * Sets the slug property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
@@ -99,15 +125,13 @@ trait Slug_Manager_Trait {
 	 * @return null The unmodified pre-filter value.
 	 */
 	public function maybe_set_slug_property( $ret, $model ) {
-		if ( ! method_exists( $this, 'get_title_property' ) ) {
-			return $ret;
-		}
-
 		$slug_property  = $this->get_slug_property();
-		$title_property = $this->get_title_property();
 
-		if ( empty( $model->$slug_property ) && ! empty( $model->$title_property ) ) {
-			$this->set_unique_slug( $model, sanitize_title( $model->$title_property ) );
+		if ( empty( $model->$slug_property ) ) {
+			$generated_slug = $this->generate_slug( $model );
+			if ( ! empty( $generated_slug ) ) {
+				$this->set_unique_slug( $model, $generated_slug );
+			}
 		} else {
 			$this->set_unique_slug( $model );
 		}
