@@ -151,12 +151,12 @@ abstract class Query {
 			'exclude'       => '',
 		);
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
-			$this->query_var_defaults[ $this->manager->get_title_property() ] = '';
-		}
-
 		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
 			$this->query_var_defaults[ $this->manager->get_slug_property() ] = '';
+		}
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$this->query_var_defaults[ $this->manager->get_title_property() ] = '';
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
@@ -521,16 +521,16 @@ abstract class Query {
 
 		list( $where, $args ) = $this->parse_list_where_field( $where, $args, $this->manager->get_primary_property(), 'include', 'exclude', '%d', 'absint' );
 
+		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+			$slug_property = $this->manager->get_slug_property();
+
+			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $slug_property, $slug_property, '%s', 'sanitize_title', true );
+		}
+
 		if ( method_exists( $this->manager, 'get_title_property' ) ) {
 			$title_property = $this->manager->get_title_property();
 
 			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $title_property, $title_property, '%s', null, false );
-		}
-
-		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
-			$slug_property = $this->manager->get_slug_property();
-
-			list( $where, $args ) = $this->parse_default_where_field( $where, $args, $slug_property, $slug_property, '%s', null, false );
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
@@ -790,12 +790,12 @@ abstract class Query {
 	public function get_valid_orderby_fields() {
 		$orderby_fields = array( 'id', 'include' );
 
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
-			$orderby_fields[] = $this->manager->get_title_property();
-		}
-
 		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
 			$orderby_fields[] = $this->manager->get_slug_property();
+		}
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$orderby_fields[] = $this->manager->get_title_property();
 		}
 
 		if ( method_exists( $this->manager, 'get_type_property' ) ) {
