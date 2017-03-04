@@ -1,4 +1,5 @@
 ( function( exports, $, _, Backbone, wp, pluginLibData ) {
+	'use strict';
 
 	_.mixin({
 		attrs: function( attrs ) {

@@ -12,8 +12,12 @@
   "predef"   : [
     "console",
     "jQuery",
+    "_",
+    "Backbone",
     "wp",
-    "ajaxurl"
+    "ajaxurl",
+    "pluginLibFieldManagerData",
+    "pluginLibEditModelData"
   ],
   "strict"   : true,
   "undef"    : true,

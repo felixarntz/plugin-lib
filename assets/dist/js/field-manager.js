@@ -4,6 +4,7 @@
  * Licensed under GPL-3.0
  */
 ( function( exports, $, _, Backbone, wp, pluginLibData ) {
+	'use strict';
 
 	_.mixin({
 		attrs: function( attrs ) {
