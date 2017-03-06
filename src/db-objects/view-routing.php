@@ -344,6 +344,8 @@ abstract class View_Routing extends Service {
 			return false;
 		}
 
+		$this->setup_view();
+
 		return true;
 	}
 
@@ -380,121 +382,9 @@ abstract class View_Routing extends Service {
 
 		$this->current_collection = $this->manager->query( $query_params );
 
+		$this->setup_view();
+
 		return true;
-	}
-
-	/**
-	 * Sets up the current view.
-	 *
-	 * This method is invoked on every successfully routed request. It adds the hooks to adjust the
-	 * regular behavior of WordPress in order to correctly handle the custom model content.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function setup_view() {
-		$this->add_filter( 'pre_get_document_title', array( $this, 'set_document_title' ), 1, 1 );
-		$this->add_filter( 'wp_head', array( $this, 'rel_canonical' ), 10, 0 );
-		$this->add_action( 'template_redirect', array( $this, 'load_template' ), 1, 0 );
-	}
-
-	/**
-	 * Returns the document title for a model singular or archive view.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param string $title Original title to be overridden.
-	 * @return string New document title.
-	 */
-	protected function set_document_title( $title ) {
-		if ( ! empty( $title ) ) {
-			return $title;
-		}
-
-		$title = array();
-
-		if ( $this->is_archive() ) {
-			$title['title'] = $this->manager->get_message( 'view_routing_archive_title' );
-			if ( $this->paged > 1 ) {
-				$title['page'] = sprintf( $this->manager->get_message( 'view_routing_archive_title_page_suffix' ), number_format_i18n( $this->paged ) );
-			}
-		} else {
-			if ( method_exists( $this->manager, 'get_title_property' ) ) {
-				$title_property = $this->manager->get_title_property();
-				$title['title'] = $this->current_model->$title_property;
-			} else {
-				$primary_property = $this->manager->get_primary_property();
-				$title['title'] = sprintf( $this->manager->get_message( 'view_routing_singular_fallback_title' ), number_format_i18n( $this->current_model->$primary_property ) );
-			}
-		}
-
-		$title['site'] = get_bloginfo( 'name', 'display' );
-
-		/** This filter is documented in wp-includes/general-template.php */
-		$sep = apply_filters( 'document_title_separator', '-' );
-
-		/** This filter is documented in wp-includes/general-template.php */
-		$title = apply_filters( 'document_title_parts', $title );
-
-		$title = implode( " $sep ", array_filter( $title ) );
-		$title = wptexturize( $title );
-		$title = convert_chars( $title );
-		$title = esc_html( $title );
-		$title = capital_P_dangit( $title );
-
-		return $title;
-	}
-
-	/**
-	 * Prints the canonical header for a singular view.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function rel_canonical() {
-		if ( ! $this->is_singular() ) {
-			return;
-		}
-
-		$permalink = $this->get_model_permalink( $this->current_model );
-
-		echo '<link rel="canonical" href="' . esc_url( $permalink ) . '">' . "\n";
-	}
-
-	/**
-	 * Loads the template for a singular view.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected function load_template() {
-		/** This filter is documented in wp-includes/template-loader.php */
-		if ( 'HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters( 'exit_on_http_head', true ) ) {
-			exit;
-		}
-
-		if ( $this->is_archive() ) {
-			$this->template()->get_partial( $this->archive_template_name, array(
-				$this->collection_var_name => $this->current_collection,
-				'template'                 => $this->template(),
-			) );
-		} else {
-			$data = array(
-				$this->model_var_name => $this->current_model,
-				'template'            => $this->template(),
-			);
-
-			if ( method_exists( $this->manager, 'get_slug_property' ) ) {
-				$slug_property = $this->manager->get_slug_property();
-
-				$data['template_suffix'] = $this->current_model->$slug_property;
-			}
-
-			$this->template()->get_partial( $this->singular_template_name, $data );
-		}
-
-		exit;
 	}
 
 	/**
@@ -648,6 +538,120 @@ abstract class View_Routing extends Service {
 		}
 
 		return $query_params;
+	}
+
+	/**
+	 * Sets up the current view.
+	 *
+	 * This method is invoked on every successfully routed request. It adds the hooks to adjust the
+	 * regular behavior of WordPress in order to correctly handle the custom model content.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function setup_view() {
+		$this->add_filter( 'pre_get_document_title', array( $this, 'set_document_title' ), 1, 1 );
+		$this->add_filter( 'wp_head', array( $this, 'rel_canonical' ), 10, 0 );
+		$this->add_action( 'template_redirect', array( $this, 'load_template' ), 1, 0 );
+	}
+
+	/**
+	 * Returns the document title for a model singular or archive view.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $title Original title to be overridden.
+	 * @return string New document title.
+	 */
+	protected function set_document_title( $title ) {
+		if ( ! empty( $title ) ) {
+			return $title;
+		}
+
+		$title = array();
+
+		if ( $this->is_archive() ) {
+			$title['title'] = $this->manager->get_message( 'view_routing_archive_title' );
+			if ( $this->paged > 1 ) {
+				$title['page'] = sprintf( $this->manager->get_message( 'view_routing_archive_title_page_suffix' ), number_format_i18n( $this->paged ) );
+			}
+		} else {
+			if ( method_exists( $this->manager, 'get_title_property' ) ) {
+				$title_property = $this->manager->get_title_property();
+				$title['title'] = $this->current_model->$title_property;
+			} else {
+				$primary_property = $this->manager->get_primary_property();
+				$title['title'] = sprintf( $this->manager->get_message( 'view_routing_singular_fallback_title' ), number_format_i18n( $this->current_model->$primary_property ) );
+			}
+		}
+
+		$title['site'] = get_bloginfo( 'name', 'display' );
+
+		/** This filter is documented in wp-includes/general-template.php */
+		$sep = apply_filters( 'document_title_separator', '-' );
+
+		/** This filter is documented in wp-includes/general-template.php */
+		$title = apply_filters( 'document_title_parts', $title );
+
+		$title = implode( " $sep ", array_filter( $title ) );
+		$title = wptexturize( $title );
+		$title = convert_chars( $title );
+		$title = esc_html( $title );
+		$title = capital_P_dangit( $title );
+
+		return $title;
+	}
+
+	/**
+	 * Prints the canonical header for a singular view.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function rel_canonical() {
+		if ( ! $this->is_singular() ) {
+			return;
+		}
+
+		$permalink = $this->get_model_permalink( $this->current_model );
+
+		echo '<link rel="canonical" href="' . esc_url( $permalink ) . '">' . "\n";
+	}
+
+	/**
+	 * Loads the template for a singular view.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function load_template() {
+		/** This filter is documented in wp-includes/template-loader.php */
+		if ( 'HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters( 'exit_on_http_head', true ) ) {
+			exit;
+		}
+
+		if ( $this->is_archive() ) {
+			$this->template()->get_partial( $this->archive_template_name, array(
+				$this->collection_var_name => $this->current_collection,
+				'template'                 => $this->template(),
+			) );
+		} else {
+			$data = array(
+				$this->model_var_name => $this->current_model,
+				'template'            => $this->template(),
+			);
+
+			if ( method_exists( $this->manager, 'get_slug_property' ) ) {
+				$slug_property = $this->manager->get_slug_property();
+
+				$data['template_suffix'] = $this->current_model->$slug_property;
+			}
+
+			$this->template()->get_partial( $this->singular_template_name, $data );
+		}
+
+		exit;
 	}
 }
 
