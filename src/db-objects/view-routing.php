@@ -185,6 +185,7 @@ abstract class View_Routing extends Service {
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
+	 *     @type Leaves_And_Love\Plugin_Lib\Router        $router        The router instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Template      $template      The template instance.
 	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
 	 * }
