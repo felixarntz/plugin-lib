@@ -131,7 +131,7 @@ class Router extends Service {
 					$query_vars = call_user_func( $route['map_callback'], $matches );
 
 					if ( is_array( $query_vars ) ) {
-						foreach ( $route['query_vars'] as $query_var => $pattern ) {
+						foreach ( $route['query_vars'] as $query_var ) {
 							if ( isset( $extra_query_vars[ $query_var ] ) ) {
 								$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
 							} elseif ( isset( $_POST[ $query_var ] ) ) {
@@ -156,7 +156,7 @@ class Router extends Service {
 				}
 
 				$query_vars = array();
-				foreach ( $route['query_vars'] as $query_var => $pattern ) {
+				foreach ( $route['query_vars'] as $query_var ) {
 					if ( isset( $extra_query_vars[ $query_var ] ) ) {
 						$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
 					} elseif ( isset( $_POST[ $query_var ] ) ) {

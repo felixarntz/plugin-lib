@@ -57,6 +57,15 @@ abstract class View_Routing extends Service {
 	protected $singular_query_var = '';
 
 	/**
+	 * Query variable name for a preview page. This will only be used if pretty permalinks are not enabled.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $preview_query_var = '';
+
+	/**
 	 * Query variable name for an archive page. This will only be used if pretty permalinks are not enabled.
 	 *
 	 * @since 1.0.0
@@ -138,6 +147,15 @@ abstract class View_Routing extends Service {
 	protected $is_singular = false;
 
 	/**
+	 * Whether the current request is for a preview of a singular model.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $is_preview = false;
+
+	/**
 	 * Whether the current request is for a model archive.
 	 *
 	 * @since 1.0.0
@@ -202,7 +220,7 @@ abstract class View_Routing extends Service {
 	 * @access public
 	 *
 	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model object.
-	 * @return string Permalink for the model view.
+	 * @return string Permalink for the model view, or empty if no permalink exists.
 	 */
 	public function get_model_permalink( $model ) {
 		if ( '' != get_option( 'permalink_structure' ) ) {
@@ -224,9 +242,17 @@ abstract class View_Routing extends Service {
 			foreach ( $permalink_parts as $permalink_part ) {
 				if ( preg_match( '/^%([a-z0-9_]+)%$/', $permalink_part, $matches ) ) {
 					if ( ! empty( $date_property ) && isset( $special_date_parts[ $matches[1] ] ) ) {
+						if ( empty( $model->$date_property ) ) {
+							return '';
+						}
+
 						$permalink .= '/' . mysql2date( $special_date_parts[ $matches[1] ], $model->$date_property, false );
 					} else {
 						$property_name = $matches[1];
+						if ( empty( $model->$property_name ) ) {
+							return '';
+						}
+
 						$permalink .= '/' . $model->$property_name;
 					}
 				} else {
@@ -242,6 +268,40 @@ abstract class View_Routing extends Service {
 		$primary_property = $this->manager->get_primary_property();
 
 		return add_query_arg( $this->singular_query_var, $model->$primary_property, home_url( '/' ) );
+	}
+
+	/**
+	 * Returns the permalink for the preview of a given model.
+	 *
+	 * The preview data is stored for a minute, meaning the preview link is valid for that period.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model object.
+	 * @return string Permalink for the model preview.
+	 */
+	public function get_model_preview_permalink( $model ) {
+		$preview_data = $model->to_json();
+
+		$preview_key = md5( serialize( $preview_data ) );
+
+		$transient_name = $this->manager->get_prefix() . $this->manager->get_singular_slug() . '_preview-' . $preview_key;
+
+		set_transient( $transient_name, $preview_data, MINUTE_IN_SECONDS );
+
+		if ( '' != get_option( 'permalink_structure' ) ) {
+			$permalink = $this->base . '/' . 'preview/' . $preview_key . '/';
+
+			return home_url( $permalink );
+		}
+
+		$query_args = array(
+			$this->preview_query_var => '1',
+			'preview'                => $preview_key,
+		);
+
+		return add_query_arg( $query_args, home_url( '/' ) );
 	}
 
 	/**
@@ -277,6 +337,7 @@ abstract class View_Routing extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
 	 * @return bool True if the request is for a singular model, false otherwise.
 	 */
 	public function is_singular() {
@@ -284,10 +345,23 @@ abstract class View_Routing extends Service {
 	}
 
 	/**
+	 * Checks whether the current request is for a preview of a singular model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return bool True if the request is for a preview of a singular model, false otherwise.
+	 */
+	public function is_preview() {
+		return $this->is_preview;
+	}
+
+	/**
 	 * Checks whether the current request is for a model archive.
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
 	 * @return bool True if the request is for a model archive, false otherwise.
 	 */
 	public function is_archive() {
@@ -343,6 +417,53 @@ abstract class View_Routing extends Service {
 		if ( null === $this->current_model ) {
 			return false;
 		}
+
+		$this->setup_view();
+
+		return true;
+	}
+
+	/**
+	 * Handles a request for a preview of a singular model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $query_vars Array of query variables.
+	 * @return bool True if a valid preview and capabilities are met, false otherwise.
+	 */
+	protected function handle_preview_request( $query_vars ) {
+		if ( $this->is_preview ) {
+			return true;
+		}
+
+		$this->is_preview  = true;
+		$this->is_singular = true;
+
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		$capabilities = $this->manager->capabilities();
+		if ( ! $capabilities || ! $capabilities->user_can_edit() ) {
+			return false;
+		}
+
+		$transient_name = $this->manager->get_prefix() . $this->manager->get_singular_slug() . '_preview-' . $query_vars['preview'];
+
+		$preview_data = get_transient( $transient_name );
+		if ( ! $preview_data ) {
+			return false;
+		}
+
+		delete_transient( $transient_name );
+
+		$model = $this->manager->create();
+		foreach ( $preview_data as $key => $value ) {
+			$model->$key = $value;
+		}
+
+		$this->current_model = $model;
 
 		$this->setup_view();
 
@@ -435,6 +556,7 @@ abstract class View_Routing extends Service {
 		$plural_slug   = $this->manager->get_plural_slug();
 
 		$this->singular_query_var = $this->get_prefix() . $singular_slug . '_' . $this->manager->get_primary_property();
+		$this->preview_query_var  = $this->get_prefix() . $singular_slug . '_preview';
 		$this->archive_query_var  = $this->get_prefix() . $plural_slug;
 
 		$this->singular_template_name = $singular_slug;
@@ -467,11 +589,18 @@ abstract class View_Routing extends Service {
 
 			$pattern .= '/?$';
 
-			$query_vars = array(
-				$this->singular_query_var => '^[\d]+$',
-			);
+			$query_vars = array( $this->singular_query_var );
 
 			$this->router()->add_route( $slug, $pattern, array( $this, 'map_matches_to_query_vars' ), $query_vars, array( $this, 'handle_singular_request' ) );
+		}
+
+		if ( ! empty( $this->preview_query_var ) ) {
+			$slug = $this->get_prefix() . $this->manager->get_singular_slug() . '_preview';
+
+			$pattern = '^' . $this->base . '/preview/(?P<preview>[\w-]+)/?$';
+			$query_vars = array( $this->preview_query_var, 'preview' );
+
+			$this->router()->add_route( $slug, $pattern, array( $this, 'map_matches_to_query_vars' ), $query_vars, array( $this, 'handle_preview_request' ) );
 		}
 
 		if ( ! empty( $this->archive_query_var ) ) {
@@ -479,10 +608,7 @@ abstract class View_Routing extends Service {
 
 			$pattern = '^' . $this->base . '(/page/?(?P<paged>[\d]+)/?)?$';
 
-			$query_vars = array(
-				$this->archive_query_var => '^[\w]+$',
-				'paged'                  => '^[\d]+$',
-			);
+			$query_vars = array( $this->archive_query_var, 'paged' );
 
 			$this->router()->add_route( $slug, $pattern, array( $this, 'map_matches_to_query_vars' ), $query_vars, array( $this, 'handle_archive_request' ) );
 		}
@@ -615,6 +741,10 @@ abstract class View_Routing extends Service {
 		}
 
 		$permalink = $this->get_model_permalink( $this->current_model );
+
+		if ( empty( $permalink ) ) {
+			return;
+		}
 
 		echo '<link rel="canonical" href="' . esc_url( $permalink ) . '">' . "\n";
 	}
