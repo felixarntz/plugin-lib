@@ -376,6 +376,23 @@ abstract class Model {
 	}
 
 	/**
+	 * Returns the permalink for the model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Permalink, or empty string if no permalink exists.
+	 */
+	public function get_permalink() {
+		$view_routing = $this->manager->view_routing();
+		if ( ! $view_routing ) {
+			return '';
+		}
+
+		return $view_routing->get_model_permalink( $this );
+	}
+
+	/**
 	 * Runs a filter before a model will be synced upstream with the database.
 	 *
 	 * @since 1.0.0
