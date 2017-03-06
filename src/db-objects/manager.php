@@ -146,6 +146,11 @@ abstract class Manager extends Service {
 			$capabilities->set_manager( $this );
 		}
 
+		$view_routing = $this->view_routing();
+		if ( $view_routing ) {
+			$view_routing->set_manager( $this );
+		}
+
 		$this->add_database_table( $this->table_name );
 
 		$this->setup_hooks();
