@@ -432,7 +432,7 @@ abstract class View_Routing extends Service {
 	 * @param array $query_vars Array of query variables.
 	 * @return bool True if a valid preview and capabilities are met, false otherwise.
 	 */
-	protected function handle_preview_request( $query_vars ) {
+	public function handle_preview_request( $query_vars ) {
 		if ( $this->is_preview ) {
 			return true;
 		}
