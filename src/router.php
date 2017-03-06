@@ -181,13 +181,15 @@ class Router extends Service {
 		}
 
 		if ( ! empty( $handle_callback ) ) {
+			$wp->query_vars = array();
+
 			$success = call_user_func( $handle_callback, $query_vars );
 
 			$this->add_filter( 'posts_pre_query', array( $this, 'override_main_query' ), 1, 2 );
 			if ( $success ) {
-				$this->add_filter( 'pre_handle_404', array( $this, 'send_200_header' ) );
+				$this->add_filter( 'pre_handle_404', array( $this, 'send_200_header' ), 1, 2 );
 			} else {
-				$this->add_filter( 'pre_handle_404', array( $this, 'send_404_header' ) );
+				$this->add_filter( 'pre_handle_404', array( $this, 'send_404_header' ), 1, 2 );
 			}
 		} else {
 			$wp->request          = $url_path;
@@ -195,6 +197,7 @@ class Router extends Service {
 			$wp->extra_query_vars = $extra_query_vars;
 		}
 
+		$this->remove_action( 'wp_head', 'feed_links_extra', 3 );
 		$this->remove_action( 'wp_head', 'wp_shortlink_wp_head', 10 );
 		$this->remove_filter( 'wp_head', 'rel_canonical', 10 );
 		$this->remove_action( 'template_redirect', 'wp_shortlink_header', 11 );
@@ -220,6 +223,11 @@ class Router extends Service {
 
 		$wp_query->found_posts   = 0;
 		$wp_query->max_num_pages = 0;
+
+		$wp_query->is_page     = false;
+		$wp_query->is_singular = false;
+		$wp_query->is_home     = false;
+		$wp_query->is_archive  = false;
 
 		return array();
 	}
