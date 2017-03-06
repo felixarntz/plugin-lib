@@ -195,6 +195,15 @@ class Translations_Manager extends Translations {
 			'rest_status_public_description'                        => $this->__translate( 'Whether or not models of that status are publicly accessible.', 'textdomain' ),
 			'rest_status_internal_description'                      => $this->__translate( 'Whether or not this status is intended for internal usage only.', 'textdomain' ),
 			'rest_status_default_description'                       => $this->__translate( 'Whether or not this is the default model status.', 'textdomain' ),
+
+			/* --- View routing --- */
+
+			'view_routing_base'                                     => $this->_xtranslate( 'models', 'view routing base', 'textdomain' ),
+			'view_routing_archive_title'                            => $this->__translate( 'Models', 'textdomain' ),
+			/* translators: %s: page number */
+			'view_routing_archive_title_page_suffix'                => $this->_xtranslate( 'Page %s', 'model archive title suffix', 'textdomain' ),
+			/* translators: %s: model ID */
+			'view_routing_singular_fallback_title'                  => $this->__translate( 'Model %s', 'textdomain' ),
 		);
 	}
 }
