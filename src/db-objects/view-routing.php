@@ -385,7 +385,7 @@ abstract class View_Routing extends Service {
 		}
 
 		$permalink_parts = explode( '/', $this->permalink );
-		if ( ! empty( $property ) && ! in_array( '%' . $property . '%s', $permalink_parts, true ) ) {
+		if ( ! empty( $property ) && ! in_array( '%' . $property . '%', $permalink_parts, true ) ) {
 			return '';
 		}
 
