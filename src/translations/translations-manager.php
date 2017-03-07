@@ -74,6 +74,8 @@ class Translations_Manager extends Translations {
 			'edit_page_create'                                      => $this->_xtranslate( 'Create', 'model button', 'textdomain' ),
 			'edit_page_update'                                      => $this->_xtranslate( 'Update', 'model button', 'textdomain' ),
 			'edit_page_delete'                                      => $this->_xtranslate( 'Delete', 'model button', 'textdomain' ),
+			'edit_page_preview'                                     => $this->_xtranslate( 'Preview', 'model button', 'textdomain' ),
+			'edit_page_preview_changes'                             => $this->_xtranslate( 'Preview Changes', 'model button', 'textdomain' ),
 			'edit_page_submit_box_title'                            => $this->_xtranslate( 'Publish', 'model submit box title', 'textdomain' ),
 			'edit_page_status_label'                                => $this->_xtranslate( 'Status', 'model status label', 'textdomain' ),
 			'edit_page_ok'                                          => $this->_xtranslate( 'OK', 'model slug buttons', 'textdomain' ),
@@ -85,6 +87,7 @@ class Translations_Manager extends Translations {
 			'action_edit_item_has_errors'                           => $this->__translate( 'Some errors occurred while trying to save the model:', 'textdomain' ),
 			'action_edit_item_other_fields_success'                 => $this->__translate( 'All other model data was saved successfully.', 'textdomain' ),
 			'action_edit_item_success'                              => $this->__translate( 'Model successfully saved.', 'textdomain' ),
+			'action_preview_item_internal_error'                    => $this->__translate( 'An internal error occurred while trying to preview the model.', 'textdomain' ),
 			/* translators: %s: model title */
 			'action_delete_item_cannot_delete'                      => $this->__translate( 'You are not allowed to delete the model &#8220;%s&#8221;.', 'textdomain' ),
 			/* translators: %s: model title */
