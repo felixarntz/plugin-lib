@@ -337,7 +337,18 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
 	 */
 	public function view_buttons( $id, $model, $manager ) {
-		//TODO: frontend (pre-)view buttons
+		$view_routing = $manager->view_routing();
+		if ( ! $view_routing ) {
+			return;
+		}
+
+		$preview_text = $id ? $manager->get_message( 'edit_page_preview_changes' ) : $manager->get_message( 'edit_page_preview' );
+
+		?>
+		<div id="preview-action">
+			<button id="post-preview" class="preview button"><?php echo $preview_text; ?></button>
+		</div>
+		<?php
 	}
 
 	/**
@@ -513,7 +524,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		?>
 		<form id="post" action="<?php echo esc_url( $this->get_model_edit_url() ); ?>" method="post" novalidate>
 			<?php wp_nonce_field( $this->get_nonce_action( 'action', $id ) ); ?>
-			<input type="hidden" name="action" value="edit" />
+			<input type="hidden" id="post_action" name="action" value="edit" />
 			<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
 				$slug_property = $this->model_manager->get_slug_property();
 				?>
@@ -795,7 +806,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$message = '';
 
-		if ( $id || ( 'action' === $action_type && 'edit' === $doaction ) ) {
+		if ( $id || ( 'action' === $action_type && in_array( $doaction, array( 'edit', 'preview' ), true ) ) ) {
 			check_admin_referer( $this->get_nonce_action( $action_type, $id ) );
 
 			if ( method_exists( $this, $action_type . '_' . $doaction ) ) {
@@ -889,7 +900,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int $id ID of the model to update. Might be empty when creating.
+	 * @param int|null $id ID of the model to update. Might be empty when creating.
 	 * @return string|WP_Error Feedback message, or error object on failure.
 	 */
 	protected function action_edit( $id ) {
@@ -957,6 +968,45 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		return $this->model_manager->get_message( 'action_edit_item_success' );
+	}
+
+	/**
+	 * Handles the 'preview' action.
+	 *
+	 * This action is special as it redirects the user to the preview instead of performing an actual operation.
+	 * This method always terminates the current request.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int|null $id ID of the model to update. Might be empty when creating.
+	 */
+	protected function action_preview( $id ) {
+		if ( ! $id ) {
+			$id = null;
+		}
+
+		$form_data = wp_unslash( $_POST );
+
+		$result = $this->field_manager->update_values( $form_data );
+		if ( ! is_wp_error( $result ) ) {
+			$result = new WP_Error();
+		}
+
+		$this->validate_custom_data( $form_data, $result );
+
+		$view_routing = $this->model_manager->view_routing();
+		if ( ! $view_routing ) {
+			wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) );
+		}
+
+		$preview_url = $view_routing->get_model_preview_permalink( $this->model );
+		if ( empty( $preview_url ) ) {
+			wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) );
+		}
+
+		wp_redirect( $preview_url );
+		exit;
 	}
 
 	/**

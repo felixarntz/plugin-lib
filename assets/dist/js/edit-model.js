@@ -181,4 +181,27 @@
 		});
 	}
 
+	var $previewButton = $( '#post-preview' );
+	if ( $previewButton.length ) {
+		$previewButton.on( 'click', function( e ) {
+			var $this   = $( this );
+			var $action = $( '#post_action' );
+			var $form   = $( 'form#post' );
+
+			var origAction = $form.val();
+			var origTarget = $form.attr( 'target' ) || '';
+
+			e.preventDefault();
+
+			if ( $this.hasClass( 'disabled' ) ) {
+				return;
+			}
+
+			$action.val( 'preview' );
+			$form.attr( 'target', 'wp-preview' ).submit().attr( 'target', origTarget );
+
+			$action.val( origAction );
+		});
+	}
+
 }( jQuery, pluginLibEditModelData ) );

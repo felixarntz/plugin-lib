@@ -266,6 +266,9 @@ abstract class View_Routing extends Service {
 		}
 
 		$primary_property = $this->manager->get_primary_property();
+		if ( empty( $model->$primary_property ) ) {
+			return '';
+		}
 
 		return add_query_arg( $this->singular_query_var, $model->$primary_property, home_url( '/' ) );
 	}
@@ -279,7 +282,7 @@ abstract class View_Routing extends Service {
 	 * @access public
 	 *
 	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model object.
-	 * @return string Permalink for the model preview.
+	 * @return string Permalink for the model preview, or empty if preview link could not be generated.
 	 */
 	public function get_model_preview_permalink( $model ) {
 		$preview_data = $model->to_json();
@@ -288,7 +291,10 @@ abstract class View_Routing extends Service {
 
 		$transient_name = $this->manager->get_prefix() . $this->manager->get_singular_slug() . '_preview-' . $preview_key;
 
-		set_transient( $transient_name, $preview_data, MINUTE_IN_SECONDS );
+		$result = set_transient( $transient_name, $preview_data, MINUTE_IN_SECONDS );
+		if ( ! $result ) {
+			return '';
+		}
 
 		if ( '' != get_option( 'permalink_structure' ) ) {
 			$permalink = $this->base . '/' . 'preview/' . $preview_key . '/';
@@ -458,7 +464,14 @@ abstract class View_Routing extends Service {
 
 		delete_transient( $transient_name );
 
-		$model = $this->manager->create();
+		$primary_property = $this->manager->get_primary_property();
+
+		if ( ! empty( $preview_data[ $primary_property ] ) ) {
+			$model = $this->manager->get( $preview_data[ $primary_property ] );
+		} else {
+			$model = $this->manager->create();
+		}
+
 		foreach ( $preview_data as $key => $value ) {
 			$model->$key = $value;
 		}

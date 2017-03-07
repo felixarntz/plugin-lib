@@ -356,7 +356,10 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$data     = $this->prepare_item_for_response( $model, $request );
 		$response = rest_ensure_response( $data );
 
-		//TODO: Add link header for permalink here.
+		$permalink = $model->get_permalink();
+		if ( ! empty( $permalink ) ) {
+			$response->link_header( 'alternate', $permalink, array( 'type' => 'text/html' ) );
+		}
 
 		return $response;
 	}

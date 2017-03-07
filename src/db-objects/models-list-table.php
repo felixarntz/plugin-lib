@@ -434,8 +434,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		$primary_property = $this->manager->get_primary_property();
 		$model_id = $model->$primary_property;
 
-		//TODO: handle this
-		$view_url = '';
+		$view_url = $model->get_permalink();
 
 		$edit_url = '';
 		if ( ! empty( $this->_args['model_page'] ) ) {
