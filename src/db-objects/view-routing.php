@@ -223,6 +223,20 @@ abstract class View_Routing extends Service {
 	 * @return string Permalink for the model view, or empty if no permalink exists.
 	 */
 	public function get_model_permalink( $model ) {
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$status_property = $this->manager->get_status_property();
+			if ( ! in_array( $model->$status_property, $this->manager->statuses()->get_public(), true ) ) {
+				return '';
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$type_property = $this->manager->get_type_property();
+			if ( ! in_array( $model->$type_property, $this->manager->types()->get_public(), true ) ) {
+				return '';
+			}
+		}
+
 		if ( '' != get_option( 'permalink_structure' ) ) {
 			$permalink = $this->base;
 
@@ -336,6 +350,71 @@ abstract class View_Routing extends Service {
 		}
 
 		return add_query_arg( $query_args, home_url( '/' ) );
+	}
+
+	/**
+	 * Returns the sample permalink for a given model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    The model object.
+	 * @param string                                      $property Optional. Name of a property to keep its
+	 *                                                              placeholder in the sample permalink in
+	 *                                                              order to replace it with a dynamic field.
+	 *                                                              Default none.
+	 * @return string Sample permalink for the model, or empty string if no sample permalink could be created.
+	 */
+	public function get_model_sample_permalink_for_property( $model, $property = '' ) {
+		if ( '' == get_option( 'permalink_structure' ) ) {
+			return '';
+		}
+
+		$permalink = $this->base;
+
+		$date_property = '';
+		$special_date_parts = array();
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$special_date_parts = array(
+				'year'  => 'Y',
+				'month' => 'm',
+				'day'   => 'd',
+			);
+		}
+
+		$permalink_parts = explode( '/', $this->permalink );
+		if ( ! empty( $property ) && ! in_array( '%' . $property . '%s', $permalink_parts, true ) ) {
+			return '';
+		}
+
+		foreach ( $permalink_parts as $permalink_part ) {
+			if ( preg_match( '/^%([a-z0-9_]+)%$/', $permalink_part, $matches ) ) {
+				if ( ! empty( $property ) && $property === $matches[1] ) {
+					$permalink .= '/%' . $property . '%';
+				} elseif ( ! empty( $date_property ) && isset( $special_date_parts[ $matches[1] ] ) ) {
+					if ( empty( $model->$date_property ) ) {
+						return '';
+					}
+
+					$permalink .= '/' . mysql2date( $special_date_parts[ $matches[1] ], $model->$date_property, false );
+				} else {
+					$property_name = $matches[1];
+					if ( empty( $model->$property_name ) ) {
+						return '';
+					}
+
+					$permalink .= '/' . $model->$property_name;
+				}
+			} else {
+				$permalink .= '/' . $permalink_part;
+			}
+		}
+
+		$permalink .= '/';
+
+		return home_url( $permalink );
 	}
 
 	/**
