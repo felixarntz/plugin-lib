@@ -69,6 +69,7 @@ class Translations_Manager extends Translations {
 			'edit_page_cannot_create_item'                          => $this->__translate( 'Sorry, you are not allowed to create a new model.', 'textdomain' ),
 			'edit_page_title_label'                                 => $this->__translate( 'Enter model title here', 'textdomain' ),
 			'edit_page_title_placeholder'                           => $this->__translate( 'Enter model title here', 'textdomain' ),
+			'edit_page_permalink_label'                             => $this->_xtranslate( 'Permalink', 'model permalink label', 'textdomain' ),
 			'edit_page_slug_label'                                  => $this->_xtranslate( 'Slug', 'model slug label', 'textdomain' ),
 			'edit_page_slug_button_label'                           => $this->_xtranslate( 'Edit Slug', 'model slug button', 'textdomain' ),
 			'edit_page_create'                                      => $this->_xtranslate( 'Create', 'model button', 'textdomain' ),
