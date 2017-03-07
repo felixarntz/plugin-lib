@@ -75,6 +75,7 @@ class Translations_Manager extends Translations {
 			'edit_page_create'                                      => $this->_xtranslate( 'Create', 'model button', 'textdomain' ),
 			'edit_page_update'                                      => $this->_xtranslate( 'Update', 'model button', 'textdomain' ),
 			'edit_page_delete'                                      => $this->_xtranslate( 'Delete', 'model button', 'textdomain' ),
+			'edit_page_view'                                        => $this->_xtranslate( 'View', 'model button', 'textdomain' ),
 			'edit_page_preview'                                     => $this->_xtranslate( 'Preview', 'model button', 'textdomain' ),
 			'edit_page_preview_changes'                             => $this->_xtranslate( 'Preview Changes', 'model button', 'textdomain' ),
 			'edit_page_submit_box_title'                            => $this->_xtranslate( 'Publish', 'model submit box title', 'textdomain' ),
