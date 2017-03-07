@@ -344,7 +344,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$preview_text = $id ? $manager->get_message( 'edit_page_preview_changes' ) : $manager->get_message( 'edit_page_preview' );
 
-		$permalink = $view_routing->get_model_permalink( $model );
+		$permalink = $id ? $view_routing->get_model_permalink( $model ) : '';
 
 		if ( ! empty( $permalink ) ) : ?>
 			<div id="view-action">
