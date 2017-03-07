@@ -23,7 +23,7 @@
 	var $realSlug    = $( '#post_name' );
 	var $editSlugBox = $( '#edit-slug-box' );
 
-	var $full;
+	var $slug;
 	var slug;
 	var slugEdited;
 	var slugDependencies = [];
@@ -51,7 +51,7 @@
 					slug = response.verified;
 
 					$realSlug.val( slug );
-					$full.text( slug );
+					$slug.text( slug );
 
 					if ( 'none' === $editSlugBox.css( 'display' ) ) {
 						$editSlugBox.fadeIn( 'slow' );
@@ -75,13 +75,14 @@
 		blockAJAX = true;
 
 		var $buttons = $( '#edit-slug-buttons' );
+
 		var buttonsOrig = $buttons.html();
-		var fullOrig = $full.html();
+		var slugOrig    = $slug.html();
 
 		$buttons.html( '<button type="button" class="save button button-small">' + pluginLibData.i18n.ok + '</button> <button type="button" class="cancel button-link">' + pluginLibData.i18n.cancel + '</button>' );
 
 		$buttons.children( '.save' ).one( 'click', function() {
-			var newSlug = $full.children( 'input' ).val();
+			var newSlug = $slug.children( 'input' ).val();
 
 			if ( newSlug == slug ) {
 				$buttons.children( '.cancel' ).trigger( 'click' );
@@ -101,7 +102,7 @@
 
 						$buttons.html( buttonsOrig );
 						$realSlug.val( slug );
-						$full.text( slug );
+						$slug.text( slug );
 
 						$( '.edit-slug' ).focus();
 
@@ -128,12 +129,12 @@
 		$buttons.children( '.cancel' ).one( 'click', function() {
 			$buttons.html( buttonsOrig );
 			$realSlug.val( slug );
-			$full.html( fullOrig );
+			$slug.html( slugOrig );
 
 			blockAJAX = false;
 		});
 
-		$full.html( '<input type="text" id="new-post-slug" value="' + slug + '" autocomplete="off" />' )
+		$slug.html( '<input type="text" id="new-post-slug" value="' + slug + '" autocomplete="off" />' )
 			.children( 'input' )
 				.keydown( function( e ) {
 					var key = e.which;
@@ -151,7 +152,7 @@
 	}
 
 	if ( $realSlug.length && $editSlugBox.length ) {
-		$full = $( '#editable-post-name-full' );
+		$slug = $( '#editable-post-name' );
 
 		slug = $realSlug.val();
 		slugEdited = slug.length ? true : false;

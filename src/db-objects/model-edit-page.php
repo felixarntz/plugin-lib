@@ -570,18 +570,34 @@ abstract class Model_Edit_Page extends Manager_Page {
 					$slug_property = $this->model_manager->get_slug_property();
 					$style = $this->model->$slug_property ? '' : ' style="display:none;"';
 
+					$label = $this->model_manager->get_message( 'edit_page_slug_label' );
+					$before_slug = $after_slug = '';
+
+					$view_routing = $this->model_manager->view_routing();
+					if ( $view_routing && '' != get_option( 'permalink_structure' ) ) {
+						$orig_slug = $this->model->$slug_property;
+
+						$this->model->$slug_property = '%' . $slug_property . '%';
+						$permalink = $view_routing->get_model_permalink( $this->model );
+						$this->model->$slug_property = $orig_slug;
+
+						if ( ! empty( $permalink ) && false !== strpos( $permalink, '%' . $slug_property . '%' ) ) {
+							$label = $this->model_manager->get_message( 'edit_page_permalink_label' );
+
+							list( $before_slug, $after_slug ) = explode( '%' . $slug_property . '%', $permalink, 2 );
+						}
+					}
+
 					?>
 					<div class="inside">
 						<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; ?>>
-							<strong><?php echo $this->model_manager->get_message( 'edit_page_slug_label' ); ?></strong>
+							<strong><?php echo $label; ?></strong>
 							<span id="edit-slug-buttons">
 								<button type="button" class="edit-slug button button-small hide-if-no-js">
 									<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
 								</button>
 							</span>
-							<span id="editable-post-name-full">
-								<?php echo esc_html( $this->model->$slug_property ); ?>
-							</span>
+							<?php echo $before_slug; ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo $after_slug; ?>
 						</div>
 					</div>
 				<?php endif; ?>
