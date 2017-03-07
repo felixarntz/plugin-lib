@@ -344,7 +344,26 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$preview_text = $id ? $manager->get_message( 'edit_page_preview_changes' ) : $manager->get_message( 'edit_page_preview' );
 
-		$permalink = $id ? $view_routing->get_model_permalink( $model ) : '';
+		$show_view_action = false;
+		if ( $id ) {
+			$show_view_action = true;
+
+			if ( method_exists( $manager, 'get_status_property' ) ) {
+				$status_property = $manager->get_status_property();
+				if ( ! in_array( $model->$status_property, $manager->statuses()->get_public(), true ) ) {
+					$show_view_action = false;
+				}
+			}
+
+			if ( method_exists( $manager, 'get_type_property' ) ) {
+				$type_property = $manager->get_type_property();
+				if ( ! in_array( $model->$type_property, $manager->types()->get_public(), true ) ) {
+					$show_view_action = false;
+				}
+			}
+		}
+
+		$permalink = $show_view_action ? $view_routing->get_model_permalink( $model ) : '';
 
 		if ( ! empty( $permalink ) ) : ?>
 			<div id="view-action">
