@@ -30,3 +30,7 @@
 .nav-tab-panel[aria-hidden="true"] {
 	display: none;
 }
+
+#view-action {
+	float: left;
+}

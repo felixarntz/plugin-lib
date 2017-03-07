@@ -597,13 +597,13 @@ abstract class Model_Edit_Page extends Manager_Page {
 					?>
 					<div class="inside">
 						<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; ?>>
-							<strong><?php echo $label; ?></strong>
+							<strong><?php printf( '%s:', $label ); ?></strong>
+							<?php echo $before_slug; ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo $after_slug; ?>
 							<span id="edit-slug-buttons">
 								<button type="button" class="edit-slug button button-small hide-if-no-js">
 									<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
 								</button>
 							</span>
-							<?php echo $before_slug; ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo $after_slug; ?>
 						</div>
 					</div>
 				<?php endif; ?>
