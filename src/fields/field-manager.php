@@ -25,6 +25,15 @@ class Field_Manager extends Service {
 	use Container_Service_Trait, Args_Service_Trait;
 
 	/**
+	 * Instance ID of this field manager. Used internally.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $instance_id = '';
+
+	/**
 	 * Array of fields that are part of this manager, grouped by their `$section`.
 	 *
 	 * @since 1.0.0
@@ -50,6 +59,26 @@ class Field_Manager extends Service {
 	 * @var array
 	 */
 	protected $current_values = array();
+
+	/**
+	 * Field manager instances.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var array
+	 */
+	protected static $instances = array();
+
+	/**
+	 * Instance count of field managers per prefix.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var array
+	 */
+	protected static $prefix_count = array();
 
 	/**
 	 * Array of registered field types, as `$type => $class_name` pairs.
@@ -80,6 +109,16 @@ class Field_Manager extends Service {
 	 * @var array
 	 */
 	protected static $enqueued = array();
+
+	/**
+	 * Internal flags for printing JS templates.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var array
+	 */
+	protected static $templates_printed = array();
 
 	/**
 	 * The AJAX API service definition.
@@ -160,6 +199,16 @@ class Field_Manager extends Service {
 		$this->set_prefix( $prefix );
 		$this->set_services( $services );
 		$this->set_args( $args );
+
+		if ( ! isset( self::$prefix_count[ $prefix ] ) ) {
+			self::$prefix_count[ $prefix ] = 1;
+		} else {
+			self::$prefix_count[ $prefix ]++;
+		}
+
+		$this->instance_id = $prefix . self::$prefix_count[ $prefix ];
+
+		self::$instances[ $this->instance_id ] = $this;
 
 		self::register_default_field_types();
 	}
@@ -262,54 +311,99 @@ class Field_Manager extends Service {
 	 * @access public
 	 */
 	public function enqueue() {
+		if ( isset( self::$enqueued['_core'] ) && self::$enqueued['_core'] ) {
+			return;
+		}
+
 		$field_instances = $this->get_fields();
 
 		$main_dependencies = array( 'jquery', 'underscore', 'backbone', 'wp-util' );
 		$localize_data     = array(
-			'fields' => array(),
+			'field_managers' => array(),
 		);
 
-		$values = $this->get_values();
+		foreach ( self::$instances as $instance_id => $instance ) {
+			$values = $instance->get_values();
 
-		foreach ( $field_instances as $id => $field_instance ) {
-			$type = array_search( get_class( $field_instance ), self::$field_types, true );
+			$localize_data['field_managers'][ $instance_id ] = array(
+				'fields' => array(),
+			);
 
-			if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
-				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+			foreach ( $instance->get_fields() as $id => $field_instance ) {
+				$type = array_search( get_class( $field_instance ), self::$field_types, true );
 
-				if ( ! empty( $new_dependencies ) ) {
-					$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+				if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
+					list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+
+					if ( ! empty( $new_dependencies ) ) {
+						$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+					}
+
+					if ( ! empty( $new_localize_data ) ) {
+						$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+					}
+
+					self::$enqueued[ $type ] = true;
 				}
 
-				if ( ! empty( $new_localize_data ) ) {
-					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
-				}
+				$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
 
-				self::$enqueued[ $type ] = true;
+				$localize_data['field_managers'][ $instance_id ]['fields'][ $id ] = $field_instance->to_json( $value );
 			}
-
-			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
-
-			$localize_data['fields'][ $id ] = $field_instance->to_json( $value );
 		}
 
-		if ( ! isset( self::$enqueued['_core'] ) || ! self::$enqueued['_core'] ) {
-			$this->library_assets()->register_style( 'plugin-lib-field-manager', 'assets/dist/css/field-manager.css', array(
-				'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
-				'enqueue' => true,
-			) );
+		$this->library_assets()->register_style( 'plugin-lib-field-manager', 'assets/dist/css/field-manager.css', array(
+			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'enqueue' => true,
+		) );
 
-			$this->library_assets()->register_script( 'plugin-lib-field-manager', 'assets/dist/js/field-manager.js', array(
-				'deps'          => $main_dependencies,
-				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
-				'in_footer'     => true,
-				'enqueue'       => true,
-				'localize_name' => 'pluginLibFieldManagerData',
-				'localize_data' => $localize_data,
-			) );
+		$this->library_assets()->register_script( 'plugin-lib-field-manager', 'assets/dist/js/field-manager.js', array(
+			'deps'          => $main_dependencies,
+			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'in_footer'     => true,
+			'enqueue'       => true,
+			'localize_name' => 'pluginLibFieldManagerData',
+			'localize_data' => $localize_data,
+		) );
 
-			self::$enqueued['_core'] = true;
+		add_action( 'wp_footer', array( $this, 'print_templates' ), 1, 0 );
+
+		self::$enqueued['_core'] = true;
+	}
+
+	/**
+	 * Prints field templates for JavaScript.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function print_templates() {
+		if ( isset( self::$templates_printed['_core'] ) && self::$templates_printed['_core'] ) {
+			return;
 		}
+
+		foreach ( self::$instances as $instance_id => $instance ) {
+			foreach ( $instance->get_fields() as $id => $field_instance ) {
+				$type = array_search( get_class( $field_instance ), self::$field_types, true );
+
+				if ( isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ] ) {
+					continue;
+				}
+
+				?>
+				<script type="text/html" id="plugin-lib-field-<?php echo $field_instance->slug; ?>-label-template">
+					<?php echo $field_instance->print_label_template(); ?>
+				</script>
+				<script type="text/html" id="plugin-lib-field-<?php echo $field_instance->slug; ?>-content-template">
+					<?php echo $field_instance->print_content_template(); ?>
+				</script>
+				<?php
+
+				self::$templates_printed[ $type ] = true;
+			}
+		}
+
+		self::$templates_printed['_core'] = true;
 	}
 
 	/**
@@ -474,7 +568,14 @@ class Field_Manager extends Service {
 	 * @return string Field id attribute.
 	 */
 	public function make_id( $id ) {
-		return str_replace( '_', '-', $id );
+		$field_id = str_replace( '_', '-', $id );
+
+		$instance_id = $this->get_instance_id();
+		if ( $instance_id ) {
+			$field_id = $instance_id . '_' . $field_id;
+		}
+
+		return $field_id;
 	}
 
 	/**
@@ -494,6 +595,18 @@ class Field_Manager extends Service {
 		}
 
 		return $this->name_prefix . '[' . $id . ']';
+	}
+
+	/**
+	 * Returns the ID of this instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string|null Instance ID.
+	 */
+	public function get_instance_id() {
+		return $this->instance_id;
 	}
 
 	/**

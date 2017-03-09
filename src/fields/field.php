@@ -324,6 +324,8 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 */
 	public final function render_content( $current_value ) {
+		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-content-wrap' ) . '">';
+
 		if ( ! empty( $this->before ) ) {
 			if ( is_callable( $this->before ) ) {
 				call_user_func( $this->before );
@@ -335,7 +337,7 @@ abstract class Field {
 		$this->render_input( $current_value );
 
 		if ( ! empty( $this->description ) ) : ?>
-			<p id="<?php echo $this->get_id_attribute(); ?>-description" class="description">
+			<p id="<?php echo esc_attr( $this->get_id_attribute() . '-description' ); ?>" class="description">
 				<?php echo $this->description; ?>
 			</p>
 		<?php endif;
@@ -347,6 +349,8 @@ abstract class Field {
 				echo $this->after;
 			}
 		}
+
+		echo '</div>';
 	}
 
 	/**
@@ -428,19 +432,21 @@ abstract class Field {
 	 */
 	public final function print_content_template() {
 		?>
-		<# if ( data.before ) { #>
-			{{ data.before }}
-		<# } #>
+		<div id="{{ data.id }}-content-wrap">
+			<# if ( data.before ) { #>
+				{{ data.before }}
+			<# } #>
 
-		<?php $this->print_input_template(); ?>
+			<?php $this->print_input_template(); ?>
 
-		<# if ( data.description ) { #>
-			<p id="{{ data.id }}-description" class="description">{{ data.description }}</p>
-		<# } #>
+			<# if ( data.description ) { #>
+				<p id="{{ data.id }}-description" class="description">{{ data.description }}</p>
+			<# } #>
 
-		<# if ( data.after ) { #>
-			{{ data.after }}
-		<# } #>
+			<# if ( data.after ) { #>
+				{{ data.after }}
+			<# } #>
+		</div>
 		<?php
 	}
 
