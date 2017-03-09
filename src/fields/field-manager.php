@@ -362,7 +362,7 @@ class Field_Manager extends Service {
 			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'in_footer'     => true,
 			'enqueue'       => true,
-			'localize_name' => 'pluginLibFieldManagerData',
+			'localize_name' => 'pluginLibFieldsAPIData',
 			'localize_data' => $localize_data,
 		) );
 
@@ -391,10 +391,10 @@ class Field_Manager extends Service {
 				}
 
 				?>
-				<script type="text/html" id="plugin-lib-field-<?php echo $field_instance->slug; ?>-label-template">
+				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-label">
 					<?php echo $field_instance->print_label_template(); ?>
 				</script>
-				<script type="text/html" id="plugin-lib-field-<?php echo $field_instance->slug; ?>-content-template">
+				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-content">
 					<?php echo $field_instance->print_content_template(); ?>
 				</script>
 				<?php

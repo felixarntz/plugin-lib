@@ -324,7 +324,7 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 */
 	public final function render_content( $current_value ) {
-		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-content-wrap' ) . '">';
+		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-content-wrap' ) . '" class="content-wrap">';
 
 		if ( ! empty( $this->before ) ) {
 			if ( is_callable( $this->before ) ) {
@@ -432,7 +432,7 @@ abstract class Field {
 	 */
 	public final function print_content_template() {
 		?>
-		<div id="{{ data.id }}-content-wrap">
+		<div id="{{ data.id }}-content-wrap" class="content-wrap">
 			<# if ( data.before ) { #>
 				{{ data.before }}
 			<# } #>
