@@ -150,7 +150,7 @@ class Select extends Select_Base {
 		}
 
 		?>
-		<select{{ _.attrs( data.inputAttrs ) }}<?php echo $multiple; ?>>
+		<select{{{ _.attrs( data.inputAttrs ) }}}<?php echo $multiple; ?>>
 			<# if ( ! _.isEmpty( data.optgroups ) ) { #>
 				<# _.each( data.optgroups, function( optgroup ) { #>
 					<# if ( ! _.isEmpty( optgroup.label ) ) { #>

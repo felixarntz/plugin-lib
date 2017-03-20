@@ -437,9 +437,9 @@ abstract class Field {
 		?>
 		<# if ( data.label && 'skip' != data.labelMode ) { #>
 			<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
-				<span{{ _.attrs( data.labelAttrs ) }}>{{ data.label }}</span>
+				<span{{{ _.attrs( data.labelAttrs ) }}}>{{ data.label }}</span>
 			<# } else { #>
-				<label{{ _.attrs( data.labelAttrs ) }}>{{ data.label }}</label>
+				<label{{{ _.attrs( data.labelAttrs ) }}}>{{ data.label }}</label>
 			<# } #>
 		<# } #>
 		<?php
@@ -455,7 +455,7 @@ abstract class Field {
 		?>
 		<div id="{{ data.id }}-content-wrap" class="content-wrap">
 			<# if ( data.before ) { #>
-				{{ data.before }}
+				{{{ data.before }}}
 			<# } #>
 
 			<?php $this->print_input_template(); ?>
@@ -465,7 +465,7 @@ abstract class Field {
 			<# } #>
 
 			<# if ( data.after ) { #>
-				{{ data.after }}
+				{{{ data.after }}}
 			<# } #>
 		</div>
 		<?php

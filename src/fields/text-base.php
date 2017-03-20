@@ -55,7 +55,7 @@ abstract class Text_Base extends Field {
 	 */
 	protected function print_single_input_template() {
 		?>
-		<input type="<?php echo esc_attr( $this->type ); ?>"{{ _.attrs( data.inputAttrs ) }} value="{{ data.currentValue }}">
+		<input type="<?php echo esc_attr( $this->type ); ?>"{{{ _.attrs( data.inputAttrs ) }}} value="{{ data.currentValue }}">
 		<?php
 		$this->print_repeatable_remove_button_template();
 	}

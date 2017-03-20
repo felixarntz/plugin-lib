@@ -60,7 +60,7 @@ class Textarea extends Text_Base {
 	 */
 	protected function print_single_input_template() {
 		?>
-		<textarea{{ _.attrs( data.inputAttrs ) }}>{{ data.currentValue }}</textarea>
+		<textarea{{{ _.attrs( data.inputAttrs ) }}}>{{ data.currentValue }}</textarea>
 		<?php
 		$this->print_repeatable_remove_button_template();
 	}

@@ -102,10 +102,10 @@ class Radio extends Select_Base {
 			<legend class="screen-reader-text">{{ data.label }}</legend>
 
 			<# _.each( data.choices, function( label, value, obj ) { #>
-				<input type="<?php echo $type; ?>"{{ _.attrs( _.extend( {}, data.inputAttrs, {
+				<input type="<?php echo $type; ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
 					id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
 					name: data.inputAttrs.name + name_suffix
-				} ) ) }} value="{{ value }}"<?php echo $checked; ?>>
+				} ) ) }}} value="{{ value }}"<?php echo $checked; ?>>
 				<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
 			<# } ) #>
 		</fieldset>
