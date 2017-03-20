@@ -352,7 +352,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 			</div>
 		<?php endif; ?>
 		<div id="preview-action">
-			<button id="post-preview" class="preview button"><?php echo $preview_text; ?></button>
+			<button type="button" id="post-preview" class="preview button"><?php echo $preview_text; ?></button>
 		</div>
 		<?php
 	}
