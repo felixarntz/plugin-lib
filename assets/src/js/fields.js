@@ -263,11 +263,18 @@
 		},
 
 		addItem: function( e ) {
+			var limit = this.model.get( 'repeatableLimit' );
+			var items   = this.model.get( 'items' );
+			if ( limit > 0 && items.length >= limit ) {
+				return;
+			}
+
 			var $button   = this.$( e.target );
 			var $wrap     = this.$( $button.data( 'target' ) );
 			var itemIndex = $wrap.children().length;
 
-			var items   = this.model.get( 'items' );
+			$button.prop( 'disabled', true );
+
 			var newItem = _generateItem( this.model.get( 'itemInitial' ), itemIndex );
 
 			items.push( newItem );
@@ -283,15 +290,25 @@
 			this.trigger( 'postRender', $newItem );
 
 			this.model.set( 'items', items );
+
+			if ( limit > 0 && items.length >= limit ) {
+				$button.hide();
+			} else {
+				$button.prop( 'disabled', false );
+			}
 		},
 
 		removeItem: function( e ) {
+			var limit = this.model.get( 'repeatableLimit' );
+			var items = this.model.get( 'items' );
+
 			var $button   = this.$( e.target );
 			var $item     = this.$( $button.data( 'target' ) );
 			var $wrap     = $item.parent();
 			var itemIndex = $wrap.index( $item );
 
-			var items = this.model.get( 'items' );
+			$button.prop( 'disabled', true );
+
 			if ( items[ itemIndex ] ) {
 				items.splice( itemIndex, 1 );
 				$item.remove();
@@ -317,6 +334,10 @@
 			}
 
 			this.model.set( 'items', items );
+
+			if ( limit > 0 && items.length < limit ) {
+				$( 'button[data-target="#' + $wrap.attr( 'id' ) + '"]' ).prop( 'disabled', false ).show();
+			}
 		},
 
 		remove: function() {
