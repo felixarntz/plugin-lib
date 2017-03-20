@@ -915,6 +915,7 @@ abstract class Field {
 		}
 
 		$button_attrs = array(
+			'type'        => 'button',
 			'id'          => $id . '-repeatable-' . $mode . '-button',
 			'class'       => 'plugin-lib-repeatable-' . $mode . '-button ' . $core_class,
 			'data-target' => '#' . $id . '-repeatable-' . $target_mode,
@@ -1016,7 +1017,7 @@ abstract class Field {
 
 		?>
 
-		<button id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
+		<button type="button" id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
 			<?php echo $message; ?>
 		</button>
 		<?php
