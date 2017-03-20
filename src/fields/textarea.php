@@ -58,7 +58,7 @@ class Textarea extends Text_Base {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function render_single_input_template() {
+	protected function print_single_input_template() {
 		?>
 		<textarea{{ _.attrs( data.input_attrs ) }}>{{ data.current_value }}</textarea>
 		<?php

@@ -65,7 +65,7 @@ class Checkbox extends Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function render_single_input_template() {
+	protected function print_single_input_template() {
 		?>
 		<input type="checkbox" value="1"{{ _.attrs( data.input_attrs ) }}<# if ( data.current_value ) { #> checked<# } #>>
 		<label for="{{ data.id }}">{{ data.label }}</label>

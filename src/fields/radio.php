@@ -86,7 +86,7 @@ class Radio extends Select_Base {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function render_single_input_template() {
+	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$type = 'checkbox';
 			$name_suffix = '[]';

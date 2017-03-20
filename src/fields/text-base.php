@@ -53,7 +53,7 @@ abstract class Text_Base extends Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function render_single_input_template() {
+	protected function print_single_input_template() {
 		?>
 		<input type="<?php echo esc_attr( $this->type ); ?>"{{ _.attrs( data.input_attrs ) }} value="{{ data.current_value }}">
 		<?php

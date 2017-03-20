@@ -678,7 +678,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected abstract function render_single_input_template();
+	protected abstract function print_single_input_template();
 
 	/**
 	 * Transforms single field data into an array to be passed to JavaScript applications.
