@@ -397,6 +397,9 @@ class Field_Manager extends Service {
 				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-content">
 					<?php echo $field_instance->print_content_template(); ?>
 				</script>
+				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-repeatable-item">
+					<?php echo $field_instance->print_repeatable_item_template(); ?>
+				</script>
 				<?php
 
 				self::$templates_printed[ $type ] = true;

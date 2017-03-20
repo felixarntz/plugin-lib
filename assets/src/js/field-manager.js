@@ -16,6 +16,17 @@
 			});
 
 			return attributeString;
+		},
+		deepClone: function( obj ) {
+			var clone = _.clone( obj );
+
+			_.each( clone, function( value, key ) {
+				if ( _.isObject( value ) ) {
+					clone[ key ] = _.deepClone( value );
+				}
+			});
+
+			return clone;
 		}
 	});
 
@@ -56,7 +67,7 @@
 		/**
 		 * @type {pluginLibFieldsAPI.Field}
 		 */
-		model: Field,
+		model: fieldsAPI.Field,
 
 		/**
 		 * @param {Array} [models=[]] Array of models used to populate the collection.
@@ -70,6 +81,79 @@
 			}
 		}
 	});
+
+	function _getObjectReplaceableFields( obj ) {
+		var fields = {};
+
+		_.each( obj, function( value, key ) {
+			if ( _.isObject( value ) && ! _.isArray( value ) ) {
+				value = _getObjectReplaceableFields( value );
+				if ( ! _.isEmpty( value ) ) {
+					fields[ key ] = value;
+				}
+			} else if ( _.isString( value ) ) {
+				if ( value.match( /%([A-Za-z0-9]+)%/g ) ) {
+					fields[ key ] = value;
+				}
+			}
+		});
+
+		return fields;
+	}
+
+	function _replaceObjectFields( obj, replacements, fields ) {
+		if ( _.isUndefined( fields ) ) {
+			fields = _getObjectReplaceableFields( obj );
+		}
+
+		function _doReplacements( match, name ) {
+			if ( ! _.isUndefined( replacements[ name ] ) ) {
+				return replacements[ name ];
+			}
+
+			return match;
+		}
+
+		_.each( fields, function( value, key ) {
+			if ( _.isObject( value ) ) {
+				if ( ! _.isObject( obj[ key ] ) ) {
+					obj[ key ] = {};
+				}
+
+				_replaceObjectFields( obj[ key ], replacements, value );
+			} else {
+				obj[ key ] = value.replace( /%([A-Za-z0-9]+)%/g, _doReplacements );
+			}
+		});
+	}
+
+	function _generateItem( itemInitial, index ) {
+		var newItem = _.deepClone( itemInitial );
+
+		_replaceObjectFields( newItem, {
+			index: index,
+			indexPlus1: index + 1
+		});
+
+		return newItem;
+	}
+
+	function _adjustRepeatableIndexes( itemInitial, items, startIndex ) {
+		if ( ! startIndex ) {
+			startIndex = 0;
+		}
+
+		var fields = _getObjectReplaceableFields( itemInitial );
+
+		for ( var i = startIndex; i < items.length; i++ ) {
+			_replaceObjectFields( items[ i ], {
+				index: i,
+				indexPlus1: i + 1
+			}, fields );
+		}
+
+		return items;
+	}
 
 	/**
 	 * pluginLibFieldsAPI.FieldView
@@ -107,6 +191,10 @@
 					options.contentTemplate = 'plugin-lib-field-' + model.get( 'slug' ) + '-content';
 				}
 
+				if ( ! options.repeatableItemTemplate ) {
+					options.repeatableItemTemplate = 'plugin-lib-field-' + model.get( 'slug' ) + '-repeatable-item';
+				}
+
 				this.events = this.getEvents( model );
 			}
 
@@ -118,8 +206,17 @@
 				this.contentTemplate = wp.template( options.contentTemplate );
 			}
 
-			this.on( 'preRender', this.preRender, this );
-			this.on( 'postRender', this.postRender, this );
+			if ( options.repeatableItemTemplate ) {
+				this.repeatableItemTemplate = wp.template( options.repeatableItemTemplate );
+			}
+
+			if ( this.preRender ) {
+				this.on( 'preRender', this.preRender, this );
+			}
+
+			if ( this.postRender ) {
+				this.on( 'postRender', this.postRender, this );
+			}
 
 			Backbone.View.apply( this, arguments );
 		},
@@ -128,7 +225,7 @@
 			var $contentWrap = this.$( '.content-wrap' );
 
 			this.trigger( 'postRender', $contentWrap );
-		}
+		},
 
 		render: function() {
 			var $contentWrap;
@@ -153,29 +250,83 @@
 		},
 
 		changeItemValue: function( e ) {
-			var $item     = this.$( e.target );
-			var $itemWrap = $item.parents( '.plugin-lib-repeatable-item' );
-			var itemIndex = $itemWrap.parent().index( $itemWrap );
+			var $itemInput = this.$( e.target );
+			var $item      = $itemInput.parents( '.plugin-lib-repeatable-item' );
+			var itemIndex  = $item.parent().index( $item );
 
 			var items = this.model.get( 'items' );
 			if ( items[ itemIndex ] ) {
-				items[ itemIndex ].current_value = this.getInputValue( $item );
+				items[ itemIndex ].current_value = this.getInputValue( $itemInput );
 			}
 
 			this.model.set( 'items', items );
 		},
 
 		addItem: function( e ) {
-			//TODO
+			var $button   = this.$( e.target );
+			var $wrap     = this.$( $button.data( 'target' ) );
+			var itemIndex = $wrap.children().length;
+
+			var items   = this.model.get( 'items' );
+			var newItem = _generateItem( this.model.get( 'itemInitial' ), itemIndex );
+
+			items.push( newItem );
+
+			var $newItem = $( this.repeatableItemTemplate( newItem ) );
+
+			this.trigger( 'preRender', $newItem );
+			this.undelegateEvents();
+
+			$wrap.append( $newItem );
+
+			this.delegateEvents();
+			this.trigger( 'postRender', $newItem );
+
+			this.model.set( 'items', items );
 		},
 
 		removeItem: function( e ) {
-			//TODO
+			var $button   = this.$( e.target );
+			var $item     = this.$( $button.data( 'target' ) );
+			var $wrap     = $item.parent();
+			var itemIndex = $wrap.index( $item );
+
+			var items = this.model.get( 'items' );
+			if ( items[ itemIndex ] ) {
+				items.splice( itemIndex, 1 );
+				$item.remove();
+
+				if ( itemIndex < items.length ) {
+					items = _adjustRepeatableIndexes( this.model.get( 'itemInitial' ), items, itemIndex );
+					$wrap.children().each( function( index ) {
+						if ( index < itemIndex ) {
+							return;
+						}
+
+						var $itemToAdjust = $( this );
+
+						this.trigger( 'preRender', $itemToAdjust );
+						this.undelegateEvents();
+
+						$itemToAdjust.replace( this.repeatableItemTemplate( items[ index ] ) );
+
+						this.delegateEvents();
+						this.trigger( 'postRender', $itemToAdjust );
+					});
+				}
+			}
+
+			this.model.set( 'items', items );
 		},
 
 		remove: function() {
-			this.off( 'preRender', this.preRender, this );
-			this.off( 'postRender', this.postRender, this );
+			if ( this.preRender ) {
+				this.off( 'preRender', this.preRender, this );
+			}
+
+			if ( this.postRender ) {
+				this.off( 'postRender', this.postRender, this );
+			}
 
 			return Backbone.View.prototype.remove.apply( this, arguments );
 		},
@@ -222,14 +373,6 @@
 			}
 
 			return currentValue;
-		},
-
-		preRender: function( $wrap ) {
-			// Empty method body.
-		},
-
-		postRender: function( $wrap ) {
-			// Empty method body.
 		}
 	});
 

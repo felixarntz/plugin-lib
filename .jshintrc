@@ -16,7 +16,7 @@
     "Backbone",
     "wp",
     "ajaxurl",
-    "pluginLibFieldManagerData",
+    "pluginLibFieldsAPIData",
     "pluginLibEditModelData"
   ],
   "strict"   : true,

@@ -165,6 +165,15 @@ abstract class Field {
 	protected $after = null;
 
 	/**
+	 * Backbone view class name to use for this field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $backbone_view = 'FieldView';
+
+	/**
 	 * Internal index counter for repeatable fields.
 	 *
 	 * @since 1.0.0
@@ -380,12 +389,7 @@ abstract class Field {
 
 			$this->index = 0;
 			foreach ( $current_value as $single_value ) {
-				$this->open_repeatable_item_wrap();
-
-				$this->render_label();
-				$this->render_single_input( $single_value );
-
-				$this->close_repeatable_item_wrap();
+				$this->render_repeatable_item( $single_value );
 
 				$this->index++;
 			}
@@ -404,6 +408,23 @@ abstract class Field {
 		} else {
 			$this->render_single_input( $current_value );
 		}
+	}
+
+	/**
+	 * Renders an item of the field if it is repeatable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param mixed $current_value Current value of the item.
+	 */
+	public final function render_repeatable_item( $current_value ) {
+		$this->open_repeatable_item_wrap();
+
+		$this->render_label();
+		$this->render_single_input( $current_value );
+
+		$this->close_repeatable_item_wrap();
 	}
 
 	/**
@@ -462,12 +483,7 @@ abstract class Field {
 			<?php $this->print_open_repeatable_wrap_template(); ?>
 
 			<# _.each( data.items, function( data ) { #>
-				<?php $this->print_open_repeatable_item_wrap_template(); ?>
-
-				<?php $this->print_label_template(); ?>
-				<?php $this->print_single_input_template(); ?>
-
-				<?php $this->print_close_repeatable_item_wrap_template(); ?>
+				<?php $this->print_repeatable_item_template(); ?>
 			<# } ) #>
 
 			<?php $this->print_close_repeatable_wrap_template(); ?>
@@ -477,6 +493,21 @@ abstract class Field {
 			<?php $this->print_single_input_template(); ?>
 		<# } #>
 		<?php
+	}
+
+	/**
+	 * Prints a template for one item of a repeatable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function print_repeatable_item_template() {
+		$this->print_open_repeatable_item_wrap_template();
+
+		$this->print_label_template();
+		$this->print_single_input_template();
+
+		$this->print_close_repeatable_item_wrap_template();
 	}
 
 	/**
@@ -498,6 +529,7 @@ abstract class Field {
 				'label'            => $this->label,
 				'label_mode'       => $this->label_mode,
 				'items'            => array(),
+				'item_initial'     => array(),
 				'repeatable'       => true,
 				'repeatable_limit' => $this->get_repeatable_limit(),
 			);
@@ -509,6 +541,9 @@ abstract class Field {
 			}
 
 			$this->label_mode = 'explicit';
+
+			$this->index = '%index%';
+			$data['item_initial'] = $this->single_to_json( $this->default );
 
 			$this->index = 0;
 			foreach ( $current_value as $single_value ) {
@@ -529,6 +564,10 @@ abstract class Field {
 		}
 
 		$data['description'] = $this->description;
+
+		if ( ! empty( $this->backbone_view ) ) {
+			$data['view'] = $this->backbone_view;
+		}
 
 		if ( ! empty( $this->before ) ) {
 			if ( is_callable( $this->before ) ) {
@@ -742,7 +781,11 @@ abstract class Field {
 		$id = $this->manager->make_id( $this->id );
 
 		if ( null !== $this->index ) {
-			$id .= '-' . ( $this->index + 1 );
+			if ( '%index%' === $this->index ) {
+				$id .= '-%indexPlus1%';
+			} else {
+				$id .= '-' . ( $this->index + 1 );
+			}
 		}
 
 		return $id;
@@ -874,7 +917,7 @@ abstract class Field {
 		$button_attrs = array(
 			'id'          => $id . '-repeatable-' . $mode . '-button',
 			'class'       => 'plugin-lib-repeatable-' . $mode . '-button ' . $core_class,
-			'data-target' => $id . '-repeatable-' . $target_mode,
+			'data-target' => '#' . $id . '-repeatable-' . $target_mode,
 		);
 		if ( $hide_button ) {
 			$button_attrs['style'] = 'display:none;';
@@ -973,7 +1016,7 @@ abstract class Field {
 
 		?>
 
-		<button id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
+		<button id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
 			<?php echo $message; ?>
 		</button>
 		<?php
@@ -1142,7 +1185,7 @@ abstract class Field {
 	 * @return array Array of forbidden properties.
 	 */
 	protected function get_forbidden_keys() {
-		return array( 'manager', 'id', 'slug', 'label_mode', 'input_attrs', 'index' );
+		return array( 'manager', 'id', 'slug', 'label_mode', 'input_attrs', 'backbone_view', 'index' );
 	}
 }
 
