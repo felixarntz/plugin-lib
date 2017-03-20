@@ -905,7 +905,7 @@ abstract class Field {
 		$id = $this->get_id_attribute();
 
 		if ( 'remove' === $mode ) {
-			$core_class  = 'button-link-delete';
+			$core_class  = 'button-link button-link-delete';
 			$target_mode = 'item';
 		} else {
 			$mode        = 'add';

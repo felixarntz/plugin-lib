@@ -3,4 +3,4 @@
  * By Felix Arntz (https://leaves-and-love.net)
  * Licensed under GPL-3.0
  */
-.plugin-lib-repeatable-wrap{display:block}.plugin-lib-repeatable-item{display:block;clear:both}
+.plugin-lib-repeatable-wrap{display:block}.plugin-lib-repeatable-item{display:block;clear:both}.wp-core-ui .button-link-delete{color:#a00}.wp-core-ui .button-link-delete:focus,.wp-core-ui .button-link-delete:hover{color:red}

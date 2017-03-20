@@ -11,3 +11,12 @@
 	display: block;
 	clear: both;
 }
+
+.wp-core-ui .button-link-delete {
+	color: #aa0000;
+}
+
+.wp-core-ui .button-link-delete:hover,
+.wp-core-ui .button-link-delete:focus {
+	color: #ff0000;
+}
