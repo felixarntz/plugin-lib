@@ -165,6 +165,15 @@ abstract class Field {
 	protected $after = null;
 
 	/**
+	 * Contains dependencies of this field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $dependencies = array();
+
+	/**
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
@@ -241,6 +250,8 @@ abstract class Field {
 		} elseif ( $this->is_repeatable() ) {
 			$this->label_mode = 'no_assoc';
 		}
+
+		$this->dependencies = $this->parse_dependencies( $this->dependencies );
 	}
 
 	/**
@@ -1174,6 +1185,69 @@ abstract class Field {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Parses the dependencies for the field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $dependencies Array of dependency arrays.
+	 * @return array Parsed dependencies array.
+	 */
+	protected function parse_dependencies( $dependencies ) {
+		if ( $this->is_repeatable() ) {
+			return array();
+		}
+
+		return array_filter( array_map( array( $this, 'parse_dependency' ), $dependencies ) );
+	}
+
+	/**
+	 * Parses a single dependency array.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $dependency Dependency array.
+	 * @return array|bool Parsed dependency array, or false if invalid.
+	 */
+	protected function parse_dependency( $dependency ) {
+		if ( ! is_array( $dependency ) ) {
+			return false;
+		}
+
+		$required_args = array( 'key', 'callback', 'fields' );
+
+		foreach ( $required_args as $required_arg ) {
+			if ( empty( $dependency[ $required_arg ] ) ) {
+				return false;
+			}
+		}
+
+		$dependency_key_whitelist = $this->get_dependency_key_whitelist();
+		if ( ! in_array( $dependency['key'], $dependency_key_whitelist, true ) ) {
+			return false;
+		}
+
+		if ( empty( $dependency['args'] ) ) {
+			$dependency['args'] = array();
+		}
+
+		return $dependency;
+	}
+
+	/**
+	 * Gets the whitelist for keys to be handled by dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Key whitelist.
+	 */
+	protected function get_dependency_key_whitelist() {
+		return array( 'description', 'display' );
 	}
 
 	/**
