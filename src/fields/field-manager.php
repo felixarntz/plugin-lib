@@ -352,12 +352,12 @@ class Field_Manager extends Service {
 			}
 		}
 
-		$this->library_assets()->register_style( 'plugin-lib-field-manager', 'assets/dist/css/field-manager.css', array(
+		$this->library_assets()->register_style( 'plugin-lib-fields', 'assets/dist/css/fields.css', array(
 			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'enqueue' => true,
 		) );
 
-		$this->library_assets()->register_script( 'plugin-lib-field-manager', 'assets/dist/js/field-manager.js', array(
+		$this->library_assets()->register_script( 'plugin-lib-fields', 'assets/dist/js/fields.js', array(
 			'deps'          => $main_dependencies,
 			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'in_footer'     => true,
@@ -366,7 +366,11 @@ class Field_Manager extends Service {
 			'localize_data' => $localize_data,
 		) );
 
-		add_action( 'wp_footer', array( $this, 'print_templates' ), 1, 0 );
+		if ( is_admin() ) {
+			add_action( 'admin_footer', array( $this, 'print_templates' ), 1, 0 );
+		} else {
+			add_action( 'wp_footer', array( $this, 'print_templates' ), 1, 0 );
+		}
 
 		self::$enqueued['_core'] = true;
 	}
