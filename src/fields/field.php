@@ -819,9 +819,8 @@ abstract class Field {
 		$id = $this->get_id_attribute();
 
 		$wrap_attrs = array(
-			'id'           => $id . '-repeatable-wrap',
-			'class'        => 'plugin-lib-repeatable-wrap plugin-lib-repeatable-'. $this->slug . '-wrap',
-			'data-limit'   => $this->get_repeatable_limit(),
+			'id'    => $id . '-repeatable-wrap',
+			'class' => 'plugin-lib-repeatable-wrap plugin-lib-repeatable-'. $this->slug . '-wrap',
 		);
 
 		echo '<span' . $this->attrs( $wrap_attrs ) . '>';
@@ -935,7 +934,7 @@ abstract class Field {
 	 */
 	protected final function print_open_repeatable_wrap_template() {
 		?>
-		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatableLimit }}">
+		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap">
 		<?php
 	}
 
