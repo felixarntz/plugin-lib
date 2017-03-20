@@ -435,11 +435,11 @@ abstract class Field {
 	 */
 	public final function print_label_template() {
 		?>
-		<# if ( data.label && 'skip' != data.label_mode ) { #>
-			<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.label_mode ) ) { #>
-				<span{{ _.attrs( data.label_attrs ) }}>{{ data.label }}</span>
+		<# if ( data.label && 'skip' != data.labelMode ) { #>
+			<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
+				<span{{ _.attrs( data.labelAttrs ) }}>{{ data.label }}</span>
 			<# } else { #>
-				<label{{ _.attrs( data.label_attrs ) }}>{{ data.label }}</label>
+				<label{{ _.attrs( data.labelAttrs ) }}>{{ data.label }}</label>
 			<# } #>
 		<# } #>
 		<?php
@@ -524,14 +524,14 @@ abstract class Field {
 			$current_value = (array) $current_value;
 
 			$data = array(
-				'slug'             => $this->slug,
-				'id'               => $this->get_id_attribute(),
-				'label'            => $this->label,
-				'label_mode'       => $this->label_mode,
-				'items'            => array(),
-				'item_initial'     => array(),
-				'repeatable'       => true,
-				'repeatable_limit' => $this->get_repeatable_limit(),
+				'slug'            => $this->slug,
+				'id'              => $this->get_id_attribute(),
+				'label'           => $this->label,
+				'labelMode'       => $this->label_mode,
+				'items'           => array(),
+				'itemInitial'     => array(),
+				'repeatable'      => true,
+				'repeatableLimit' => $this->get_repeatable_limit(),
 			);
 
 			$srt_added = false;
@@ -543,7 +543,7 @@ abstract class Field {
 			$this->label_mode = 'explicit';
 
 			$this->index = '%index%';
-			$data['item_initial'] = $this->single_to_json( $this->default );
+			$data['itemInitial'] = $this->single_to_json( $this->default );
 
 			$this->index = 0;
 			foreach ( $current_value as $single_value ) {
@@ -566,7 +566,7 @@ abstract class Field {
 		$data['description'] = $this->description;
 
 		if ( ! empty( $this->backbone_view ) ) {
-			$data['view'] = $this->backbone_view;
+			$data['backboneView'] = $this->backbone_view;
 		}
 
 		if ( ! empty( $this->before ) ) {
@@ -691,17 +691,17 @@ abstract class Field {
 	 */
 	protected function single_to_json( $current_value ) {
 		return array(
-			'slug'          => $this->slug,
-			'id'            => $this->get_id_attribute(),
-			'name'          => $this->get_name_attribute(),
-			'section'       => $this->section,
-			'label'         => $this->label,
-			'label_mode'    => $this->label_mode,
-			'default'       => $this->default,
-			'fieldset'      => $this->fieldset,
-			'input_attrs'   => $this->get_input_attrs( array(), false ),
-			'label_attrs'   => $this->get_label_attrs( array(), false ),
-			'current_value' => $current_value,
+			'slug'         => $this->slug,
+			'id'           => $this->get_id_attribute(),
+			'name'         => $this->get_name_attribute(),
+			'section'      => $this->section,
+			'label'        => $this->label,
+			'labelMode'    => $this->label_mode,
+			'default'      => $this->default,
+			'fieldset'     => $this->fieldset,
+			'inputAttrs'   => $this->get_input_attrs( array(), false ),
+			'labelAttrs'   => $this->get_label_attrs( array(), false ),
+			'currentValue' => $current_value,
 		);
 	}
 
@@ -935,7 +935,7 @@ abstract class Field {
 	 */
 	protected final function print_open_repeatable_wrap_template() {
 		?>
-		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatable_limit }}">
+		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap" data-limit="{{ data.repeatableLimit }}">
 		<?php
 	}
 
@@ -983,7 +983,7 @@ abstract class Field {
 	 */
 	protected final function print_repeatable_add_button_template() {
 		?>
-		<# if ( ! data.repeatable_limit || data.repeatable_limit > data.items.length ) { #>
+		<# if ( ! data.repeatableLimit || data.repeatableLimit > data.items.length ) { #>
 			<?php $this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ ' . 'data.label' . ' }}' ) ); ?>
 		<# } #>
 		<?php

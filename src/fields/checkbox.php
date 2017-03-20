@@ -67,7 +67,7 @@ class Checkbox extends Field {
 	 */
 	protected function print_single_input_template() {
 		?>
-		<input type="checkbox" value="1"{{ _.attrs( data.input_attrs ) }}<# if ( data.current_value ) { #> checked<# } #>>
+		<input type="checkbox" value="1"{{ _.attrs( data.inputAttrs ) }}<# if ( data.currentValue ) { #> checked<# } #>>
 		<label for="{{ data.id }}">{{ data.label }}</label>
 		<?php
 		$this->print_repeatable_remove_button_template();

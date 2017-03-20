@@ -251,7 +251,7 @@
 		},
 
 		changeValue: function( e ) {
-			this.model.set( 'current_value', this.getInputValue( this.$( e.target ) ) );
+			this.model.set( 'currentValue', this.getInputValue( this.$( e.target ) ) );
 		},
 
 		changeItemValue: function( e ) {
@@ -390,7 +390,7 @@
 			});
 
 			_.each( fieldsAPI.FieldManager.instances[ instanceId ].models, function( field ) {
-				var viewClassName = field.get( 'view' );
+				var viewClassName = field.get( 'backboneView' );
 				var FieldView     = fieldsAPI.FieldView;
 
 				if ( viewClassName && 'FieldView' !== viewClassName && fieldsAPI.FieldView[ viewClassName ] ) {

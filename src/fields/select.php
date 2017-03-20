@@ -143,14 +143,14 @@ class Select extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$multiple = ' multiple';
-			$selected = '<# if ( _.contains( data.current_value, value ) ) { #> selected<# } #>';
+			$selected = '<# if ( _.contains( data.currentValue, value ) ) { #> selected<# } #>';
 		} else {
 			$multiple = '';
-			$selected = '<# if ( data.current_value === value ) { #> selected<# } #>';
+			$selected = '<# if ( data.currentValue === value ) { #> selected<# } #>';
 		}
 
 		?>
-		<select{{ _.attrs( data.input_attrs ) }}<?php echo $multiple; ?>>
+		<select{{ _.attrs( data.inputAttrs ) }}<?php echo $multiple; ?>>
 			<# if ( ! _.isEmpty( data.optgroups ) ) { #>
 				<# _.each( data.optgroups, function( optgroup ) { #>
 					<# if ( ! _.isEmpty( optgroup.label ) ) { #>

@@ -90,11 +90,11 @@ class Radio extends Select_Base {
 		if ( $this->multi ) {
 			$type = 'checkbox';
 			$name_suffix = '[]';
-			$checked = '<# if ( _.contains( data.current_value, value ) ) { #> checked<# } #>';
+			$checked = '<# if ( _.contains( data.currentValue, value ) ) { #> checked<# } #>';
 		} else {
 			$type = 'radio';
 			$name_suffix = '';
-			$checked = '<# if ( data.current_value === value ) { #> checked<# } #>';
+			$checked = '<# if ( data.currentValue === value ) { #> checked<# } #>';
 		}
 
 		?>
@@ -102,11 +102,11 @@ class Radio extends Select_Base {
 			<legend class="screen-reader-text">{{ data.label }}</legend>
 
 			<# _.each( data.choices, function( label, value, obj ) { #>
-				<input type="<?php echo $type; ?>"{{ _.attrs( _.extend( {}, data.input_attrs, {
-					id: data.input_attrs.id + _.indexOf( _.keys( obj ), value ),
-					name: data.input_attrs.name + name_suffix
+				<input type="<?php echo $type; ?>"{{ _.attrs( _.extend( {}, data.inputAttrs, {
+					id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
+					name: data.inputAttrs.name + name_suffix
 				} ) ) }} value="{{ value }}"<?php echo $checked; ?>>
-				<label for="{{ data.input_attrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
+				<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
 			<# } ) #>
 		</fieldset>
 		<?php
