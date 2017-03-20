@@ -1006,7 +1006,7 @@ abstract class Field {
 	 */
 	protected final function print_repeatable_button_template( $mode, $message ) {
 		if ( 'remove' === $mode ) {
-			$core_class  = 'button-link-delete';
+			$core_class  = 'button-link button-link-delete';
 			$target_mode = 'item';
 		} else {
 			$mode        = 'add';
