@@ -241,7 +241,7 @@
 				this.trigger( 'preRender', $contentWrap );
 				this.undelegateEvents();
 
-				$contentWrap.replace( this.contentTemplate( this.model.toJSON() ) );
+				$contentWrap.replaceWith( this.contentTemplate( this.model.toJSON() ) );
 
 				this.delegateEvents();
 				this.trigger( 'postRender', $contentWrap );
@@ -257,11 +257,11 @@
 		changeItemValue: function( e ) {
 			var $itemInput = this.$( e.target );
 			var $item      = $itemInput.parents( '.plugin-lib-repeatable-item' );
-			var itemIndex  = $item.parent().index( $item );
+			var itemIndex  = $item.parent().children().index( $item );
 
 			var items = this.model.get( 'items' );
 			if ( items[ itemIndex ] ) {
-				items[ itemIndex ].current_value = this.getInputValue( $itemInput );
+				items[ itemIndex ].currentValue = this.getInputValue( $itemInput );
 			}
 
 			this.model.set( 'items', items );
@@ -303,14 +303,39 @@
 			}
 		},
 
+		addItemOnEnter: function( e ) {
+			if ( e.which !== 13 ) {
+				return;
+			}
+
+			var $item = this.$( e.target ).parents( '.plugin-lib-repeatable-item' );
+
+			if ( $item.find( '.plugin-lib-control' ).length > 1 ) {
+				return;
+			}
+
+			e.preventDefault();
+			e.stopPropagation();
+
+			this.addItem({
+				target: this.$( e.target ).parents( '.plugin-lib-repeatable-wrap' ).next( '.plugin-lib-repeatable-add-button' )[0]
+			});
+
+			if ( $item.next().length ) {
+				$item.next().find( '.plugin-lib-control' ).focus();
+			}
+		},
+
 		removeItem: function( e ) {
+			var self = this;
+
 			var limit = this.model.get( 'repeatableLimit' );
 			var items = this.model.get( 'items' );
 
 			var $button   = this.$( e.target );
 			var $item     = this.$( $button.data( 'target' ) );
 			var $wrap     = $item.parent();
-			var itemIndex = $wrap.index( $item );
+			var itemIndex = $wrap.children().index( $item );
 
 			$button.prop( 'disabled', true );
 
@@ -327,13 +352,13 @@
 
 						var $itemToAdjust = $( this );
 
-						this.trigger( 'preRender', $itemToAdjust );
-						this.undelegateEvents();
+						self.trigger( 'preRender', $itemToAdjust );
+						self.undelegateEvents();
 
-						$itemToAdjust.replace( this.repeatableItemTemplate( items[ index ] ) );
+						$itemToAdjust.replaceWith( self.repeatableItemTemplate( items[ index ] ) );
 
-						this.delegateEvents();
-						this.trigger( 'postRender', $itemToAdjust );
+						self.delegateEvents();
+						self.trigger( 'postRender', $itemToAdjust );
 					});
 				}
 			}
@@ -361,6 +386,7 @@
 			if ( model.get( 'repeatable' ) && _.isArray( model.get( 'items' ) ) ) {
 				return {
 					'click .plugin-lib-repeatable-add-button': 'addItem',
+					'keydown .plugin-lib-repeatable-item .plugin-lib-control': 'addItemOnEnter',
 					'click .plugin-lib-repeatable-remove-button': 'removeItem',
 					'change :input': 'changeItemValue'
 				};
