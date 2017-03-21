@@ -1,0 +1,679 @@
+<?php
+/**
+ * Dependency_Resolver class
+ *
+ * @package LeavesAndLovePluginLib
+ * @since 1.0.0
+ */
+
+namespace Leaves_And_Love\Plugin_Lib\Fields;
+
+if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) ) :
+
+/**
+ * Dependency resolver class for fields
+ *
+ * @since 1.0.0
+ */
+class Dependency_Resolver {
+	/**
+	 * Dependencies definition.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $dependencies = array();
+
+	/**
+	 * Whether the dependencies have been resolved.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $resolved = false;
+
+	/**
+	 * Callbacks used for resolving dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $callbacks = array();
+
+	/**
+	 * Field instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field
+	 */
+	protected $field;
+
+	/**
+	 * Field manager instance.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 */
+	protected $field_manager;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array                                           $dependencies  Dependencies definition.
+	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field         $field         The field instance.
+	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $field_manager The field manager instance.
+	 */
+	public function __construct( $dependencies, $field, $field_manager ) {
+		$this->field         = $field;
+		$this->field_manager = $field_manager;
+
+		$this->dependencies = $this->parse_dependencies( $dependencies );
+	}
+
+	/**
+	 * Resolves all dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of field properties and their resolved values.
+	 */
+	public function resolve_dependencies() {
+		$results = array();
+
+		$callbacks = $this->get_callbacks();
+		$values    = $this->field_manager->get_values();
+
+		foreach ( $this->dependencies as $dependency ) {
+			if ( ! isset( $callbacks[ $dependency['callback'] ] ) ) {
+				continue;
+			}
+
+			$callback = $callbacks[ $dependency['callback'] ];
+
+			$field_values = array();
+			foreach ( $dependency['fields'] as $identifier ) {
+				if ( ! isset( $values[ $identifier ] ) ) {
+					$values[ $identifier ] = null;
+				}
+
+				$field_values[ $identifier ] = $values[ $identifier ];
+			}
+
+			$result = call_user_func( $callback, $dependency['key'], $field_values, $dependency['args'] );
+
+			if ( null === $result ) {
+				continue;
+			}
+
+			$results[ $dependency['key'] ] = $result;
+		}
+
+		$this->resolved = true;
+
+		return $results;
+	}
+
+	/**
+	 * Returns whether the dependencies have been resolved at least once.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return bool True if dependencies have been resolved, false otherwise.
+	 */
+	public function resolved() {
+		return $this->resolved;
+	}
+
+	/**
+	 * Returns the field keys that depend on other fields.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array of keys.
+	 */
+	public function get_dependency_keys() {
+		$keys = array();
+
+		foreach ( $this->dependencies as $dependency ) {
+			$keys[] = $dependency['key'];
+		}
+
+		return array_unique( $keys );
+	}
+
+	/**
+	 * Returns the identifiers of the field that this field depends on.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string|array $keys Optional. One or more keys to only return field identifiers
+	 *                           that affect those. Default empty.
+	 * @return array Array of field identifiers.
+	 */
+	public function get_dependency_field_identifiers( $keys = array() ) {
+		$field_identifiers = array();
+
+		$keys = (array) $keys;
+
+		foreach ( $this->dependencies as $dependency ) {
+			if ( ! in_array( $dependency['key'], $keys, true ) ) {
+				continue;
+			}
+
+			foreach ( $dependency['fields'] as $identifier ) {
+				$field_identifiers[] = $identifier;
+			}
+		}
+
+		return array_unique( $field_identifiers );
+	}
+
+	/**
+	 * Parses the dependencies for the field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $dependencies Array of dependency arrays.
+	 * @return array Parsed dependencies array.
+	 */
+	public function parse_dependencies( $dependencies ) {
+		return array_filter( array_map( array( $this, 'parse_dependency' ), $dependencies ) );
+	}
+
+	/**
+	 * Parses a single dependency array.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $dependency Dependency array.
+	 * @return array|bool Parsed dependency array, or false if invalid.
+	 */
+	protected function parse_dependency( $dependency ) {
+		if ( ! is_array( $dependency ) ) {
+			return false;
+		}
+
+		$required_args = array( 'key', 'callback', 'fields' );
+
+		foreach ( $required_args as $required_arg ) {
+			if ( empty( $dependency[ $required_arg ] ) ) {
+				return false;
+			}
+		}
+
+		$dependency_key_whitelist = $this->get_dependency_key_whitelist();
+		if ( ! in_array( $dependency['key'], $dependency_key_whitelist, true ) ) {
+			return false;
+		}
+
+		if ( empty( $dependency['args'] ) ) {
+			$dependency['args'] = array();
+		}
+
+		return $dependency;
+	}
+
+	/**
+	 * Gets the whitelist for keys to be handled by dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Key whitelist.
+	 */
+	protected function get_dependency_key_whitelist() {
+		return array_filter( array( 'description', 'display' ), array( $this, 'field_property_exists' ) );
+	}
+
+	/**
+	 * Checks whether a property exists on the field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key Key to check for.
+	 * @return bool True if the key exists on the field, otherwise false.
+	 */
+	protected function field_property_exists( $key ) {
+		return isset( $this->field->$key );
+	}
+
+	/**
+	 * Returns the available callbacks for resolving field dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return array Associative array of callback identifiers and their functions.
+	 */
+	protected function get_callbacks() {
+		$callbacks = array(
+			'get_data_by_condition_true'         => array( $this, 'get_data_by_condition_true' ),
+			'get_data_by_condition_false'        => array( $this, 'get_data_by_condition_false' ),
+			'get_data_by_condition_greater_than' => array( $this, 'get_data_by_condition_greater_than' ),
+			'get_data_by_condition_lower_than'   => array( $this, 'get_data_by_condition_lower_than' ),
+			'get_data_by_map'                    => array( $this, 'get_data_by_map' ),
+			'get_data_by_named_map'              => array( $this, 'get_data_by_named_map' ),
+		);
+
+		/**
+		 * Filters the available callbacks for resolving field dependencies.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $callbacks Associative array of callback identifiers and their functions.
+		 */
+		return apply_filters( 'plugin_lib_dependency_resolver_callbacks', $callbacks );
+	}
+
+	/**
+	 * Callback depending on whether the depending fields' values are true-ish.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type mixed  $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed  $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_true( $key, $field_values, $args ) {
+		return $this->get_data_by_condition_bool_helper( $key, $field_values, $args, false );
+	}
+
+	/**
+	 * Callback depending on whether the depending fields' values are false-ish.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type mixed  $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed  $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_false( $key, $field_values, $args ) {
+		return $this->get_data_by_condition_bool_helper( $key, $field_values, $args, true );
+	}
+
+	/**
+	 * Callback helper for `get_data_by_condition_true` and `get_data_by_condition_false`.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type mixed  $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed  $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @param bool   $reverse      Optional. Whether to reverse the checks. Default false.
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_bool_helper( $key, $field_values, $args, $reverse = false ) {
+		$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
+
+		if ( $reverse ) {
+			$result_false  = isset( $args['result_true'] ) ? $args['result_true'] : true;
+			$result_true = isset( $args['result_false'] ) ? $args['result_false'] : false;
+		} else {
+			$result_false = isset( $args['result_false'] ) ? $args['result_false'] : false;
+			$result_true  = isset( $args['result_true'] ) ? $args['result_true'] : true;
+		}
+
+		if ( 'OR' === $operator ) {
+			foreach ( $field_values as $identifier => $value ) {
+				if ( $value ) {
+					return $result_true;
+				}
+			}
+
+			return $result_false;
+		}
+
+		foreach ( $field_values as $identifier => $value ) {
+			if ( ! $value ) {
+				return $result_false;
+			}
+		}
+
+		return $result_true;
+	}
+
+	/**
+	 * Callback depending on whether the depending fields' values are greater than a given breakpoint.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type int|float $breakpoint   Breakpoint to check. Default float 0.
+	 *     @type bool      $inclusive    Whether the check should be inclusive. Default false.
+	 *     @type mixed     $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed     $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string    $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                   Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_greater_than( $key, $field_values, $args ) {
+		return $this->get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, false );
+	}
+
+	/**
+	 * Callback depending on whether the depending fields' values are lower than a given breakpoint.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type int|float $breakpoint   Breakpoint to check. Default float 0.
+	 *     @type bool      $inclusive    Whether the check should be inclusive. Default false.
+	 *     @type mixed     $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed     $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string    $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                   Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_lower_than( $key, $field_values, $args ) {
+		return $this->get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, true );
+	}
+
+	/**
+	 * Callback helper for `get_data_by_condition_greater_than` and `get_data_by_condition_lower_than`.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type int|float $breakpoint   Breakpoint to check. Default float 0.
+	 *     @type bool      $inclusive    Whether the check should be inclusive. Default false.
+	 *     @type mixed     $result_true  Result to return in case the conditions are met. Default true.
+	 *     @type mixed     $result_false Result to return in case the conditions are not met. Default false.
+	 *     @type string    $operator     Operator for checking the conditions when passing multiple fields.
+	 *                                   Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @param bool   $reverse      Optional. Whether to reverse the checks. Default false.
+	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
+	 *               $result_false argument.
+	 */
+	protected function get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, $reverse = false ) {
+		$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
+
+		if ( $reverse ) {
+			$result_false  = isset( $args['result_true'] ) ? $args['result_true'] : true;
+			$result_true = isset( $args['result_false'] ) ? $args['result_false'] : false;
+		} else {
+			$result_false = isset( $args['result_false'] ) ? $args['result_false'] : false;
+			$result_true  = isset( $args['result_true'] ) ? $args['result_true'] : true;
+		}
+
+		$breakpoint = 0.0;
+		$sanitize = 'floatval';
+		if ( isset( $args['breakpoint'] ) ) {
+			if ( is_int( $args['breakpoint'] ) ) {
+				$sanitize = 'intval';
+			}
+
+			$breakpoint = call_user_func( $sanitize, $args['breakpoint'] );
+		}
+
+		$inclusive = isset( $args['inclusive'] ) ? (bool) $args['inclusive'] : false;
+		if ( $reverse ) {
+			$inclusive = ! $inclusive;
+		}
+
+		if ( 'OR' === $operator ) {
+			foreach ( $field_values as $identifier => $value ) {
+				$value = call_user_func( $sanitize, $value );
+
+				if ( $value > $breakpoint || $value === $breakpoint && $inclusive ) {
+					return $result_true;
+				}
+			}
+
+			return $result_false;
+		}
+
+		foreach ( $field_values as $identifier => $value ) {
+			$value = call_user_func( $sanitize, $value );
+
+			if ( $value < $breakpoint || $value === $breakpoint && ! $inclusive ) {
+				return $result_false;
+			}
+		}
+
+		return $result_true;
+	}
+
+	/**
+	 * Callback depending on a map of depending field values and what they should trigger.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type array  $map      Map array of `$value => $result` pairs.
+	 *     @type mixed  $default  Default result to use if nothing is matched.
+	 *     @type bool   $merge    When multiple fields are provided, this flag determines whether all
+	 *                            their value results should be combined or whether only one value should
+	 *                            be treated. Only works for array and bool results.
+	 *     @type string $operator Operator for merging the results when passing multiple fields. Only has
+	 *                            an effect if $merge is true. Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Result, or null if nothing matched and no default has been provided.
+	 */
+	protected function get_data_by_map( $key, $field_values, $args ) {
+		$default = isset( $args['default'] ) ? $args['default'] : null;
+
+		if ( empty( $args['map'] ) ) {
+			return $default;
+		}
+
+		$map      = $args['map'];
+		$merge    = isset( $args['merge'] ) ? (bool) $args['merge'] : false;
+		$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
+
+		$result = null;
+
+		$used_values = array();
+		foreach ( $field_values as $identifier => $value ) {
+			if ( ! isset( $map[ $value ] ) ) {
+				continue;
+			}
+
+			if ( $merge ) {
+				if ( is_array( $result ) && is_array( $map[ $value ] ) ) {
+					if ( ! in_array( $value, $used_values, true ) ) {
+						$used_values[] = $value;
+
+						if ( 'OR' === $operator ) {
+							$result = array_merge( $result, $map[ $value ] );
+						} else {
+							$result = array_merge( array_intersect_key( $result, $map[ $value ] ), array_intersect_key( $map[ $value ], $result ) );
+						}
+					}
+
+					continue;
+				}
+
+				if ( is_bool( $result ) && is_bool( $map[ $value ] ) ) {
+					if ( ! in_array( $value, $used_values, true ) ) {
+						$used_values[] = $value;
+
+						if ( 'OR' === $operator ) {
+							$result = $result || $map[ $value ];
+						} else {
+							$result = $result && $map[ $value ];
+						}
+					}
+
+					continue;
+				}
+			}
+
+			$used_values[] = $value;
+			$result = $map[ $value ];
+		}
+
+		if ( null === $result ) {
+			return $default;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Callback depending on a named map of depending field values and what they should trigger.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $key          Key of the field that is modified.
+	 * @param array  $field_values Array of depending field identifiers and their current values.
+	 * @param array  $args         {
+	 *
+	 *     Additional arguments.
+	 *
+	 *     @type array  $named_map Named map array of `$identifier => $map` pairs, where each $map is an array of
+	 *                             `$value => $result` pairs.
+	 *     @type mixed  $default   Default result to use if nothing is matched.
+	 *     @type bool   $merge     When multiple fields are provided, this flag determines whether all
+	 *                             their value results should be combined or whether only one value should
+	 *                             be treated. Only works for array and bool results.
+	 *     @type string $operator  Operator for merging the results when passing multiple fields. Only has
+	 *                             an effect if $merge is true. Either 'AND' or 'OR'. Default 'AND'.
+	 * }
+	 * @return mixed Result, or null if nothing matched and no default has been provided.
+	 */
+	protected function get_data_by_named_map( $key, $field_values, $args ) {
+		$default = isset( $args['default'] ) ? $args['default'] : null;
+
+		if ( empty( $args['named_map'] ) ) {
+			return $default;
+		}
+
+		$named_map = $args['named_map'];
+		$merge     = isset( $args['merge'] ) ? (bool) $args['merge'] : false;
+		$operator  = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
+
+		$result = null;
+
+		$used_values = array();
+		foreach ( $field_values as $identifier => $value ) {
+			if ( ! isset( $named_map[ $identifier ] ) ) {
+				continue;
+			}
+
+			$map = $named_map[ $identifier ];
+
+			$used_values[ $identifier ] = array();
+			if ( ! isset( $map[ $value ] ) ) {
+				continue;
+			}
+
+			if ( $merge ) {
+				if ( is_array( $result ) && is_array( $map[ $value ] ) ) {
+					if ( ! in_array( $value, $used_values[ $identifier ], true ) ) {
+						$used_values[ $identifier ][] = $value;
+
+						if ( 'OR' === $operator ) {
+							$result = array_merge( $result, $map[ $value ] );
+						} else {
+							$result = array_merge( array_intersect_key( $result, $map[ $value ] ), array_intersect_key( $map[ $value ], $result ) );
+						}
+					}
+
+					continue;
+				}
+
+				if ( is_bool( $result ) && is_bool( $map[ $value ] ) ) {
+					if ( ! in_array( $value, $used_values[ $identifier ], true ) ) {
+						$used_values[ $identifier ][] = $value;
+
+						if ( 'OR' === $operator ) {
+							$result = $result || $map[ $value ];
+						} else {
+							$result = $result && $map[ $value ];
+						}
+					}
+
+					continue;
+				}
+			}
+
+			$used_values[ $identifier ][] = $value;
+			$result = $map[ $value ];
+		}
+
+		if ( null === $result ) {
+			return $default;
+		}
+
+		return $result;
+	}
+}
+
+endif;

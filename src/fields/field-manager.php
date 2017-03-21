@@ -13,6 +13,7 @@ use Leaves_And_Love\Plugin_Lib\Assets;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
 use WP_Error;
+use Exception;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 
@@ -315,8 +316,6 @@ class Field_Manager extends Service {
 			return;
 		}
 
-		$field_instances = $this->get_fields();
-
 		$main_dependencies = array( 'jquery', 'underscore', 'backbone', 'wp-util' );
 		$localize_data     = array(
 			'field_managers' => array(),
@@ -329,7 +328,12 @@ class Field_Manager extends Service {
 				'fields' => array(),
 			);
 
-			foreach ( $instance->get_fields() as $id => $field_instance ) {
+			$field_instances = $instance->get_fields();
+
+			/** This is run to verify there are no circular dependencies. */
+			$this->resolve_dependency_order( $field_instances );
+
+			foreach ( $field_instances as $id => $field_instance ) {
 				$type = array_search( get_class( $field_instance ), self::$field_types, true );
 
 				if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
@@ -492,6 +496,9 @@ class Field_Manager extends Service {
 	 */
 	public function update_values( $values, $sections = null ) {
 		$field_instances = $this->get_fields( $sections );
+		$field_instances = $this->resolve_dependency_order( $field_instances );
+
+		$validated_values = $this->get_values();
 
 		$errors = new WP_Error();
 
@@ -505,6 +512,8 @@ class Field_Manager extends Service {
 					continue;
 				}
 
+				$this->current_values[ $id ] = $validated_value;
+
 				$args = $this->update_value_callback_args;
 				$args[ $id_key ] = $id;
 				$args[ $value_key ] = $validated_value;
@@ -512,13 +521,13 @@ class Field_Manager extends Service {
 				call_user_func_array( $this->update_value_callback, $args );
 			}
 		} else {
-			$validated_values = $this->get_values();
-
 			foreach ( $field_instances as $id => $field_instance ) {
 				$validated_value = $this->validate_value( $field_instance, $values, $errors );
 				if ( is_wp_error( $validated_value ) ) {
 					continue;
 				}
+
+				$this->current_values[ $id ] = $validated_value;
 
 				$validated_values[ $id ] = $validated_value;
 			}
@@ -681,6 +690,74 @@ class Field_Manager extends Service {
 		}
 
 		return $validated_value;
+	}
+
+	/**
+	 * Sorts field instances by their dependencies so that those can be resolved in the correct order.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $field_instances Array of field instances.
+	 * @return array Array of field instances sorted by their dependencies.
+	 */
+	protected function resolve_dependency_order( $field_instances ) {
+		$resolved = array();
+
+		foreach ( $field_instances as $id => $field_instance ) {
+			$resolved = $this->resolve_dependency_order_for_instance( $field_instance, $field_instances, $resolved, array() );
+		}
+
+		return $resolved;
+	}
+
+	/**
+	 * Recursive helper method for sorting field instances by their dependencies.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field $field_instance Field instance to recursively add its dependencies and itself.
+	 * @param array                                   $all_instances  All field instances in the collection to sort.
+	 * @param array                                   $resolved       Results array to append to.
+	 * @param array                                   $queued_ids     Array of field identifiers that are currently queued for appending.
+	 *                                                                This allows to detect circular dependencies.
+	 * @return array Modified results array.
+	 */
+	protected function resolve_dependency_order_for_instance( $field_instance, $all_instances, $resolved, $queued_ids ) {
+		if ( isset( $resolved[ $field_instance->id ] ) ) {
+			return $resolved;
+		}
+
+		$dependency_resolver = $field_instance->dependency_resolver;
+		if ( ! $dependency_resolver ) {
+			$resolved[ $field_instance->id ] = $field_instance;
+			return $resolved;
+		}
+
+		$dependency_ids = $dependency_resolver->get_dependency_field_identifiers();
+		if ( empty( $dependency_ids ) ) {
+			$resolved[ $field_instance->id ] = $field_instance;
+			return $resolved;
+		}
+
+		$queued_ids[] = $field_instance->id;
+
+		foreach ( $dependency_ids as $dependency_id ) {
+			if ( ! isset( $all_instances[ $dependency_id ] ) ) {
+				continue;
+			}
+
+			if ( in_array( $dependency_id, $queued_ids, true ) ) {
+				throw new Exception( sprintf( 'Circular dependency detected in plugin-lib between fields &#8220;%1$s&#8221; and &#8220;%2$s&#8221;!', $field_instance->id, $dependency_id ) );
+			}
+
+			$resolved = $this->resolve_dependency_order_for_instance( $all_instances[ $dependency_id ], $all_instances, $resolved, $queued_ids );
+		}
+
+		$resolved[ $field_instance->id ] = $field_instance;
+
+		return $resolved;
 	}
 
 	/**

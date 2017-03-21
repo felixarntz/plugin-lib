@@ -28,6 +28,15 @@ abstract class Field {
 	protected $manager = null;
 
 	/**
+	 * Dependency resolver for this field, if applicable.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver|null
+	 */
+	protected $dependency_resolver = null;
+
+	/**
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
@@ -165,15 +174,6 @@ abstract class Field {
 	protected $after = null;
 
 	/**
-	 * Contains dependencies of this field.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @var array
-	 */
-	protected $dependencies = array();
-
-	/**
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
@@ -225,6 +225,12 @@ abstract class Field {
 
 		$forbidden_keys = $this->get_forbidden_keys();
 
+		if ( isset( $args['dependencies'] ) ) {
+			$this->dependency_resolver = new Dependency_Resolver( $args['dependencies'], $this, $this->manager );
+
+			unset( $args['dependencies'] );
+		}
+
 		foreach ( $args as $key => $value ) {
 			if ( in_array( $key, $forbidden_keys, true ) ) {
 				continue;
@@ -250,8 +256,6 @@ abstract class Field {
 		} elseif ( $this->is_repeatable() ) {
 			$this->label_mode = 'no_assoc';
 		}
-
-		$this->dependencies = $this->parse_dependencies( $this->dependencies );
 	}
 
 	/**
@@ -293,6 +297,10 @@ abstract class Field {
 			return null;
 		}
 
+		if ( ! in_array( $property, $this->get_forbidden_keys(), true ) ) {
+			$this->maybe_resolve_dependencies();
+		}
+
 		return $this->$property;
 	}
 
@@ -306,6 +314,8 @@ abstract class Field {
 	 *               is an associative array of data to pass to the main script.
 	 */
 	public function enqueue() {
+		$this->maybe_resolve_dependencies();
+
 		return array( array(), array() );
 	}
 
@@ -316,6 +326,8 @@ abstract class Field {
 	 * @access public
 	 */
 	public final function render_label() {
+		$this->maybe_resolve_dependencies();
+
 		if ( empty( $this->label ) || 'skip' === $this->label_mode ) {
 			return;
 		}
@@ -344,6 +356,8 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 */
 	public final function render_content( $current_value ) {
+		$this->maybe_resolve_dependencies();
+
 		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-content-wrap' ) . '" class="content-wrap">';
 
 		if ( ! empty( $this->before ) ) {
@@ -382,6 +396,8 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 */
 	public final function render_input( $current_value ) {
+		$this->maybe_resolve_dependencies();
+
 		if ( $this->is_repeatable() ) {
 			$current_value = (array) $current_value;
 
@@ -430,6 +446,8 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the item.
 	 */
 	public final function render_repeatable_item( $current_value ) {
+		$this->maybe_resolve_dependencies();
+
 		$this->open_repeatable_item_wrap();
 
 		$this->render_label();
@@ -531,6 +549,8 @@ abstract class Field {
 	 * @return array Field data to be JSON-encoded.
 	 */
 	public final function to_json( $current_value ) {
+		$this->maybe_resolve_dependencies();
+
 		if ( $this->is_repeatable() ) {
 			$current_value = (array) $current_value;
 
@@ -615,6 +635,8 @@ abstract class Field {
 	 *                        object on failure.
 	 */
 	public final function validate( $value = null ) {
+		$this->maybe_resolve_dependencies();
+
 		if ( $this->is_repeatable() ) {
 			if ( empty( $value ) ) {
 				return array();
@@ -1076,6 +1098,8 @@ abstract class Field {
 	 *                      `$as_string` is true.
 	 */
 	public function get_wrap_attrs( $as_string = true ) {
+		$this->maybe_resolve_dependencies();
+
 		$wrap_attrs = array(
 			'id' => $this->get_id_attribute() . '-wrap',
 		);
@@ -1188,66 +1212,28 @@ abstract class Field {
 	}
 
 	/**
-	 * Parses the dependencies for the field.
+	 * Resolves all dependencies of this field, if applicable.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 *
-	 * @param array $dependencies Array of dependency arrays.
-	 * @return array Parsed dependencies array.
 	 */
-	protected function parse_dependencies( $dependencies ) {
-		if ( $this->is_repeatable() ) {
-			return array();
+	protected function maybe_resolve_dependencies() {
+		if ( ! $this->dependency_resolver ) {
+			return;
 		}
 
-		return array_filter( array_map( array( $this, 'parse_dependency' ), $dependencies ) );
-	}
-
-	/**
-	 * Parses a single dependency array.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @param array $dependency Dependency array.
-	 * @return array|bool Parsed dependency array, or false if invalid.
-	 */
-	protected function parse_dependency( $dependency ) {
-		if ( ! is_array( $dependency ) ) {
-			return false;
+		if ( $this->dependency_resolver->resolved() ) {
+			return;
 		}
 
-		$required_args = array( 'key', 'callback', 'fields' );
-
-		foreach ( $required_args as $required_arg ) {
-			if ( empty( $dependency[ $required_arg ] ) ) {
-				return false;
+		$resolved_keys = $this->dependency_resolver->resolve_dependencies();
+		foreach ( $resolved_keys as $property => $value ) {
+			if ( ! isset( $this->$property ) ) {
+				continue;
 			}
+
+			$this->$property = $value;
 		}
-
-		$dependency_key_whitelist = $this->get_dependency_key_whitelist();
-		if ( ! in_array( $dependency['key'], $dependency_key_whitelist, true ) ) {
-			return false;
-		}
-
-		if ( empty( $dependency['args'] ) ) {
-			$dependency['args'] = array();
-		}
-
-		return $dependency;
-	}
-
-	/**
-	 * Gets the whitelist for keys to be handled by dependencies.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 *
-	 * @return array Key whitelist.
-	 */
-	protected function get_dependency_key_whitelist() {
-		return array( 'description', 'display' );
 	}
 
 	/**
@@ -1259,7 +1245,7 @@ abstract class Field {
 	 * @return array Array of forbidden properties.
 	 */
 	protected function get_forbidden_keys() {
-		return array( 'manager', 'id', 'slug', 'label_mode', 'input_attrs', 'backbone_view', 'index' );
+		return array( 'manager', 'dependency_resolver', 'id', 'slug', 'label_mode', 'input_attrs', 'backbone_view', 'index' );
 	}
 }
 
