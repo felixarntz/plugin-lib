@@ -135,6 +135,18 @@ class Dependency_Resolver {
 	}
 
 	/**
+	 * Returns the field dependency definition.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Dependency definition.
+	 */
+	public function get_dependencies() {
+		return $this->dependencies();
+	}
+
+	/**
 	 * Returns the field keys that depend on other fields.
 	 *
 	 * @since 1.0.0
@@ -236,7 +248,13 @@ class Dependency_Resolver {
 	 * @return array Key whitelist.
 	 */
 	protected function get_dependency_key_whitelist() {
-		return array_filter( array( 'label', 'description', 'display', 'default', 'choices', 'optgroups' ), array( $this, 'field_property_exists' ) );
+		$whitelist = array( 'label', 'description', 'display' );
+
+		if ( ! $this->field->is_repeatable() ) {
+			$whitelist = array_merge( $whitelist, array( 'default', 'choices', 'optgroups' ) );
+		}
+
+		return array_filter( $whitelist, array( $this, 'field_property_exists' ) );
 	}
 
 	/**

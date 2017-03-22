@@ -225,9 +225,9 @@ abstract class Field {
 
 		$forbidden_keys = $this->get_forbidden_keys();
 
+		$dependencies = null;
 		if ( isset( $args['dependencies'] ) ) {
-			$this->dependency_resolver = new Dependency_Resolver( $args['dependencies'], $this, $this->manager );
-
+			$dependencies = $args['dependencies'];
 			unset( $args['dependencies'] );
 		}
 
@@ -255,6 +255,10 @@ abstract class Field {
 			$this->repeatable = false;
 		} elseif ( $this->is_repeatable() ) {
 			$this->label_mode = 'no_assoc';
+		}
+
+		if ( null !== $dependencies ) {
+			$this->dependency_resolver = new Dependency_Resolver( $dependencies, $this, $this->manager );
 		}
 	}
 
@@ -595,6 +599,11 @@ abstract class Field {
 		}
 
 		$data['description'] = $this->description;
+		$data['display']     = $this->display;
+
+		if ( null !== $this->dependency_resolver ) {
+			$data['dependencies'] = $this->dependency_resolver->get_dependencies();
+		}
 
 		if ( ! empty( $this->backbone_view ) ) {
 			$data['backboneView'] = $this->backbone_view;
@@ -1177,6 +1186,7 @@ abstract class Field {
 
 		if ( ! $this->display && isset( $all_input_attrs['required'] ) && $all_input_attrs['required'] ) {
 			$all_input_attrs['required'] = false;
+			$all_input_attrs['data-required'] = 'true';
 		}
 
 		if ( $as_string ) {
