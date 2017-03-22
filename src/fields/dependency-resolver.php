@@ -562,38 +562,13 @@ class Dependency_Resolver {
 				continue;
 			}
 
-			if ( $merge ) {
-				if ( is_array( $result ) && is_array( $map[ $value ] ) ) {
-					if ( ! in_array( $value, $used_values, true ) ) {
-						$used_values[] = $value;
-
-						if ( 'OR' === $operator ) {
-							$result = array_merge( $result, $map[ $value ] );
-						} else {
-							$result = array_merge( array_intersect_key( $result, $map[ $value ] ), array_intersect_key( $map[ $value ], $result ) );
-						}
-					}
-
-					continue;
-				}
-
-				if ( is_bool( $result ) && is_bool( $map[ $value ] ) ) {
-					if ( ! in_array( $value, $used_values, true ) ) {
-						$used_values[] = $value;
-
-						if ( 'OR' === $operator ) {
-							$result = $result || $map[ $value ];
-						} else {
-							$result = $result && $map[ $value ];
-						}
-					}
-
-					continue;
-				}
+			if ( $merge && ! in_array( $value, $used_values, true ) ) {
+				$used_values[] = $value;
+				$result = $this->merge_into_result( $result, $map[ $value ], $operator );
+			} else {
+				$used_values[] = $value;
+				$result = $map[ $value ];
 			}
-
-			$used_values[] = $value;
-			$result = $map[ $value ];
 		}
 
 		if ( null === $result ) {
@@ -652,38 +627,13 @@ class Dependency_Resolver {
 				continue;
 			}
 
-			if ( $merge ) {
-				if ( is_array( $result ) && is_array( $map[ $value ] ) ) {
-					if ( ! in_array( $value, $used_values[ $identifier ], true ) ) {
-						$used_values[ $identifier ][] = $value;
-
-						if ( 'OR' === $operator ) {
-							$result = array_merge( $result, $map[ $value ] );
-						} else {
-							$result = array_merge( array_intersect_key( $result, $map[ $value ] ), array_intersect_key( $map[ $value ], $result ) );
-						}
-					}
-
-					continue;
-				}
-
-				if ( is_bool( $result ) && is_bool( $map[ $value ] ) ) {
-					if ( ! in_array( $value, $used_values[ $identifier ], true ) ) {
-						$used_values[ $identifier ][] = $value;
-
-						if ( 'OR' === $operator ) {
-							$result = $result || $map[ $value ];
-						} else {
-							$result = $result && $map[ $value ];
-						}
-					}
-
-					continue;
-				}
+			if ( $merge && ! in_array( $value, $used_values[ $identifier ], true ) ) {
+				$used_values[ $identifier ][] = $value;
+				$result = $this->merge_into_result( $result, $map[ $value ], $operator );
+			} else {
+				$used_values[ $identifier ][] = $value;
+				$result = $map[ $value ];
 			}
-
-			$used_values[ $identifier ][] = $value;
-			$result = $map[ $value ];
 		}
 
 		if ( null === $result ) {
@@ -691,6 +641,55 @@ class Dependency_Resolver {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Merges a value into an existing result.
+	 *
+	 * Only merges if both values have the same data types.
+	 *
+	 * If the values cannot be merged, $value will simply override $result.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed  $result   Result to merge into.
+	 * @param mixed  $value    Value to merge into $result.
+	 * @param string $operator Either 'OR' or 'AND'.
+	 * @return mixed Merged result.
+	 */
+	protected function merge_into_result( $result, $value, $operator ) {
+		if ( is_array( $result ) && isset( $result[0] ) && is_array( $value ) && isset( $value[0] ) ) {
+			if ( 'OR' === $operator ) {
+				$result = array_unique( array_merge( $result, $value ) );
+			} else {
+				$result = array_unique( array_merge( array_intersect( $result, $value ), array_intersect( $value, $result ) ) );
+			}
+
+			return $result;
+		}
+
+		if ( is_array( $result ) && is_array( $value ) ) {
+			if ( 'OR' === $operator ) {
+				$result = array_merge( $result, $value );
+			} else {
+				$result = array_merge( array_intersect_key( $result, $value ), array_intersect_key( $value, $result ) );
+			}
+
+			return $result;
+		}
+
+		if ( is_bool( $result ) && is_bool( $value ) ) {
+			if ( 'OR' === $operator ) {
+				$result = $result || $value;
+			} else {
+				$result = $result && $value;
+			}
+
+			return $result;
+		}
+
+		return $value;
 	}
 }
 
