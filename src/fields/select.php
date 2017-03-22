@@ -192,7 +192,7 @@ class Select extends Select_Base {
 			return $result;
 		}
 
-		if ( in_array( 'optgroups', $this->dependency_resolver->get_dependency_keys(), true ) ) {
+		if ( in_array( 'optgroups', $this->dependency_resolver->get_dependency_props(), true ) ) {
 			$this->optgroups_to_choices();
 		}
 

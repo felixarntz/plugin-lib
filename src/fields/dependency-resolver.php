@@ -108,13 +108,13 @@ class Dependency_Resolver {
 				$field_values[ $identifier ] = $values[ $identifier ];
 			}
 
-			$result = call_user_func( $callback, $dependency['key'], $field_values, $dependency['args'] );
+			$result = call_user_func( $callback, $dependency['prop'], $field_values, $dependency['args'] );
 
 			if ( null === $result ) {
 				continue;
 			}
 
-			$results[ $dependency['key'] ] = $result;
+			$results[ $dependency['prop'] ] = $result;
 		}
 
 		$this->resolved = true;
@@ -147,21 +147,21 @@ class Dependency_Resolver {
 	}
 
 	/**
-	 * Returns the field keys that depend on other fields.
+	 * Returns the field properties that depend on other fields.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return array Array of keys.
+	 * @return array Array of properties.
 	 */
-	public function get_dependency_keys() {
-		$keys = array();
+	public function get_dependency_props() {
+		$props = array();
 
 		foreach ( $this->dependencies as $dependency ) {
-			$keys[] = $dependency['key'];
+			$props[] = $dependency['prop'];
 		}
 
-		return array_unique( $keys );
+		return array_unique( $props );
 	}
 
 	/**
@@ -170,17 +170,17 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string|array $keys Optional. One or more keys to only return field identifiers
+	 * @param string|array $props Optional. One or more properties to only return field identifiers
 	 *                           that affect those. Default empty.
 	 * @return array Array of field identifiers.
 	 */
-	public function get_dependency_field_identifiers( $keys = array() ) {
+	public function get_dependency_field_identifiers( $props = array() ) {
 		$field_identifiers = array();
 
-		$keys = (array) $keys;
+		$props = (array) $props;
 
 		foreach ( $this->dependencies as $dependency ) {
-			if ( ! in_array( $dependency['key'], $keys, true ) ) {
+			if ( ! in_array( $dependency['prop'], $props, true ) ) {
 				continue;
 			}
 
@@ -219,7 +219,7 @@ class Dependency_Resolver {
 			return false;
 		}
 
-		$required_args = array( 'key', 'callback', 'fields' );
+		$required_args = array( 'prop', 'callback', 'fields' );
 
 		foreach ( $required_args as $required_arg ) {
 			if ( empty( $dependency[ $required_arg ] ) ) {
@@ -227,8 +227,8 @@ class Dependency_Resolver {
 			}
 		}
 
-		$dependency_key_whitelist = $this->get_dependency_key_whitelist();
-		if ( ! in_array( $dependency['key'], $dependency_key_whitelist, true ) ) {
+		$dependency_prop_whitelist = $this->get_dependency_prop_whitelist();
+		if ( ! in_array( $dependency['prop'], $dependency_prop_whitelist, true ) ) {
 			return false;
 		}
 
@@ -240,14 +240,14 @@ class Dependency_Resolver {
 	}
 
 	/**
-	 * Gets the whitelist for keys to be handled by dependencies.
+	 * Gets the whitelist for properties to be handled by dependencies.
 	 *
 	 * @since 1.0.0
 	 * @access protected
 	 *
 	 * @return array Key whitelist.
 	 */
-	protected function get_dependency_key_whitelist() {
+	protected function get_dependency_prop_whitelist() {
 		$whitelist = array( 'label', 'description', 'display' );
 
 		if ( ! $this->field->is_repeatable() ) {
@@ -263,11 +263,11 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key Key to check for.
-	 * @return bool True if the key exists on the field, otherwise false.
+	 * @param string $prop Key to check for.
+	 * @return bool True if the property exists on the field, otherwise false.
 	 */
-	protected function field_property_exists( $key ) {
-		return isset( $this->field->$key );
+	protected function field_property_exists( $prop ) {
+		return isset( $this->field->$prop );
 	}
 
 	/**
@@ -304,7 +304,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -318,8 +318,8 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_true( $key, $field_values, $args ) {
-		return $this->get_data_by_condition_bool_helper( $key, $field_values, $args, false );
+	protected function get_data_by_condition_true( $prop, $field_values, $args ) {
+		return $this->get_data_by_condition_bool_helper( $prop, $field_values, $args, false );
 	}
 
 	/**
@@ -328,7 +328,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -342,8 +342,8 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_false( $key, $field_values, $args ) {
-		return $this->get_data_by_condition_bool_helper( $key, $field_values, $args, true );
+	protected function get_data_by_condition_false( $prop, $field_values, $args ) {
+		return $this->get_data_by_condition_bool_helper( $prop, $field_values, $args, true );
 	}
 
 	/**
@@ -352,7 +352,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -367,7 +367,7 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_bool_helper( $key, $field_values, $args, $reverse = false ) {
+	protected function get_data_by_condition_bool_helper( $prop, $field_values, $args, $reverse = false ) {
 		$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
 
 		if ( $reverse ) {
@@ -403,7 +403,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -419,8 +419,8 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_greater_than( $key, $field_values, $args ) {
-		return $this->get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, false );
+	protected function get_data_by_condition_greater_than( $prop, $field_values, $args ) {
+		return $this->get_data_by_condition_numeric_comparison_helper( $prop, $field_values, $args, false );
 	}
 
 	/**
@@ -429,7 +429,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -445,8 +445,8 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_lower_than( $key, $field_values, $args ) {
-		return $this->get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, true );
+	protected function get_data_by_condition_lower_than( $prop, $field_values, $args ) {
+		return $this->get_data_by_condition_numeric_comparison_helper( $prop, $field_values, $args, true );
 	}
 
 	/**
@@ -455,7 +455,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -472,7 +472,7 @@ class Dependency_Resolver {
 	 * @return mixed Content of the $result_true argument if conditions are met, otherwise content of the
 	 *               $result_false argument.
 	 */
-	protected function get_data_by_condition_numeric_comparison_helper( $key, $field_values, $args, $reverse = false ) {
+	protected function get_data_by_condition_numeric_comparison_helper( $prop, $field_values, $args, $reverse = false ) {
 		$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
 
 		if ( $reverse ) {
@@ -527,7 +527,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -543,7 +543,7 @@ class Dependency_Resolver {
 	 * }
 	 * @return mixed Result, or null if nothing matched and no default has been provided.
 	 */
-	protected function get_data_by_map( $key, $field_values, $args ) {
+	protected function get_data_by_map( $prop, $field_values, $args ) {
 		$default = isset( $args['default'] ) ? $args['default'] : null;
 
 		if ( empty( $args['map'] ) ) {
@@ -609,7 +609,7 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $key          Key of the field that is modified.
+	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
 	 * @param array  $args         {
 	 *
@@ -626,7 +626,7 @@ class Dependency_Resolver {
 	 * }
 	 * @return mixed Result, or null if nothing matched and no default has been provided.
 	 */
-	protected function get_data_by_named_map( $key, $field_values, $args ) {
+	protected function get_data_by_named_map( $prop, $field_values, $args ) {
 		$default = isset( $args['default'] ) ? $args['default'] : null;
 
 		if ( empty( $args['named_map'] ) ) {

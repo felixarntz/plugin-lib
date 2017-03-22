@@ -1238,13 +1238,13 @@ abstract class Field {
 			return false;
 		}
 
-		$resolved_keys = $this->dependency_resolver->resolve_dependencies();
-		foreach ( $resolved_keys as $property => $value ) {
-			if ( ! isset( $this->$property ) ) {
+		$resolved_props = $this->dependency_resolver->resolve_dependencies();
+		foreach ( $resolved_props as $prop => $value ) {
+			if ( ! isset( $this->$prop ) ) {
 				continue;
 			}
 
-			$this->$property = $value;
+			$this->$prop = $value;
 		}
 
 		return true;
