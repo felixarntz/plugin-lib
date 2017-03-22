@@ -236,7 +236,7 @@ class Dependency_Resolver {
 	 * @return array Key whitelist.
 	 */
 	protected function get_dependency_key_whitelist() {
-		return array_filter( array( 'description', 'display' ), array( $this, 'field_property_exists' ) );
+		return array_filter( array( 'label', 'description', 'display', 'default', 'choices', 'optgroups' ), array( $this, 'field_property_exists' ) );
 	}
 
 	/**
