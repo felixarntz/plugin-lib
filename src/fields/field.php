@@ -1216,14 +1216,16 @@ abstract class Field {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @return bool True if dependencies were resolved, false if nothing changed.
 	 */
 	protected function maybe_resolve_dependencies() {
 		if ( ! $this->dependency_resolver ) {
-			return;
+			return false;
 		}
 
 		if ( $this->dependency_resolver->resolved() ) {
-			return;
+			return false;
 		}
 
 		$resolved_keys = $this->dependency_resolver->resolve_dependencies();
@@ -1234,6 +1236,8 @@ abstract class Field {
 
 			$this->$property = $value;
 		}
+
+		return true;
 	}
 
 	/**

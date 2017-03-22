@@ -67,20 +67,7 @@ class Select extends Select_Base {
 	public function __construct( $manager, $id, $args = array() ) {
 		parent::__construct( $manager, $id, $args );
 
-		if ( ! empty( $this->optgroups ) ) {
-			if ( ! empty( $this->choices ) ) {
-				array_unshift( $this->optgroups, array(
-					'label'   => '',
-					'choices' => $this->choices,
-				) );
-			}
-
-			$this->choices = array();
-
-			foreach ( $this->optgroups as $optgroup ) {
-				$this->choices = array_merge( $this->choices, $optgroup['choices'] );
-			}
-		}
+		$this->optgroups_to_choices();
 	}
 
 	/**
@@ -189,6 +176,43 @@ class Select extends Select_Base {
 		$data['optgroups'] = $this->optgroups;
 
 		return $data;
+	}
+
+	/**
+	 * Resolves all dependencies of this field, if applicable.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return bool True if dependencies were resolved, false if nothing changed.
+	 */
+	protected function maybe_resolve_dependencies() {
+		$result = parent::maybe_resolve_dependencies();
+		if ( ! $result ) {
+			return $result;
+		}
+
+		if ( in_array( 'optgroups', $this->dependency_resolver->get_dependency_keys(), true ) ) {
+			$this->optgroups_to_choices();
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Sets the choices property based on the optgroups property.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 */
+	protected function optgroups_to_choices() {
+		if ( ! empty( $this->optgroups ) ) {
+			$this->choices = array();
+
+			foreach ( $this->optgroups as $optgroup ) {
+				$this->choices = array_merge( $this->choices, $optgroup['choices'] );
+			}
+		}
 	}
 }
 
