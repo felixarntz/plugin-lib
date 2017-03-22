@@ -31,7 +31,7 @@
 	});
 
 	var cbHelpers = {
-		'get_data_by_condition_bool_helper': function( key, values, args, reverse ) {
+		'get_data_by_condition_bool_helper': function( prop, values, args, reverse ) {
 			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
 
 			var resultFalse, resultTrue, value, identifier, i;
@@ -68,7 +68,7 @@
 			return resultTrue;
 		},
 
-		'get_data_by_condition_numeric_comparison_helper': function( key, values, args, reverse ) {
+		'get_data_by_condition_numeric_comparison_helper': function( prop, values, args, reverse ) {
 			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
 
 			var resultFalse, resultTrue, breakpoint, sanitize, inclusive, value, identifier, i;
@@ -118,43 +118,163 @@
 			}
 
 			return resultTrue;
+		},
+
+		'merge_into_result': function( result, value, operator ) {
+			if ( _.isArray( result ) && _.isArray( value ) ) {
+				if ( 'OR' === operator ) {
+					result = _.union( result, value );
+				} else {
+					result = _.intersection( result, value );
+				}
+
+				return result;
+			}
+
+			if ( _.isObject( result ) && _.isObject( value ) ) {
+				if ( 'OR' === operator ) {
+					result = _.extend( result, value );
+				} else {
+					result = _.extend( _.pick( result, _.keys( value ) ), _.pick( value, _.keys( result ) ) );
+				}
+
+				return result;
+			}
+
+			if ( _.isBoolean( result ) && _.isBoolean( value ) ) {
+				if ( 'OR' === operator ) {
+					result = result || value;
+				} else {
+					result = result && value;
+				}
+
+				return result;
+			}
+
+			return value;
 		}
 	};
 
-	var defaultDependencyCallbacks = [
-		{
-			name: 'get_data_by_condition_true',
-			callback: function( key, values, args, cb ) {
-				var result = cbHelpers.get_data_by_condition_bool_helper( key, values, args, false );
+	var defaultDependencyCallbacks = {
+		'get_data_by_condition_true': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_bool_helper( prop, values, args, false );
 
+			cb( result );
+		},
+
+		'get_data_by_condition_false': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_bool_helper( prop, values, args, true );
+
+			cb( result );
+		},
+
+		'get_data_by_condition_greater_than': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( prop, values, args, false );
+
+			cb( result );
+		},
+
+		'get_data_by_condition_lower_than': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( prop, values, args, true );
+
+			cb( result );
+		},
+
+		'get_data_by_map': function( prop, values, args, cb ) {
+			var defaultResult = args['default'] || null;
+
+			if ( _.isUndefined( args.map ) || _.isEmpty( args.map ) ) {
+				cb( defaultResult );
+				return;
+			}
+
+			var map      = args.map;
+			var merge    = !! args.merge;
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+			var identifier, value;
+
+			var result = null;
+
+			var usedValues = [];
+			for ( var i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
+
+				if ( _.isUndefined( map[ value ] ) ) {
+					continue;
+				}
+
+				if ( merge && ! _.contains( usedValues, value ) ) {
+					usedValues.push( value );
+					result = cbHelpers.merge_into_result( result, map[ value ], operator );
+				} else {
+					usedValues.push( value );
+					if ( _.isObject( map[ value ] ) ) {
+						result = _.clone( map[ value ] );
+					} else {
+						result = map[ value ];
+					}
+				}
+			}
+
+			if ( null === result ) {
+				cb( defaultResult );
+			} else {
 				cb( result );
 			}
 		},
-		{
-			name: 'get_data_by_condition_false',
-			callback: function( key, values, args, cb ) {
-				var result = cbHelpers.get_data_by_condition_bool_helper( key, values, args, true );
 
-				cb( result );
+		'get_data_by_named_map': function( prop, values, args, cb ) {
+			var defaultResult = args['default'] || null;
+
+			if ( _.isUndefined( args.named_map ) || _.isEmpty( args.named_map ) ) {
+				cb( defaultResult );
+				return;
 			}
-		},
-		{
-			name: 'get_data_by_condition_greater_than',
-			callback: function( key, values, args, cb ) {
-				var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( key, values, args, false );
 
-				cb( result );
+			var namedMap = args.named_map;
+			var merge    = !! args.merge;
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+			var identifier, value, map;
+
+			var result = null;
+
+			var usedValues = {};
+			for ( var i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
+
+				if ( _.isUndefined( namedMap[ identifier ] ) ) {
+					continue;
+				}
+
+				map = namedMap[ identifier ];
+
+				usedValues[ identifier ] = [];
+				if ( _.isUndefined( map[ value ] ) ) {
+					continue;
+				}
+
+				if ( merge && ! _.contains( usedValues[ identifier ], value ) ) {
+					usedValues[ identifier ].push( value );
+					result = cbHelpers.merge_into_result( result, map[ value ], operator );
+				} else {
+					usedValues[ identifier ].push( value );
+					if ( _.isObject( map[ value ] ) ) {
+						result = _.clone( map[ value ] );
+					} else {
+						result = map[ value ];
+					}
+				}
 			}
-		},
-		{
-			name: 'get_data_by_condition_lower_than',
-			callback: function( key, values, args, cb ) {
-				var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( key, values, args, true );
 
+			if ( null === result ) {
+				cb( defaultResult );
+			} else {
 				cb( result );
 			}
 		}
-	];
+	};
 
 	var fieldsAPI = {};
 
@@ -257,8 +377,10 @@
 		},
 
 		loadCallbacks: function() {
-			for ( var i in defaultDependencyCallbacks ) {
-				this.addCallback( defaultDependencyCallbacks[ i ].name, defaultDependencyCallbacks[ i ].callback );
+			var names = Object.keys( defaultDependencyCallbacks );
+
+			for ( var i in names ) {
+				this.addCallback( names[ i ], defaultDependencyCallbacks[ names[ i ] ] );
 			}
 
 			$( document ).trigger( 'pluginLibFieldsAPIDependencyCallbacks', this );
@@ -362,7 +484,7 @@
 					}
 				}
 
-				dependencyQueue.add( dependency.targetId, dependency.key, dependency.callback, currentValues, dependency.args );
+				dependencyQueue.add( dependency.targetId, dependency.prop, dependency.callback, currentValues, dependency.args );
 			}
 
 			dependencyQueue.resolve( _.bind( this.updateDependants, this ) );
@@ -387,7 +509,7 @@
 
 					this.dependencyTriggers[ fieldId ].push({
 						targetId: id,
-						key: dependency.key,
+						prop: dependency.prop,
 						callback: dependency.callback,
 						fields: dependency.fields,
 						args: dependency.args

@@ -35,7 +35,362 @@
 		}
 	});
 
+	var cbHelpers = {
+		'get_data_by_condition_bool_helper': function( prop, values, args, reverse ) {
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+
+			var resultFalse, resultTrue, value, identifier, i;
+			if ( reverse ) {
+				resultFalse = args.result_true || true;
+				resultTrue  = args.result_false || false;
+			} else {
+				resultFalse = args.result_false || false;
+				resultTrue  = args.result_true || true;
+			}
+
+			if ( 'OR' === operator ) {
+				for ( i in Object.keys( values ) ) {
+					identifier = Object.keys( values )[ i ];
+					value      = values[ identifier ];
+
+					if ( value ) {
+						return resultTrue;
+					}
+				}
+
+				return resultFalse;
+			}
+
+			for ( i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
+
+				if ( ! value ) {
+					return resultFalse;
+				}
+			}
+
+			return resultTrue;
+		},
+
+		'get_data_by_condition_numeric_comparison_helper': function( prop, values, args, reverse ) {
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+
+			var resultFalse, resultTrue, breakpoint, sanitize, inclusive, value, identifier, i;
+			if ( reverse ) {
+				resultFalse = args.result_true || true;
+				resultTrue  = args.result_false || false;
+			} else {
+				resultFalse = args.result_false || false;
+				resultTrue  = args.result_true || true;
+			}
+
+			breakpoint = 0.0;
+			sanitize = parseFloat;
+			if ( ! _.isUndefined( args.breakpoint ) ) {
+				if ( parseInt( args.breakpoint, 10 ) === args.breakpoint ) {
+					sanitize = _.bind( parseInt, undefined, undefined, 10 );
+				}
+
+				breakpoint = sanitize( args.breakpoint );
+			}
+
+			inclusive = !! args.inclusive;
+			if ( reverse ) {
+				inclusive = ! inclusive;
+			}
+
+			if ( 'OR' === operator ) {
+				for ( i in Object.keys( values ) ) {
+					identifier = Object.keys( values )[ i ];
+					value      = sanitize( values[ identifier ] );
+
+					if ( value > breakpoint || value === breakpoint && inclusive ) {
+						return resultTrue;
+					}
+				}
+
+				return resultFalse;
+			}
+
+			for ( i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = sanitize( values[ identifier ] );
+
+				if ( value < breakpoint || value === breakpoint && ! inclusive ) {
+					return resultFalse;
+				}
+			}
+
+			return resultTrue;
+		},
+
+		'merge_into_result': function( result, value, operator ) {
+			if ( _.isArray( result ) && _.isArray( value ) ) {
+				if ( 'OR' === operator ) {
+					result = _.union( result, value );
+				} else {
+					result = _.intersection( result, value );
+				}
+
+				return result;
+			}
+
+			if ( _.isObject( result ) && _.isObject( value ) ) {
+				if ( 'OR' === operator ) {
+					result = _.extend( result, value );
+				} else {
+					result = _.extend( _.pick( result, _.keys( value ) ), _.pick( value, _.keys( result ) ) );
+				}
+
+				return result;
+			}
+
+			if ( _.isBoolean( result ) && _.isBoolean( value ) ) {
+				if ( 'OR' === operator ) {
+					result = result || value;
+				} else {
+					result = result && value;
+				}
+
+				return result;
+			}
+
+			return value;
+		}
+	};
+
+	var defaultDependencyCallbacks = {
+		'get_data_by_condition_true': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_bool_helper( prop, values, args, false );
+
+			cb( result );
+		},
+
+		'get_data_by_condition_false': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_bool_helper( prop, values, args, true );
+
+			cb( result );
+		},
+
+		'get_data_by_condition_greater_than': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( prop, values, args, false );
+
+			cb( result );
+		},
+
+		'get_data_by_condition_lower_than': function( prop, values, args, cb ) {
+			var result = cbHelpers.get_data_by_condition_numeric_comparison_helper( prop, values, args, true );
+
+			cb( result );
+		},
+
+		'get_data_by_map': function( prop, values, args, cb ) {
+			var defaultResult = args['default'] || null;
+
+			if ( _.isUndefined( args.map ) || _.isEmpty( args.map ) ) {
+				cb( defaultResult );
+				return;
+			}
+
+			var map      = args.map;
+			var merge    = !! args.merge;
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+			var identifier, value;
+
+			var result = null;
+
+			var usedValues = [];
+			for ( var i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
+
+				if ( _.isUndefined( map[ value ] ) ) {
+					continue;
+				}
+
+				if ( merge && ! _.contains( usedValues, value ) ) {
+					usedValues.push( value );
+					result = cbHelpers.merge_into_result( result, map[ value ], operator );
+				} else {
+					usedValues.push( value );
+					if ( _.isObject( map[ value ] ) ) {
+						result = _.clone( map[ value ] );
+					} else {
+						result = map[ value ];
+					}
+				}
+			}
+
+			if ( null === result ) {
+				cb( defaultResult );
+			} else {
+				cb( result );
+			}
+		},
+
+		'get_data_by_named_map': function( prop, values, args, cb ) {
+			var defaultResult = args['default'] || null;
+
+			if ( _.isUndefined( args.named_map ) || _.isEmpty( args.named_map ) ) {
+				cb( defaultResult );
+				return;
+			}
+
+			var namedMap = args.named_map;
+			var merge    = !! args.merge;
+			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
+			var identifier, value, map;
+
+			var result = null;
+
+			var usedValues = {};
+			for ( var i in Object.keys( values ) ) {
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
+
+				if ( _.isUndefined( namedMap[ identifier ] ) ) {
+					continue;
+				}
+
+				map = namedMap[ identifier ];
+
+				usedValues[ identifier ] = [];
+				if ( _.isUndefined( map[ value ] ) ) {
+					continue;
+				}
+
+				if ( merge && ! _.contains( usedValues[ identifier ], value ) ) {
+					usedValues[ identifier ].push( value );
+					result = cbHelpers.merge_into_result( result, map[ value ], operator );
+				} else {
+					usedValues[ identifier ].push( value );
+					if ( _.isObject( map[ value ] ) ) {
+						result = _.clone( map[ value ] );
+					} else {
+						result = map[ value ];
+					}
+				}
+			}
+
+			if ( null === result ) {
+				cb( defaultResult );
+			} else {
+				cb( result );
+			}
+		}
+	};
+
 	var fieldsAPI = {};
+
+	fieldsAPI.DependencyResolver = function( queueIdentifier ) {
+		this.queueIdentifier = queueIdentifier;
+		this.queuedItems = [];
+		this.resolvedProps = {};
+		this.busyCount = 0;
+		this.finalizeCallback;
+	};
+
+	_.extend( fieldsAPI.DependencyResolver.prototype, {
+		add: function( targetId, prop, callback, values, args ) {
+			callback = fieldsAPI.DependencyResolver.getCallback( callback );
+			if ( ! callback ) {
+				return;
+			}
+
+			this.queuedItems.push({
+				targetId: targetId,
+				prop: prop,
+				callback: callback,
+				values: values,
+				args: args
+			});
+		},
+
+		resolve: function( finalizeCallback ) {
+			var queuedItem;
+
+			this.busyCount = this.queuedItems.length;
+			this.finalizeCallback = finalizeCallback;
+
+			for ( var i in this.queuedItems ) {
+				queuedItem = this.queuedItems[ i ];
+
+				queuedItem.callback( queuedItem.prop, queuedItem.values, queuedItem.args, _.bind( this.resolved, this, null, queuedItem.prop, queuedItem.targetId ) );
+			}
+		},
+
+		resolved: function( propValue, prop, targetId ) {
+			if ( _.isUndefined( this.resolvedProps[ targetId ] ) ) {
+				this.resolvedProps[ targetId ] = {};
+			}
+
+			this.resolvedProps[ targetId ][ prop ] = propValue;
+
+			this.busyCount--;
+
+			if ( 0 === this.busyCount ) {
+				this.finalResolved();
+			}
+		},
+
+		finalResolved: function() {
+			fieldsAPI.DependencyResolver.finishQueue( this.queueIdentifier );
+
+			this.finalizeCallback( this.resolvedProps );
+		}
+	});
+
+	_.extend( fieldsAPI.DependencyResolver, {
+		callbacks: {},
+		queues: {},
+		queueCount: 0,
+		queueTotal: 0,
+
+		startQueue: function() {
+			this.queueCount++;
+			this.queueTotal++;
+
+			var queueIdentifier = 'queue' + this.queueTotal;
+			var queue = new fieldsAPI.DependencyResolver( queueIdentifier );
+
+			this.queues[ queueIdentifier ] = queue;
+
+			return queue;
+		},
+
+		finishQueue: function( queueIdentifier ) {
+			if ( _.isUndefined( this.queues[ queueIdentifier ] ) ) {
+				return;
+			}
+
+			delete this.queues[ queueIdentifier ];
+
+			this.queueCount--;
+		},
+
+		addCallback: function( callbackName, callback ) {
+			if ( ! _.isFunction( callback ) ) {
+				return;
+			}
+
+			this.callbacks[ callbackName ] = callback;
+		},
+
+		getCallback: function( callbackName ) {
+			return this.callbacks[ callbackName ];
+		},
+
+		loadCallbacks: function() {
+			var names = Object.keys( defaultDependencyCallbacks );
+
+			for ( var i in names ) {
+				this.addCallback( names[ i ], defaultDependencyCallbacks[ names[ i ] ] );
+			}
+
+			$( document ).trigger( 'pluginLibFieldsAPIDependencyCallbacks', this );
+		}
+	});
 
 	/**
 	 * pluginLibFieldsAPI.Field
@@ -84,6 +439,108 @@
 			if ( options.instanceId ) {
 				this.instanceId = options.InstanceId;
 			}
+
+			this.dependencyTriggers = {};
+
+			this.on( 'update', this.updateDependencyTriggers, this );
+			this.on( 'change:currentValue', this.triggerDependantsUpdate, this );
+		},
+
+		sync: function() {
+			return false;
+		},
+
+		updateDependencyTriggers: function( collection, options ) {
+			var field;
+
+			for ( var i in options.added ) {
+				field = options.added[ i ];
+
+				this.addFieldDependencies( field.get( 'id' ), field.get( 'dependencies' ) );
+			}
+
+			for ( var j in options.removed ) {
+				field = options.removed[ j ];
+
+				this.removeFieldDependencies( field.get( 'id' ) );
+			}
+		},
+
+		triggerDependantsUpdate: function( field, currentValue ) {
+			var fieldId = field.get( 'id' );
+
+			if ( ! _.isArray( this.dependencyTriggers[ fieldId ] ) ) {
+				return;
+			}
+
+			var dependencyQueue = new fieldsAPI.DependencyResolver.startQueue();
+			var dependency;
+			var currentValues;
+
+			for ( var i in this.dependencyTriggers[ fieldId ] ) {
+				dependency = this.dependencyTriggers[ fieldId ][ i ];
+				currentValues = {};
+
+				for ( var j in dependency.fields ) {
+					if ( dependency.fields[ j ] === fieldId ) {
+						currentValues[ fieldId ] = currentValue;
+					} else {
+						currentValues[ dependency.fields[ j ] ] = this.get( dependency.fields[ j ] ).get( 'currentValue' );
+					}
+				}
+
+				dependencyQueue.add( dependency.targetId, dependency.prop, dependency.callback, currentValues, dependency.args );
+			}
+
+			dependencyQueue.resolve( _.bind( this.updateDependants, this ) );
+		},
+
+		updateDependants: function( dependencyProps ) {
+			_.each( dependencyProps, _.bind( function( props, targetId ) {
+				this.get( targetId ).set( props );
+			}, this ) );
+		},
+
+		addFieldDependencies: function( id, dependencies ) {
+			_.each( dependencies, _.bind( function( dependency ) {
+				var fieldId;
+
+				for ( var i in dependency.fields ) {
+					fieldId = dependency.fields[ i ];
+
+					if ( _.isUndefined( this.dependencyTriggers[ fieldId ] ) ) {
+						this.dependencyTriggers[ fieldId ] = [];
+					}
+
+					this.dependencyTriggers[ fieldId ].push({
+						targetId: id,
+						prop: dependency.prop,
+						callback: dependency.callback,
+						fields: dependency.fields,
+						args: dependency.args
+					});
+				}
+			}, this ) );
+		},
+
+		removeFieldDependencies: function( id ) {
+			_.each( this.dependencyTriggers, _.bind( function( dependencies, fieldId ) {
+				var newDependencies = [];
+
+				for ( var i in dependencies ) {
+					if ( dependencies[ i ].targetId === id ) {
+						continue;
+					}
+
+					newDependencies.push( dependencies[ i ] );
+				}
+
+				if ( newDependencies.length ) {
+					this.dependencyTriggers[ fieldId ] = newDependencies;
+				} else {
+					delete this.dependencyTriggers[ fieldId ];
+				}
+			}, this ) );
 		}
 	});
 
@@ -431,6 +888,8 @@
 	fieldsAPI.FieldManager.instances = {};
 
 	$( document ).ready( function() {
+		fieldsAPI.DependencyResolver.loadCallbacks();
+
 		_.each( fieldsAPIData.field_managers, function( instance, instanceId ) {
 			fieldsAPI.FieldManager.instances[ instanceId ] = new fieldsAPI.FieldManager( _.values( instance.fields ), {
 				instanceId: instanceId
