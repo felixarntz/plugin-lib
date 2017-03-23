@@ -283,7 +283,60 @@
 
 	var fieldsAPI = {};
 
-	fieldsAPI.DependencyResolver = function( queueIdentifier ) {
+	var drPriv = {
+		callbacks: {},
+		queues: {},
+		queueCount: 0,
+		queueTotal: 0
+	};
+
+	fieldsAPI.DependencyResolver = {
+		startQueue: function() {
+			drPriv.queueCount++;
+			drPriv.queueTotal++;
+
+			var queueIdentifier = 'queue' + drPriv.queueTotal;
+			var queue = new fieldsAPI.DependencyResolverQueue( queueIdentifier );
+
+			drPriv.queues[ queueIdentifier ] = queue;
+
+			return queue;
+		},
+
+		finishQueue: function( queueIdentifier ) {
+			if ( _.isUndefined( drPriv.queues[ queueIdentifier ] ) ) {
+				return;
+			}
+
+			delete drPriv.queues[ queueIdentifier ];
+
+			drPriv.queueCount--;
+		},
+
+		addCallback: function( callbackName, callback ) {
+			if ( ! _.isFunction( callback ) ) {
+				return;
+			}
+
+			drPriv.callbacks[ callbackName ] = callback;
+		},
+
+		getCallback: function( callbackName ) {
+			return drPriv.callbacks[ callbackName ];
+		},
+
+		loadCallbacks: function() {
+			var names = Object.keys( defaultDependencyCallbacks );
+
+			for ( var i in names ) {
+				fieldsAPI.DependencyResolver.addCallback( names[ i ], defaultDependencyCallbacks[ names[ i ] ] );
+			}
+
+			$( document ).trigger( 'pluginLibFieldsAPIDependencyCallbacks', fieldsAPI.DependencyResolver );
+		}
+	};
+
+	fieldsAPI.DependencyResolverQueue = function( queueIdentifier ) {
 		this.queueIdentifier = queueIdentifier;
 		this.queuedItems = [];
 		this.resolvedProps = {};
@@ -291,7 +344,7 @@
 		this.finalizeCallback;
 	};
 
-	_.extend( fieldsAPI.DependencyResolver.prototype, {
+	_.extend( fieldsAPI.DependencyResolverQueue.prototype, {
 		add: function( targetId, prop, callback, values, args ) {
 			callback = fieldsAPI.DependencyResolver.getCallback( callback );
 			if ( ! callback ) {
@@ -316,11 +369,11 @@
 			for ( var i in this.queuedItems ) {
 				queuedItem = this.queuedItems[ i ];
 
-				queuedItem.callback( queuedItem.prop, queuedItem.values, queuedItem.args, _.bind( this.resolved, this, null, queuedItem.prop, queuedItem.targetId ) );
+				queuedItem.callback( queuedItem.prop, queuedItem.values, queuedItem.args, _.bind( this.resolved, this, queuedItem.targetId, queuedItem.prop ) );
 			}
 		},
 
-		resolved: function( propValue, prop, targetId ) {
+		resolved: function( targetId, prop, propValue ) {
 			if ( _.isUndefined( this.resolvedProps[ targetId ] ) ) {
 				this.resolvedProps[ targetId ] = {};
 			}
@@ -338,57 +391,6 @@
 			fieldsAPI.DependencyResolver.finishQueue( this.queueIdentifier );
 
 			this.finalizeCallback( this.resolvedProps );
-		}
-	});
-
-	_.extend( fieldsAPI.DependencyResolver, {
-		callbacks: {},
-		queues: {},
-		queueCount: 0,
-		queueTotal: 0,
-
-		startQueue: function() {
-			this.queueCount++;
-			this.queueTotal++;
-
-			var queueIdentifier = 'queue' + this.queueTotal;
-			var queue = new fieldsAPI.DependencyResolver( queueIdentifier );
-
-			this.queues[ queueIdentifier ] = queue;
-
-			return queue;
-		},
-
-		finishQueue: function( queueIdentifier ) {
-			if ( _.isUndefined( this.queues[ queueIdentifier ] ) ) {
-				return;
-			}
-
-			delete this.queues[ queueIdentifier ];
-
-			this.queueCount--;
-		},
-
-		addCallback: function( callbackName, callback ) {
-			if ( ! _.isFunction( callback ) ) {
-				return;
-			}
-
-			this.callbacks[ callbackName ] = callback;
-		},
-
-		getCallback: function( callbackName ) {
-			return this.callbacks[ callbackName ];
-		},
-
-		loadCallbacks: function() {
-			var names = Object.keys( defaultDependencyCallbacks );
-
-			for ( var i in names ) {
-				this.addCallback( names[ i ], defaultDependencyCallbacks[ names[ i ] ] );
-			}
-
-			$( document ).trigger( 'pluginLibFieldsAPIDependencyCallbacks', this );
 		}
 	});
 
@@ -450,6 +452,16 @@
 			return false;
 		},
 
+		setupDependencyTriggers: function() {
+			var field;
+
+			for ( var i in this.models ) {
+				field = this.models[ i ];
+
+				this.addFieldDependencies( field.get( 'id' ), field.get( 'dependencies' ) );
+			}
+		},
+
 		updateDependencyTriggers: function( collection, options ) {
 			var field;
 
@@ -502,6 +514,10 @@
 		},
 
 		addFieldDependencies: function( id, dependencies ) {
+			if ( ! _.isArray( dependencies ) ) {
+				return;
+			}
+
 			_.each( dependencies, _.bind( function( dependency ) {
 				var fieldId;
 
@@ -655,6 +671,20 @@
 
 				if ( ! options.repeatableItemTemplate ) {
 					options.repeatableItemTemplate = 'plugin-lib-field-' + model.get( 'slug' ) + '-repeatable-item';
+				}
+
+				var dependencies = model.get( 'dependencies' );
+				if ( _.isArray( dependencies ) ) {
+					var methodName;
+					for ( var i in dependencies ) {
+						methodName = 'apply' + ( '_' + dependencies[ i ].prop ).replace( /_([a-zA-Z0-9])/g, function( matches, part ) {
+							return part.toUpperCase();
+						});
+
+						if ( _.isFunction( this[ methodName ] ) ) {
+							model.on( 'change:' + dependencies[ i ].prop, this[ methodName ], this );
+						}
+					}
 				}
 
 				this.events = this.getEvents( model );
@@ -882,6 +912,30 @@
 			}
 
 			return currentValue;
+		},
+
+		applyLabel: function( field, label ) {
+			//TODO
+		},
+
+		applyDescription: function( field, description ) {
+			//TODO
+		},
+
+		applyDisplay: function( field, display ) {
+			//TODO
+		},
+
+		applyDefault: function( field, defaultVal ) {
+			//TODO
+		},
+
+		applyChoices: function( field, choices ) {
+			//TODO
+		},
+
+		applyOptgroups: function( field, optgroups ) {
+			//TODO
 		}
 	});
 
@@ -894,6 +948,7 @@
 			fieldsAPI.FieldManager.instances[ instanceId ] = new fieldsAPI.FieldManager( _.values( instance.fields ), {
 				instanceId: instanceId
 			});
+			fieldsAPI.FieldManager.instances[ instanceId ].setupDependencyTriggers();
 
 			_.each( fieldsAPI.FieldManager.instances[ instanceId ].models, function( field ) {
 				var viewClassName = field.get( 'backboneView' );

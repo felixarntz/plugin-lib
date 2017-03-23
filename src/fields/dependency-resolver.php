@@ -143,7 +143,7 @@ class Dependency_Resolver {
 	 * @return array Dependency definition.
 	 */
 	public function get_dependencies() {
-		return $this->dependencies();
+		return $this->dependencies;
 	}
 
 	/**
@@ -226,6 +226,12 @@ class Dependency_Resolver {
 				return false;
 			}
 		}
+
+		$fields = array();
+		foreach ( $dependency['fields'] as $field ) {
+			$fields[] = $this->field_manager->make_id( $field );
+		}
+		$dependency['fields'] = $fields;
 
 		$dependency_prop_whitelist = $this->get_dependency_prop_whitelist();
 		if ( ! in_array( $dependency['prop'], $dependency_prop_whitelist, true ) ) {
