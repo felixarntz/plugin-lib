@@ -250,7 +250,7 @@ class Dependency_Resolver {
 	protected function get_dependency_prop_whitelist() {
 		$whitelist = array( 'label', 'description', 'display' );
 
-		if ( ! $this->field->is_repeatable() ) {
+		if ( ! $this->field->repeatable ) {
 			$whitelist = array_merge( $whitelist, array( 'default', 'choices', 'optgroups' ) );
 		}
 

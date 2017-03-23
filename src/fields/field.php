@@ -301,7 +301,7 @@ abstract class Field {
 			return null;
 		}
 
-		if ( ! in_array( $property, $this->get_forbidden_keys(), true ) ) {
+		if ( 'repeatable' !== $property && ! in_array( $property, $this->get_forbidden_keys(), true ) ) {
 			$this->maybe_resolve_dependencies();
 		}
 
