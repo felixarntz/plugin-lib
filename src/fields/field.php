@@ -333,23 +333,25 @@ abstract class Field {
 	public final function render_label() {
 		$this->maybe_resolve_dependencies();
 
-		if ( empty( $this->label ) || 'skip' === $this->label_mode ) {
-			return;
+		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-label-wrap' ) . '" class="label-wrap">';
+
+		if ( ! empty( $this->label ) && 'skip' !== $this->label_mode ) {
+			if ( in_array( $this->label_mode, array( 'no_assoc', 'aria_hidden' ), true ) ) {
+				?>
+				<span<?php echo $this->get_label_attrs(); ?>>
+					<?php echo $this->label; ?>
+				</span>
+				<?php
+			} else {
+				?>
+				<label<?php echo $this->get_label_attrs(); ?>>
+					<?php echo $this->label; ?>
+				</label>
+				<?php
+			}
 		}
 
-		if ( in_array( $this->label_mode, array( 'no_assoc', 'aria_hidden' ), true ) ) {
-			?>
-			<span<?php echo $this->get_label_attrs(); ?>>
-				<?php echo $this->label; ?>
-			</span>
-			<?php
-		} else {
-			?>
-			<label<?php echo $this->get_label_attrs(); ?>>
-				<?php echo $this->label; ?>
-			</label>
-			<?php
-		}
+		echo '</div>';
 	}
 
 	/**
@@ -469,13 +471,15 @@ abstract class Field {
 	 */
 	public final function print_label_template() {
 		?>
-		<# if ( data.label && 'skip' != data.labelMode ) { #>
-			<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
-				<span{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.label }}}</span>
-			<# } else { #>
-				<label{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.label }}}</label>
+		<div id="{{ data.id }}-label-wrap" class="label-wrap">
+			<# if ( data.label && 'skip' != data.labelMode ) { #>
+				<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
+					<span{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.label }}}</span>
+				<# } else { #>
+					<label{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.label }}}</label>
+				<# } #>
 			<# } #>
-		<# } #>
+		</div>
 		<?php
 	}
 
