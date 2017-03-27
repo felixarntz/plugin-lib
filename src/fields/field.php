@@ -499,7 +499,7 @@ abstract class Field {
 			<?php $this->print_input_template(); ?>
 
 			<# if ( data.description ) { #>
-				<p id="{{ data.id }}-description" class="description">{{ data.description }}</p>
+				<p id="{{ data.id }}-description" class="description">{{{ data.description }}}</p>
 			<# } #>
 
 			<# if ( data.after ) { #>
@@ -1120,7 +1120,8 @@ abstract class Field {
 		);
 
 		if ( ! $this->display ) {
-			$wrap_attrs['style'] = 'display:none;';
+			$wrap_attrs['class'] = 'plugin-lib-hidden';
+			$wrap_attrs['aria-hidden'] = 'true';
 		}
 
 		if ( $as_string ) {
