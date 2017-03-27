@@ -1029,11 +1029,7 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function print_repeatable_add_button_template() {
-		?>
-		<# if ( ! data.repeatableLimit || data.repeatableLimit > data.items.length ) { #>
-			<?php $this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ ' . 'data.label' . ' }}' ) ); ?>
-		<# } #>
-		<?php
+		$this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ ' . 'data.label' . ' }}' ) );
 	}
 
 	/**
@@ -1053,6 +1049,8 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function print_repeatable_button_template( $mode, $message ) {
+		$style = '';
+
 		if ( 'remove' === $mode ) {
 			$core_class  = 'button-link button-link-delete';
 			$target_mode = 'item';
@@ -1060,13 +1058,15 @@ abstract class Field {
 			$mode        = 'add';
 			$core_class  = 'button';
 			$target_mode = 'wrap';
+			$style       = '<# if ( data.repeatableLimit && data.repeatableLimit <= data.items.length ) { #>display:none;<# } #>';
 		}
 
 		?>
-
-		<button type="button" id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>">
-			<?php echo $message; ?>
-		</button>
+		<# if ( data.repeatable ) { #>
+			<button type="button" id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>" style="<?php echo $style; ?>">
+				<?php echo $message; ?>
+			</button>
+		<# } #>
 		<?php
 	}
 
