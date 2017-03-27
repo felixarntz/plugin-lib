@@ -369,11 +369,13 @@
 		},
 
 		resolved: function( targetId, prop, propValue ) {
-			if ( _.isUndefined( this.resolvedProps[ targetId ] ) ) {
-				this.resolvedProps[ targetId ] = {};
-			}
+			if ( null !== propValue ) {
+				if ( _.isUndefined( this.resolvedProps[ targetId ] ) ) {
+					this.resolvedProps[ targetId ] = {};
+				}
 
-			this.resolvedProps[ targetId ][ prop ] = propValue;
+				this.resolvedProps[ targetId ][ prop ] = propValue;
+			}
 
 			this.busyCount--;
 
@@ -714,11 +716,21 @@
 			this.trigger( 'postRender', $contentWrap );
 		},
 
-		render: function() {
+		renderLabel: function() {
+			var $labelWrap;
+
+			if ( this.labelTemplate ) {
+				$labelWrap = this.$( '#' + this.model.get( 'id' ) + '-label-wrap' );
+
+				$labelWrap.replaceWith( this.labelTemplate( this.model.toJSON() ) );
+			}
+		},
+
+		renderContent: function() {
 			var $contentWrap;
 
 			if ( this.contentTemplate ) {
-				$contentWrap = this.$( '.content-wrap' );
+				$contentWrap = this.$( '#' + this.model.get( 'id' ) + '-content-wrap' );
 
 				this.trigger( 'preRender', $contentWrap );
 				this.undelegateEvents();
@@ -728,8 +740,6 @@
 				this.delegateEvents();
 				this.trigger( 'postRender', $contentWrap );
 			}
-
-			return this;
 		},
 
 		changeValue: function( e ) {
@@ -910,27 +920,60 @@
 		},
 
 		applyLabel: function( field, label ) {
-			//TODO
+			var labelAttrs = field.get( 'labelAttrs' );
+			var $label = this.$( labelAttrs.id ? '#' + labelAttrs.id : '.plugin-lib-label:first' );
+
+			if ( $label.length ) {
+				$label.html( label );
+			} else {
+				this.renderLabel();
+			}
 		},
 
 		applyDescription: function( field, description ) {
-			//TODO
+			var $description = this.$( '#' + field.get( 'id' ) + '-description' );
+
+			if ( $description.length ) {
+				if ( description.length ) {
+					$description.html( description );
+				} else {
+					$description.remove();
+				}
+			} else {
+				if ( description.length ) {
+					this.renderContent();
+				}
+			}
 		},
 
 		applyDisplay: function( field, display ) {
-			//TODO
+			var $wrap = this.$el;
+
+			if ( display ) {
+				$wrap.addClass( 'plugin-lib-toggling' );
+				setTimeout( function() {
+					$wrap.removeClass( 'plugin-lib-hidden plugin-lib-toggling' );
+					$wrap.attr( 'aria-hidden', 'false' );
+				}, 500 );
+			} else {
+				$wrap.addClass( 'plugin-lib-hidden plugin-lib-toggling' );
+				setTimeout( function() {
+					$wrap.removeClass( 'plugin-lib-toggling' );
+					$wrap.attr( 'aria-hidden', 'true' );
+				}, 500 );
+			}
 		},
 
 		applyDefault: function( field, defaultVal ) {
-			//TODO
+			// Do nothing.
 		},
 
 		applyChoices: function( field, choices ) {
-			//TODO
+			this.renderContent();
 		},
 
 		applyOptgroups: function( field, optgroups ) {
-			//TODO
+			this.renderContent();
 		}
 	});
 
