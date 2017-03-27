@@ -34,6 +34,13 @@
 	}
 }
 
+tr.plugin-lib-wrap.plugin-lib-hidden {
+	position: absolute;
+	top: -9999px;
+	left: -9999px;
+	width: 1px;
+}
+
 /* ----------------------------------------------------------------------------
   2.0 - Polyfill for button links in WordPress < 4.8
 ---------------------------------------------------------------------------- */
