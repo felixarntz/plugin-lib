@@ -23,6 +23,21 @@
 	margin-left: 10px;
 }
 
+.plugin-lib-wrap {
+	max-height: none;
+}
+
+.plugin-lib-wrap.plugin-lib-hidden {
+	overflow: hidden;
+	max-height: 0;
+}
+
+.plugin-lib-wrap.plugin-lib-toggling {
+	-webkit-transition: all 0.5s ease-in-out;
+	   -moz-transition: all 0.5s ease-in-out;
+	        transition: all 0.5s ease-in-out;
+}
+
 /* ----------------------------------------------------------------------------
   2.0 - Polyfill for button links in WordPress < 4.8
 ---------------------------------------------------------------------------- */

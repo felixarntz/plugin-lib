@@ -1116,11 +1116,12 @@ abstract class Field {
 		$this->maybe_resolve_dependencies();
 
 		$wrap_attrs = array(
-			'id' => $this->get_id_attribute() . '-wrap',
+			'id'    => $this->get_id_attribute() . '-wrap',
+			'class' => 'plugin-lib-wrap',
 		);
 
 		if ( ! $this->display ) {
-			$wrap_attrs['class'] = 'plugin-lib-hidden';
+			$wrap_attrs['class'] .= ' plugin-lib-hidden';
 			$wrap_attrs['aria-hidden'] = 'true';
 		}
 

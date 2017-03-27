@@ -950,17 +950,15 @@
 			var $wrap = this.$el;
 
 			if ( display ) {
-				$wrap.addClass( 'plugin-lib-toggling' );
-				setTimeout( function() {
-					$wrap.removeClass( 'plugin-lib-hidden plugin-lib-toggling' );
-					$wrap.attr( 'aria-hidden', 'false' );
-				}, 500 );
-			} else {
-				$wrap.addClass( 'plugin-lib-hidden plugin-lib-toggling' );
+				$wrap.addClass( 'plugin-lib-toggling' ).removeClass( 'plugin-lib-hidden' ).attr( 'aria-hidden', 'false' );
 				setTimeout( function() {
 					$wrap.removeClass( 'plugin-lib-toggling' );
-					$wrap.attr( 'aria-hidden', 'true' );
-				}, 500 );
+				}, 800 );
+			} else {
+				$wrap.addClass( 'plugin-lib-toggling' ).addClass( 'plugin-lib-hidden' ).attr( 'aria-hidden', 'true' );
+				setTimeout( function() {
+					$wrap.removeClass( 'plugin-lib-toggling' );
+				}, 800 );
 			}
 		},
 
