@@ -243,6 +243,7 @@ abstract class Field {
 			}
 		}
 
+		$this->label_classes[] = 'plugin-lib-label';
 		$this->input_classes[] = 'plugin-lib-control';
 		$this->input_classes[] = 'plugin-lib-' . $this->slug . '-control';
 
@@ -563,6 +564,7 @@ abstract class Field {
 				'id'              => $this->get_id_attribute(),
 				'label'           => $this->label,
 				'labelMode'       => $this->label_mode,
+				'labelAttrs'      => $this->get_label_attrs( array(), false ),
 				'items'           => array(),
 				'itemInitial'     => array(),
 				'repeatable'      => true,
@@ -1137,7 +1139,9 @@ abstract class Field {
 	 *                      attribute string if `$as_string` is true.
 	 */
 	protected function get_label_attrs( $label_attrs = array(), $as_string = true ) {
-		$base_label_attrs = array();
+		$base_label_attrs = array(
+			'id'    => $this->get_id_attribute() . '-label',
+		);
 
 		if ( 'explicit' === $this->label_mode ) {
 			$base_label_attrs['for'] = $this->get_id_attribute();
