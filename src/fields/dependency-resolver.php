@@ -257,7 +257,7 @@ class Dependency_Resolver {
 		$whitelist = array( 'label', 'description', 'display' );
 
 		if ( ! $this->field->repeatable ) {
-			$whitelist = array_merge( $whitelist, array( 'default', 'choices', 'optgroups' ) );
+			$whitelist = array_merge( $whitelist, array( 'default', 'choices', 'optgroups', 'unit' ) );
 		}
 
 		return array_filter( $whitelist, array( $this, 'field_property_exists' ) );

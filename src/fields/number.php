@@ -38,6 +38,15 @@ class Number extends Field {
 	protected $type = 'number';
 
 	/**
+	 * Unit to show after the control, if any.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $unit = '';
+
+	/**
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
@@ -52,7 +61,10 @@ class Number extends Field {
 		);
 		?>
 		<input<?php echo $this->get_input_attrs( $input_attrs ); ?>>
-		<?php
+		<?php if ( ! empty( $this->unit ) ) : ?>
+			<span class="plugin-lib-unit"><?php echo $this->unit; ?></span>
+		<?php endif;
+
 		$this->render_repeatable_remove_button();
 	}
 
@@ -65,8 +77,28 @@ class Number extends Field {
 	protected function print_single_input_template() {
 		?>
 		<input type="<?php echo esc_attr( $this->type ); ?>"{{{ _.attrs( data.inputAttrs ) }}} value="{{ data.currentValue }}">
+		<# if ( ! _.isEmpty( data.unit ) ) { #>
+			<span class="plugin-lib-unit">{{{ data.unit }}}</span>
+		<# } #>
+
 		<?php
 		$this->print_repeatable_remove_button_template();
+	}
+
+	/**
+	 * Transforms single field data into an array to be passed to JavaScript applications.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param mixed $current_value Current value of the field.
+	 * @return array Field data to be JSON-encoded.
+	 */
+	protected function single_to_json( $current_value ) {
+		$data = parent::single_to_json( $current_value );
+		$data['unit'] = $this->unit;
+
+		return $data;
 	}
 
 	/**

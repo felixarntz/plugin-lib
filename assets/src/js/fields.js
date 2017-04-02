@@ -972,6 +972,22 @@
 
 		applyOptgroups: function( field, optgroups ) {
 			this.renderContent();
+		},
+
+		applyUnit: function( field, unit ) {
+			var $unit = this.$( '.plugin-lib-unit' );
+
+			if ( $unit.length ) {
+				if ( unit.length ) {
+					$unit.html( unit );
+				} else {
+					$unit.remove();
+				}
+			} else {
+				if ( unit.length ) {
+					this.$( '#' + field.get( 'id' ) ).after( '<span class="plugin-lib-unit">' + unit + '</span>' );
+				}
+			}
 		}
 	});
 
