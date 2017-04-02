@@ -91,14 +91,16 @@ class Select extends Select_Base {
 	public function enqueue() {
 		$ret = parent::enqueue();
 
+		$assets = $this->manager->library_assets();
+
 		$select2_version = '4.0.3';
 
-		$this->library_assets()->register_style( 'select2', 'node_modules/select2/dist/css/select2.css', array(
+		$assets->register_style( 'select2', 'node_modules/select2/dist/css/select2.css', array(
 			'ver'     => $select2_version,
 			'enqueue' => true,
 		) );
 
-		$this->library_assets()->register_script( 'select2', 'node_modules/select2/dist/js/select2.js', array(
+		$assets->register_script( 'select2', 'node_modules/select2/dist/js/select2.js', array(
 			'deps'          => array( 'jquery' ),
 			'ver'           => $select2_version,
 			'in_footer'     => true,
@@ -110,8 +112,8 @@ class Select extends Select_Base {
 		$locale = str_replace( '_', '-', get_locale() );
 		$language = substr( $locale, 0, 2 );
 
-		if ( $this->library_assets()->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {
-			$this->library_assets()->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $locale . '.js', array(
+		if ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {
+			$assets->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $locale . '.js', array(
 				'deps'          => array( 'select2' ),
 				'ver'           => $select2_version,
 				'in_footer'     => true,
@@ -119,8 +121,8 @@ class Select extends Select_Base {
 			) );
 
 			$ret[0][] = 'select2-locale';
-		} elseif ( $this->library_assets()->file_exists( 'node_modules/select2/dist/js/i18n/' . $language . '.js' ) ) {
-			$this->library_assets()->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $language . '.js', array(
+		} elseif ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $language . '.js' ) ) {
+			$assets->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $language . '.js', array(
 				'deps'          => array( 'select2' ),
 				'ver'           => $select2_version,
 				'in_footer'     => true,

@@ -737,6 +737,8 @@
 
 				$contentWrap.replaceWith( this.contentTemplate( this.model.toJSON() ) );
 
+				$contentWrap = this.$( '#' + this.model.get( 'id' ) + '-content-wrap' );
+
 				this.delegateEvents();
 				this.trigger( 'postRender', $contentWrap );
 			}
@@ -778,12 +780,8 @@
 
 			var $newItem = $( this.repeatableItemTemplate( newItem ) );
 
-			this.trigger( 'preRender', $newItem );
-			this.undelegateEvents();
-
 			$wrap.append( $newItem );
 
-			this.delegateEvents();
 			this.trigger( 'postRender', $newItem );
 
 			this.model.set( 'items', items );
@@ -833,6 +831,9 @@
 
 			if ( items[ itemIndex ] ) {
 				items.splice( itemIndex, 1 );
+
+				self.trigger( 'preRender', $item );
+
 				$item.remove();
 
 				if ( itemIndex < items.length ) {
@@ -843,14 +844,15 @@
 						}
 
 						var $itemToAdjust = $( this );
+						var $newItem      = self.repeatableItemTemplate( items[ index ] );
 
 						self.trigger( 'preRender', $itemToAdjust );
 						self.undelegateEvents();
 
-						$itemToAdjust.replaceWith( self.repeatableItemTemplate( items[ index ] ) );
+						$itemToAdjust.replaceWith( $newItem );
 
 						self.delegateEvents();
-						self.trigger( 'postRender', $itemToAdjust );
+						self.trigger( 'postRender', $newItem );
 					});
 				}
 			}
@@ -992,6 +994,10 @@
 	});
 
 	fieldsAPI.FieldView.SelectFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( 'select.plugin-lib-control' ).select2( 'destroy' );
+		},
+
 		postRender: function( $el ) {
 			$el.find( 'select.plugin-lib-control' ).select2({
 				width: 'element',
