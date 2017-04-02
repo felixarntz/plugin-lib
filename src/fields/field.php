@@ -492,17 +492,17 @@ abstract class Field {
 	public final function print_content_template() {
 		?>
 		<div id="{{ data.id }}-content-wrap" class="content-wrap">
-			<# if ( data.before ) { #>
+			<# if ( ! _.isEmpty( data.before ) ) { #>
 				{{{ data.before }}}
 			<# } #>
 
 			<?php $this->print_input_template(); ?>
 
-			<# if ( data.description ) { #>
+			<# if ( ! _.isEmpty( data.description ) ) { #>
 				<p id="{{ data.id }}-description" class="description">{{{ data.description }}}</p>
 			<# } #>
 
-			<# if ( data.after ) { #>
+			<# if ( ! _.isEmpty( data.after ) ) { #>
 				{{{ data.after }}}
 			<# } #>
 		</div>
