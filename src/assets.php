@@ -183,6 +183,26 @@ class Assets extends Service {
 	}
 
 	/**
+	 * Checks whether a specific asset file exists in the filesystem.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $src Relative asset path.
+	 * @return bool True if the file exists, false otherwise.
+	 */
+	public function file_exists( $src ) {
+		$full_path = $this->get_full_path( $src );
+
+		// If the file name was changed, existence of the file has already been verified.
+		if ( strlen( $full_path ) - strlen( $src ) !== strpos( $full_path, $src ) ) {
+			return true;
+		}
+
+		return file_exists( $full_path );
+	}
+
+	/**
 	 * Checks an asset handle and possibly prefixes it.
 	 *
 	 * Only assets that are recognized as third-party assets are not prefixed.
@@ -231,6 +251,22 @@ class Assets extends Service {
 	 * @return string Full asset URL.
 	 */
 	protected function get_full_url( $src ) {
+		return $this->get_full_path( $src, true );
+	}
+
+	/**
+	 * Transforms a relative asset path into a full path.
+	 *
+	 * The method also automatically handles loading a minified vs non-minified file.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $src Relative asset path.
+	 * @param bool   $url Whether to return the URL instead of the path. Default false.
+	 * @return string Full asset path or URL, depending on the $url parameter.
+	 */
+	protected function get_full_path( $src, $url = false ) {
 		$extension = '';
 		if ( false !== strpos( $src, '.' ) ) {
 			$parts = explode( '.', $src );
@@ -254,7 +290,11 @@ class Assets extends Service {
 			}
 		}
 
-		return call_user_func( $this->url_callback, $src );
+		if ( $url ) {
+			return call_user_func( $this->url_callback, $src );
+		}
+
+		return call_user_func( $this->path_callback, $src );
 	}
 
 	/**

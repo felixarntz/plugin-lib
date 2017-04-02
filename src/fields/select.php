@@ -28,6 +28,15 @@ class Select extends Select_Base {
 	protected $slug = 'select';
 
 	/**
+	 * Backbone view class name to use for this field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $backbone_view = 'SelectFieldView';
+
+	/**
 	 * Option groups with choices to select from, if necessary.
 	 *
 	 * @since 1.0.0
@@ -68,6 +77,60 @@ class Select extends Select_Base {
 		parent::__construct( $manager, $id, $args );
 
 		$this->optgroups_to_choices();
+	}
+
+	/**
+	 * Enqueues the necessary assets for the field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array where the first element is an array of script handles and the second element
+	 *               is an associative array of data to pass to the main script.
+	 */
+	public function enqueue() {
+		$ret = parent::enqueue();
+
+		$select2_version = '4.0.3';
+
+		$this->library_assets()->register_style( 'select2', 'node_modules/select2/dist/css/select2.css', array(
+			'ver'     => $select2_version,
+			'enqueue' => true,
+		) );
+
+		$this->library_assets()->register_script( 'select2', 'node_modules/select2/dist/js/select2.js', array(
+			'deps'          => array( 'jquery' ),
+			'ver'           => $select2_version,
+			'in_footer'     => true,
+			'enqueue'       => true,
+		) );
+
+		$ret[0][] = 'select2';
+
+		$locale = str_replace( '_', '-', get_locale() );
+		$language = substr( $locale, 0, 2 );
+
+		if ( $this->library_assets()->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {
+			$this->library_assets()->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $locale . '.js', array(
+				'deps'          => array( 'select2' ),
+				'ver'           => $select2_version,
+				'in_footer'     => true,
+				'enqueue'       => true,
+			) );
+
+			$ret[0][] = 'select2-locale';
+		} elseif ( $this->library_assets()->file_exists( 'node_modules/select2/dist/js/i18n/' . $language . '.js' ) ) {
+			$this->library_assets()->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $language . '.js', array(
+				'deps'          => array( 'select2' ),
+				'ver'           => $select2_version,
+				'in_footer'     => true,
+				'enqueue'       => true,
+			) );
+
+			$ret[0][] = 'select2-locale';
+		}
+
+		return $ret;
 	}
 
 	/**

@@ -996,6 +996,16 @@
 		}
 	});
 
+	fieldsAPI.FieldView.SelectFieldView = fieldsAPI.FieldView.extend({
+		postRender: function( $el ) {
+			$el.find( 'select.plugin-lib-control' ).select2({
+				width: 'element',
+				closeOnSelect: true,
+				minimumResultsForSearch: 8
+			});
+		}
+	});
+
 	fieldsAPI.FieldManager.instances = {};
 
 	$( document ).ready( function() {
