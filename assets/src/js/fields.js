@@ -11,7 +11,15 @@
 						attributeString += ' ' + attr;
 					}
 				} else {
-					attributeString += ' ' + attr + '="' + value + '"';
+					if ( _.isArray( value ) || _.isObject( value ) ) {
+						value = window.JSON.stringify( value );
+					}
+
+					if ( _.isString( value ) && -1 !== value.search( '"' ) ) {
+						attributeString += " " + attr + "='" + value + "'";
+					} else {
+						attributeString += ' ' + attr + '="' + value + '"';
+					}
 				}
 			});
 

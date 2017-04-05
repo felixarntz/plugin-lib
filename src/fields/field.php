@@ -1224,7 +1224,15 @@ abstract class Field {
 					$output .= ' ' . $attr;
 				}
 			} else {
-				$output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
+				if ( is_array( $value ) || is_object( $value ) ) {
+					$value = json_encode( $value );
+				}
+
+				if ( is_string( $value ) && false !== strpos( $value, '"' ) ) {
+					$output .= " " . $attr . "='" . esc_attr( $value ) . "'";
+				} else {
+					$output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
+				}
 			}
 		}
 
