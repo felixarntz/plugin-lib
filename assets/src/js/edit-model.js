@@ -17,7 +17,9 @@
 		});
 
 		$this.attr( 'aria-selected', 'true' );
-		$( $this.attr( 'href' ) ).attr( 'aria-hidden', 'false' );
+		$( $this.attr( 'href' ) ).attr( 'aria-hidden', 'false' ).find( '.plugin-lib-map-control' ).each( function() {
+			$( this ).wpMapPicker( 'refresh' );
+		});
 	});
 
 	var $realSlug    = $( '#post_name' );
