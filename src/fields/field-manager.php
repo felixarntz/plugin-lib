@@ -872,6 +872,7 @@ class Field_Manager extends Service {
 			'multiselect' => 'Leaves_And_Love\Plugin_Lib\Fields\Multiselect',
 			'radio'       => 'Leaves_And_Love\Plugin_Lib\Fields\Radio',
 			'multibox'    => 'Leaves_And_Love\Plugin_Lib\Fields\Multibox',
+			'map'         => 'Leaves_And_Love\Plugin_Lib\Fields\Map',
 		);
 
 		foreach ( $default_field_types as $type => $class_name ) {

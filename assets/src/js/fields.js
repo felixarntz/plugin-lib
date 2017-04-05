@@ -1015,6 +1015,16 @@
 		}
 	});
 
+	fieldsAPI.FieldView.MapFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMapPicker( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMapPicker();
+		}
+	});
+
 	fieldsAPI.FieldManager.instances = {};
 
 	$( document ).ready( function() {
