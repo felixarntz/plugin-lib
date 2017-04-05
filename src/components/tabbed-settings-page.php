@@ -170,6 +170,8 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @access public
 	 */
 	public function render() {
+		require ABSPATH . 'wp-admin/options-head.php';
+
 		if ( empty( $this->tabs ) ) {
 			?>
 			<div class="wrap"><?php $this->render_header(); ?></div>
@@ -204,7 +206,8 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 */
 	public function register() {
 		foreach ( $this->tabs as $id => $tab_args ) {
-			register_setting( $id, $id, array( $this, 'validate' ) );
+			register_setting( $id, $id );
+			add_filter( "sanitize_option_{$id}", array( $this, 'validate' ), 10, 2 );
 
 			foreach ( $tab_args['field_manager']->get_fields() as $field ) {
 				add_settings_field( $field->id, $field->label, array( $this, 'render_field' ), $id, $field->section, array(

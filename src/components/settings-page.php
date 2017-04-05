@@ -144,6 +144,8 @@ abstract class Settings_Page extends Admin_Page {
 	 * @access public
 	 */
 	public function render() {
+		require ABSPATH . 'wp-admin/options-head.php';
+
 		$this->current_values = $this->field_manager->get_values();
 
 		?>
@@ -164,7 +166,8 @@ abstract class Settings_Page extends Admin_Page {
 	 * @access public
 	 */
 	public function register() {
-		register_setting( $this->slug, $this->slug, array( $this, 'validate' ) );
+		register_setting( $this->slug, $this->slug );
+		add_filter( "sanitize_option_{$this->slug}", array( $this, 'validate' ), 10, 2 );
 
 		foreach ( $this->sections as $id => $section_args ) {
 			add_settings_section( $id, $section_args['title'], array( $this, 'render_section_description' ), $this->slug );
