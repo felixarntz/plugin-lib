@@ -60,6 +60,12 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * }
 	 */
 	public function add_tab( $id, $args = array() ) {
+		$prefix = $this->manager->get_prefix();
+
+		if ( 0 !== strpos( $id, $prefix ) ) {
+			$id = $prefix . $id;
+		}
+
 		$this->tabs[ $id ] = wp_parse_args( $args, array(
 			'title'       => '',
 			'description' => '',
@@ -92,6 +98,14 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * }
 	 */
 	public function add_section( $id, $args = array() ) {
+		if ( ! empty( $args['tab'] ) ) {
+			$prefix = $this->manager->get_prefix();
+
+			if ( 0 !== strpos( $args['tab'], $prefix ) ) {
+				$args['tab'] = $prefix . $args['tab'];
+			}
+		}
+
 		$this->sections[ $id ] = wp_parse_args( $args, array(
 			'title'       => '',
 			'description' => '',
@@ -194,7 +208,7 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 
 			foreach ( $tab_args['field_manager']->get_fields() as $field ) {
 				add_settings_field( $field->id, $field->label, array( $this, 'render_field' ), $id, $field->section, array(
-					'label_for'      => $this->field_manager->make_id( $field->id ),
+					'label_for'      => $tab_args['field_manager']->make_id( $field->id ),
 					'field_instance' => $field,
 				) );
 			}
@@ -282,17 +296,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 
 		return key( $this->tabs );
 	}
-
-	/**
-	 * Adds tabs, sections and fields to this page.
-	 *
-	 * This method should call the methods `add_tab()`, `add_section()` and `add_field()` to
-	 * populate the page.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 */
-	protected abstract function add_page_content();
 }
 
 endif;
