@@ -170,7 +170,11 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @access public
 	 */
 	public function render() {
-		require ABSPATH . 'wp-admin/options-head.php';
+		global $parent_file;
+
+		if ( $parent_file !== 'options-general.php' ) {
+			require ABSPATH . 'wp-admin/options-head.php';
+		}
 
 		if ( empty( $this->tabs ) ) {
 			?>

@@ -144,7 +144,11 @@ abstract class Settings_Page extends Admin_Page {
 	 * @access public
 	 */
 	public function render() {
-		require ABSPATH . 'wp-admin/options-head.php';
+		global $parent_file;
+
+		if ( $parent_file !== 'options-general.php' ) {
+			require ABSPATH . 'wp-admin/options-head.php';
+		}
 
 		$this->current_values = $this->field_manager->get_values();
 
