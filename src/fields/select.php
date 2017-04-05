@@ -109,7 +109,8 @@ class Select extends Select_Base {
 
 		$ret[0][] = 'select2';
 
-		$locale = str_replace( '_', '-', get_locale() );
+		$locale = explode( '_', get_locale() );
+		$locale = $locale[0] . '-' . $locale[1];
 		$language = substr( $locale, 0, 2 );
 
 		if ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {

@@ -109,9 +109,12 @@ class Map extends Text_Base {
 
 		$assets = $this->manager->library_assets();
 
+		$locale = explode( '_', get_locale() );
+		$locale = $locale[0] . '-' . $locale[1];
+
 		$gmaps_url = 'https://maps.google.com/maps/api/js';
 		$gmaps_args = array(
-			'language' => str_replace( '_', '-', get_locale() ),
+			'language' => $locale,
 		);
 		if ( ( $api_key = self::get_api_key() ) ) {
 			$gmaps_args['key'] = $api_key;
