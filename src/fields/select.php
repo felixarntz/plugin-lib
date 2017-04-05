@@ -101,10 +101,10 @@ class Select extends Select_Base {
 		) );
 
 		$assets->register_script( 'select2', 'node_modules/select2/dist/js/select2.js', array(
-			'deps'          => array( 'jquery' ),
-			'ver'           => $select2_version,
-			'in_footer'     => true,
-			'enqueue'       => true,
+			'deps'      => array( 'jquery' ),
+			'ver'       => $select2_version,
+			'in_footer' => true,
+			'enqueue'   => true,
 		) );
 
 		$ret[0][] = 'select2';
@@ -114,19 +114,19 @@ class Select extends Select_Base {
 
 		if ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {
 			$assets->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $locale . '.js', array(
-				'deps'          => array( 'select2' ),
-				'ver'           => $select2_version,
-				'in_footer'     => true,
-				'enqueue'       => true,
+				'deps'      => array( 'select2' ),
+				'ver'       => $select2_version,
+				'in_footer' => true,
+				'enqueue'   => true,
 			) );
 
 			$ret[0][] = 'select2-locale';
 		} elseif ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $language . '.js' ) ) {
 			$assets->register_script( 'select2-locale', 'node_modules/select2/dist/js/i18n/' . $language . '.js', array(
-				'deps'          => array( 'select2' ),
-				'ver'           => $select2_version,
-				'in_footer'     => true,
-				'enqueue'       => true,
+				'deps'      => array( 'select2' ),
+				'ver'       => $select2_version,
+				'in_footer' => true,
+				'enqueue'   => true,
 			) );
 
 			$ret[0][] = 'select2-locale';
