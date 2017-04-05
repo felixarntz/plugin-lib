@@ -321,39 +321,37 @@ class Field_Manager extends Service {
 			'field_managers' => array(),
 		);
 
-		foreach ( self::$instances as $instance_id => $instance ) {
-			$values = $instance->get_values();
+		$values = $this->get_values();
 
-			$localize_data['field_managers'][ $instance_id ] = array(
-				'fields' => array(),
-			);
+		$localize_data['field_managers'][ $this->instance_id ] = array(
+			'fields' => array(),
+		);
 
-			$field_instances = $instance->get_fields();
+		$field_instances = $this->get_fields();
 
-			/** This is run to verify there are no circular dependencies. */
-			$this->resolve_dependency_order( $field_instances );
+		/** This is run to verify there are no circular dependencies. */
+		$this->resolve_dependency_order( $field_instances );
 
-			foreach ( $field_instances as $id => $field_instance ) {
-				$type = array_search( get_class( $field_instance ), self::$field_types, true );
+		foreach ( $field_instances as $id => $field_instance ) {
+			$type = array_search( get_class( $field_instance ), self::$field_types, true );
 
-				if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
-					list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+			if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
+				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
 
-					if ( ! empty( $new_dependencies ) ) {
-						$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
-					}
-
-					if ( ! empty( $new_localize_data ) ) {
-						$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
-					}
-
-					self::$enqueued[ $type ] = true;
+				if ( ! empty( $new_dependencies ) ) {
+					$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
 				}
 
-				$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
+				if ( ! empty( $new_localize_data ) ) {
+					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+				}
 
-				$localize_data['field_managers'][ $instance_id ]['fields'][ $id ] = $field_instance->to_json( $value );
+				self::$enqueued[ $type ] = true;
 			}
+
+			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
+
+			$localize_data['field_managers'][ $this->instance_id ]['fields'][ $id ] = $field_instance->to_json( $value );
 		}
 
 		$this->library_assets()->register_style( 'fields', 'assets/dist/css/fields.css', array(
@@ -390,28 +388,26 @@ class Field_Manager extends Service {
 			return;
 		}
 
-		foreach ( self::$instances as $instance_id => $instance ) {
-			foreach ( $instance->get_fields() as $id => $field_instance ) {
-				$type = array_search( get_class( $field_instance ), self::$field_types, true );
+		foreach ( $this->get_fields() as $id => $field_instance ) {
+			$type = array_search( get_class( $field_instance ), self::$field_types, true );
 
-				if ( isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ] ) {
-					continue;
-				}
-
-				?>
-				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-label">
-					<?php echo $field_instance->print_label_template(); ?>
-				</script>
-				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-content">
-					<?php echo $field_instance->print_content_template(); ?>
-				</script>
-				<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-repeatable-item">
-					<?php echo $field_instance->print_repeatable_item_template(); ?>
-				</script>
-				<?php
-
-				self::$templates_printed[ $type ] = true;
+			if ( isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ] ) {
+				continue;
 			}
+
+			?>
+			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-label">
+				<?php echo $field_instance->print_label_template(); ?>
+			</script>
+			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-content">
+				<?php echo $field_instance->print_content_template(); ?>
+			</script>
+			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-repeatable-item">
+				<?php echo $field_instance->print_repeatable_item_template(); ?>
+			</script>
+			<?php
+
+			self::$templates_printed[ $type ] = true;
 		}
 
 		self::$templates_printed['_core'] = true;
