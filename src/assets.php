@@ -193,6 +193,10 @@ class Assets extends Service {
 	 */
 	public function file_exists( $src ) {
 		$full_path = $this->get_full_path( $src );
+		if ( ! $full_path ) {
+			// Assume that files at external locations exist.
+			return true;
+		}
 
 		// If the file name was changed, existence of the file has already been verified.
 		if ( strlen( $full_path ) - strlen( $src ) !== strpos( $full_path, $src ) ) {
@@ -216,6 +220,12 @@ class Assets extends Service {
 	 */
 	protected function check_handle( $handle, $src ) {
 		$vendor_directory_names = implode( '|', array( 'vendor', 'node_modules', 'bower_components' ) );
+
+		if ( ( preg_match( '/^(http|https):\/\//', $src ) || 0 === strpos( $src, '//' ) ) && ! strpos( $src, home_url() ) ) {
+			$property_name = '.css' === substr( $src, -4 ) ? 'third_party_styles' : 'third_party_scripts';
+			array_push( $this->$property_name, $handle );
+			return $handle;
+		}
 
 		if ( preg_match( "/(^|\/)($vendor_directory_names)\//", $src ) ) {
 			$property_name = '.css' === substr( $src, -4 ) ? 'third_party_styles' : 'third_party_scripts';
@@ -248,7 +258,8 @@ class Assets extends Service {
 	 * @access protected
 	 *
 	 * @param string $src Relative asset path.
-	 * @return string Full asset URL.
+	 * @return string|bool Full asset URL, or false if the path
+	 *                     is requested for a full $src URL.
 	 */
 	protected function get_full_url( $src ) {
 		return $this->get_full_path( $src, true );
@@ -264,9 +275,18 @@ class Assets extends Service {
 	 *
 	 * @param string $src Relative asset path.
 	 * @param bool   $url Whether to return the URL instead of the path. Default false.
-	 * @return string Full asset path or URL, depending on the $url parameter.
+	 * @return string|bool Full asset path or URL, depending on the $url parameter, or false
+	 *                     if the path is requested for a full $src URL.
 	 */
 	protected function get_full_path( $src, $url = false ) {
+		if ( preg_match( '/^(http|https):\/\//', $src ) || 0 === strpos( $src, '//' ) ) {
+			if ( $url ) {
+				return $src;
+			}
+
+			return false;
+		}
+
 		$extension = '';
 		if ( false !== strpos( $src, '.' ) ) {
 			$parts = explode( '.', $src );
@@ -308,7 +328,7 @@ class Assets extends Service {
 	 */
 	public static function get_library_instance() {
 		if ( null === self::$library_instance ) {
-			self::$library_instance = new Assets( 'pluginlib_', array(
+			self::$library_instance = new Assets( 'plugin_lib_', array(
 				'path_callback' => function( $rel_path ) { return plugin_dir_path( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
 				'url_callback'  => function( $rel_path ) { return plugin_dir_url( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
 			) );
