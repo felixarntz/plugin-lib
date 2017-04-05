@@ -356,12 +356,12 @@ class Field_Manager extends Service {
 			}
 		}
 
-		$this->library_assets()->register_style( 'plugin-lib-fields', 'assets/dist/css/fields.css', array(
+		$this->library_assets()->register_style( 'fields', 'assets/dist/css/fields.css', array(
 			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'enqueue' => true,
 		) );
 
-		$this->library_assets()->register_script( 'plugin-lib-fields', 'assets/dist/js/fields.js', array(
+		$this->library_assets()->register_script( 'fields', 'assets/dist/js/fields.js', array(
 			'deps'          => $main_dependencies,
 			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
 			'in_footer'     => true,
