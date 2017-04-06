@@ -861,6 +861,7 @@ class Field_Manager extends Service {
 			'email'       => 'Leaves_And_Love\Plugin_Lib\Fields\Email',
 			'url'         => 'Leaves_And_Love\Plugin_Lib\Fields\URL',
 			'textarea'    => 'Leaves_And_Love\Plugin_Lib\Fields\Textarea',
+			'wysiwyg'     => 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG',
 			'number'      => 'Leaves_And_Love\Plugin_Lib\Fields\Number',
 			'range'       => 'Leaves_And_Love\Plugin_Lib\Fields\Range',
 			'checkbox'    => 'Leaves_And_Love\Plugin_Lib\Fields\Checkbox',
