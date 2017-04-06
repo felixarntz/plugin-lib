@@ -117,31 +117,51 @@ class WYSIWYG extends Textarea {
 	 * @access protected
 	 */
 	protected function print_single_input_template() {
-		$input_attrs = $this->get_input_attrs( array(), false );
-		$editor_id = $input_attrs['id'];
-
-		$template = $this->editor_markup[ $editor_id ];
-
-		if ( isset( $input_attrs['rows'] ) ) {
-			$template = str_replace( ' rows="' . (int) $input_attrs['rows'] . '"', ' rows="{{data.editorSettings.textarea_rows}}"', $template );
+		if ( user_can_richedit() ) {
+			$switch_class = 'tmce-active';
+			$autocomplete = ' autocomplete="off"';
 		} else {
-			$template = str_replace( ' rows="20"', ' rows="{{data.editorSettings.textarea_rows}}"', $template );
+			$switch_class = 'html-active';
+			$autocomplete = '';
 		}
 
-		if ( ! empty( $input_attrs['class'] ) ) {
-			$template = str_replace( esc_attr( $input_attrs['class'] ), '{{data.editorSettings.editor_class}}', $template );
-		} else {
-			$template = str_replace( ' class=" wp-editor-area"', ' class="{{data.editorSettings.editor_class}} wp-editor-area"', $template );
-		}
+		?>
+		<div id="wp-{{data.inputAttrs.id}}-wrap" class="wp-core-ui wp-editor-wrap <?php echo $switch_class; ?>">
+			<?php if ( user_can_richedit() ) : ?>
+				<div id="wp-{{data.inputAttrs.id}}-editor-tools" class="wp-editor-tools hide-if-no-js">
+					<# if ( data.editorSettings.media_buttons ) { #>
+						<div id="wp-{{data.inputAttrs.id}}-media-buttons" class="wp-media-buttons">
+							<button type="button"%s class="button insert-media add_media" data-editor="{{data.inputAttrs.id}}">
+								<span class="wp-media-buttons-icon"></span>
+								<?php _e( 'Add Media' ); ?>
+							</button>
+						</div>
+					<# } #>
+					<div class="wp-editor-tabs">
+						<button type="button" id="{{data.inputAttrs.id}}-tmce" class="wp-switch-editor switch-tmce" data-wp-editor-id="{{data.inputAttrs.id}}"><?php _e( 'Visual' ); ?></button>
+						<button type="button" id="{{data.inputAttrs.id}}-html" class="wp-switch-editor switch-html" data-wp-editor-id="{{data.inputAttrs.id}}"><?php _x( 'Text', 'Name for the Text editor tab (formerly HTML)' ); ?></button>
+					</div>
+				</div>
+			<?php else : ?>
+				<# if ( data.editorSettings.media_buttons ) { #>
+					<div id="wp-{{data.inputAttrs.id}}-editor-tools" class="wp-editor-tools hide-if-no-js">
+						<div id="wp-{{data.inputAttrs.id}}-media-buttons" class="wp-media-buttons">
+							<button type="button"%s class="button insert-media add_media" data-editor="{{data.inputAttrs.id}}">
+								<span class="wp-media-buttons-icon"></span>
+								<?php _e( 'Add Media' ); ?>
+							</button>
+						</div>
+					</div>
+				<# } #>
+			<?php endif; ?>
 
-		$template = str_replace( ' name="' . esc_attr( $input_attrs['name'] ) . '"', ' name="{{data.editorSettings.textarea_name}}"', $template );
+			<div id="wp-{{data.inputAttrs.id}}-editor-container" class="wp-editor-container">
+				<div id="qt_{{data.inputAttrs.id}}_toolbar" class="quicktags-toolbar"></div>
+				<textarea class="{{data.editorSettings.editor_class}} wp-editor-area" rows="{{data.editorSettings.textarea_rows}}"<?php echo $autocomplete; ?> cols="40" name="{{data.editorSettings.textarea_name}}" id="{{data.inputAttrs.id}}">{{ data.currentValue }}</textarea>
+			</div>
+		</div>
 
-		$template = str_replace( esc_attr( $editor_id ), '{{data.inputAttrs.id}}', $template );
-
-		//TODO: replace value with {{data.currentValue}}
-
-		echo $template;
-
+		<?php
 		$this->print_repeatable_remove_button_template();
 	}
 

@@ -1025,6 +1025,33 @@
 		}
 	});
 
+	fieldsAPI.FieldView.WYSIWYGFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
+
+			var editor = tinymce.get( editorId );
+			if ( editor ) {
+				editor.save();
+				editor.remove();
+
+				delete window.tinyMCEPreInit.mceInit[ editorId ];
+				delete window.tinyMCEPreInit.qtInit[ editorId ];
+			}
+		},
+
+		postRender: function( $el ) {
+			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
+
+			if ( _.isUndefined( window.tinyMCEPreInit.mceInit[ editorId ] ) || _.isUndefined( window.tinyMCEPreInit.qtInit[ editorId ] ) ) {
+				window.tinyMCEPreInit.mceInit[ editorId ] = this.model.get( 'tinyMCESettings' );
+				window.tinyMCEPreInit.qtInit[ editorId ]  = this.model.get( 'quickTagsSettings' );
+
+				window.tinymce.init( window.tinyMCEPreInit.mceInit[ editorId ] );
+				window.quicktags( window.tinyMCEPreInit.qtInit[ editorId ] );
+			}
+		}
+	});
+
 	fieldsAPI.FieldManager.instances = {};
 
 	$( document ).ready( function() {
