@@ -50,6 +50,17 @@ class Translations_Field_Manager extends Translations {
 			'field_select_invalid'           => $this->__translate( 'The value &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; is not one of the available choices.', 'textdomain' ),
 			/* translators: 1: comma-separated list of values, 2: field label */
 			'field_select_invalid_multi'     => $this->__translate( 'Some of the values &#8220;%1$s&#8221; for the field &#8220;%2$s&#8221; are not part of the available choices.', 'textdomain' ),
+			'field_media_add_button'         => $this->_xtranslate( 'Choose a File', 'media button', 'textdomain' ),
+			'field_media_replace_button'     => $this->_xtranslate( 'Choose another File', 'media button', 'textdomain' ),
+			'field_media_remove_button'      => $this->_xtranslate( 'Remove', 'media button', 'textdomain' ),
+			'field_media_modal_heading'      => $this->_xtranslate( 'Choose a File', 'media modal heading', 'textdomain' ),
+			'field_media_modal_button'       => $this->_xtranslate( 'Insert File', 'media modal button', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_media_invalid_url'        => $this->__translate( 'The URL %1$s for the field &#8220;%2$s&#8221; does not point to a WordPress media file.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_media_invalid_post_type'  => $this->__translate( 'The post with ID %1$s referenced in the field &#8220;%2$s&#8221; is not a valid WordPress media file.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label, 3: comma-separated list of valid formats */
+			'field_media_invalid_mime_type'  => $this->__translate( 'The media item with ID %1$s referenced in the field &#8220;%2$s&#8221; is neither of the valid formats (%3$s).', 'textdomain' ),
 		);
 	}
 }

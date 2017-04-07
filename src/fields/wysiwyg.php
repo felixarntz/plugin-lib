@@ -14,7 +14,7 @@ use WP_Error;
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 
 /**
- * Class for a textarea field.
+ * Class for a WYSIWYG field.
  *
  * @since 1.0.0
  */

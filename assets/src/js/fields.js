@@ -1001,30 +1001,6 @@
 		}
 	});
 
-	fieldsAPI.FieldView.SelectFieldView = fieldsAPI.FieldView.extend({
-		preRender: function( $el ) {
-			$el.find( 'select.plugin-lib-control' ).select2( 'destroy' );
-		},
-
-		postRender: function( $el ) {
-			$el.find( 'select.plugin-lib-control' ).select2({
-				width: 'element',
-				closeOnSelect: true,
-				minimumResultsForSearch: 8
-			});
-		}
-	});
-
-	fieldsAPI.FieldView.MapFieldView = fieldsAPI.FieldView.extend({
-		preRender: function( $el ) {
-			$el.find( '.plugin-lib-control' ).wpMapPicker( 'destroy' );
-		},
-
-		postRender: function( $el ) {
-			$el.find( '.plugin-lib-control' ).wpMapPicker();
-		}
-	});
-
 	fieldsAPI.FieldView.WYSIWYGFieldView = fieldsAPI.FieldView.extend({
 		preRender: function( $el ) {
 			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
@@ -1049,6 +1025,47 @@
 				window.tinymce.init( window.tinyMCEPreInit.mceInit[ editorId ] );
 				window.quicktags( window.tinyMCEPreInit.qtInit[ editorId ] );
 			}
+		}
+	});
+
+	fieldsAPI.FieldView.SelectFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( 'select.plugin-lib-control' ).select2( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			$el.find( 'select.plugin-lib-control' ).select2({
+				width: 'element',
+				closeOnSelect: true,
+				minimumResultsForSearch: 8
+			});
+		}
+	});
+
+	fieldsAPI.FieldView.MediaFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMediaPicker( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMediaPicker({
+				filterable: false,
+				label_add: fieldsAPIData.i18nMediaAddButton,
+				label_replace: fieldsAPIData.i18nMediaReplaceButton,
+				label_remove: fieldsAPIData.i18nMediaRemoveButton,
+				label_modal: fieldsAPIData.i18nMediaModalHeading,
+				label_button: fieldsAPIData.i18nMediaModalButton
+			});
+		}
+	});
+
+	fieldsAPI.FieldView.MapFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMapPicker( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpMapPicker();
 		}
 	});
 
