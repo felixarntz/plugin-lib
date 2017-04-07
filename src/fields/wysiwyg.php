@@ -251,6 +251,8 @@ class WYSIWYG extends Textarea {
 	 */
 	protected function set_tinymce_settings( $settings, $editor_id ) {
 		$this->tinymce_settings[ $editor_id ] = $settings;
+
+		return $settings;
 	}
 
 	/**
@@ -264,6 +266,8 @@ class WYSIWYG extends Textarea {
 	 */
 	protected function set_quicktags_settings( $settings, $editor_id ) {
 		$this->quicktags_settings[ $editor_id ] = $settings;
+
+		return $settings;
 	}
 
 	/**
