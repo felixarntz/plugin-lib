@@ -89,8 +89,9 @@ class Dependency_Resolver {
 	public function resolve_dependencies() {
 		$results = array();
 
-		$callbacks = $this->get_callbacks();
-		$values    = $this->field_manager->get_values();
+		$callbacks   = $this->get_callbacks();
+		$instance_id = $this->field_manager->get_instance_id();
+		$values      = $this->field_manager->get_values();
 
 		foreach ( $this->dependencies as $dependency ) {
 			if ( ! isset( $callbacks[ $dependency['callback'] ] ) ) {
@@ -101,11 +102,13 @@ class Dependency_Resolver {
 
 			$field_values = array();
 			foreach ( $dependency['fields'] as $identifier ) {
-				if ( ! isset( $values[ $identifier ] ) ) {
-					$values[ $identifier ] = null;
+				$slug = str_replace( $instance_id . '_', '', $identifier );
+
+				if ( ! isset( $values[ $slug ] ) ) {
+					$values[ $slug ] = null;
 				}
 
-				$field_values[ $identifier ] = $values[ $identifier ];
+				$field_values[ $identifier ] = $values[ $slug ];
 			}
 
 			$result = call_user_func( $callback, $dependency['prop'], $field_values, $dependency['args'] );
