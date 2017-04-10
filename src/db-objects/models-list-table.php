@@ -400,7 +400,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 *               initial sorting order descending.
 	 */
 	protected function get_sortable_columns() {
-		$columns = $this->build_columns();
+		$columns = $this->build_sortable_columns();
 
 		/**
 		 * Filters the sortable list table columns.
