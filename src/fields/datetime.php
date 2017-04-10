@@ -173,6 +173,10 @@ class Datetime extends Text_Base {
 			$current_value = '';
 		}
 
+		if ( ! empty( $current_value ) ) {
+			$current_value = $this->format( $current_value );
+		}
+
 		parent::render_single_input( $current_value );
 	}
 
@@ -188,6 +192,10 @@ class Datetime extends Text_Base {
 	protected function single_to_json( $current_value ) {
 		if ( in_array( $current_value, $this->get_emptyish_values(), true ) ) {
 			$current_value = '';
+		}
+
+		if ( ! empty( $current_value ) ) {
+			$current_value = $this->format( $current_value );
 		}
 
 		$data = parent::single_to_json( $current_value );
