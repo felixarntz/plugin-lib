@@ -1042,6 +1042,124 @@
 		}
 	});
 
+	var dtpLocaleSet = false;
+
+	fieldsAPI.FieldView.DatetimeFieldView = fieldsAPI.FieldView.extend({
+		constructor: function() {
+			if ( ! dtpLocaleSet ) {
+				$.datetimepicker.setLocale( fieldsAPIData.language );
+				dtpLocaleSet = true;
+			}
+
+			fieldsAPI.FieldView.apply( this, arguments );
+		},
+
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).datetimepicker( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			var options = {
+				formatDate: 'Y-m-d',
+				formatTime: 'H:i',
+				dayOfWeekStart: fieldsAPIData.startOfWeek,
+				scrollMonth: false,
+				scrollTime: false,
+				scrollInput: false,
+				validateOnBlur: false
+			};
+
+			switch ( $el.find( '.plugin-lib-control' ).data( 'store' ) ) {
+				case 'time':
+					options.format = fieldsAPIData.timeFormat;
+					options.datepicker = false;
+					options.onShow = this._timeOnShow;
+					break;
+				case 'date':
+					options.format = fieldsAPIData.dateFormat;
+					options.timepicker = false;
+					options.onShow = this._dateOnShow;
+					break;
+				default:
+					options.format = fieldsAPIData.datetimeFormat;
+					options.onShow = this._datetimeOnShow;
+			}
+
+			$el.find( '.plugin-lib-control' ).datetimepicker( options );
+		},
+
+		_datetimeOnShow: function( ct, $input ) {
+			var helper = '';
+			if ( $input.attr( 'min' ) ) {
+				helper = $input.attr( 'min' ).split( ' ' );
+				if ( helper.length === 2 ) {
+					this.setOptions({
+						minDate: helper[0],
+						minTime: helper[1]
+					});
+				} else if( helper.length === 1 ) {
+					this.setOptions({
+						minDate: helper[0]
+					});
+				}
+			}
+
+			if ( $input.attr( 'max' ) ) {
+				helper = $input.attr( 'max' ).split( ' ' );
+				if ( helper.length === 2 ) {
+					this.setOptions({
+						maxDate: helper[0],
+						maxTime: helper[1]
+					});
+				} else if( helper.length === 1 ) {
+					this.setOptions({
+						maxDate: helper[0]
+					});
+				}
+			}
+
+			if ( $input.attr( 'step' ) ) {
+				this.setOptions({
+					step: parseInt( $input.attr( 'step' ), 10 )
+				});
+			}
+		},
+
+		_dateOnShow: function( ct, $input ) {
+			if ( $input.attr( 'min' ) ) {
+				this.setOptions({
+					minDate: $input.attr( 'min' )
+				});
+			}
+
+			if ( $input.attr( 'max' ) ) {
+				this.setOptions({
+					maxDate: $input.attr( 'max' )
+				});
+			}
+		},
+
+		_timeOnShow: function( ct, $input ) {
+			if ( $input.attr( 'min' ) ) {
+				this.setOptions({
+					minTime: $input.attr( 'min' )
+				});
+			}
+
+			if ( $input.attr( 'max' ) ) {
+				this.setOptions({
+					maxTime: $input.attr( 'max' )
+				});
+			}
+
+			if ( $input.attr( 'step' ) ) {
+				this.setOptions({
+					step: parseInt( $input.attr( 'step' ), 10 )
+				});
+			}
+		}
+	});
+
 	fieldsAPI.FieldView.MediaFieldView = fieldsAPI.FieldView.extend({
 		preRender: function( $el ) {
 			$el.find( '.plugin-lib-control' ).wpMediaPicker( 'destroy' );

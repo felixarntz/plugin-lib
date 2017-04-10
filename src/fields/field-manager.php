@@ -869,6 +869,8 @@ class Field_Manager extends Service {
 			'multiselect' => 'Leaves_And_Love\Plugin_Lib\Fields\Multiselect',
 			'radio'       => 'Leaves_And_Love\Plugin_Lib\Fields\Radio',
 			'multibox'    => 'Leaves_And_Love\Plugin_Lib\Fields\Multibox',
+			'datetime'    => 'Leaves_And_Love\Plugin_Lib\Fields\Datetime',
+			'media'       => 'Leaves_And_Love\Plugin_Lib\Fields\Media',
 			'map'         => 'Leaves_And_Love\Plugin_Lib\Fields\Map',
 		);
 
