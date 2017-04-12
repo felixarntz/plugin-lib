@@ -1160,6 +1160,18 @@
 		}
 	});
 
+	fieldsAPI.FieldView.ColorFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpColorPicker( 'destroy' );
+		},
+
+		postRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).wpColorPicker({
+				mode: 'hsv'
+			});
+		}
+	});
+
 	fieldsAPI.FieldView.MediaFieldView = fieldsAPI.FieldView.extend({
 		preRender: function( $el ) {
 			$el.find( '.plugin-lib-control' ).wpMediaPicker( 'destroy' );
