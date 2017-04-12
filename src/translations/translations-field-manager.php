@@ -56,6 +56,8 @@ class Translations_Field_Manager extends Translations {
 			'field_datetime_lower_than'      => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is lower than the required minimum of %3$s.', 'textdomain' ),
 			/* translators: 1: incorrect value, 2: field label, 3: maximum allowed value */
 			'field_datetime_greater_than'    => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is greater than the required maximum of %3$s.', 'textdomain' ),
+			/* translators: 1: incorrect value, 2: field label */
+			'field_color_invalid_format'     => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is not a valid color format.', 'textdomain' ),
 			'field_media_add_button'         => $this->_xtranslate( 'Choose a File', 'media button', 'textdomain' ),
 			'field_media_replace_button'     => $this->_xtranslate( 'Choose another File', 'media button', 'textdomain' ),
 			'field_media_remove_button'      => $this->_xtranslate( 'Remove', 'media button', 'textdomain' ),
