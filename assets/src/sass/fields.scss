@@ -49,6 +49,23 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	max-width: 100px;
 }
 
+.plugin-lib-group-control {
+	margin-bottom: 20px;
+	padding: 12px;
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	        box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+
+	> .plugin-lib-wrap {
+		margin-bottom: 12px;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}
+
 /* ----------------------------------------------------------------------------
   3.0 - Polyfill for button links in WordPress < 4.8
 ---------------------------------------------------------------------------- */
