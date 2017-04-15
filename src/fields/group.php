@@ -20,13 +20,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
  */
 class Group extends Field implements Field_Manager_Interface {
 	/**
-	 * Fields that are part of this group.
+	 * Field type identifier.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var array
+	 * @var string
 	 */
-	protected $fields = array();
+	protected $slug = 'group';
 
 	/**
 	 * Backbone view class name to use for this field.
@@ -36,6 +36,15 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @var string
 	 */
 	protected $backbone_view = 'GroupFieldView';
+
+	/**
+	 * Fields that are part of this group.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $fields = array();
 
 	/**
 	 * Constructor.
