@@ -129,7 +129,7 @@ class Media extends Text_Base {
 
 		$assets = $this->manager->library_assets();
 
-		if ( $GLOBALS['post'] ) {
+		if ( ! empty( $GLOBALS['post'] ) ) {
 			wp_enqueue_media( array( 'post' => $GLOBALS['post']->ID ) );
 		} else {
 			wp_enqueue_media();
