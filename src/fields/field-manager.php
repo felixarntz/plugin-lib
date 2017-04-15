@@ -640,8 +640,8 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 			$field_name = $this->name_prefix . '[' . $field_name . ']';
 		}
 
-		if ( null !== $this->index ) {
-			$field_name .= '[' . $this->index . ']';
+		if ( null !== $index ) {
+			$field_name .= '[' . $index . ']';
 		}
 
 		return $field_name;
