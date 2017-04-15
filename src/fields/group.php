@@ -294,6 +294,10 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @return array Field data to be JSON-encoded.
 	 */
 	protected function single_to_json( $current_value ) {
+		if ( ! is_array( $current_value ) ) {
+			$current_value = (array) $current_value;
+		}
+
 		$data = parent::single_to_json( $current_value );
 		$data['fields'] = array();
 
