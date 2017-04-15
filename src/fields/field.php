@@ -749,6 +749,7 @@ abstract class Field {
 			'fieldset'     => $this->fieldset,
 			'inputAttrs'   => $this->get_input_attrs( array(), false ),
 			'labelAttrs'   => $this->get_label_attrs( array(), false ),
+			'wrapAttrs'    => $this->get_wrap_attrs( false ),
 			'currentValue' => $current_value,
 		);
 	}
