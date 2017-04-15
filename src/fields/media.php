@@ -382,18 +382,18 @@ class Media extends Text_Base {
 	 * @return array Array of allowed MIME types as `$extension => $mime_type` pairs.
 	 */
 	protected function get_all_mime_types() {
-		$allowed_mime_types = array();
+		$mime_types = array();
 
-		$_allowed_mime_types = get_allowed_mime_types();
+		$_mime_types = wp_get_mime_types();
 
-		foreach ( $_allowed_mime_types as $_extensions => $_mime_type ) {
+		foreach ( $_mime_types as $_extensions => $_mime_type ) {
 			$extensions = explode( '|', $_extensions );
 			foreach ( $extensions as $extension ) {
-				$allowed_mime_types[ $extension ] = $_mime_type;
+				$mime_types[ $extension ] = $_mime_type;
 			}
 		}
 
-		return $allowed_mime_types;
+		return $mime_types;
 	}
 }
 
