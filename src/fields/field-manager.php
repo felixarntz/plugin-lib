@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\Fields;
 
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Assets;
+use Leaves_And_Love\Plugin_Lib\Fields\Interfaces\Field_Manager_Interface;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
 use WP_Error;
@@ -22,7 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
  *
  * @since 1.0.0
  */
-class Field_Manager extends Service {
+class Field_Manager extends Service implements Field_Manager_Interface {
 	use Container_Service_Trait, Args_Service_Trait;
 
 	/**
@@ -312,7 +313,7 @@ class Field_Manager extends Service {
 	 * @access public
 	 */
 	public function enqueue() {
-		if ( isset( self::$enqueued['_core'] ) && self::$enqueued['_core'] ) {
+		if ( $this->enqueued( '_core' ) ) {
 			return;
 		}
 
@@ -333,9 +334,9 @@ class Field_Manager extends Service {
 		$this->resolve_dependency_order( $field_instances );
 
 		foreach ( $field_instances as $id => $field_instance ) {
-			$type = array_search( get_class( $field_instance ), self::$field_types, true );
+			$type = $field_instance->slug;
 
-			if ( ! isset( self::$enqueued[ $type ] ) || ! self::$enqueued[ $type ] ) {
+			if ( ! $this->enqueued( $type ) ) {
 				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
 
 				if ( ! empty( $new_dependencies ) ) {
@@ -346,7 +347,7 @@ class Field_Manager extends Service {
 					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
 				}
 
-				self::$enqueued[ $type ] = true;
+				$this->enqueued( $type, true );
 			}
 
 			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
@@ -374,7 +375,27 @@ class Field_Manager extends Service {
 			add_action( 'wp_footer', array( $this, 'print_templates' ), 1, 0 );
 		}
 
-		self::$enqueued['_core'] = true;
+		$this->enqueued( '_core', true );
+	}
+
+	/**
+	 * Checks whether dependencies for a specific type have been enqueued.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string    $type Type to check for.
+	 * @param bool|null $set  Optional. A boolean in case the value should be set. Default null.
+	 * @return bool True if the dependencies have been enqueued at the time of calling the function,
+	 *              false otherwise.
+	 */
+	public function enqueued( $type, $set = null ) {
+		$result = isset( self::$enqueued[ $type ] ) && self::$enqueued[ $type ];
+		if ( null !== $set ) {
+			self::$enqueued[ $type ] = (bool) $set;
+		}
+
+		return $result;
 	}
 
 	/**
@@ -389,7 +410,7 @@ class Field_Manager extends Service {
 		}
 
 		foreach ( $this->get_fields() as $id => $field_instance ) {
-			$type = array_search( get_class( $field_instance ), self::$field_types, true );
+			$type = $field_instance->slug;
 
 			if ( isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ] ) {
 				continue;
@@ -576,15 +597,25 @@ class Field_Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $id Field identifier.
+	 * @param string          $id    Field identifier.
+	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
+	 *                               Default null.
 	 * @return string Field id attribute.
 	 */
-	public function make_id( $id ) {
+	public function make_id( $id, $index = null ) {
 		$field_id = str_replace( '_', '-', $id );
 
 		$instance_id = $this->get_instance_id();
 		if ( $instance_id ) {
 			$field_id = $instance_id . '_' . $field_id;
+		}
+
+		if ( null !== $index ) {
+			if ( '%index%' === $index ) {
+				$field_id .= '-%indexPlus1%';
+			} else {
+				$field_id .= '-' . ( $index + 1 );
+			}
 		}
 
 		return $field_id;
@@ -596,17 +627,24 @@ class Field_Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $id Field identifier.
+	 * @param string          $id    Field identifier.
+	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
+	 *                               Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id ) {
+	public function make_name( $id, $index ) {
 		$name_prefix = $this->name_prefix;
 
-		if ( empty( $name_prefix ) ) {
-			return $id;
+		$field_name = $id;
+		if ( ! empty( $this->name_prefix ) ) {
+			$field_name = $this->name_prefix . '[' . $field_name . ']';
 		}
 
-		return $this->name_prefix . '[' . $id . ']';
+		if ( null !== $this->index ) {
+			$field_name .= '[' . $this->index . ']';
+		}
+
+		return $field_name;
 	}
 
 	/**

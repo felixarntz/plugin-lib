@@ -827,17 +827,7 @@ abstract class Field {
 	 * @return string `id` attribute value.
 	 */
 	protected function get_id_attribute() {
-		$id = $this->manager->make_id( $this->id );
-
-		if ( null !== $this->index ) {
-			if ( '%index%' === $this->index ) {
-				$id .= '-%indexPlus1%';
-			} else {
-				$id .= '-' . ( $this->index + 1 );
-			}
-		}
-
-		return $id;
+		return $this->manager->make_id( $this->id, $this->index );
 	}
 
 	/**
@@ -849,13 +839,7 @@ abstract class Field {
 	 * @return string `name` attribute value.
 	 */
 	protected function get_name_attribute() {
-		$name = $this->manager->make_name( $this->id );
-
-		if ( null !== $this->index ) {
-			$name .= '[' . $this->index . ']';
-		}
-
-		return $name;
+		$name = $this->manager->make_name( $this->id, $this->index );
 	}
 
 	/**
