@@ -911,6 +911,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 			'color'       => 'Leaves_And_Love\Plugin_Lib\Fields\Color',
 			'media'       => 'Leaves_And_Love\Plugin_Lib\Fields\Media',
 			'map'         => 'Leaves_And_Love\Plugin_Lib\Fields\Map',
+			'group'       => 'Leaves_And_Love\Plugin_Lib\Fields\Group',
 		);
 
 		foreach ( $default_field_types as $type => $class_name ) {
