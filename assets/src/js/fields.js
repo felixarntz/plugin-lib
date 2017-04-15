@@ -1284,7 +1284,7 @@
 
 				var $subel = $el.find( '#' + data.wrapAttrs.id );
 
-				fieldsAPI.FieldView[ data.backboneView ].prototype.preRender.apply( this, $subel );
+				fieldsAPI.FieldView[ data.backboneView ].prototype.preRender.apply( this, [ $subel ] );
 			});
 		},
 
@@ -1316,7 +1316,7 @@
 
 				var $subel = $el.find( '#' + data.wrapAttrs.id );
 
-				fieldsAPI.FieldView[ data.backboneView ].prototype.postRender.apply( this, $subel );
+				fieldsAPI.FieldView[ data.backboneView ].prototype.postRender.apply( this, [ $subel ] );
 			});
 		}
 	});
