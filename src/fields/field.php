@@ -839,7 +839,7 @@ abstract class Field {
 	 * @return string `name` attribute value.
 	 */
 	protected function get_name_attribute() {
-		$name = $this->manager->make_name( $this->id, $this->index );
+		return $this->manager->make_name( $this->id, $this->index );
 	}
 
 	/**
