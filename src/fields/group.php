@@ -67,33 +67,36 @@ class Group extends Field implements Field_Manager_Interface {
 	 * }
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
+		$fields = array();
 		if ( isset( $args['fields'] ) ) {
-			$field_instances = array();
-			foreach ( $args['fields'] as $field_id => $field_args ) {
-				$type = 'text';
-				if ( isset( $field_args['type'] ) ) {
-					$type = $field_args['type'];
-					unset( $field_args['type'] );
-				}
-
-				if ( 'group' === $type || ! Field_Manager::is_field_type_registered( $type ) ) {
-					continue;
-				}
-
-				// Sub-fields have some additional argument restrictions.
-				$field_args['repeatable'] = false;
-				$field_args['before'] = null;
-				$field_args['after'] = null;
-				if ( isset( $field_args['dependencies'] ) ) {
-					unset( $field_args['dependencies'] );
-				}
-
-				$class_name = Field_Manager::get_registered_field_type( $type );
-				$field_instances[ $field_id ] = new $class_name( $this, $field_id, $field_args );
-			}
+			$fields = $args['fields'];
+			unset( $args['fields'] );
 		}
 
 		parent::__construct( $manager, $id, $args );
+
+		foreach ( $fields as $field_id => $field_args ) {
+			$type = 'text';
+			if ( isset( $field_args['type'] ) ) {
+				$type = $field_args['type'];
+				unset( $field_args['type'] );
+			}
+
+			if ( 'group' === $type || ! Field_Manager::is_field_type_registered( $type ) ) {
+				continue;
+			}
+
+			// Sub-fields have some additional argument restrictions.
+			$field_args['repeatable'] = false;
+			$field_args['before'] = null;
+			$field_args['after'] = null;
+			if ( isset( $field_args['dependencies'] ) ) {
+				unset( $field_args['dependencies'] );
+			}
+
+			$class_name = Field_Manager::get_registered_field_type( $type );
+			$this->fields[ $field_id ] = new $class_name( $this, $field_id, $field_args );
+		}
 
 		// The slug must contain the ID to ensure all required templates are printed.
 		$this->slug .= '-' . $this->id;
