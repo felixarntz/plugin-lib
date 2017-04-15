@@ -251,6 +251,7 @@ class Group extends Field implements Field_Manager_Interface {
 
 		?>
 		<div id="<?php echo esc_attr( $group_id ); ?>"<?php echo $class; ?>>
+			<?php $this->render_repeatable_remove_button(); ?>
 			<?php foreach ( $this->fields as $id => $field_instance ) : ?>
 				<div<?php echo $field_instance->get_wrap_attrs(); ?>>
 					<?php $field_instance->render_label(); ?>
@@ -259,7 +260,6 @@ class Group extends Field implements Field_Manager_Interface {
 			<?php endforeach; ?>
 		</div>
 		<?php
-		$this->render_repeatable_remove_button();
 	}
 
 	/**
@@ -271,6 +271,7 @@ class Group extends Field implements Field_Manager_Interface {
 	protected function print_single_input_template() {
 		?>
 		<div id="{{ data.id }}"<# if ( data.inputAttrs.class ) { #> class="{{ data.inputAttrs.class }}"<# } #>>
+			<?php $this->print_repeatable_remove_button_template(); ?>
 			<?php foreach ( $this->fields as $id => $field_instance ) : ?>
 				<# _.alias( data.fields.<?php echo $id; ?>, function( data ) { #>
 					<div{{{ _.attrs( data.wrapAttrs ) }}}>
@@ -281,7 +282,6 @@ class Group extends Field implements Field_Manager_Interface {
 			<?php endforeach; ?>
 		</div>
 		<?php
-		$this->print_repeatable_remove_button_template();
 	}
 
 	/**
