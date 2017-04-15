@@ -738,7 +738,7 @@ abstract class Field {
 	 * @return array Field data to be JSON-encoded.
 	 */
 	protected function single_to_json( $current_value ) {
-		return array(
+		$data = array(
 			'slug'         => $this->slug,
 			'id'           => $this->get_id_attribute(),
 			'name'         => $this->get_name_attribute(),
@@ -752,6 +752,13 @@ abstract class Field {
 			'wrapAttrs'    => $this->get_wrap_attrs( false ),
 			'currentValue' => $current_value,
 		);
+
+		if ( $this->is_repeatable() ) {
+			$data['repeatable'] = true;
+			$data['repeatableLimit'] = $this->get_repeatable_limit();
+		}
+
+		return $data;
 	}
 
 	/**
