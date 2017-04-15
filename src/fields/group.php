@@ -196,7 +196,7 @@ class Group extends Field implements Field_Manager_Interface {
 	 *                      invalid identifier.
 	 */
 	public function get_message( $identifier, $noop = false ) {
-		$this->manager->get_message( $identifier, $noop );
+		return $this->manager->get_message( $identifier, $noop );
 	}
 
 	/**
