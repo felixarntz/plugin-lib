@@ -632,7 +632,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 *                               Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id, $index ) {
+	public function make_name( $id, $index = null ) {
 		$name_prefix = $this->name_prefix;
 
 		$field_name = $id;

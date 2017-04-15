@@ -130,7 +130,7 @@ class Group extends Field implements Field_Manager_Interface {
 	 *                               Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id, $index ) {
+	public function make_name( $id, $index = null ) {
 		$field_name = $this->manager->make_name( $this->id, $this->index );
 
 		return $field_name . '[' . $id . ']';
