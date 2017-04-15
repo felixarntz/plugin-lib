@@ -106,6 +106,42 @@ class Group extends Field implements Field_Manager_Interface {
 	}
 
 	/**
+	 * Proxies the manager's AJAX API class instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\AJAX AJAX API class instance.
+	 */
+	public function ajax() {
+		return $this->manager->ajax();
+	}
+
+	/**
+	 * Proxies the manager's Assets API class instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\Assets Assets API class instance.
+	 */
+	public function assets() {
+		return $this->manager->assets();
+	}
+
+	/**
+	 * Proxies the manager's library assets API class instance.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return Leaves_And_Love\Plugin_Lib\Assets Library assets API class instance.
+	 */
+	public function library_assets() {
+		return $this->manager->library_assets();
+	}
+
+	/**
 	 * Creates the id attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
