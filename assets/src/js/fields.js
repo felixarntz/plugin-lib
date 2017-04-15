@@ -2,6 +2,9 @@
 	'use strict';
 
 	_.mixin({
+		alias: function( alias, func ) {
+			func( alias );
+		},
 		attrs: function( attrs ) {
 			var attributeString = '';
 
@@ -1005,7 +1008,7 @@
 		preRender: function( $el ) {
 			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
 
-			var editor = tinymce.get( editorId );
+			var editor = window.tinymce.get( editorId );
 			if ( editor ) {
 				editor.save();
 				editor.remove();
@@ -1196,6 +1199,125 @@
 
 		postRender: function( $el ) {
 			$el.find( '.plugin-lib-control' ).wpMapPicker();
+		}
+	});
+
+	fieldsAPI.FieldView.GroupFieldView = fieldsAPI.FieldView.extend({
+		changeValue: function( e ) {
+			var $fieldInput = this.$( e.target );
+			var fieldId = $fieldInput.attr( 'id' );
+			var newValue = this.getInputValue( $fieldInput );
+
+			var currentValue = this.model.get( 'currentValue' );
+			var fields = this.model.get( 'fields' );
+
+			var fieldKeys = Object.keys( fields );
+			var data, id;
+			for ( var i in fieldKeys ) {
+				id = fieldKeys[ i ];
+				data = fields[ id ];
+
+				if ( data.id === fieldId ) {
+					fields[ id ].currentValue = newValue;
+					currentValue[ id ] = newValue;
+					break;
+				}
+			}
+
+			this.model.set( 'fields', fields );
+			this.model.set( 'currentValue', currentValue );
+		},
+
+		changeItemValue: function( e ) {
+			var $itemFieldInput = this.$( e.target );
+			var itemFieldId = $itemFieldInput.attr( 'id' );
+			var newValue = this.getInputValue( $itemFieldInput );
+
+			var $itemGroup = $itemFieldInput.parents( '.plugin-lib-group-control' );
+			var $item      = $itemGroup.parents( '.plugin-lib-repeatable-item' );
+			var itemIndex  = $item.parent().children().index( $item );
+
+			var items = this.model.get( 'items' );
+			if ( items[ itemIndex ] ) {
+				var fieldKeys = Object.keys( items[ itemIndex ].fields );
+				var data, id;
+				for ( var i in fieldKeys ) {
+					id = fieldKeys[ i ];
+					data = items[ itemIndex ].fields[ id ];
+
+					if ( data.id === itemFieldId ) {
+						items[ itemIndex ].fields[ id ].currentValue = newValue;
+						items[ itemIndex ].currentValue[ id ] = newValue;
+						break;
+					}
+				}
+			}
+
+			this.model.set( 'items', items );
+		},
+
+		preRender: function( $el ) {
+			var fields;
+
+			if ( this.model.get( 'repeatable' ) && _.isArray( this.model.get( 'items' ) ) ) {
+				var itemIndex = $el.parent().children().index( $el );
+				var items = this.model.get( 'items' );
+				if ( items[ itemIndex ] ) {
+					fields = items[ itemIndex ].fields;
+				}
+			} else {
+				fields = this.model.get( 'fields' );
+			}
+
+			if ( ! fields ) {
+				return;
+			}
+
+			_.each( fields, function( data ) {
+				if ( ! data.backboneView || 'FieldView' === data.backboneView ) {
+					return;
+				}
+
+				if ( ! fieldsAPI.FieldView[ data.backboneView ] ) {
+					return;
+				}
+
+				var $subel = $el.find( '#' + data.wrapAttrs.id );
+
+				fieldsAPI.FieldView[ data.backboneView ].prototype.preRender.apply( this, $subel );
+			});
+		},
+
+		postRender: function( $el ) {
+			var fields;
+
+			if ( this.model.get( 'repeatable' ) && _.isArray( this.model.get( 'items' ) ) ) {
+				var itemIndex = $el.parent().children().index( $el );
+				var items = this.model.get( 'items' );
+				if ( items[ itemIndex ] ) {
+					fields = items[ itemIndex ].fields;
+				}
+			} else {
+				fields = this.model.get( 'fields' );
+			}
+
+			if ( ! fields ) {
+				return;
+			}
+
+			_.each( fields, function( data ) {
+				if ( ! data.backboneView || 'FieldView' === data.backboneView ) {
+					return;
+				}
+
+				if ( ! fieldsAPI.FieldView[ data.backboneView ] ) {
+					return;
+				}
+
+				var $subel = $el.find( '#' + data.wrapAttrs.id );
+
+				fieldsAPI.FieldView[ data.backboneView ].prototype.postRender.apply( this, $subel );
+			});
 		}
 	});
 
