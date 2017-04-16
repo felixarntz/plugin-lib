@@ -61,6 +61,10 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 }
 
+.plugin-lib-group-control > .plugin-lib-repeatable-remove-button {
+	float: right;
+}
+
 .plugin-lib-group-control > .plugin-lib-wrap {
 	margin-bottom: 12px;
 }
