@@ -282,7 +282,7 @@ abstract class Settings_Page extends Admin_Page {
 		?>
 		<form action="options.php" method="post" novalidate="novalidate">
 			<?php settings_fields( $option ); ?>
-			<?php do_settings_sections( $option ); ?>
+			<?php $this->do_settings_sections( $option ); ?>
 			<?php submit_button(); ?>
 		</form>
 		<?php
@@ -315,6 +315,85 @@ abstract class Settings_Page extends Admin_Page {
 		}
 
 		return $validated_values;
+	}
+
+	/**
+	 * Renders settings sections.
+	 *
+	 * This is a copy of the `do_settings_sections()` WordPress function, which is
+	 * used to call the custom `do_settings_fields()` implementation.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @global $wp_settings_sections Storage array of all settings sections added to admin pages
+	 * @global $wp_settings_fields Storage array of settings fields and info about their pages/sections
+	 *
+	 * @param string $page The slug name of the page whose settings sections should be output.
+	 */
+	protected function do_settings_sections( $page ) {
+		global $wp_settings_sections, $wp_settings_fields;
+
+		if ( ! isset( $wp_settings_sections[$page] ) )
+			return;
+
+		foreach ( (array) $wp_settings_sections[$page] as $section ) {
+			if ( $section['title'] )
+				echo "<h2>{$section['title']}</h2>\n";
+
+			if ( $section['callback'] )
+				call_user_func( $section['callback'], $section );
+
+			if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+				continue;
+			echo '<table class="form-table">';
+			$this->do_settings_fields( $page, $section['id'] );
+			echo '</table>';
+		}
+	}
+
+	/**
+	 * Renders settings fields.
+	 *
+	 * This is a copy of the `do_settings_fields()` WordPress function, which is
+	 * used to print additional attributes in the `<tr>` wrapper of each field.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @global $wp_settings_fields Storage array of settings fields and their pages/sections
+	 *
+	 * @param string $page    Slug title of the admin page who's settings fields should be shown.
+	 * @param string $section Slug title of the settings section who's fields should be shown.
+	 */
+	protected function do_settings_fields( $page, $section ) {
+		global $wp_settings_fields;
+
+		if ( ! isset( $wp_settings_fields[$page][$section] ) )
+			return;
+
+		foreach ( (array) $wp_settings_fields[$page][$section] as $field ) {
+			$class = '';
+
+			if ( ! empty( $field['args']['field_instance'] ) ) {
+				$class = $field['args']['field_instance']->get_wrap_attrs();
+			} elseif ( ! empty( $field['args']['class'] ) ) {
+				$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
+			}
+
+			echo "<tr{$class}>";
+
+			if ( ! empty( $field['args']['label_for'] ) ) {
+				echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+			} else {
+				echo '<th scope="row">' . $field['title'] . '</th>';
+			}
+
+			echo '<td>';
+			call_user_func($field['callback'], $field['args']);
+			echo '</td>';
+			echo '</tr>';
+		}
 	}
 
 	/**
