@@ -255,7 +255,7 @@ class Group extends Field implements Field_Manager_Interface {
 			<?php foreach ( $this->fields as $id => $field_instance ) : ?>
 				<div<?php echo $field_instance->get_wrap_attrs(); ?>>
 					<?php $field_instance->render_label(); ?>
-					<?php $field_instance->render_content(); ?>
+					<?php $field_instance->render_content( $current_value ); ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
