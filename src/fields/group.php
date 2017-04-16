@@ -252,10 +252,12 @@ class Group extends Field implements Field_Manager_Interface {
 		?>
 		<div id="<?php echo esc_attr( $group_id ); ?>"<?php echo $class; ?>>
 			<?php $this->render_repeatable_remove_button(); ?>
-			<?php foreach ( $this->fields as $id => $field_instance ) : ?>
+			<?php foreach ( $this->fields as $id => $field_instance ) :
+				$partial_value = isset( $current_value[ $id ] ) ? $current_value[ $id ] : $field_instance->default;
+				?>
 				<div<?php echo $field_instance->get_wrap_attrs(); ?>>
 					<?php $field_instance->render_label(); ?>
-					<?php $field_instance->render_content( $current_value ); ?>
+					<?php $field_instance->render_content( $partial_value ); ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
