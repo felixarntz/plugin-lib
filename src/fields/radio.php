@@ -55,7 +55,6 @@ class Radio extends Select_Base {
 			$current_value = (array) $current_value;
 		} else {
 			$input_attrs['type'] = 'checkbox';
-			$input_attrs['name'] .= '[]';
 		}
 
 		$base_id = $input_attrs['id'];
@@ -89,11 +88,9 @@ class Radio extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$type = 'checkbox';
-			$name_suffix = '[]';
 			$checked = '<# if ( _.contains( data.currentValue, value ) ) { #> checked<# } #>';
 		} else {
 			$type = 'radio';
-			$name_suffix = '';
 			$checked = '<# if ( data.currentValue === value ) { #> checked<# } #>';
 		}
 
@@ -104,7 +101,7 @@ class Radio extends Select_Base {
 			<# _.each( data.choices, function( label, value, obj ) { #>
 				<input type="<?php echo $type; ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
 					id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
-					name: data.inputAttrs.name + name_suffix
+					name: data.inputAttrs.name
 				} ) ) }}} value="{{ value }}"<?php echo $checked; ?>>
 				<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
 			<# } ) #>
