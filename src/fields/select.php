@@ -145,7 +145,7 @@ class Select extends Select_Base {
 	 * @param mixed $current_value Current field value.
 	 */
 	protected function render_single_input( $current_value ) {
-		if ( ! $this->multi ) {
+		if ( $this->multi ) {
 			$current_value = (array) $current_value;
 		}
 
@@ -196,7 +196,7 @@ class Select extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$multiple = ' multiple';
-			$selected = '<# if ( _.contains( data.currentValue, value ) ) { #> selected<# } #>';
+			$selected = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, value ) ) { #> selected<# } #>';
 		} else {
 			$multiple = '';
 			$selected = '<# if ( data.currentValue === value ) { #> selected<# } #>';
