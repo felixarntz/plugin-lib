@@ -158,6 +158,10 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @access public
 	 */
 	public function enqueue_assets() {
+		if ( empty( $this->tabs ) ) {
+			return;
+		}
+
 		$current_tab_id = $this->get_current_tab();
 
 		$this->tabs[ $current_tab_id ]['field_manager']->enqueue();
