@@ -756,6 +756,15 @@ abstract class Manager extends Service {
 				'num_args' => 2,
 			);
 		}
+
+		if ( method_exists( $this, 'register_rest_routes' ) ) {
+			$this->filters[] = array(
+				'name'     => 'rest_api_init',
+				'callback' => array( $this, 'register_rest_routes' ),
+				'priority' => 10,
+				'num_args' => 0,
+			);
+		}
 	}
 }
 
