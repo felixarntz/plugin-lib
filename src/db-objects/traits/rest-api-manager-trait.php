@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
-if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\REST_API_Trait' ) ) :
+if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\REST_API_Manager_Trait' ) ) :
 
 /**
  * Trait for managers.
@@ -17,7 +17,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\REST_API_Trai
  *
  * @since 1.0.0
  */
-trait REST_API_Trait {
+trait REST_API_Manager_Trait {
 	/**
 	 * The REST controller class name.
 	 *
