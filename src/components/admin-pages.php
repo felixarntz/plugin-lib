@@ -100,9 +100,11 @@ class Admin_Pages extends Service {
 	 * @param int|null                                                $position             Optional. Page position index. Default null.
 	 * @param string                                                  $administration_panel Optional. Either 'site', 'network' or 'user'.
 	 *                                                                                      Default 'site'.
+	 * @param bool                                                    $skip_menu            Optional. Whether to not add a menu or submenu
+	 *                                                                                      item. Default false.
 	 * @return bool True on success, false on failure.
 	 */
-	public function add( $slug, $class_name, $parent_slug = null, $position = null, $administration_panel = 'site' ) {
+	public function add( $slug, $class_name, $parent_slug = null, $position = null, $administration_panel = 'site', $skip_menu = false ) {
 		if ( ! is_subclass_of( $class_name, 'Leaves_And_Love\Plugin_Lib\Components\Admin_Page' ) ) {
 			return false;
 		}
@@ -133,6 +135,7 @@ class Admin_Pages extends Service {
 		$page->administration_panel = $administration_panel;
 		$page->parent_slug          = $parent_slug;
 		$page->position             = $position;
+		$page->skip_menu            = $skip_menu;
 
 		if ( ! isset( $this->pages[ $administration_panel ] ) ) {
 			$this->pages[ $administration_panel ] = array();
@@ -242,6 +245,9 @@ class Admin_Pages extends Service {
 			if ( $page->parent_slug ) {
 				$callback = 'add_submenu_page';
 				array_unshift( $args, $page->parent_slug );
+			} elseif ( $page->skip_menu ) {
+				$callback = 'add_submenu_page';
+				array_unshift( $args, null );
 			} else {
 				$args[] = $page->icon_url;
 				$args[] = $page->position;

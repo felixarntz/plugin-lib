@@ -20,6 +20,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Page' ) ) :
  * @property string      $administration_panel Administration panel the page belongs to.
  * @property string|null $parent_slug          Parent page slug.
  * @property int         $position             Page position index.
+ * @property bool        $skip_menu            Whether to not add a menu or submenu item for the page.
  * @property string      $hook_suffix          Page hook suffix.
  *
  * @property-read string $slug       Page slug.
@@ -100,6 +101,15 @@ abstract class Admin_Page {
 	 * @var int
 	 */
 	protected $position = null;
+
+	/**
+	 * Whether to not add a menu or submenu item for the page.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $skip_menu = false;
 
 	/**
 	 * Page hook suffix.
@@ -226,7 +236,7 @@ abstract class Admin_Page {
 
 		$this->$property = $value;
 
-		if ( in_array( $property, array( 'slug', 'parent_slug', 'administration_panel' ), true ) ) {
+		if ( in_array( $property, array( 'slug', 'parent_slug', 'skip_menu', 'administration_panel' ), true ) ) {
 			$this->update_url();
 		}
 	}
@@ -242,14 +252,16 @@ abstract class Admin_Page {
 	protected function update_url() {
 		$parent_file = 'admin.php';
 
-		if ( false !== strpos( $this->parent_slug, '?' ) ) {
-			list( $base_slug, $query ) = explode( '?', $this->parent_slug, 2 );
-		} else {
-			$base_slug = $this->parent_slug;
-		}
+		if ( $this->parent_slug ) {
+			if ( false !== strpos( $this->parent_slug, '?' ) ) {
+				list( $base_slug, $query ) = explode( '?', $this->parent_slug, 2 );
+			} else {
+				$base_slug = $this->parent_slug;
+			}
 
-		if ( '.php' === substr( $base_slug, -4 ) ) {
-			$parent_file = $this->parent_slug;
+			if ( '.php' === substr( $base_slug, -4 ) ) {
+				$parent_file = $this->parent_slug;
+			}
 		}
 
 		$base_url = '';
@@ -276,7 +288,7 @@ abstract class Admin_Page {
 	 * @return array Array of property names.
 	 */
 	protected function get_read_properties() {
-		return array( 'slug', 'title', 'menu_title', 'capability', 'icon_url', 'position', 'administration_panel', 'parent_slug', 'hook_suffix', 'url' );
+		return array( 'slug', 'title', 'menu_title', 'capability', 'icon_url', 'position', 'skip_menu', 'administration_panel', 'parent_slug', 'hook_suffix', 'url' );
 	}
 
 	/**
@@ -288,7 +300,7 @@ abstract class Admin_Page {
 	 * @return array Array of property names.
 	 */
 	protected function get_write_properties() {
-		return array( 'administration_panel', 'parent_slug', 'position', 'hook_suffix' );
+		return array( 'administration_panel', 'parent_slug', 'position', 'skip_menu', 'hook_suffix' );
 	}
 }
 
