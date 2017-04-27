@@ -145,9 +145,7 @@ class Select extends Select_Base {
 	 * @param mixed $current_value Current field value.
 	 */
 	protected function render_single_input( $current_value ) {
-		if ( $this->multi ) {
-			$current_value = (array) $current_value;
-		}
+		$current_value = (array) $current_value;
 
 		$input_attrs = array( 'multiple' => $this->multi );
 

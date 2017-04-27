@@ -47,12 +47,13 @@ class Radio extends Select_Base {
 	 * @param mixed $current_value Current field value.
 	 */
 	protected function render_single_input( $current_value ) {
+		$current_value = (array) $current_value;
+
 		$input_attrs = $this->get_input_attrs( array(
 			'type' => 'radio',
 		), false );
 
 		if ( $this->multi ) {
-			$current_value = (array) $current_value;
 			$input_attrs['type'] = 'checkbox';
 		}
 
