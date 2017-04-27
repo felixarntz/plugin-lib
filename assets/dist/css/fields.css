@@ -48,6 +48,10 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 /* ----------------------------------------------------------------------------
   2.0 - Specific fields
 ---------------------------------------------------------------------------- */
+.plugin-lib-select-control {
+	min-width: 200px;
+}
+
 .plugin-lib-color-control {
 	max-width: 100px;
 }
