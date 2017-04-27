@@ -51,9 +51,8 @@ class Radio extends Select_Base {
 			'type' => 'radio',
 		), false );
 
-		if ( ! $this->multi ) {
+		if ( $this->multi ) {
 			$current_value = (array) $current_value;
-		} else {
 			$input_attrs['type'] = 'checkbox';
 		}
 
@@ -88,7 +87,7 @@ class Radio extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$type = 'checkbox';
-			$checked = '<# if ( _.contains( data.currentValue, value ) ) { #> checked<# } #>';
+			$checked = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, value ) ) { #> checked<# } #>';
 		} else {
 			$type = 'radio';
 			$checked = '<# if ( data.currentValue === value ) { #> checked<# } #>';
