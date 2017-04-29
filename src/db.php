@@ -365,6 +365,8 @@ class DB extends Service {
 			}
 		} else {
 			$this->uninstall_single();
+
+			$this->options()->flush( 'db_version' );
 		}
 	}
 
