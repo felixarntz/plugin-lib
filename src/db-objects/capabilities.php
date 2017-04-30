@@ -239,15 +239,19 @@ abstract class Capabilities extends Service {
 
 			if ( is_string( $mode ) && 'meta' !== $mode ) {
 				foreach ( $this->base_capabilities as $name => $real_name ) {
-					if ( 'read_items' === $name || 'read_others_items' === $name ) {
-						$mapped_value = 'read';
-					} elseif ( 'create_items' === $name ) {
-						$mapped_value = sprintf( 'edit_%s', $mode );
-					} else {
-						$mapped_value = str_replace( '_items', '_' . $mode, $name );
+					if ( in_array( $mode, array( 'posts', 'pages' ), true ) ) {
+						if ( 'read_items' === $name || 'read_others_items' === $name ) {
+							$this->capability_mappings[ $real_name ] = 'read';
+							continue;
+						}
+
+						if ( 'create_items' === $name ) {
+							$this->capability_mappings[ $real_name ] = sprintf( 'edit_%s', $mode );
+							continue;
+						}
 					}
 
-					$this->capability_mappings[ $real_name ] = $mapped_value;
+					$this->capability_mappings[ $real_name ] = str_replace( '_items', '_' . $mode, $name );
 				}
 			} elseif ( is_array( $mode ) ) {
 				foreach ( $this->base_capabilities as $name => $real_name ) {
