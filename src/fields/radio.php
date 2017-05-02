@@ -70,7 +70,7 @@ class Radio extends Select_Base {
 
 				$input_attrs['id']      = $base_id . '-' . $count;
 				$input_attrs['value']   = $value;
-				$input_attrs['checked'] = in_array( $value, $current_value, true );
+				$input_attrs['checked'] = in_array( (string) $value, $current_value, true );
 				?>
 				<input<?php echo $this->attrs( $input_attrs ); ?>>
 				<label for="<?php echo esc_attr( $input_attrs['id'] ); ?>"><?php echo $label; ?></label>
@@ -88,10 +88,10 @@ class Radio extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$type = 'checkbox';
-			$checked = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, value ) ) { #> checked<# } #>';
+			$checked = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, String( value ) ) ) { #> checked<# } #>';
 		} else {
 			$type = 'radio';
-			$checked = '<# if ( data.currentValue === value ) { #> checked<# } #>';
+			$checked = '<# if ( data.currentValue === String( value ) ) { #> checked<# } #>';
 		}
 
 		?>

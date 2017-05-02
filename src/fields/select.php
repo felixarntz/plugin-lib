@@ -160,7 +160,7 @@ class Select extends Select_Base {
 					<?php foreach ( $optgroup['choices'] as $value => $label ) :
 						$option_attrs = array(
 							'value'    => $value,
-							'selected' => in_array( $value, $current_value, true ),
+							'selected' => in_array( (string) $value, $current_value, true ),
 						);
 						?>
 						<option<?php echo $this->attrs( $option_attrs ); ?>><?php echo esc_html( $label ); ?></option>
@@ -174,7 +174,7 @@ class Select extends Select_Base {
 				<?php foreach ( $this->choices as $value => $label ) :
 					$option_attrs = array(
 						'value'    => $value,
-						'selected' => in_array( $value, $current_value, true ),
+						'selected' => in_array( (string) $value, $current_value, true ),
 					);
 					?>
 					<option<?php echo $this->attrs( $option_attrs ); ?>><?php echo esc_html( $label ); ?></option>
@@ -194,10 +194,10 @@ class Select extends Select_Base {
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
 			$multiple = ' multiple';
-			$selected = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, value ) ) { #> selected<# } #>';
+			$selected = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, String( value ) ) ) { #> selected<# } #>';
 		} else {
 			$multiple = '';
-			$selected = '<# if ( data.currentValue === value ) { #> selected<# } #>';
+			$selected = '<# if ( data.currentValue === String( value ) ) { #> selected<# } #>';
 		}
 
 		?>
