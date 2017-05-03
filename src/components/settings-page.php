@@ -77,8 +77,6 @@ abstract class Settings_Page extends Admin_Page {
 			'update_value_callback_args' => array( $this->slug, '{value}' ),
 			'name_prefix'                => $this->slug,
 		) );
-
-		$this->add_page_content();
 	}
 
 	/**
@@ -170,6 +168,8 @@ abstract class Settings_Page extends Admin_Page {
 	 * @access public
 	 */
 	public function register() {
+		$this->add_page_content();
+
 		register_setting( $this->slug, $this->slug );
 		add_filter( "sanitize_option_{$this->slug}", array( $this, 'validate' ), 10, 2 );
 
