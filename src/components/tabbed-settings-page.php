@@ -213,6 +213,8 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * @access public
 	 */
 	public function register() {
+		$this->add_page_content();
+
 		foreach ( $this->tabs as $id => $tab_args ) {
 			register_setting( $id, $id );
 			add_filter( "sanitize_option_{$id}", array( $this, 'validate' ), 10, 2 );
