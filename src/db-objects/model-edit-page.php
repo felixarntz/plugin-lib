@@ -624,7 +624,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$use_tabs = count( $this->tabs ) > 1;
 		?>
 
-		<div class="form-content<?php echo $use_tabs ? 'tabbed' : 'no-tabs'; ?>">
+		<div class="form-content <?php echo $use_tabs ? 'tabbed' : 'no-tabs'; ?>">
 
 			<?php if ( $use_tabs ) : ?>
 				<h2 class="nav-tab-wrapper" role="tablist">
