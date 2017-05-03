@@ -307,6 +307,42 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 
 		return key( $this->tabs );
 	}
+
+	/**
+	 * Renders settings sections.
+	 *
+	 * This is a copy of the `do_settings_sections()` WordPress function, which is
+	 * used to call the custom `do_settings_fields()` implementation and to print the heading
+	 * as h3 instead of h2 to account for the additional tab navigation.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @global $wp_settings_sections Storage array of all settings sections added to admin pages
+	 * @global $wp_settings_fields Storage array of settings fields and info about their pages/sections
+	 *
+	 * @param string $page The slug name of the page whose settings sections should be output.
+	 */
+	protected function do_settings_sections( $page ) {
+		global $wp_settings_sections, $wp_settings_fields;
+
+		if ( ! isset( $wp_settings_sections[$page] ) )
+			return;
+
+		foreach ( (array) $wp_settings_sections[$page] as $section ) {
+			if ( $section['title'] )
+				echo "<h3>{$section['title']}</h3>\n";
+
+			if ( $section['callback'] )
+				call_user_func( $section['callback'], $section );
+
+			if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+				continue;
+			echo '<table class="form-table">';
+			$this->do_settings_fields( $page, $section['id'] );
+			echo '</table>';
+		}
+	}
 }
 
 endif;
