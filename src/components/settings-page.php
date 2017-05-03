@@ -382,8 +382,11 @@ abstract class Settings_Page extends Admin_Page {
 			}
 
 			echo "<tr{$class}>";
-
-			if ( ! empty( $field['args']['label_for'] ) ) {
+			if ( ! empty( $field['args']['field_instance'] ) ) {
+				echo '<th scope="row">';
+				$field['args']['field_instance']->render_label();
+				echo '</th>';
+			} elseif ( ! empty( $field['args']['label_for'] ) ) {
 				echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
 			} else {
 				echo '<th scope="row">' . $field['title'] . '</th>';
