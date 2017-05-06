@@ -1106,7 +1106,7 @@
 						headers: {
 							'X-WP-Nonce': fieldsAPIData.restNonce
 						},
-						success: function( data, status, xhr ) {
+						success: function( data ) {
 							var results = [];
 							for ( var i in data ) {
 								var value = replacePlaceholdersWithData( autocompleteArgs.valueGenerator, data[ i ] );
@@ -1122,8 +1122,18 @@
 
 							response( results );
 						},
-						error: function( xhr, status ) {
+						error: function( xhr ) {
+							if ( _.isObject( xhr.responseJSON ) && null !== xhr.responseJSON && ! _.isEmpty( xhr.responseJSON.message ) ) {
+								console.error( xhr.responseJSON.message );
+							}
+
 							response([]);
+						},
+						complete: function( xhr ) {
+							var newNonce = xhr.getResponseHeader( 'X-WP-Nonce' );
+							if ( newNonce ) {
+								fieldsAPIData.restNonce = newNonce;
+							}
 						}
 					});
 				}
