@@ -1068,7 +1068,13 @@
 			var fieldPath = placeholder.split( '.' );
 
 			var value = getDataField( fieldPath, data );
-			if ( _.isEmpty( value ) || _.isObject( value ) ) {
+			if ( _.isObject( value ) ) {
+				return match;
+			}
+
+			value = '' + value;
+
+			if ( _.isEmpty( value ) ) {
 				return match;
 			}
 
