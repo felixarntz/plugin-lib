@@ -91,9 +91,12 @@ class Autocomplete extends Text_Base {
 		$args['autocomplete'] = wp_parse_args( $args['autocomplete'], array(
 			'rest_placeholder_search_route' => 'wp/v2/posts?search=%search%',
 			'rest_placeholder_label_route'  => 'wp/v2/posts/%value%',
-			'value_generator'               => 'id',
-			'label_generator'               => 'title.rendered',
+			'value_generator'               => '%id%',
+			'label_generator'               => '%title.rendered%',
 		) );
+
+		$args['rest_placeholder_search_route'] = ltrim( $args['rest_placeholder_search_route'], '/' );
+		$args['rest_placeholder_label_route'] = ltrim( $args['rest_placeholder_label_route'], '/' );
 
 		parent::__construct( $manager, $id, $args );
 	}
@@ -111,8 +114,8 @@ class Autocomplete extends Text_Base {
 		$ret = parent::enqueue();
 
 		$ret[0][] = 'jquery-ui-autocomplete';
-		$ret[1]['rest_url'] = rest_url();
-		$ret[1]['rest_nonce'] = wp_create_nonce( 'wp_rest' );
+		$ret[1]['restUrl'] = rest_url( '/' );
+		$ret[1]['restNonce'] = wp_create_nonce( 'wp_rest' );
 
 		return $ret;
 	}
@@ -182,7 +185,12 @@ class Autocomplete extends Text_Base {
 	protected function single_to_json( $current_value ) {
 		$data = parent::single_to_json( $current_value );
 
-		$data['autocomplete'] = $this->autocomplete;
+		$data['autocomplete'] = array(
+			'restPlaceholderSearchRoute' => $this->autocomplete['rest_placeholder_search_route'],
+			'restPlaceholderLabelRoute'  => $this->autocomplete['rest_placeholder_label_route'],
+			'valueGenerator'             => $this->autocomplete['value_generator'],
+			'labelGenerator'             => $this->autocomplete['label_generator'],
+		);
 
 		return $data;
 	}
@@ -260,7 +268,7 @@ class Autocomplete extends Text_Base {
 	 * @return string String after the replacements, or an empty string if errors occurred while replacing.
 	 */
 	protected function replace_placeholders_with_data( $placeholder_string, $data ) {
-		$replaced = preg_replace_callback( '/\{\{([A-Za-z0-9\.]+)\}\}/', function( $matches ) use ( $data ) {
+		$replaced = preg_replace_callback( '/\%([A-Za-z0-9\.]+)\%/', function( $matches ) use ( $data ) {
 			$field_path = explode( '.', $matches[1] );
 
 			$value = $this->get_data_field( $field_path, $data );
@@ -271,7 +279,7 @@ class Autocomplete extends Text_Base {
 			return $value;
 		}, $placeholder_string );
 
-		if ( false !== strpos( $replaced, '{{' ) ) {
+		if ( false !== strpos( $replaced, '%' ) ) {
 			return '';
 		}
 

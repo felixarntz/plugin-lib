@@ -1045,6 +1045,87 @@
 		}
 	});
 
+	function getDataField( fieldPath, data ) {
+		if ( _.isEmpty( fieldPath ) ) {
+			return data;
+		}
+
+		if ( ! _.isObject( data ) ) {
+			return undefined;
+		}
+
+		var currentField = fieldPath.shift();
+
+		if ( ! data[ currentField ] ) {
+			return undefined;
+		}
+
+		return getDataField( fieldPath, data[ currentField ] );
+	}
+
+	function replacePlaceholdersWithData( placeholderString, data ) {
+		var replaced = placeholderString.replace( /\%([A-Za-z0-9\.]+)\%/, function( match, placeholder ) {
+			var fieldPath = placeholder.split( '.' );
+
+			var value = getDataField( fieldPath, data );
+			if ( _.isEmpty( value ) || _.isObject( value ) ) {
+				return match;
+			}
+
+			return value;
+		});
+
+		if ( -1 < replaced.search( '%' ) ) {
+			return '';
+		}
+
+		return replaced;
+	}
+
+	fieldsAPI.FieldView.AutocompleteFieldView = fieldsAPI.FieldView.extend({
+		preRender: function( $el ) {
+			$el.find( '.plugin-lib-control' ).autocomplete( 'destroy' );
+
+			this.model.set( 'currentLabel', '' );
+		},
+
+		postRender: function( $el ) {
+			var autocompleteArgs = this.model.get( 'autocomplete' );
+
+			$el.find( '.plugin-lib-control' ).autocomplete({
+				source: function( request, response ) {
+					var restUrl = fieldsAPIData.restUrl + autocompleteArgs.restPlaceholderSearchRoute.replace( '%search%', request.term );
+					$.ajax( restUrl, {
+						method: 'GET',
+						dataType: 'json',
+						headers: {
+							'X-WP-Nonce': fieldsAPIData.restNonce
+						},
+						success: function( data, status, xhr ) {
+							var results = [];
+							for ( var i in data ) {
+								var value = replacePlaceholdersWithData( autocompleteArgs.valueGenerator, data[ i ] );
+								var label = replacePlaceholdersWithData( autocompleteArgs.labelGenerator, data[ i ] );
+
+								if ( ! _.isEmpty( value ) && ! _.isEmpty( label ) ) {
+									results.push({
+										value: value,
+										label: label
+									});
+								}
+							}
+
+							response( results );
+						},
+						error: function( xhr, status ) {
+							response([]);
+						}
+					});
+				}
+			});
+		}
+	});
+
 	var dtpLocaleSet = false;
 
 	fieldsAPI.FieldView.DatetimeFieldView = fieldsAPI.FieldView.extend({
