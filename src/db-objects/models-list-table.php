@@ -652,6 +652,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		echo '<label for="filter-by-date" class="screen-reader-text">' . $this->manager->get_message( 'list_table_filter_by_date_label' ) . '</label>';
 		echo '<select id="filter-by-date" name="m">';
+		echo '<option value="0"' . selected( $m, 0, false ) . '>' . $this->manager->get_message( 'list_table_all_dates' ) . '</option>';
 
 		foreach ( $months as $row ) {
 			if ( 0 == $row->year ) {

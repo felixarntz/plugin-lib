@@ -111,6 +111,7 @@ class Translations_Manager extends Translations {
 			'list_table_no'                                         => $this->__translate( 'No', 'textdomain' ),
 			'list_table_filter_button_label'                        => $this->_xtranslate( 'Filter', 'models list button', 'textdomain' ),
 			'list_table_filter_by_date_label'                       => $this->_xtranslate( 'Filter by date', 'models list dropdown label', 'textdomain' ),
+			'list_table_all_dates'                                  => $this->__translate( 'All dates', 'textdomain' ),
 			/* translators: 1: month name, 2: 4-digit year */
 			'list_table_month_year'                                 => $this->_xtranslate( '%1$s %2$s', 'month and year', 'textdomain' ),
 			'list_table_column_label_title'                         => $this->_xtranslate( 'Title', 'model column label', 'textdomain' ),
