@@ -84,14 +84,16 @@ class Autocomplete extends Text_Base {
 	 * }
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
-		if ( isset( $args['autocomplete'] ) ) {
-			$args['autocomplete'] = wp_parse_args( $args['autocomplete'], array(
-				'rest_placeholder_search_route' => '',
-				'rest_placeholder_label_route'  => '',
-				'value_generator'               => '',
-				'label_generator'               => '',
-			) );
+		if ( ! isset( $args['autocomplete'] ) ) {
+			$args['autocomplete'] = array();
 		}
+
+		$args['autocomplete'] = wp_parse_args( $args['autocomplete'], array(
+			'rest_placeholder_search_route' => '',
+			'rest_placeholder_label_route'  => '',
+			'value_generator'               => '',
+			'label_generator'               => '',
+		) );
 
 		parent::__construct( $manager, $id, $args );
 	}
