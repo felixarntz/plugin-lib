@@ -95,8 +95,8 @@ class Autocomplete extends Text_Base {
 			'label_generator'               => '%title.rendered%',
 		) );
 
-		$args['rest_placeholder_search_route'] = ltrim( $args['rest_placeholder_search_route'], '/' );
-		$args['rest_placeholder_label_route'] = ltrim( $args['rest_placeholder_label_route'], '/' );
+		$args['autocomplete']['rest_placeholder_search_route'] = ltrim( $args['autocomplete']['rest_placeholder_search_route'], '/' );
+		$args['autocomplete']['rest_placeholder_label_route'] = ltrim( $args['autocomplete']['rest_placeholder_label_route'], '/' );
 
 		parent::__construct( $manager, $id, $args );
 	}
