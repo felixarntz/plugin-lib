@@ -148,7 +148,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$default_orderby = $date_property;
 			$default_order   = 'DESC';
 
-			if ( isset( $_REQUEST['m'] ) ) {
+			if ( ! empty( $_REQUEST['m'] ) ) {
 				$query_params['date_query'] = array(
 					array(
 						'year'   => substr( $_REQUEST['m'], 0, 4 ),
