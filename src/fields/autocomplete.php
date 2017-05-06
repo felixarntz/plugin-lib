@@ -89,10 +89,10 @@ class Autocomplete extends Text_Base {
 		}
 
 		$args['autocomplete'] = wp_parse_args( $args['autocomplete'], array(
-			'rest_placeholder_search_route' => '',
-			'rest_placeholder_label_route'  => '',
-			'value_generator'               => '',
-			'label_generator'               => '',
+			'rest_placeholder_search_route' => 'wp/v2/posts?search=%search%',
+			'rest_placeholder_label_route'  => 'wp/v2/posts/%value%',
+			'value_generator'               => 'id',
+			'label_generator'               => 'title.rendered',
 		) );
 
 		parent::__construct( $manager, $id, $args );
@@ -129,7 +129,7 @@ class Autocomplete extends Text_Base {
 		$current_label = '';
 
 		if ( ! empty( $current_value ) && ! empty( $this->autocomplete['rest_placeholder_label_route'] ) ) {
-			$rest_url = rest_url( str_replace( '{{value}}', $current_value, $this->autocomplete['rest_placeholder_label_route'] ) );
+			$rest_url = rest_url( str_replace( '%value%', $current_value, $this->autocomplete['rest_placeholder_label_route'] ) );
 			$request = WP_REST_Request::from_url( $rest_url );
 			if ( $request ) {
 				$response = rest_do_request( $request );
@@ -209,7 +209,7 @@ class Autocomplete extends Text_Base {
 				return new WP_Error( 'field_autocomplete_missing_label_route', sprintf( $this->manager->get_message( 'field_autocomplete_missing_label_route' ), $this->label ) );
 			}
 
-			$rest_url = rest_url( str_replace( '{{value}}', $value, $this->autocomplete['rest_placeholder_label_route'] ) );
+			$rest_url = rest_url( str_replace( '%value%', $value, $this->autocomplete['rest_placeholder_label_route'] ) );
 			$request = WP_REST_Request::from_url( $rest_url );
 			if ( ! $request ) {
 				return new WP_Error( 'field_autocomplete_missing_label_route', sprintf( $this->manager->get_message( 'field_autocomplete_missing_label_route' ), $this->label ) );
