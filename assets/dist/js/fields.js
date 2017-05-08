@@ -1147,7 +1147,7 @@
 					e.preventDefault();
 
 					$el.find( '.plugin-lib-control' ).val( ui.item.label );
-					$el.find( '.plugin-lib-control' ).next().val( ui.item.value );
+					$el.find( '.plugin-lib-control' ).next().val( ui.item.value ).trigger( 'change' );
 				},
 				focus: function( e, ui ) {
 					e.preventDefault();
