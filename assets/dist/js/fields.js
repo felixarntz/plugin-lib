@@ -1069,7 +1069,7 @@
 	}
 
 	function replacePlaceholdersWithData( placeholderString, data ) {
-		var replaced = placeholderString.replace( /\%([A-Za-z0-9\.]+)\%/, function( match, placeholder ) {
+		var replaced = placeholderString.replace( /\%([A-Za-z0-9_\.]+)\%/g, function( match, placeholder ) {
 			var fieldPath = placeholder.split( '.' );
 
 			var value = getDataField( fieldPath, data );
