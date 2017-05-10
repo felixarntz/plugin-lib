@@ -87,96 +87,12 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @access public
 	 */
 	public function prepare_items() {
-		$capabilities = $this->manager->capabilities();
-
 		$per_page = $this->get_items_per_page( 'list_' . $this->_args['plural'] . '_per_page' );
-
 		$paged = $this->get_pagenum();
 
-		$query_params = array(
-			'number' => $per_page,
-			'offset' => ( $paged - 1 ) * $per_page,
-		);
+		$query_params = $this->build_query_params( $per_page, ( $paged - 1 ) * $per_page );
 
-		$default_orderby = $this->manager->get_primary_property();
-		$default_order   = 'ASC';
-
-		if ( method_exists( $this->manager, 'get_title_property' ) ) {
-			$default_orderby = $this->manager->get_title_property();
-			$default_order   = 'ASC';
-		}
-
-		if ( method_exists( $this->manager, 'get_type_property' ) ) {
-			$type_property = $this->manager->get_type_property();
-
-			if ( isset( $_REQUEST[ $type_property ] ) ) {
-				$query_params[ $type_property ] = $_REQUEST[ $type_property ];
-			}
-		}
-
-		if ( method_exists( $this->manager, 'get_status_property' ) ) {
-			$status_property = $this->manager->get_status_property();
-
-			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
-
-			if ( isset( $_REQUEST[ $status_property ] ) ) {
-				$query_params[ $status_property ] = (array) $_REQUEST[ $status_property ];
-			}
-
-			if ( ! empty( $internal_statuses ) ) {
-				if ( isset( $query_params[ $status_property ] ) ) {
-					$query_params[ $status_property ] = array_diff( $query_params[ $status_property ], $internal_statuses );
-				} else {
-					$query_params[ $status_property ] = array_diff( array_keys( $this->manager->statuses()->query() ), $internal_statuses );
-				}
-			}
-		}
-
-		if ( method_exists( $this->manager, 'get_author_property' ) ) {
-			$author_property = $this->manager->get_author_property();
-
-			if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
-				$query_params[ $author_property ] = get_current_user_id();
-			} elseif ( isset( $_REQUEST[ $author_property ] ) ) {
-				$query_params[ $author_property ] = $_REQUEST[ $author_property ];
-			}
-		}
-
-		if ( method_exists( $this->manager, 'get_date_property' ) ) {
-			$date_property = $this->manager->get_date_property();
-
-			$default_orderby = $date_property;
-			$default_order   = 'DESC';
-
-			if ( ! empty( $_REQUEST['m'] ) ) {
-				$query_params['date_query'] = array(
-					array(
-						'year'   => substr( $_REQUEST['m'], 0, 4 ),
-						'month'  => substr( $_REQUEST['m'], 4, 2 ),
-						'column' => $date_property,
-					),
-				);
-			}
-		}
-
-		if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-			$query_params['orderby'] = array( $_REQUEST['orderby'] => $_REQUEST['order'] );
-		} elseif ( isset( $_REQUEST['orderby'] ) ) {
-			$query_params['orderby'] = array( $_REQUEST['orderby'] => $default_order );
-		} elseif ( isset( $_REQUEST['order'] ) ) {
-			$query_params['orderby'] = array( $default_orderby => $_REQUEST['order'] );
-		} else {
-			$query_params['orderby'] = array( $default_orderby => $default_order );
-		}
-
-		$query_object = $this->manager->create_query_object();
-
-		$search_fields = $query_object->get_search_fields();
-		if ( ! empty( $search_fields ) && isset( $_REQUEST['s'] ) ) {
-			$query_params['search'] = wp_unslash( trim( $_REQUEST['s'] ) );
-		}
-
-		$collection = $query_object->query( $query_params );
+		$collection = $this->manager->query( $query_params );
 
 		$total = $collection->get_total();
 
@@ -561,6 +477,105 @@ abstract class Models_List_Table extends \WP_List_Table {
 		}
 
 		return $options;
+	}
+
+	/**
+	 * Builds query parameters for the current request.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param int $number Maximum number of models to query.
+	 * @param int $offset Offset to query models.
+	 * @return array Associative array of query parameters.
+	 */
+	protected function build_query_params( $number, $offset ) {
+		$query_params = array(
+			'number' => $number,
+			'offset' => $offset,
+		);
+
+		$default_orderby = $this->manager->get_primary_property();
+		$default_order   = 'ASC';
+
+		if ( method_exists( $this->manager, 'get_title_property' ) ) {
+			$default_orderby = $this->manager->get_title_property();
+			$default_order   = 'ASC';
+		}
+
+		if ( method_exists( $this->manager, 'get_type_property' ) ) {
+			$type_property = $this->manager->get_type_property();
+
+			if ( isset( $_REQUEST[ $type_property ] ) ) {
+				$query_params[ $type_property ] = $_REQUEST[ $type_property ];
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_status_property' ) ) {
+			$status_property = $this->manager->get_status_property();
+
+			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
+
+			if ( isset( $_REQUEST[ $status_property ] ) ) {
+				$query_params[ $status_property ] = (array) $_REQUEST[ $status_property ];
+			}
+
+			if ( ! empty( $internal_statuses ) ) {
+				if ( isset( $query_params[ $status_property ] ) ) {
+					$query_params[ $status_property ] = array_diff( $query_params[ $status_property ], $internal_statuses );
+				} else {
+					$query_params[ $status_property ] = array_diff( array_keys( $this->manager->statuses()->query() ), $internal_statuses );
+				}
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			$capabilities = $this->manager->capabilities();
+
+			if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
+				$query_params[ $author_property ] = get_current_user_id();
+			} elseif ( isset( $_REQUEST[ $author_property ] ) ) {
+				$query_params[ $author_property ] = $_REQUEST[ $author_property ];
+			}
+		}
+
+		if ( method_exists( $this->manager, 'get_date_property' ) ) {
+			$date_property = $this->manager->get_date_property();
+
+			$default_orderby = $date_property;
+			$default_order   = 'DESC';
+
+			if ( ! empty( $_REQUEST['m'] ) ) {
+				$query_params['date_query'] = array(
+					array(
+						'year'   => substr( $_REQUEST['m'], 0, 4 ),
+						'month'  => substr( $_REQUEST['m'], 4, 2 ),
+						'column' => $date_property,
+					),
+				);
+			}
+		}
+
+		if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
+			$query_params['orderby'] = array( $_REQUEST['orderby'] => $_REQUEST['order'] );
+		} elseif ( isset( $_REQUEST['orderby'] ) ) {
+			$query_params['orderby'] = array( $_REQUEST['orderby'] => $default_order );
+		} elseif ( isset( $_REQUEST['order'] ) ) {
+			$query_params['orderby'] = array( $default_orderby => $_REQUEST['order'] );
+		} else {
+			$query_params['orderby'] = array( $default_orderby => $default_order );
+		}
+
+		$query_object = $this->manager->create_query_object();
+
+		$search_fields = $query_object->get_search_fields();
+		if ( ! empty( $search_fields ) && isset( $_REQUEST['s'] ) ) {
+			$query_params['search'] = wp_unslash( trim( $_REQUEST['s'] ) );
+		}
+
+		return $query_params;
 	}
 
 	/**
