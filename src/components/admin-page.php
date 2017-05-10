@@ -220,7 +220,7 @@ abstract class Admin_Page {
 		if ( 'capability' === $property && is_array( $this->capability ) ) {
 			$page_capability = '';
 
-			foreach ( $capabilities as $capability ) {
+			foreach ( $this->capability as $capability ) {
 				$page_capability = $capability;
 				if ( current_user_can( $capability ) ) {
 					break;
