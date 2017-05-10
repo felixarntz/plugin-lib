@@ -869,7 +869,7 @@ abstract class Query {
 
 		$searches = array();
 		foreach ( $fields as $field ) {
-			$searches[] = $searches[] = "%{$table_name}%." . $wpdb->prepare( "{$field} LIKE %s", $like );
+			$searches[] = "%{$table_name}%." . $wpdb->prepare( "{$field} LIKE %s", $like );
 		}
 
 		return '(' . implode( ' OR ', $searches ) . ')';

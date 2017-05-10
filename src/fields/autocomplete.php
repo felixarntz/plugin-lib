@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib\Fields;
 
 use Leaves_And_Love\Plugin_Lib\Fields\Text_Base;
 use WP_Error;
+use WP_REST_Request;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 
@@ -268,7 +269,7 @@ class Autocomplete extends Text_Base {
 	 * @return string String after the replacements, or an empty string if errors occurred while replacing.
 	 */
 	protected function replace_placeholders_with_data( $placeholder_string, $data ) {
-		$replaced = preg_replace_callback( '/\%([A-Za-z0-9\.]+)\%/', function( $matches ) use ( $data ) {
+		$replaced = preg_replace_callback( '/\%([A-Za-z0-9_\.]+)\%/', function( $matches ) use ( $data ) {
 			$field_path = explode( '.', $matches[1] );
 
 			$value = $this->get_data_field( $field_path, $data );

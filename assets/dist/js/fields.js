@@ -1069,7 +1069,7 @@
 	}
 
 	function replacePlaceholdersWithData( placeholderString, data ) {
-		var replaced = placeholderString.replace( /\%([A-Za-z0-9\.]+)\%/, function( match, placeholder ) {
+		var replaced = placeholderString.replace( /\%([A-Za-z0-9_\.]+)\%/g, function( match, placeholder ) {
 			var fieldPath = placeholder.split( '.' );
 
 			var value = getDataField( fieldPath, data );
@@ -1147,7 +1147,7 @@
 					e.preventDefault();
 
 					$el.find( '.plugin-lib-control' ).val( ui.item.label );
-					$el.find( '.plugin-lib-control' ).next().val( ui.item.value );
+					$el.find( '.plugin-lib-control' ).next().val( ui.item.value ).trigger( 'change' );
 				},
 				focus: function( e, ui ) {
 					e.preventDefault();
