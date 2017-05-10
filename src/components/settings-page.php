@@ -80,6 +80,18 @@ abstract class Settings_Page extends Admin_Page {
 	}
 
 	/**
+	 * Handles a request to the page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public function handle_request() {
+		if ( ! $this->current_user_can() ) {
+			wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
+		}
+	}
+
+	/**
 	 * Adds a section to the settings page.
 	 *
 	 * @since 1.0.0

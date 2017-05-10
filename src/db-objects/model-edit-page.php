@@ -260,7 +260,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 			$this->is_update = true;
 		} else {
-			if ( ! $capabilities || ! $capabilities->user_can_create() ) {
+			if ( ! $this->current_user_can() ) {
 				wp_die( $this->model_manager->get_message( 'edit_page_cannot_create_item' ), 403 );
 			}
 

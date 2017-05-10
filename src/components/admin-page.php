@@ -60,9 +60,11 @@ abstract class Admin_Page {
 	/**
 	 * Required capability to access the page.
 	 *
+	 * May be an array if a hierarchy of fallback capabilities should be used.
+	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var string
+	 * @var string|array
 	 */
 	protected $capability = '';
 
@@ -215,6 +217,19 @@ abstract class Admin_Page {
 			return null;
 		}
 
+		if ( 'capability' === $property && is_array( $this->capability ) ) {
+			$page_capability = '';
+
+			foreach ( $capabilities as $capability ) {
+				$page_capability = $capability;
+				if ( current_user_can( $capability ) ) {
+					break;
+				}
+			}
+
+			return $page_capability;
+		}
+
 		return $this->$property;
 	}
 
@@ -277,6 +292,30 @@ abstract class Admin_Page {
 		}
 
 		$this->url = add_query_arg( 'page', $this->slug, $base_url );
+	}
+
+	/**
+	 * Checks whether the current user can access the page.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @return bool True if the current user can access the page, false otherwise.
+	 */
+	protected function current_user_can() {
+		if ( is_array( $this->capability ) ) {
+			$has_cap = false;
+			foreach ( $this->capability as $capability ) {
+				if ( current_user_can( $capability ) ) {
+					$has_cap = true;
+					break;
+				}
+			}
+
+			return $has_cap;
+		}
+
+		return current_user_can( $this->capability );
 	}
 
 	/**

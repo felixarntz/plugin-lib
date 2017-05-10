@@ -85,8 +85,7 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @access public
 	 */
 	public function handle_request() {
-		$capabilities = $this->model_manager->capabilities();
-		if ( ! $capabilities || ! $capabilities->user_can_edit() ) {
+		if ( ! $this->current_user_can() ) {
 			wp_die( $this->model_manager->get_message( 'list_page_cannot_edit_items' ), 403 );
 		}
 
