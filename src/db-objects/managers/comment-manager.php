@@ -59,6 +59,8 @@ class Comment_Manager extends Core_Manager {
 		$this->date_property    = 'comment_date';
 		$this->author_property  = 'user_id';
 
+		$this->public = true;
+
 		parent::__construct( $prefix, $services, $translations );
 	}
 

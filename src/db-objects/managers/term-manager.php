@@ -62,6 +62,8 @@ class Term_Manager extends Core_Manager {
 		$this->slug_property    = 'slug';
 		$this->type_property    = 'taxonomy';
 
+		$this->public = true;
+
 		parent::__construct( $prefix, $services, $translations );
 	}
 

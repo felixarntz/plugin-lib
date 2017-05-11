@@ -69,6 +69,8 @@ class Post_Manager extends Core_Manager {
 		$this->status_property  = 'post_status';
 		$this->author_property  = 'post_author';
 
+		$this->public = true;
+
 		$this->secondary_date_properties = array( 'post_modified' );
 
 		parent::__construct( $prefix, $services, $translations );
