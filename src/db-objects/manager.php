@@ -101,6 +101,15 @@ abstract class Manager extends Service {
 	protected $primary_property = 'id';
 
 	/**
+	 * Whether the models are publicly readable.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var bool
+	 */
+	protected $public = false;
+
+	/**
 	 * The database service definition.
 	 *
 	 * @since 1.0.0
@@ -491,6 +500,18 @@ abstract class Manager extends Service {
 	}
 
 	/**
+	 * Checks whether the models are publicly readable.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return bool True if models are public, false otherwise.
+	 */
+	public function is_public() {
+		return $this->public;
+	}
+
+	/**
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0
@@ -540,10 +561,10 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param int|string  $key   The key under which the cache contents are stored.
-	 * @param bool        $force Optional. Whether to force an update of the local cache from the
-	 *                           persistent cache. Default false.
-	 * @param bool        $found Optional. Whether the key was found in the cache. Disambiguates a
+	 * @param int|string $key   The key under which the cache contents are stored.
+	 * @param bool       $force Optional. Whether to force an update of the local cache from the
+	 *                          persistent cache. Default false.
+	 * @param bool       $found Optional. Whether the key was found in the cache. Disambiguates a
 	 *                           return of false, a storable value. Passed by reference. Default null.
 	 * @return bool|mixed False on failure to retrieve contents, or the cache contents on success.
 	 */
