@@ -101,7 +101,7 @@ class REST_Model_Types_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_edit_types', $this->manager->get_message( 'rest_cannot_edit_types' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
-		if ( ! $capabilities || ! $capabilities->user_can_read() ) {
+		if ( ! $this->manager->is_public() && ( ! $capabilities || ! $capabilities->user_can_read() ) ) {
 			return new WP_Error( 'rest_cannot_read_types', $this->manager->get_message( 'rest_cannot_read_types' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
@@ -147,14 +147,14 @@ class REST_Model_Types_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_edit_type', $this->manager->get_message( 'rest_cannot_edit_type' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
-		if ( ! $capabilities || ! $capabilities->user_can_read() ) {
-			return new WP_Error( 'rest_cannot_read_type', $this->manager->get_message( 'rest_cannot_read_type' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
 		$obj = $this->manager->types()->get( $request['slug'] );
 
 		if ( ! $obj || ( ! $obj->public && 'edit' !== $request['context'] ) ) {
 			return new WP_Error( 'rest_invalid_type_slug', $this->manager->get_message( 'rest_invalid_type_slug' ), array( 'status' => 404 ) );
+		}
+
+		if ( ! $this->manager->is_public() && ( ! $capabilities || ! $capabilities->user_can_read() ) ) {
+			return new WP_Error( 'rest_cannot_read_type', $this->manager->get_message( 'rest_cannot_read_type' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;

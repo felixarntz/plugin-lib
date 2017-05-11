@@ -182,6 +182,28 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			return true;
 		}
 
+		if ( $this->manager->is_public() ) {
+			if ( ! method_exists( $this->manager, 'get_status_property' ) ) {
+				return true;
+			}
+
+			$public_statuses = $this->manager->statuses()->get_public();
+
+			if ( ! empty( $public_statuses ) ) {
+				$public = true;
+				foreach ( (array) $request[ $this->manager->get_status_property() ] as $status ) {
+					if ( ! in_array( $status, $public_statuses, true ) ) {
+						$public = false;
+						break;
+					}
+				}
+
+				if ( $public ) {
+					return true;
+				}
+			}
+		}
+
 		if ( ! $capabilities || ! $capabilities->user_can_read() ) {
 			return new WP_Error( 'rest_cannot_read_items', $this->manager->get_message( 'rest_cannot_read_items' ), array( 'status' => rest_authorization_required_code() ) );
 		}
@@ -327,6 +349,19 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			}
 
 			return true;
+		}
+
+		if ( $this->manager->is_public() ) {
+			if ( ! method_exists( $this->manager, 'get_status_property' ) ) {
+				return true;
+			}
+
+			$public_statuses = $this->manager->statuses()->get_public();
+			$status_property = $this->manager->get_status_property();
+
+			if ( in_array( $model->$status_property, $public_statuses, true ) ) {
+				return true;
+			}
 		}
 
 		if ( ! $capabilities || ! $capabilities->user_can_read( null, $request[ $primary_property ] ) ) {

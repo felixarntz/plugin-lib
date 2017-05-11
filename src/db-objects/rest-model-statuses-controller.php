@@ -101,7 +101,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_edit_statuses', $this->manager->get_message( 'rest_cannot_edit_statuses' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
-		if ( ! $capabilities || ! $capabilities->user_can_read() ) {
+		if ( ! $this->manager->is_public() && ( ! $capabilities || ! $capabilities->user_can_read() ) ) {
 			return new WP_Error( 'rest_cannot_read_statuses', $this->manager->get_message( 'rest_cannot_read_statuses' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
@@ -147,14 +147,14 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_edit_status', $this->manager->get_message( 'rest_cannot_edit_status' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
-		if ( ! $capabilities || ! $capabilities->user_can_read() ) {
-			return new WP_Error( 'rest_cannot_read_status', $this->manager->get_message( 'rest_cannot_read_status' ), array( 'status' => rest_authorization_required_code() ) );
-		}
-
 		$obj = $this->manager->statuses()->get( $request['slug'] );
 
 		if ( ! $obj || ( ! $obj->public && 'edit' !== $request['context'] ) ) {
 			return new WP_Error( 'rest_invalid_status_slug', $this->manager->get_message( 'rest_invalid_status_slug' ), array( 'status' => 404 ) );
+		}
+
+		if ( ! $this->manager->is_public() && ( ! $capabilities || ! $capabilities->user_can_read() ) ) {
+			return new WP_Error( 'rest_cannot_read_status', $this->manager->get_message( 'rest_cannot_read_status' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
 		return true;
