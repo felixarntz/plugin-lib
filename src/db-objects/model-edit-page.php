@@ -281,6 +281,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 				$status_property = $this->model_manager->get_status_property();
 				$this->model->$status_property = $this->model_manager->statuses()->get_default();
 			}
+
+			$this->title = $this->model_manager->get_message( 'edit_page_add_new_item' );
 		}
 
 		$this->handle_actions();

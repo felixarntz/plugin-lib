@@ -64,6 +64,7 @@ class Translations_Manager extends Translations {
 
 			'edit_page_item'                                        => $this->__translate( 'Edit Model', 'textdomain' ),
 			'edit_page_add_new'                                     => $this->_xtranslate( 'Add New', 'model button', 'textdomain' ),
+			'edit_page_add_new_item'                                => $this->__translate( 'Add New Model', 'textdomain' ),
 			'edit_page_invalid_id'                                  => $this->__translate( 'Invalid model ID.', 'textdomain' ),
 			'edit_page_cannot_edit_item'                            => $this->__translate( 'Sorry, you are not allowed to edit this model.', 'textdomain' ),
 			'edit_page_cannot_create_item'                          => $this->__translate( 'Sorry, you are not allowed to create a new model.', 'textdomain' ),
