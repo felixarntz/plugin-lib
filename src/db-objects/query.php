@@ -20,12 +20,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
  *
  * @since 1.0.0
  *
- * @property-read string                                    $request
- * @property-read array                                     $request_args
- * @property-read array                                     $sql_clauses
- * @property-read array                                     $query_vars
- * @property-read array                                     $query_var_defaults
- * @property-read Leaves_And_Love\Plugin_Lib\DB_Objects\Collection $results
+ * @property-read string     $request
+ * @property-read array      $request_args
+ * @property-read array      $sql_clauses
+ * @property-read array      $query_vars
+ * @property-read array      $query_var_defaults
+ * @property-read Collection $results
  */
 abstract class Query {
 	/**
@@ -33,7 +33,7 @@ abstract class Query {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -96,7 +96,7 @@ abstract class Query {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Collection
+	 * @var Collection
 	 */
 	protected $results;
 
@@ -135,7 +135,7 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model query.
+	 * @param Manager $manager The manager instance for the model query.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -290,10 +290,10 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @see Leaves_And_Love\Plugin_Lib\DB_Objects\Query::query()
+	 * @see Query::query()
 	 *
 	 * @param string|array $query Array or query string of model query arguments. See
-	 *                            Leaves_And_Love\Plugin_Lib\DB_Objects\Query::query().
+	 *                            {@see Query::query()}.
 	 */
 	protected function parse_query( $query ) {
 		$this->query_vars = wp_parse_args( $query, $this->query_var_defaults );
@@ -306,7 +306,7 @@ abstract class Query {
 		$this->query_vars['offset'] = absint( $this->query_vars['offset'] );
 
 		if ( null === $this->query_vars['no_found_rows'] ) {
-			if ( $this->query_vars['number'] === 0 ) {
+			if ( 0 === $this->query_vars['number'] ) {
 				$this->query_vars['no_found_rows'] = true;
 			} else {
 				$this->query_vars['no_found_rows'] = false;
@@ -341,7 +341,7 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
+	 * @return Collection Collection of models.
 	 */
 	protected function get_results() {
 		$key = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
@@ -382,11 +382,11 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param array  $models  The model IDs, or objects for this collection.
-	 * @param int    $total   Optional. The total amount of models in the collection. Default is the
-	 *                        number of models.
-	 * @param string $fields  Optional. Mode of the models passed. Default 'ids'.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
+	 * @param array  $model_ids The model IDs, or objects for this collection.
+	 * @param int    $total     Optional. The total amount of models in the collection. Default is the
+	 *                          number of models.
+	 * @param string $fields    Optional. Mode of the models passed. Default 'ids'.
+	 * @return Collection Collection of models.
 	 */
 	protected function create_collection( $model_ids, $total, $fields ) {
 		$model_ids = array_map( 'intval', $model_ids );
@@ -655,7 +655,7 @@ abstract class Query {
 
 			$meta_query_clauses = $this->meta_query->get_clauses();
 
-			return sprintf( "CAST(%s.meta_value AS %s)", esc_sql( $meta_query_clauses[ $orderby ]['alias'] ), esc_sql( $meta_query_clauses[ $orderby ]['cast'] ) );
+			return sprintf( 'CAST(%s.meta_value AS %s)', esc_sql( $meta_query_clauses[ $orderby ]['alias'] ), esc_sql( $meta_query_clauses[ $orderby ]['cast'] ) );
 		}
 
 		return '%' . $table_name . '%.' . $orderby;
@@ -850,7 +850,7 @@ abstract class Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @global wpdb  $wpdb WordPress database abstraction object.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
 	 * @param string $string Search string.
 	 * @param array  $fields Database columns to search.

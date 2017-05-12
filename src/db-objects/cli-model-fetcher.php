@@ -21,7 +21,7 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -31,7 +31,7 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+	 * @param Manager $manager The manager instance.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -46,7 +46,7 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 * @access public
 	 *
 	 * @param int $arg Model ID.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null Model object, or null if it does not exist.
+	 * @return Model|null Model object, or null if it does not exist.
 	 */
 	public function get( $arg ) {
 		return $this->manager->get( $arg );

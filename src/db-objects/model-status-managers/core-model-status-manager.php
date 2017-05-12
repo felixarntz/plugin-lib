@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Core_Model_Status_Manager' ) ) :
 
@@ -28,18 +29,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * @var string
 	 */
 	protected $default = '';
-
-	/**
-	 * Constructor.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param string $prefix The instance prefix.
-	 */
-	public function __construct( $prefix ) {
-		parent::__construct( $prefix );
-	}
 
 	/**
 	 * Registers a new status.
@@ -73,7 +62,7 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status|null Status object, or null it it does not exist.
+	 * @return Model_Status|null Status object, or null it it does not exist.
 	 */
 	public function get( $slug ) {
 		if ( isset( $this->items[ $slug ] ) ) {

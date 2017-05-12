@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
+use Leaves_And_Love\Plugin_Lib\Translations\Translations;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait' ) ) :
 
 /**
@@ -21,7 +23,7 @@ trait Translations_Service_Trait {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Translations\Translations
+	 * @var Translations
 	 */
 	protected $translations;
 
@@ -46,7 +48,7 @@ trait Translations_Service_Trait {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 * @param Translations $translations Translations instance.
 	 */
 	protected function set_translations( $translations ) {
 		$this->translations = $translations;

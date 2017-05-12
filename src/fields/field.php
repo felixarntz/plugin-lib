@@ -23,7 +23,7 @@ abstract class Field {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 * @var  Field_Manager
 	 */
 	protected $manager = null;
 
@@ -32,7 +32,7 @@ abstract class Field {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver|null
+	 * @var Dependency_Resolver|null
 	 */
 	protected $dependency_resolver = null;
 
@@ -197,9 +197,9 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $manager Field manager instance.
-	 * @param string                                          $id      Field identifier.
-	 * @param array                                           $args    {
+	 * @param Field_Manager $manager Field manager instance.
+	 * @param string        $id      Field identifier.
+	 * @param array         $args    {
 	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
 	 *     will be used as an attribute on the input. Default empty array.
 	 *
@@ -860,7 +860,7 @@ abstract class Field {
 
 		$wrap_attrs = array(
 			'id'    => $id . '-repeatable-wrap',
-			'class' => 'plugin-lib-repeatable-wrap plugin-lib-repeatable-'. $this->slug . '-wrap',
+			'class' => 'plugin-lib-repeatable-wrap plugin-lib-repeatable-' . $this->slug . '-wrap',
 		);
 
 		echo '<span' . $this->attrs( $wrap_attrs ) . '>';
@@ -1021,7 +1021,7 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function print_repeatable_add_button_template() {
-		$this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ ' . 'data.label' . ' }}' ) );
+		$this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ data.label }}' ) );
 	}
 
 	/**
@@ -1031,7 +1031,7 @@ abstract class Field {
 	 * @access protected
 	 */
 	protected final function print_repeatable_remove_button_template() {
-		$this->print_repeatable_button_template( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), '{{ ' . 'data.label' . ' }}' ) );
+		$this->print_repeatable_button_template( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), '{{ data.label }}' ) );
 	}
 
 	/**
@@ -1039,6 +1039,9 @@ abstract class Field {
 	 *
 	 * @since 1.0.0
 	 * @access protected
+	 *
+	 * @param string $mode    Button mode. Either 'add' or 'remove'.
+	 * @param string $message Button message.
 	 */
 	protected final function print_repeatable_button_template( $mode, $message ) {
 		$style = '';
@@ -1217,11 +1220,11 @@ abstract class Field {
 				}
 			} else {
 				if ( is_array( $value ) || is_object( $value ) ) {
-					$value = json_encode( $value );
+					$value = wp_json_encode( $value );
 				}
 
 				if ( is_string( $value ) && false !== strpos( $value, '"' ) ) {
-					$output .= " " . $attr . "='" . esc_attr( $value ) . "'";
+					$output .= ' ' . $attr . "='" . esc_attr( $value ) . "'";
 				} else {
 					$output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
 				}

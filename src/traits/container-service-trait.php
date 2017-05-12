@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
 use Leaves_And_Love\Plugin_Lib\Error_Handler;
+use Leaves_And_Love\Plugin_Lib\Service;
 use ReflectionClass;
 
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait' ) ) :
@@ -43,8 +44,7 @@ trait Container_Service_Trait {
 	 *
 	 * @param string $method_name Method name. Should be the name of a service.
 	 * @param array  $args        Method arguments. Unused here.
-	 * @return Leaves_And_Love\Plugin_Lib\Service The service instance, or null
-	 *                                            if it does not exist.
+	 * @return Service The service instance, or null if it does not exist.
 	 */
 	public function __call( $method_name, $args ) {
 		if ( isset( $this->services[ $method_name ] ) ) {

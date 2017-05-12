@@ -10,6 +10,9 @@ namespace Leaves_And_Love\Plugin_Lib\Components;
 
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
+use Leaves_And_Love_Plugin;
+use Leaves_And_Love_Autoloader;
+use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 
@@ -76,7 +79,7 @@ abstract class Extension extends Service {
 	 *
 	 * @param string                 $name             Extension name.
 	 * @param Leaves_And_Love_Plugin $plugin           Parent plugin instance.
-	 * @param string                 $main file        Path to the extension's main file.
+	 * @param string                 $main_file        Path to the extension's main file.
 	 * @param string                 $basedir_relative Optional. The relative base path to the other
 	 *                                                 files of this extension. Default empty.
 	 */

@@ -9,6 +9,8 @@
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
 use Leaves_And_Love\Plugin_Lib\Fields\Interfaces\Field_Manager_Interface;
+use Leaves_And_Love\Plugin_Lib\AJAX;
+use Leaves_And_Love\Plugin_Lib\Assets;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
@@ -52,9 +54,9 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $manager Field manager instance.
-	 * @param string                                          $id      Field identifier.
-	 * @param array                                           $args    {
+	 * @param Field_Manager $manager Field manager instance.
+	 * @param string        $id      Field identifier.
+	 * @param array         $args    {
 	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
 	 *     will be used as an attribute on the input. Default empty array.
 	 *
@@ -120,7 +122,7 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\AJAX AJAX API class instance.
+	 * @return AJAX AJAX API class instance.
 	 */
 	public function ajax() {
 		return $this->manager->ajax();
@@ -132,7 +134,7 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\Assets Assets API class instance.
+	 * @return Assets Assets API class instance.
 	 */
 	public function assets() {
 		return $this->manager->assets();
@@ -144,7 +146,7 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\Assets Library assets API class instance.
+	 * @return Assets Library assets API class instance.
 	 */
 	public function library_assets() {
 		return $this->manager->library_assets();

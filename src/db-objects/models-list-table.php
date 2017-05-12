@@ -25,7 +25,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -35,10 +35,10 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @see WP_List_Table::__construct() for more information on default arguments.
+	 * @see \WP_List_Table::__construct() for more information on default arguments.
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
-	 * @param array                                         $args    An associative array of arguments.
+	 * @param Manager $manager The manager instance.
+	 * @param array   $args    An associative array of arguments.
 	 */
 	public function __construct( $manager, $args = array() ) {
 		$this->manager = $manager;
@@ -140,7 +140,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 * @param Model $model The current model object.
 	 */
 	public function column_cb( $model ) {
 		$primary_property = $this->manager->get_primary_property();
@@ -168,7 +168,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 * @param Model $model The current model object.
 	 */
 	public function column_title( $model ) {
 		$title_property = $this->manager->get_title_property();
@@ -195,7 +195,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 * @param Model $model The current model object.
 	 */
 	public function column_author( $model ) {
 		$author_property = $this->manager->get_author_property();
@@ -214,7 +214,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The current model object.
+	 * @param Model $model The current model object.
 	 */
 	public function column_date( $model ) {
 		$date_property = $this->manager->get_date_property();
@@ -233,8 +233,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model       The current model object.
-	 * @param string                                      $column_name The current column name.
+	 * @param Model  $model       The current model object.
+	 * @param string $column_name The current column name.
 	 */
 	public function column_default( $model, $column_name ) {
 		if ( has_action( "{$this->_args['plural']}_list_table_column_{$column_name}" ) ) {
@@ -246,8 +246,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 			 *
 			 * @since 1.0.0
 			 *
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The current model object.
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+			 * @param Model   $model   The current model object.
+			 * @param Manager $manager The manager instance.
 			 */
 			do_action( "{$this->_args['plural']}_list_table_column_{$column_name}", $model, $this->manager );
 			return;
@@ -298,8 +298,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array                                         $columns Columns as `$slug => $label` pairs.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 * @param array   $columns Columns as `$slug => $label` pairs.
+		 * @param Manager $manager The manager instance.
 		 */
 		return apply_filters( "{$this->_args['plural']}_list_table_columns", $columns, $this->manager );
 	}
@@ -325,8 +325,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array                                         $columns Sortable columns as `$slug => $orderby` pairs.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 * @param array   $columns Sortable columns as `$slug => $orderby` pairs.
+		 * @param Manager $manager The manager instance.
 		 */
 		return apply_filters( "{$this->_args['plural']}_list_table_sortable_columns", $columns, $this->manager );
 	}
@@ -337,9 +337,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model       The model being acted upon.
-	 * @param string                                      $column_name Current column name.
-	 * @param string                                      $primary     Primary column name.
+	 * @param Model  $model       The model being acted upon.
+	 * @param string $column_name Current column name.
+	 * @param string $primary     Primary column name.
 	 * @return string The row actions HTML, or an empty string if the current column is not the primary column.
 	 */
 	protected function handle_row_actions( $model, $column_name, $primary ) {
@@ -366,14 +366,12 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array                                         $actions  Row actions as `$slug => $data` pairs.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model    The current model.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager  The manager instance.
-		 * @param string                                        $view_url The URL to view the model in the frontend,
-		 *                                                                if available.
-		 * @param string                                        $edit_url The URL to edit the model in the backend,
-		 *                                                                if available.
-		 * @param string                                        $list_url The URL to the list page.
+		 * @param array   $actions  Row actions as `$slug => $data` pairs.
+		 * @param Model   $model    The current model.
+		 * @param Manager $manager  The manager instance.
+		 * @param string  $view_url The URL to view the model in the frontend, if available.
+		 * @param string  $edit_url The URL to edit the model in the backend, if available.
+		 * @param string  $list_url The URL to the list page.
 		 */
 		$actions = apply_filters( "{$this->_args['plural']}_list_table_row_actions", $actions, $model, $this->manager, $view_url, $edit_url, $this->_args['models_page'] );
 
@@ -389,7 +387,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 			if ( 0 === strpos( $action_url, $edit_url ) ) {
 				$action_url = add_query_arg( array(
 					'_wpnonce'         => $nonce,
-					'_wp_http_referer' => urlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ),
+					'_wp_http_referer' => rawurlencode( wp_unslash( $_SERVER['REQUEST_URI'] ) ),
 				), $action_url );
 			}
 
@@ -420,9 +418,9 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array                                         $views    Views as `$slug => $data` pairs.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager  The manager instance.
-		 * @param string                                        $list_url The URL to the list page.
+		 * @param array   $views    Views as `$slug => $data` pairs.
+		 * @param Manager $manager  The manager instance.
+		 * @param string  $list_url The URL to the list page.
 		 */
 		$views = apply_filters( "{$this->_args['plural']}_list_table_views", $views, $this->manager, $this->_args['models_page'] );
 
@@ -465,8 +463,8 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param array                                         $actions Bulk actions as `$slug => $data` pairs.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+		 * @param array   $actions Bulk actions as `$slug => $data` pairs.
+		 * @param Manager $manager The manager instance.
 		 */
 		$actions = apply_filters( "{$this->_args['plural']}_list_table_bulk_actions", $actions, $this->manager );
 
@@ -648,7 +646,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
 
 			if ( ! empty( $internal_statuses ) ) {
-				$where .= " AND $status_property NOT IN (" . implode( ',', array_fill( 0, count( $internal_statuses ), '%s' ) ) . ")";
+				$where .= " AND $status_property NOT IN (" . implode( ',', array_fill( 0, count( $internal_statuses ), '%s' ) ) . ')';
 				$where_args = array_merge( $where_args, $internal_statuses );
 			}
 		}
@@ -659,7 +657,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 
 		$month_count = count( $months );
 
-		if ( ! $month_count || ( 1 === $month_count && 0 == $months[0]->month ) ) {
+		if ( ! $month_count || ( 1 === $month_count && 0 === (int) $months[0]->month ) ) {
 			return;
 		}
 
@@ -670,7 +668,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		echo '<option value="0"' . selected( $m, 0, false ) . '>' . $this->manager->get_message( 'list_table_all_dates' ) . '</option>';
 
 		foreach ( $months as $row ) {
-			if ( 0 == $row->year ) {
+			if ( 0 === (int) $row->year ) {
 				continue;
 			}
 
@@ -741,7 +739,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string &$current Slug of the current view, passed by reference. Should be
+	 * @param string $current  Slug of the current view, passed by reference. Should be
 	 *                         set properly in the method.
 	 * @param string $list_url Optional. The URL to the list page. Default empty.
 	 * @return array Views as `$slug => $data` pairs. The $data array must have keys 'url'
@@ -849,14 +847,11 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model for which to return row actions.
-	 * @param int                                         $model_id The model ID.
-	 * @param string                                      $view_url Optional. The URL to view the model in the
-	 *                                                              frontend. Default empty.
-	 * @param string                                      $edit_url Optional. The URL to edit the model in the
-	 *                                                              backend. Default empty.
-	 * @param string                                      $list_url Optional. The URL to the list page. Default
-	 *                                                              empty.
+	 * @param Model  $model    The model for which to return row actions.
+	 * @param int    $model_id The model ID.
+	 * @param string $view_url Optional. The URL to view the model in the frontend. Default empty.
+	 * @param string $edit_url Optional. The URL to edit the model in the backend. Default empty.
+	 * @param string $list_url Optional. The URL to the list page. Default empty.
 	 * @return array Row actions as `$id => $link` pairs.
 	 */
 	protected function build_row_actions( $model, $model_id, $view_url = '', $edit_url = '', $list_url = '' ) {

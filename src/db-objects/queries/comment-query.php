@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Comment_Collection;
 use WP_Comment_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Comment_Query' ) ) :
@@ -28,7 +29,7 @@ class Comment_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of comment query arguments. See `WP_Comment_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Comment_Collection Collection of comments.
+	 * @return Comment_Collection Collection of comments.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +57,7 @@ class Comment_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Comment_Collection Results as a collection.
+	 * @return Comment_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->comments;

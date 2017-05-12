@@ -11,6 +11,7 @@ namespace Leaves_And_Love\Plugin_Lib;
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_DB;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
@@ -20,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
  *
  * @since 1.0.0
  *
- * @method Leaves_And_Love\Plugin_Lib\Options options()
+ * @method Options options()
  */
 class DB extends Service {
 	use Hook_Service_Trait, Container_Service_Trait, Translations_Service_Trait;
@@ -30,7 +31,7 @@ class DB extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var wpdb
+	 * @var \wpdb
 	 */
 	protected $wpdb;
 
@@ -73,7 +74,7 @@ class DB extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_options = 'Leaves_And_Love\Plugin_Lib\Options';
+	protected static $service_options = Options::class;
 
 	/**
 	 * Constructor.
@@ -83,16 +84,16 @@ class DB extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
+	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param string                                               $prefix       The prefix for all database tables.
-	 * @param array                                                $services {
+	 * @param string          $prefix       The prefix for all database tables.
+	 * @param array           $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Options       $options       The Option API class instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type Options       $options       The Option API class instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 * @param Translations_DB $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
 		global $wpdb;
@@ -327,6 +328,8 @@ class DB extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
+	 * @param bool $force Optional. Whether to force install regardless of the check. Default false.
 	 */
 	public function check( $force = false ) {
 		if ( ! $force && $this->version <= $this->options()->get( 'db_version', 0 ) ) {

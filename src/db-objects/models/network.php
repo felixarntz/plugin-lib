@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
 use WP_Network;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network' ) ) :
@@ -27,22 +28,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network' ) ) 
  * @property-read string $cookie_domain
  */
 class Network extends Core_Model {
-	/**
-	 * Constructor.
-	 *
-	 * Sets the ID and fetches relevant data.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model.
-	 * @param WP_Network|null                               $db_obj  Optional. The database object or
-	 *                                                               null for a new instance.
-	 */
-	public function __construct( $manager, $db_obj = null ) {
-		parent::__construct( $manager, $db_obj );
-	}
-
 	/**
 	 * Magic isset-er.
 	 *

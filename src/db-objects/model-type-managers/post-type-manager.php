@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Post_Type;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager' ) ) :
 
 /**
@@ -24,10 +26,10 @@ class Post_Type_Manager extends Core_Model_Type_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix   The instance prefix.
+	 * @param string $prefix The instance prefix.
 	 */
 	public function __construct( $prefix ) {
-		$this->item_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Post_Type';
+		$this->item_class_name = Post_Type::class;
 
 		$this->default = 'post';
 

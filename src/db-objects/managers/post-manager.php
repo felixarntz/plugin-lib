@@ -16,6 +16,16 @@ use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Slug_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Author_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Post_Query;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Post_Status_Manager;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager;
+use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Meta;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Post_Manager' ) ) :
 
@@ -35,23 +45,23 @@ class Post_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                            $prefix   The instance prefix.
-	 * @param array                                                             $services {
+	 * @param string                    $prefix       The instance prefix.
+	 * @param array                     $services     {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB                                                   $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache                                                $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Meta                                                 $meta          The meta instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Post_Type_Manager     $types         The type manager instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Post_Status_Manager $statuses      The status manager instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler                                        $error_handler The error handler instance.
+	 *     @type DB                  $db            The database instance.
+	 *     @type Cache               $cache         The cache instance.
+	 *     @type Meta                $meta          The meta instance.
+	 *     @type Post_Type_Manager   $types         The type manager instance.
+	 *     @type Post_Status_Manager $statuses      The status manager instance.
+	 *     @type Error_Handler       $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Post_Manager $translations Translations instance.
+	 * @param Translations_Post_Manager $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
-		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Post';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection';
-		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Post_Query';
+		$this->class_name            = Post::class;
+		$this->collection_class_name = Post_Collection::class;
+		$this->query_class_name      = Post_Query::class;
 
 		$this->singular_slug = 'post';
 		$this->plural_slug   = 'posts';

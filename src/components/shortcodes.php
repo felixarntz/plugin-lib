@@ -10,6 +10,9 @@ namespace Leaves_And_Love\Plugin_Lib\Components;
 
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Template;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcodes' ) ) :
 
@@ -43,7 +46,7 @@ class Shortcodes extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_cache = 'Leaves_And_Love\Plugin_Lib\Cache';
+	protected static $service_cache = Cache::class;
 
 	/**
 	 * Template service definition.
@@ -53,7 +56,7 @@ class Shortcodes extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_template = 'Leaves_And_Love\Plugin_Lib\Template';
+	protected static $service_template = Template::class;
 
 	/**
 	 * Constructor.
@@ -61,13 +64,13 @@ class Shortcodes extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                              $prefix   The prefix for all shortcodes.
+	 * @param string $prefix   The prefix for all shortcodes.
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The Cache API instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Template      $template      The Template API instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type Cache         $cache         The Cache API instance.
+	 *     @type Template      $template      The Template API instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
@@ -86,9 +89,9 @@ class Shortcodes extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                           $tag     Shortcode tag to be searched in content.
-	 * @param callable                                         $func    Hook to run when shortcode is found.
-	 * @param array|string                                     $args    {
+	 * @param string       $tag  Shortcode tag to be searched in content.
+	 * @param callable     $func Hook to run when shortcode is found.
+	 * @param array|string $args {
 	 *     Array or string of additional shortcode arguments.
 	 *
 	 *     @type callable $enqueue_callback Function to enqueue scripts and stylesheets this shortcode requires.
@@ -138,7 +141,7 @@ class Shortcodes extends Service {
 	 * @access public
 	 *
 	 * @param string $tag Shortcode tag to retrieve object for.
-	 * @return Leaves_And_Love\Plugin_Lib\Components\Shortcode|null Shortcode object, or null if not exists.
+	 * @return Shortcode|null Shortcode object, or null if not exists.
 	 */
 	public function get( $tag ) {
 		if ( ! $this->has( $tag ) ) {

@@ -8,8 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Number;
-
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Range' ) ) :
 
 /**

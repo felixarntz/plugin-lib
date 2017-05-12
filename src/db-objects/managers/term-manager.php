@@ -13,6 +13,15 @@ use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Title_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Content_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Slug_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager;
+use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Meta;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Term_Manager' ) ) :
 
@@ -32,22 +41,22 @@ class Term_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                            $prefix   The instance prefix.
-	 * @param array                                                             $services {
+	 * @param string                    $prefix       The instance prefix.
+	 * @param array                     $services     {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB                                              $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache                                           $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Meta                                            $meta          The meta instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager $types         The type manager instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler                                   $error_handler The error handler instance.
+	 *     @type DB               $db            The database instance.
+	 *     @type Cache            $cache         The cache instance.
+	 *     @type Meta             $meta          The meta instance.
+	 *     @type Taxonomy_Manager $types         The type manager instance.
+	 *     @type Error_Handler    $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Term_Manager $translations Translations instance.
+	 * @param Translations_Term_Manager $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
-		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection';
-		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query';
+		$this->class_name            = Term::class;
+		$this->collection_class_name = Term_Collection::class;
+		$this->query_class_name      = Term_Query::class;
 
 		$this->singular_slug = 'term';
 		$this->plural_slug   = 'terms';

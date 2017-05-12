@@ -50,7 +50,7 @@ final class Shortcode {
 	 *
 	 * @since 1.0.0
 	 * @access private
-	 * @var Leaves_And_Love\Plugin_Lib\Components\Shortcodes
+	 * @var Shortcodes
 	 */
 	private $manager;
 
@@ -69,9 +69,9 @@ final class Shortcode {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                           $tag     Shortcode tag to be searched in content.
-	 * @param callable                                         $func    Hook to run when shortcode is found.
-	 * @param array|string                                     $args    {
+	 * @param string       $tag     Shortcode tag to be searched in content.
+	 * @param callable     $func    Hook to run when shortcode is found.
+	 * @param array|string $args    {
 	 *     Array or string of additional shortcode arguments.
 	 *
 	 *     @type callable $enqueue_callback Function to enqueue scripts and stylesheets this shortcode requires.
@@ -84,7 +84,7 @@ final class Shortcode {
 	 *     @type int      $cache_expiration Time in seconds for which the shortcode should be cached. This only
 	 *                                      takes effect if $cache is true. Default is 86400 (one day).
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Shortcodes $manager The shortcode manager instance.
+	 * @param Shortcodes   $manager The shortcode manager instance.
 	 */
 	public function __construct( $tag, $func, $args, $manager ) {
 		$this->tag = $tag;

@@ -8,9 +8,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
-use WP_REST_Server;
-use WP_REST_Response;
 use WP_REST_Controller;
+use WP_REST_Server;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controller' ) ) :
@@ -26,7 +27,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -37,7 +38,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * @access protected
 	 * @var string
 	 */
-	protected $types_controller_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Controller';
+	protected $types_controller_class_name = REST_Model_Types_Controller::class;
 
 	/**
 	 * Model statuses controller class name.
@@ -46,14 +47,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * @access protected
 	 * @var string
 	 */
-	protected $statuses_controller_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_Controller';
+	protected $statuses_controller_class_name = REST_Model_Statuses_Controller::class;
 
 	/**
 	 * REST model types controller.
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Controller
+	 * @var REST_Model_Types_Controller
 	 */
 	protected $types_controller;
 
@@ -62,7 +63,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_Controller
+	 * @var REST_Model_Statuses_Controller
 	 */
 	protected $statuses_controller;
 
@@ -72,7 +73,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+	 * @param Manager $manager The manager instance.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -662,8 +663,8 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model   Model object.
-	 * @param WP_REST_Request                             $request Request object.
+	 * @param Model           $model   Model object.
+	 * @param WP_REST_Request $request Request object.
 	 * @return WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $model, $request ) {
@@ -713,7 +714,7 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model Model object.
+	 * @param Model $model Model object.
 	 * @return array Links for the given model.
 	 */
 	protected function prepare_links( $model ) {

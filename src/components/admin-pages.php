@@ -11,6 +11,9 @@ namespace Leaves_And_Love\Plugin_Lib\Components;
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Assets;
+use Leaves_And_Love\Plugin_Lib\AJAX;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Pages' ) ) :
 
@@ -50,7 +53,7 @@ class Admin_Pages extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
+	protected static $service_assets = Assets::class;
 
 	/**
 	 * AJAX service definition.
@@ -60,7 +63,7 @@ class Admin_Pages extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_ajax = 'Leaves_And_Love\Plugin_Lib\AJAX';
+	protected static $service_ajax = AJAX::class;
 
 	/**
 	 * Constructor.
@@ -68,13 +71,13 @@ class Admin_Pages extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                              $prefix   The prefix for all shortcodes.
+	 * @param string $prefix   The prefix for all shortcodes.
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Assets        $assets        The Assets API instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\AJAX          $ajax          The AJAX API instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type Assets        $assets        The Assets API instance.
+	 *     @type AJAX          $ajax          The AJAX API instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
@@ -92,16 +95,16 @@ class Admin_Pages extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                  $slug                 Page slug.
-	 * @param string|Leaves_And_Love\Plugin_Lib\Components\Admin_Page $class_name           Either the name of the class to handle the
-	 *                                                                                      page, or an already instantiated object of
-	 *                                                                                      that class.
-	 * @param string|null                                             $parent_slug          Optional. Parent page slug. Default null.
-	 * @param int|null                                                $position             Optional. Page position index. Default null.
-	 * @param string                                                  $administration_panel Optional. Either 'site', 'network' or 'user'.
-	 *                                                                                      Default 'site'.
-	 * @param bool                                                    $skip_menu            Optional. Whether to not add a menu or submenu
-	 *                                                                                      item. Default false.
+	 * @param string            $slug                 Page slug.
+	 * @param string|Admin_Page $class_name           Either the name of the class to handle the
+	 *                                                page, or an already instantiated object of
+	 *                                                that class.
+	 * @param string|null       $parent_slug          Optional. Parent page slug. Default null.
+	 * @param int|null          $position             Optional. Page position index. Default null.
+	 * @param string            $administration_panel Optional. Either 'site', 'network' or 'user'.
+	 *                                                Default 'site'.
+	 * @param bool              $skip_menu            Optional. Whether to not add a menu or submenu
+	 *                                                item. Default false.
 	 * @return bool True on success, false on failure.
 	 */
 	public function add( $slug, $class_name, $parent_slug = null, $position = null, $administration_panel = 'site', $skip_menu = false ) {
@@ -159,8 +162,7 @@ class Admin_Pages extends Service {
 	 * @param string $slug                 Page slug.
 	 * @param string $administration_panel Optional. Either 'site', 'network' or 'user'.
 	 *                                     Default 'site'.
-	 * @return Leaves_And_Love\Plugin_Lib\Components\Admin_Page Admin page instance, or null
-	 *                                                          if it does not exist.
+	 * @return Admin_Page Admin page instance, or null if it does not exist.
 	 */
 	public function get( $slug, $administration_panel = 'site' ) {
 		if ( ! $this->exists( $slug, $administration_panel ) ) {
@@ -281,7 +283,7 @@ class Admin_Pages extends Service {
 		}
 
 		foreach ( $this->pages[ $administration_panel ] as $slug => $page ) {
-			if ( ! is_a( $page, 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) {
+			if ( ! is_a( $page, Settings_Page::class ) ) {
 				continue;
 			}
 

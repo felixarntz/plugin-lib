@@ -11,6 +11,8 @@ namespace Leaves_And_Love\Plugin_Lib\Components;
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Extensions;
+use Leaves_And_Love_Plugin;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extensions' ) ) :
@@ -39,7 +41,7 @@ class Extensions extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $base_class = 'Leaves_And_Love\Plugin_Lib\Components\Extension';
+	protected $base_class = Extension::class;
 
 	/**
 	 * The main plugin instance.
@@ -56,8 +58,8 @@ class Extensions extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                          $prefix       The prefix.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Extensions $translations Translations instance.
+	 * @param string                  $prefix       The prefix.
+	 * @param Translations_Extensions $translations Translations instance.
 	 */
 	public function __construct( $prefix, $translations ) {
 		$this->set_prefix( $prefix );
@@ -74,7 +76,7 @@ class Extensions extends Service {
 	 *
 	 * @param string $name             Identifier for the extension.
 	 * @param string $class_name       Name of the extension class.
-	 * @param string $main file        Path to the extension's main file.
+	 * @param string $main_file        Path to the extension's main file.
 	 * @param string $basedir_relative Optional. The relative base path to the other files of this
 	 *                                 extension. Default empty.
 	 * @return bool|WP_Error True on success, error object on failure.
@@ -113,7 +115,7 @@ class Extensions extends Service {
 	 * @access public
 	 *
 	 * @param string $name Identifier of the extension.
-	 * @return Leaves_And_Love\Plugin_Lib\Components\Extension|null Extension instance, or null if it is not registered.
+	 * @return Extension|null Extension instance, or null if it is not registered.
 	 */
 	public function get( $name ) {
 		if ( ! $this->is_registered( $name ) ) {

@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Taxonomy;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Taxonomy_Manager' ) ) :
 
 /**
@@ -27,7 +29,7 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * @param string $prefix   The instance prefix.
 	 */
 	public function __construct( $prefix ) {
-		$this->item_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Taxonomy';
+		$this->item_class_name = Taxonomy::class;
 
 		$this->default = 'category';
 

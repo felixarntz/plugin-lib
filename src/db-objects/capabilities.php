@@ -64,7 +64,7 @@ abstract class Capabilities extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager = null;
 
@@ -314,7 +314,7 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+	 * @param Manager $manager Manager instance.
 	 */
 	public function set_manager( $manager ) {
 		$this->manager = $manager;

@@ -11,6 +11,14 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Storage;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Date_Manager_Trait;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Site_Manager;
+use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Meta;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Site_Manager' ) ) :
 
@@ -30,21 +38,21 @@ class Site_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                            $prefix   The instance prefix.
-	 * @param array                                                             $services {
+	 * @param string                    $prefix       The instance prefix.
+	 * @param array                     $services     {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB            $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Meta          $meta          The meta instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type DB            $db            The database instance.
+	 *     @type Cache         $cache         The cache instance.
+	 *     @type Meta          $meta          The meta instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Site_Manager $translations Translations instance.
+	 * @param Translations_Site_Manager $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
-		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection';
-		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query';
+		$this->class_name            = Site::class;
+		$this->collection_class_name = Site_Collection::class;
+		$this->query_class_name      = Site_Query::class;
 
 		$this->singular_slug = 'site';
 		$this->plural_slug   = 'sites';

@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
 use WP_Term;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Term' ) ) :
@@ -43,9 +44,8 @@ class Term extends Core_Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model.
-	 * @param WP_Term|null                                  $db_obj  Optional. The database object or
-	 *                                                               null for a new instance.
+	 * @param Manager      $manager The manager instance for the model.
+	 * @param WP_Term|null $db_obj  Optional. The database object or null for a new instance.
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		parent::__construct( $manager, $db_obj );

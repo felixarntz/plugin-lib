@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection;
 use WP_User_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\User_Query' ) ) :
@@ -28,7 +29,7 @@ class User_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of user query arguments. See `WP_User_Query::prepare_query()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection Collection of users.
+	 * @return User_Collection Collection of users.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) ) {
@@ -65,7 +66,7 @@ class User_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\User_Collection Results as a collection.
+	 * @return User_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->get_results();

@@ -27,7 +27,7 @@ abstract class Model_Status_Manager extends Item_Registry {
 	 * @access protected
 	 * @var string
 	 */
-	protected $item_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status';
+	protected $item_class_name = Model_Status::class;
 
 	/**
 	 * Returns the slug of the default status.

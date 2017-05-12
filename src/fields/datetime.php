@@ -8,7 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Text_Base;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
@@ -73,9 +72,9 @@ class Datetime extends Text_Base {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $manager Field manager instance.
-	 * @param string                                          $id      Field identifier.
-	 * @param array                                           $args    {
+	 * @param Field_Manager $manager Field manager instance.
+	 * @param string        $id      Field identifier.
+	 * @param array         $args    {
 	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
 	 *     will be used as an attribute on the input. Default empty array.
 	 *
@@ -352,29 +351,29 @@ class Datetime extends Text_Base {
 	protected function untranslate_replace( $matches ) {
 		$term = $matches[0];
 
-		if ( $key = array_search( $term, self::$locale_data['weekday_initial'] ) ) {
-			if ( $key = array_search( $key, self::$locale_data['weekday'] ) ) {
+		if ( $key = array_search( $term, self::$locale_data['weekday_initial'], true ) ) {
+			if ( $key = array_search( $key, self::$locale_data['weekday'], true ) ) {
 				return $key;
 			}
 		}
 
-		if ( $key = array_search( $term, self::$locale_data['weekday_abbrev'] ) ) {
-			if ( $key = array_search( $key, self::$locale_data['weekday'] ) ) {
+		if ( $key = array_search( $term, self::$locale_data['weekday_abbrev'], true ) ) {
+			if ( $key = array_search( $key, self::$locale_data['weekday'], true ) ) {
 				return $key;
 			}
 		}
 
-		if ( $key = array_search( $term, self::$locale_data['weekday'] ) ) {
+		if ( $key = array_search( $term, self::$locale_data['weekday'], true ) ) {
 			return $key;
 		}
 
-		if ( $key = array_search( $term, self::$locale_data['month_abbrev'] ) ) {
-			if ( $key = array_search( $key, self::$locale_data['month'] ) ) {
+		if ( $key = array_search( $term, self::$locale_data['month_abbrev'], true ) ) {
+			if ( $key = array_search( $key, self::$locale_data['month'], true ) ) {
 				return $key;
 			}
 		}
 
-		if ( $key = array_search( $term, self::$locale_data['month'] ) ) {
+		if ( $key = array_search( $term, self::$locale_data['month'], true ) ) {
 			return $key;
 		}
 

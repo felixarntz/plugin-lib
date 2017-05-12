@@ -8,7 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Field;
+use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Checkbox' ) ) :
 

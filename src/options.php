@@ -41,7 +41,7 @@ class Options extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix   The prefix for all options.
+	 * @param string $prefix The prefix for all options.
 	 */
 	public function __construct( $prefix ) {
 		$this->set_prefix( $prefix );
@@ -165,9 +165,9 @@ class Options extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string  $option     Name of the option to retrieve.
-	 * @param int     $network_id Optional. Network ID to receive the option values for. Default is
-	 *                            the current network.
+	 * @param string $option     Name of the option to retrieve.
+	 * @param int    $network_id Optional. Network ID to receive the option values for. Default is
+	 *                           the current network.
 	 * @return array Array of site IDs with their values for the option name.
 	 */
 	public function get_for_all_sites( $option, $network_id = null ) {
@@ -190,7 +190,7 @@ class Options extends Service {
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
-	 * @param string  $option Name of the option to check.
+	 * @param string $option Name of the option to check.
 	 * @return array Array of network IDs.
 	 */
 	public function get_networks_with_option( $option ) {

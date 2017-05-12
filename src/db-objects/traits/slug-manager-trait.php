@@ -48,10 +48,9 @@ trait Slug_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to set the slug on.
-	 * @param string                                      $slug  Optional. Slug to set. If not
-	 *                                                           provided, the model slug will
-	 *                                                           be used. Default empty.
+	 * @param Model  $model The model to set the slug on.
+	 * @param string $slug  Optional. Slug to set. If not provided, the model slug will
+	 *                      be used. Default empty.
 	 */
 	public function set_unique_slug( $model, $slug = '' ) {
 		$primary_property = $this->get_primary_property();
@@ -97,7 +96,7 @@ trait Slug_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to generate the slug for.
+	 * @param Model $model The model to generate the slug for.
 	 * @return string Generated slug, or empty string if no slug could be generated.
 	 */
 	public function generate_slug( $model ) {
@@ -139,8 +138,8 @@ trait Slug_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param null                                        $ret   Return value from the filter.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to modify.
+	 * @param null  $ret   Return value from the filter.
+	 * @param Model $model The model to modify.
 	 * @return null The unmodified pre-filter value.
 	 */
 	public function maybe_set_slug_property( $ret, $model ) {

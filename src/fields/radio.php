@@ -8,8 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Select_Base;
-
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 
 /**

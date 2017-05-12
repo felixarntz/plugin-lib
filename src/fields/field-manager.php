@@ -9,10 +9,13 @@
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
 use Leaves_And_Love\Plugin_Lib\Service;
-use Leaves_And_Love\Plugin_Lib\Assets;
 use Leaves_And_Love\Plugin_Lib\Fields\Interfaces\Field_Manager_Interface;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Field_Manager;
+use Leaves_And_Love\Plugin_Lib\AJAX;
+use Leaves_And_Love\Plugin_Lib\Assets;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 use WP_Error;
 use Exception;
 
@@ -130,7 +133,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_ajax = 'Leaves_And_Love\Plugin_Lib\AJAX';
+	protected static $service_ajax = AJAX::class;
 
 	/**
 	 * The Assets API service definition.
@@ -140,7 +143,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
+	protected static $service_assets = Assets::class;
 
 	/**
 	 * The Assets API service definition for the library itself.
@@ -150,7 +153,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_library_assets = 'Leaves_And_Love\Plugin_Lib\Assets';
+	protected static $service_library_assets = Assets::class;
 
 
 	/**
@@ -159,7 +162,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access protected
 	 * @static
-	 * @var Leaves_And_Love\Plugin_Lib\Translations\Translations
+	 * @var Translations_Field_Manager
 	 */
 	protected static $translations;
 
@@ -169,15 +172,15 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                             $prefix       Prefix.
-	 * @param array                                                              $services     {
+	 * @param string $prefix   Prefix.
+	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\AJAX          $ajax          The AJAX API class instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Assets        $assets        The Assets API class instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type AJAX          $ajax          The AJAX API class instance.
+	 *     @type Assets        $assets        The Assets API class instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
-	 * @param array                                                              $args         {
+	 * @param array  $args     {
 	 *     Array of arguments.
 	 *
 	 *     @type callable $get_value_callback         Callback to get current values.
@@ -259,7 +262,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @access public
 	 *
 	 * @param string $id Field identifier.
-	 * @return Leaves_And_Love\Plugin_Lib\Fields\Field|null Field instance, or null if it does not exist.
+	 * @return Field|null Field instance, or null if it does not exist.
 	 */
 	public function get( $id ) {
 		if ( ! $this->exists( $id ) ) {
@@ -680,8 +683,8 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field $field Field instance.
-	 * @param mixed                                   $value Current field value.
+	 * @param Field $field Field instance.
+	 * @param mixed $value Current field value.
 	 */
 	protected function render_form_table_row( $field, $value ) {
 		?>
@@ -704,9 +707,9 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field $field  Field instance.
-	 * @param array                                   $values Array of all values to validate.
-	 * @param WP_Error                                $errors Error object to possibly fill.
+	 * @param Field    $field  Field instance.
+	 * @param array    $values Array of all values to validate.
+	 * @param WP_Error $errors Error object to possibly fill.
 	 * @return mixed|WP_Error Validated value on success, error object on failure.
 	 */
 	protected function validate_value( $field, $values, $errors ) {
@@ -751,12 +754,14 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field $field_instance Field instance to recursively add its dependencies and itself.
-	 * @param array                                   $all_instances  All field instances in the collection to sort.
-	 * @param array                                   $resolved       Results array to append to.
-	 * @param array                                   $queued_ids     Array of field identifiers that are currently queued for appending.
-	 *                                                                This allows to detect circular dependencies.
+	 * @param Field $field_instance Field instance to recursively add its dependencies and itself.
+	 * @param array $all_instances  All field instances in the collection to sort.
+	 * @param array $resolved       Results array to append to.
+	 * @param array $queued_ids     Array of field identifiers that are currently queued for appending.
+	 *                              This allows to detect circular dependencies.
 	 * @return array Modified results array.
+	 *
+	 * @throws Exception Thrown if circular dependency is detected.
 	 */
 	protected function resolve_dependency_order_for_instance( $field_instance, $all_instances, $resolved, $queued_ids ) {
 		if ( isset( $resolved[ $field_instance->id ] ) ) {
@@ -895,24 +900,24 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 		self::$defaults_registered = true;
 
 		$default_field_types = array(
-			'text'         => 'Leaves_And_Love\Plugin_Lib\Fields\Text',
-			'email'        => 'Leaves_And_Love\Plugin_Lib\Fields\Email',
-			'url'          => 'Leaves_And_Love\Plugin_Lib\Fields\URL',
-			'textarea'     => 'Leaves_And_Love\Plugin_Lib\Fields\Textarea',
-			'wysiwyg'      => 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG',
-			'number'       => 'Leaves_And_Love\Plugin_Lib\Fields\Number',
-			'range'        => 'Leaves_And_Love\Plugin_Lib\Fields\Range',
-			'checkbox'     => 'Leaves_And_Love\Plugin_Lib\Fields\Checkbox',
-			'select'       => 'Leaves_And_Love\Plugin_Lib\Fields\Select',
-			'multiselect'  => 'Leaves_And_Love\Plugin_Lib\Fields\Multiselect',
-			'radio'        => 'Leaves_And_Love\Plugin_Lib\Fields\Radio',
-			'multibox'     => 'Leaves_And_Love\Plugin_Lib\Fields\Multibox',
-			'autocomplete' => 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete',
-			'datetime'     => 'Leaves_And_Love\Plugin_Lib\Fields\Datetime',
-			'color'        => 'Leaves_And_Love\Plugin_Lib\Fields\Color',
-			'media'        => 'Leaves_And_Love\Plugin_Lib\Fields\Media',
-			'map'          => 'Leaves_And_Love\Plugin_Lib\Fields\Map',
-			'group'        => 'Leaves_And_Love\Plugin_Lib\Fields\Group',
+			'text'         => Text::class,
+			'email'        => Email::class,
+			'url'          => URL::class,
+			'textarea'     => Textarea::class,
+			'wysiwyg'      => WYSIWYG::class,
+			'number'       => Number::class,
+			'range'        => Range::class,
+			'checkbox'     => Checkbox::class,
+			'select'       => Select::class,
+			'multiselect'  => Multiselect::class,
+			'radio'        => Radio::class,
+			'multibox'     => Multibox::class,
+			'autocomplete' => Autocomplete::class,
+			'datetime'     => Datetime::class,
+			'color'        => Color::class,
+			'media'        => Media::class,
+			'map'          => Map::class,
+			'group'        => Group::class,
 		);
 
 		foreach ( $default_field_types as $type => $class_name ) {
@@ -926,7 +931,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 * @param Translations_Field_Manager $translations Translations instance.
 	 */
 	public static function set_translations( $translations ) {
 		self::$translations = $translations;

@@ -27,7 +27,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -76,15 +76,11 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model
-	 *                                                        collection.
-	 * @param array                                  $models  The model IDs, or objects for
-	 *                                                        this collection.
-	 * @param int                                    $total   Optional. The total amount of models
-	 *                                                        in the collection. Default is the
-	 *                                                        number of models.
-	 * @param string                                 $fields  Optional. Mode of the models passed.
-	 *                                                        Default 'ids'.
+	 * @param Manager $manager The manager instance for the model collection.
+	 * @param array   $models  The model IDs, or objects for this collection.
+	 * @param int     $total   Optional. The total amount of models in the collection.
+	 *                         Default is the number of models.
+	 * @param string  $fields  Optional. Mode of the models passed. Default 'ids'.
 	 */
 	public function __construct( $manager, $models, $total = 0, $fields = 'ids' ) {
 		$this->manager = $manager;
@@ -217,7 +213,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @access public
 	 *
 	 * @param int $offset Offset to get model for.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null Model at the offset, or null if it does not exist.
+	 * @return Model|null Model at the offset, or null if it does not exist.
 	 */
 	public function offsetGet( $offset ) {
 		if ( ! isset( $this->models[ $offset ] ) ) {
@@ -244,7 +240,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 *
 	 * Unsetting an model is not allowed here though.
 	 *
-	 * @param int   $offset Offset to unset.
+	 * @param int $offset Offset to unset.
 	 */
 	public function offsetUnset( $offset ) {
 		// Empty method body.
@@ -256,7 +252,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null Model at the current position, or null if it is invalid.
+	 * @return Model|null Model at the current position, or null if it is invalid.
 	 */
 	public function current() {
 		if ( ! isset( $this->models[ $this->position ] ) ) {
@@ -328,8 +324,8 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model|int $model Model object or model ID.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model The model object.
+	 * @param Model|int $model Model object or model ID.
+	 * @return Model The model object.
 	 */
 	protected function transform_into_object( $model ) {
 		return $this->manager->get( $model );
@@ -341,7 +337,7 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model|int $model Model object or model ID.
+	 * @param Model|int $model Model object or model ID.
 	 * @return int The model ID.
 	 */
 	protected function transform_into_id( $model ) {
@@ -364,10 +360,9 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model        Model object.
-	 * @param bool                                        $include_meta Whether to include metadata
-	 *                                                                  for each model in the
-	 *                                                                  collection. Default true.
+	 * @param Model $model        Model object.
+	 * @param bool  $include_meta Whether to include metadata for each model in the
+	 *                            collection. Default true.
 	 * @return array Array including all information for the model.
 	 */
 	protected function transform_into_json( $model, $include_meta = true ) {

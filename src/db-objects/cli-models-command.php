@@ -23,7 +23,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -42,7 +42,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+	 * @param Manager $manager The manager instance.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -85,8 +85,8 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		\WP_CLI::add_command( "$name get", array( $this, 'get' ), $this->get_get_args( $name ) );
 		\WP_CLI::add_command( "$name delete", array( $this, 'delete' ), $this->get_delete_args( $name ) );
 		\WP_CLI::add_command( "$name list", array( $this, 'list_' ), $this->get_list_args( $name ) );
-		//TODO:
-		//\WP_CLI::add_command( "$name generate", array( $this, 'generate' ), $this->get_generate_args( $name ) );
+
+		/* TODO: \WP_CLI::add_command( "$name generate", array( $this, 'generate' ), $this->get_generate_args( $name ) ); */
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
 			\WP_CLI::add_command( "$name meta", new CLI_Model_Meta_Command( $this->manager ) );
@@ -618,11 +618,11 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param string $arg Supplied argument
+	 * @param string $arg Supplied argument.
 	 * @return string Model content.
 	 */
 	protected function read_from_file_or_stdin( $arg ) {
-		if ( $arg !== '-' ) {
+		if ( '-' !== $arg ) {
 			$readfile = $arg;
 			if ( ! file_exists( $readfile ) || ! is_file( $readfile ) ) {
 				\WP_CLI::error( "Unable to read content from '$readfile'." );
@@ -630,6 +630,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		} else {
 			$readfile = 'php://stdin';
 		}
+
 		return file_get_contents( $readfile );
 	}
 }

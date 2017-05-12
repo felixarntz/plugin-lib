@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use WP_Error;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Sitewide_Model_Trait' ) ) :
 
 /**
@@ -134,7 +136,7 @@ trait Sitewide_Model_Trait {
 	 * @access protected
 	 */
 	protected function maybe_switch() {
-		if ( is_multisite() && $this->__site_id && $this->__site_id !== get_current_blog_id() ) {
+		if ( is_multisite() && $this->__site_id && get_current_blog_id() !== $this->__site_id ) {
 			switch_to_blog( $this->__site_id );
 			$this->__switched = true;
 		}

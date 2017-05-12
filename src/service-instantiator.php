@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib;
 
+use Leaves_And_Love\Plugin_Lib\Translations\Translations;
 use ReflectionClass;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Service_Instantiator' ) ) :
@@ -39,7 +40,7 @@ final class Service_Instantiator {
 	 * @param string $class_name Fully qualified service class name.
 	 * @param string $prefix     Prefix for the plugin the service should be instantiated for.
 	 * @param mixed  $args,...   Further arguments to pass to the constructor.
-	 * @return Leaves_And_Love\Plugin_Lib\Service|null The service instance, or null if invalid.
+	 * @return Service|null The service instance, or null if invalid.
 	 */
 	public static function instantiate( $class_name, $prefix ) {
 		if ( ! class_exists( $class_name ) || ! is_subclass_of( $class_name, 'Leaves_And_Love\Plugin_Lib\Service' ) ) {
@@ -177,7 +178,7 @@ final class Service_Instantiator {
 	 *
 	 * @param string $class_name Fully qualified service class name.
 	 * @param array  $args       Further arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\Translations\Translations|null Translations object, or null on failure.
+	 * @return Translations|null Translations object, or null on failure.
 	 */
 	private static function fill_constructor_translations( $class_name, $args ) {
 		foreach ( $args as $arg ) {

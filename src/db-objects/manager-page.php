@@ -9,6 +9,8 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Components\Admin_Page;
+use Leaves_And_Love\Plugin_Lib\Components\Admin_Pages;
+use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 
@@ -23,7 +25,7 @@ abstract class Manager_Page extends Admin_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $model_manager;
 
@@ -33,9 +35,9 @@ abstract class Manager_Page extends Admin_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug          Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager       Admin page manager instance.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager     $model_manager Model manager instance.
+	 * @param string      $slug          Page slug.
+	 * @param Admin_Pages $manager       Admin page manager instance.
+	 * @param Manager     $model_manager Model manager instance.
 	 */
 	public function __construct( $slug, $manager, $model_manager ) {
 		parent::__construct( $slug, $manager );

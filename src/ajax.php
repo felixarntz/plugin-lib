@@ -10,6 +10,7 @@ namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_AJAX;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\AJAX' ) ) :
@@ -37,8 +38,8 @@ class AJAX extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                    $prefix       The prefix for all AJAX actions.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_AJAX $translations Translations instance.
+	 * @param string            $prefix       The prefix for all AJAX actions.
+	 * @param Translations_AJAX $translations Translations instance.
 	 */
 	public function __construct( $prefix, $translations ) {
 		$this->set_prefix( $prefix );

@@ -9,6 +9,8 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Query;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collection;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Core_Query' ) ) :
 
@@ -37,7 +39,7 @@ abstract class Core_Query extends Query {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Core_Manager $manager The manager instance for the model query.
+	 * @param Manager $manager The manager instance for the model query.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -144,7 +146,7 @@ abstract class Core_Query extends Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Core_Collection Results as a collection.
+	 * @return Collection Results as a collection.
 	 */
 	protected abstract function parse_results_collection();
 }

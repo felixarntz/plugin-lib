@@ -9,7 +9,9 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Fields\Field_Manager;
+use Leaves_And_Love\Plugin_Lib\Components\Admin_Pages;
 use Leaves_And_Love\Plugin_Lib\Assets;
+use WP_Screen;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) ) :
@@ -25,7 +27,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Model
+	 * @var Model
 	 */
 	protected $model;
 
@@ -70,7 +72,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 * @var Field_Manager
 	 */
 	protected $field_manager = null;
 
@@ -80,9 +82,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug          Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager       Admin page manager instance.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager     $model_manager Model manager instance.
+	 * @param string      $slug          Page slug.
+	 * @param Admin_Pages $manager       Admin page manager instance.
+	 * @param Manager     $model_manager Model manager instance.
 	 */
 	public function __construct( $slug, $manager, $model_manager ) {
 		parent::__construct( $slug, $manager, $model_manager );
@@ -108,17 +110,21 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$this->list_page_slug = $this->manager->get_prefix() . 'list_' . $this->model_manager->get_plural_slug();
 		}
 
-		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), array(
+		$services = array(
 			'ajax'          => $this->manager->ajax(),
 			'assets'        => $this->manager->assets(),
 			'error_handler' => $this->manager->error_handler(),
-		), array(
+		);
+
+		$manager_args = array(
 			'get_value_callback'         => array( $this, 'get_model_field_value' ),
 			'get_value_callback_args'    => array( '{id}' ),
 			'update_value_callback'      => array( $this, 'update_model_field_value' ),
 			'update_value_callback_args' => array( '{id}', '{value}' ),
 			'name_prefix'                => '',
-		) );
+		);
+
+		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), $services, $manager_args );
 
 		if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 			$this->manager->ajax()->register_action( 'model_generate_slug', array( $this, 'ajax_model_generate_slug' ) );
@@ -134,12 +140,12 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $id   Section identifier.
+	 * @param string $id   Tab identifier.
 	 * @param array  $args {
-	 *     Optional. Section arguments.
+	 *     Optional. Tab arguments.
 	 *
-	 *     @type string $title       Section title.
-	 *     @type string $description Section description. Default empty.
+	 *     @type string $title       Tab title.
+	 *     @type string $description Tab description. Default empty.
 	 * }
 	 */
 	public function add_tab( $id, $args = array() ) {
@@ -332,9 +338,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param int|null                                      $id      Current model ID, or null if new model.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+	 * @param int|null $id      Current model ID, or null if new model.
+	 * @param Model    $model   Current model object.
+	 * @param Manager  $manager Model manager instance.
 	 */
 	public function view_buttons( $id, $model, $manager ) {
 		$view_routing = $manager->view_routing();
@@ -363,9 +369,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param int|null                                      $id      Current model ID, or null if new model.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+	 * @param int|null $id      Current model ID, or null if new model.
+	 * @param Model    $model   Current model object.
+	 * @param Manager  $manager Model manager instance.
 	 */
 	public function status_select( $id, $model, $manager ) {
 		if ( ! method_exists( $manager, 'get_status_property' ) ) {
@@ -538,7 +544,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 			<?php endif; ?>
 
 			<div id="poststuff">
-				<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
+				<div id="post-body" class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
 					<div id="post-body-content">
 						<?php $this->render_form_header(); ?>
 						<?php $this->render_form_content(); ?>
@@ -580,7 +586,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 					$before_slug = $after_slug = '';
 
 					$view_routing = $this->model_manager->view_routing();
-					if ( $view_routing && '' != get_option( 'permalink_structure' ) ) {
+					if ( $view_routing && '' !== (string) get_option( 'permalink_structure' ) ) {
 						$permalink = $view_routing->get_model_sample_permalink_for_property( $this->model, $slug_property );
 
 						if ( ! empty( $permalink ) ) {
@@ -729,9 +735,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 								 *
 								 * @since 1.0.0
 								 *
-								 * @param int|null                                      $id      Current model ID, or null if new model.
-								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+								 * @param int|null $id      Current model ID, or null if new model.
+								 * @param Model    $model   Current model object.
+								 * @param Manager  $manager Model manager instance.
 								 */
 								do_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
 							} else {
@@ -756,9 +762,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 								 *
 								 * @since 1.0.0
 								 *
-								 * @param int|null                                      $id      Current model ID, or null if new model.
-								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-								 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+								 * @param int|null $id      Current model ID, or null if new model.
+								 * @param Model    $model   Current model object.
+								 * @param Manager  $manager Model manager instance.
 								 */
 								do_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
 							} else {
@@ -813,7 +819,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		} else {
 			$action_type = 'row_action';
 
-			$sendback_query = parse_url( $sendback, PHP_URL_QUERY );
+			$sendback_query = wp_parse_url( $sendback, PHP_URL_QUERY );
 			if ( ! empty( $sendback_query ) ) {
 				parse_str( $sendback_query, $sendback_query_args );
 				if ( ! empty( $sendback_query_args ) && ! empty( $sendback_query_args['paged'] ) ) {
@@ -846,9 +852,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 				 *
 				 * @since 1.0.0
 				 *
-				 * @param string                                        $message Empty message to be modified.
-				 * @param int                                           $id      Model ID.
-				 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+				 * @param string  $message Empty message to be modified.
+				 * @param int     $id      Model ID.
+				 * @param Manager $manager The manager instance.
 				 */
 				$message = apply_filters( "{$prefix}{$singular_slug}_handle_{$action_type}_{$doaction}", $message, $id, $this->model_manager );
 			}
@@ -880,7 +886,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param WP_Screen Current screen.
+	 * @param WP_Screen $screen Current screen.
 	 */
 	protected function setup_screen( $screen ) {
 		add_screen_option( 'layout_columns', array(
@@ -943,10 +949,10 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Error                                      $result  Current error object. Might be empty.
-		 * @param int|null                                      $id      Current model ID, or null if new model.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+		 * @param WP_Error $result  Current error object. Might be empty.
+		 * @param int|null $id      Current model ID, or null if new model.
+		 * @param Model    $model   Current model object.
+		 * @param Manager  $manager Model manager instance.
 		 */
 		do_action( "{$prefix}_edit_{$singular_slug}_before_update", $result, $id, $this->model, $this->model_manager );
 
@@ -966,10 +972,10 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param WP_Error                                      $result  Current error object. Might be empty.
-		 * @param int|null                                      $id      Current model ID, or null if new model.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   Current model object.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Model manager instance.
+		 * @param WP_Error $result  Current error object. Might be empty.
+		 * @param int|null $id      Current model ID, or null if new model.
+		 * @param Model    $model   Current model object.
+		 * @param Manager  $manager Model manager instance.
 		 */
 		do_action( "{$prefix}_edit_{$singular_slug}_after_update", $result, $id, $this->model, $this->model_manager );
 

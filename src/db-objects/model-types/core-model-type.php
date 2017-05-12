@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Core_Model_Type_Manager;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Core_Model_Type' ) ) :
 
@@ -37,9 +38,9 @@ abstract class Core_Model_Type extends Model_Type {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Managers\Core_Model_Type_Manager $owner Parent registry.
-	 * @param string                                                                            $slug  Type slug.
-	 * @param array|object                                                                      $args  Optional. Type arguments. Default empty.
+	 * @param Core_Model_Type_Manager $owner Parent registry.
+	 * @param string                  $slug  Type slug.
+	 * @param array|object            $args  Optional. Type arguments. Default empty.
 	 */
 	public function __construct( $owner, $slug, $args = array() ) {
 		if ( is_object( $args ) ) {

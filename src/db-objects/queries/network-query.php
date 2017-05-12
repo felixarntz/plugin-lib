@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection;
 use WP_Network_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Network_Query' ) ) :
@@ -28,7 +29,7 @@ class Network_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of network query arguments. See `WP_Network_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection Collection of networks.
+	 * @return Network_Collection Collection of networks.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +57,7 @@ class Network_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection Results as a collection.
+	 * @return Network_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->networks;

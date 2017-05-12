@@ -23,7 +23,7 @@ abstract class Item {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Components\Item_Registry
+	 * @var Item_Registry
 	 */
 	protected $owner;
 
@@ -53,9 +53,9 @@ abstract class Item {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Item_Registry $owner Parent registry.
-	 * @param string                                              $slug  Item slug.
-	 * @param array|object                                        $args  Optional. Item arguments. Default empty.
+	 * @param Item_Registry $owner Parent registry.
+	 * @param string        $slug  Item slug.
+	 * @param array|object  $args  Optional. Item arguments. Default empty.
 	 */
 	public function __construct( $owner, $slug, $args = array() ) {
 		$this->owner = $owner;

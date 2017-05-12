@@ -39,7 +39,7 @@ class Template extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $prefix           The prefix for the theme subdirectory.
+	 * @param string $prefix The prefix for the theme subdirectory.
 	 * @param array  $args   {
 	 *     Array of arguments.
 	 *

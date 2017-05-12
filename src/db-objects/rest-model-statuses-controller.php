@@ -8,8 +8,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
-use WP_REST_Server;
 use WP_REST_Controller;
+use WP_REST_Server;
+use WP_REST_Request;
+use WP_REST_Response;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_Controller' ) ) :
@@ -25,7 +27,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -35,7 +37,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance.
+	 * @param Manager $manager The manager instance.
 	 */
 	public function __construct( $manager ) {
 		$this->manager = $manager;
@@ -123,7 +125,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 		$data = array();
 
 		foreach ( $this->manager->statuses()->query( $args ) as $obj ) {
-			$status = $this->prepare_item_for_response( $obj );
+			$status = $this->prepare_item_for_response( $obj, $request );
 
 			$data[ $obj->slug ] = $this->prepare_response_for_collection( $status );
 		}
@@ -187,8 +189,8 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status $model_status Model status object.
-	 * @param WP_REST_Request                                    $request      Request object.
+	 * @param Model_Status    $model_status Model status object.
+	 * @param WP_REST_Request $request      Request object.
 	 * @return WP_REST_Response Response object.
 	 */
 	public function prepare_item_for_response( $model_status, $request ) {
@@ -217,7 +219,7 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status $model_status Model status object.
+	 * @param Model_Status $model_status Model status object.
 	 * @return array Links for the given model status.
 	 */
 	protected function prepare_links( $model_status ) {

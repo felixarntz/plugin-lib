@@ -8,6 +8,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_Trait' ) ) :
 
 /**
@@ -35,7 +38,7 @@ trait Type_Manager_Trait {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_types = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type_Manager';
+	protected static $service_types = Model_Type_Manager::class;
 
 	/**
 	 * Registers a new type.
@@ -58,7 +61,7 @@ trait Type_Manager_Trait {
 	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
+	 * @return Model_Type|null Type object, or null it it does not exist.
 	 */
 	public function get_type( $slug ) {
 		return $this->types()->get( $slug );

@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Statuses\Post_Status;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Managers\Post_Status_Manager' ) ) :
 
 /**
@@ -27,7 +29,7 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * @param string $prefix The instance prefix.
 	 */
 	public function __construct( $prefix ) {
-		$this->item_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Statuses\Post_Status';
+		$this->item_class_name = Post_Status::class;
 
 		$this->default = 'draft';
 

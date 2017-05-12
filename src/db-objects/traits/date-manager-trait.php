@@ -78,9 +78,9 @@ trait Date_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    The model to set a date on.
-	 * @param string                                      $property Name of the date property.
-	 * @param string                                      $date     The date to set.
+	 * @param Model  $model    The model to set a date on.
+	 * @param string $property Name of the date property.
+	 * @param string $date     The date to set.
 	 */
 	public function set_date_with_gmt( $model, $property, $date ) {
 		if ( ! in_array( $property, $this->get_all_date_properties(), true ) ) {
@@ -108,8 +108,8 @@ trait Date_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param null                                        $ret   Return value from the filter.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to modify.
+	 * @param null  $ret   Return value from the filter.
+	 * @param Model $model The model to modify.
 	 * @return null The unmodified pre-filter value.
 	 */
 	public function maybe_set_date_property( $ret, $model ) {

@@ -11,6 +11,9 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait;
+use Leaves_And_Love\Plugin_Lib\Router;
+use Leaves_And_Love\Plugin_Lib\Template;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 
@@ -115,7 +118,7 @@ abstract class View_Routing extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager = null;
 
@@ -124,7 +127,7 @@ abstract class View_Routing extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null
+	 * @var Model|null
 	 */
 	protected $current_model = null;
 
@@ -133,7 +136,7 @@ abstract class View_Routing extends Service {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Collection|null
+	 * @var Collection|null
 	 */
 	protected $current_collection = null;
 
@@ -181,7 +184,7 @@ abstract class View_Routing extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_router = 'Leaves_And_Love\Plugin_Lib\Router';
+	protected static $service_router = Router::class;
 
 	/**
 	 * Template service definition.
@@ -191,7 +194,7 @@ abstract class View_Routing extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_template = 'Leaves_And_Love\Plugin_Lib\Template';
+	protected static $service_template = Template::class;
 
 	/**
 	 * Constructor.
@@ -203,9 +206,9 @@ abstract class View_Routing extends Service {
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\Router        $router        The router instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Template      $template      The template instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type Router        $router        The router instance.
+	 *     @type Template      $template      The template instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
@@ -219,7 +222,7 @@ abstract class View_Routing extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model object.
+	 * @param Model $model The model object.
 	 * @return string Permalink for the model view, or empty if no permalink exists.
 	 */
 	public function get_model_permalink( $model ) {
@@ -237,7 +240,7 @@ abstract class View_Routing extends Service {
 			}
 		}
 
-		if ( '' != get_option( 'permalink_structure' ) ) {
+		if ( '' !== (string) get_option( 'permalink_structure' ) ) {
 			$permalink = $this->base;
 
 			$date_property = '';
@@ -295,7 +298,7 @@ abstract class View_Routing extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model object.
+	 * @param Model $model The model object.
 	 * @return string Permalink for the model preview, or empty if preview link could not be generated.
 	 */
 	public function get_model_preview_permalink( $model ) {
@@ -310,8 +313,8 @@ abstract class View_Routing extends Service {
 			return '';
 		}
 
-		if ( '' != get_option( 'permalink_structure' ) ) {
-			$permalink = $this->base . '/' . 'preview/' . $preview_key . '/';
+		if ( '' !== (string) get_option( 'permalink_structure' ) ) {
+			$permalink = $this->base . '/preview/' . $preview_key . '/';
 
 			return home_url( $permalink );
 		}
@@ -334,7 +337,7 @@ abstract class View_Routing extends Service {
 	 * @return string Permalink for the archive view.
 	 */
 	public function get_archive_permalink( $page = 1 ) {
-		if ( '' != get_option( 'permalink_structure' ) ) {
+		if ( '' !== (string) get_option( 'permalink_structure' ) ) {
 			$permalink = $this->base . '/';
 
 			if ( $page > 1 ) {
@@ -358,15 +361,14 @@ abstract class View_Routing extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    The model object.
-	 * @param string                                      $property Optional. Name of a property to keep its
-	 *                                                              placeholder in the sample permalink in
-	 *                                                              order to replace it with a dynamic field.
-	 *                                                              Default none.
+	 * @param Model  $model    The model object.
+	 * @param string $property Optional. Name of a property to keep its placeholder in the
+	 *                         sample permalink in order to replace it with a dynamic field.
+	 *                         Default none.
 	 * @return string Sample permalink for the model, or empty string if no sample permalink could be created.
 	 */
 	public function get_model_sample_permalink_for_property( $model, $property = '' ) {
-		if ( '' == get_option( 'permalink_structure' ) ) {
+		if ( '' === (string) get_option( 'permalink_structure' ) ) {
 			return '';
 		}
 
@@ -459,7 +461,7 @@ abstract class View_Routing extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+	 * @param Manager $manager Manager instance.
 	 */
 	public function set_manager( $manager ) {
 		$this->manager = $manager;

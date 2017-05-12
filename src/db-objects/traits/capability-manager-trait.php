@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Capabilities;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Capability_Manager_Trait' ) ) :
 
 /**
@@ -26,7 +28,7 @@ trait Capability_Manager_Trait {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_capabilities = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Capabilities';
+	protected static $service_capabilities = Capabilities::class;
 }
 
 endif;

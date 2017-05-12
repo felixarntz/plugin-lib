@@ -8,7 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Text_Base;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Media' ) ) :
@@ -63,9 +62,9 @@ class Media extends Text_Base {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $manager Field manager instance.
-	 * @param string                                          $id      Field identifier.
-	 * @param array                                           $args    {
+	 * @param Field_Manager $manager Field manager instance.
+	 * @param string        $id      Field identifier.
+	 * @param array         $args    {
 	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
 	 *     will be used as an attribute on the input. Default empty array.
 	 *
@@ -276,7 +275,7 @@ class Media extends Text_Base {
 	 * @return bool True if the file extension is valid, false otherwise.
 	 */
 	protected function check_extension( $extension, $accepted_types = 'all' ) {
-		if ( 'all' == $accepted_types || ! $accepted_types ) {
+		if ( 'all' === $accepted_types || ! $accepted_types ) {
 			return true;
 		}
 
@@ -284,27 +283,27 @@ class Media extends Text_Base {
 			$accepted_types = array( $accepted_types );
 		}
 
-		// Check the file extension
-		if ( in_array( strtolower( $extension ), $accepted_types ) ) {
+		// Check the file extension.
+		if ( in_array( strtolower( $extension ), $accepted_types, true ) ) {
 			return true;
 		}
 
-		// Check the file type
+		// Check the file type.
 		$type = wp_ext2type( $extension );
-		if ( $type !== null && in_array( $type, $accepted_types ) ) {
+		if ( null !== $type && in_array( $type, $accepted_types, true ) ) {
 			return true;
 		}
 
-		// Check the file MIME type
+		// Check the file MIME type.
 		$allowed_mime_types = $this->get_all_mime_types();
 		if ( isset( $allowed_mime_types[ $extension ] ) ) {
-			if ( in_array( $allowed_mime_types[ $extension ], $accepted_types ) ) {
+			if ( in_array( $allowed_mime_types[ $extension ], $accepted_types, true ) ) {
 				return true;
 			}
 
-			// Check the general file MIME type
+			// Check the general file MIME type.
 			$general_type = explode( '/', $allowed_mime_types[ $extension ] )[0];
-			if ( in_array( $general_type, $accepted_types ) ) {
+			if ( in_array( $general_type, $accepted_types, true ) ) {
 				return true;
 			}
 		}
@@ -344,11 +343,11 @@ class Media extends Text_Base {
 					case 'spreadsheet':
 					case 'interactive':
 					case 'archive':
-						// documents, spreadsheets, interactive and archive are always MIME type application
+						// Documents, spreadsheets, interactive and archive are always MIME type application.
 						$validated_mime_types[] = 'application';
 						break;
 					case 'code':
-						// code is always MIME type text
+						// Code is always MIME type text.
 						$validated_mime_types[] = 'text';
 						break;
 					case 'image':
@@ -356,17 +355,17 @@ class Media extends Text_Base {
 					case 'video':
 					case 'text':
 					case 'application':
-						// a valid MIME type
+						// A valid MIME type.
 						$validated_mime_types[] = $mime_type;
 						break;
 					default:
 						if ( isset( $allowed_mime_types[ $mime_type ] ) ) {
-							// a MIME type for a file extension
+							// A MIME type for a file extension.
 							$validated_mime_types[] = $allowed_mime_types[ $mime_type ];
 						}
 				}
-			} elseif ( in_array( $mime_type, $allowed_mime_types ) ) {
-				// a fully qualified MIME type (with subtype)
+			} elseif ( in_array( $mime_type, $allowed_mime_types, true ) ) {
+				// A fully qualified MIME type (with subtype).
 				$validated_mime_types[] = $mime_type;
 			}
 		}

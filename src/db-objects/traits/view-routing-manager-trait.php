@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\View_Routing_Manager_Trait' ) ) :
 
 /**
@@ -26,7 +28,7 @@ trait View_Routing_Manager_Trait {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_view_routing = 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing';
+	protected static $service_view_routing = View_Routing::class;
 }
 
 endif;

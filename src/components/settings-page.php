@@ -52,7 +52,7 @@ abstract class Settings_Page extends Admin_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 * @var Field_Manager
 	 */
 	protected $field_manager = null;
 
@@ -62,21 +62,25 @@ abstract class Settings_Page extends Admin_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug    Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager Admin page manager instance.
+	 * @param string      $slug    Page slug.
+	 * @param Admin_Pages $manager Admin page manager instance.
 	 */
 	public function __construct( $slug, $manager ) {
 		parent::__construct( $slug, $manager );
 
-		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), array(
+		$services = array(
 			'ajax'          => $this->manager->ajax(),
 			'assets'        => $this->manager->assets(),
 			'error_handler' => $this->manager->error_handler(),
-		), array(
+		);
+
+		$manager_args = array(
 			'get_value_callback_args'    => array( $this->slug ),
 			'update_value_callback_args' => array( $this->slug, '{value}' ),
 			'name_prefix'                => $this->slug,
-		) );
+		);
+
+		$this->field_manager = new Field_Manager( $this->manager->get_prefix(), $services, $manager_args );
 	}
 
 	/**
@@ -152,11 +156,13 @@ abstract class Settings_Page extends Admin_Page {
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
+	 * @global string|null $parent_file Parent file for the current admin page.
 	 */
 	public function render() {
 		global $parent_file;
 
-		if ( $parent_file !== 'options-general.php' ) {
+		if ( 'options-general.php' !== $parent_file ) {
 			require ABSPATH . 'wp-admin/options-head.php';
 		}
 
@@ -346,18 +352,23 @@ abstract class Settings_Page extends Admin_Page {
 	protected function do_settings_sections( $page ) {
 		global $wp_settings_sections, $wp_settings_fields;
 
-		if ( ! isset( $wp_settings_sections[$page] ) )
+		if ( ! isset( $wp_settings_sections[ $page ] ) ) {
 			return;
+		}
 
-		foreach ( (array) $wp_settings_sections[$page] as $section ) {
-			if ( $section['title'] )
+		foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
+			if ( $section['title'] ) {
 				echo "<h2>{$section['title']}</h2>\n";
+			}
 
-			if ( $section['callback'] )
+			if ( $section['callback'] ) {
 				call_user_func( $section['callback'], $section );
+			}
 
-			if ( ! isset( $wp_settings_fields ) || !isset( $wp_settings_fields[$page] ) || !isset( $wp_settings_fields[$page][$section['id']] ) )
+			if ( ! isset( $wp_settings_fields ) || ! isset( $wp_settings_fields[ $page ] ) || ! isset( $wp_settings_fields[ $page ][ $section['id'] ] ) ) {
 				continue;
+			}
+
 			echo '<table class="form-table">';
 			$this->do_settings_fields( $page, $section['id'] );
 			echo '</table>';
@@ -381,10 +392,11 @@ abstract class Settings_Page extends Admin_Page {
 	protected function do_settings_fields( $page, $section ) {
 		global $wp_settings_fields;
 
-		if ( ! isset( $wp_settings_fields[$page][$section] ) )
+		if ( ! isset( $wp_settings_fields[ $page ][ $section ] ) ) {
 			return;
+		}
 
-		foreach ( (array) $wp_settings_fields[$page][$section] as $field ) {
+		foreach ( (array) $wp_settings_fields[ $page ][ $section ] as $field ) {
 			$class = '';
 
 			if ( ! empty( $field['args']['field_instance'] ) ) {
@@ -405,7 +417,7 @@ abstract class Settings_Page extends Admin_Page {
 			}
 
 			echo '<td>';
-			call_user_func($field['callback'], $field['args']);
+			call_user_func( $field['callback'], $field['args'] );
 			echo '</td>';
 			echo '</tr>';
 		}

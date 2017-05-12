@@ -24,7 +24,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
  *
  * @since 1.0.0
  *
- * @method Leaves_And_Love\Plugin_Lib\DB db()
+ * @method DB db()
  */
 class Meta extends Service {
 	use Container_Service_Trait;
@@ -49,8 +49,8 @@ class Meta extends Service {
 	 * @param array  $services {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB           $db             The database class instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type DB            $db             The database class instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
 	 */
 	public function __construct( $prefix, $services ) {
@@ -140,9 +140,9 @@ class Meta extends Service {
 	 * @param string $meta_key   Metadata key.
 	 * @param mixed  $meta_value Optional. Metadata value. Must be serializable if non-scalar. If specified, only delete
 	 *                           metadata entries with this value. Otherwise, delete all entries with the specified meta_key.
-	 *                           Pass `null, `false`, or an empty string to skip this check. (For backward compatibility,
+	 *                           Pass `null, `false`, or an empty string to skip this check. For backward compatibility,
 	 *                           it is not possible to pass an empty string to delete those entries with an empty string
-	 *                           for a value.)
+	 *                           for a value.
 	 * @param bool   $delete_all Optional, default is false. If true, delete matching metadata entries for all objects,
 	 *                           ignoring the specified object_id. Otherwise, only delete matching metadata entries for
 	 *                           the specified object_id.

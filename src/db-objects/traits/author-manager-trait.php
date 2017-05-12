@@ -45,8 +45,8 @@ trait Author_Manager_Trait {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param null                                        $pre   Null value from the pre-filter.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model The model to modify.
+	 * @param null  $pre   Null value from the pre-filter.
+	 * @param Model $model The model to modify.
 	 * @return null The unmodified pre-filter value.
 	 */
 	public function maybe_set_author_property( $pre, $model ) {

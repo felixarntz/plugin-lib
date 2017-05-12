@@ -38,7 +38,7 @@ abstract class Item_Registry extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $item_class_name = 'Leaves_And_Love\Plugin_Lib\Components\Item';
+	protected $item_class_name = Item::class;
 
 	/**
 	 * Constructor.
@@ -83,7 +83,7 @@ abstract class Item_Registry extends Service {
 	 * @access public
 	 *
 	 * @param string $slug Unique slug of the item.
-	 * @return Leaves_And_Love\Plugin_Lib\Components\Item|null Type object, or null it it does not exist.
+	 * @return Item|null Type object, or null it it does not exist.
 	 */
 	public function get( $slug ) {
 		if ( ! isset( $this->items[ $slug ] ) ) {

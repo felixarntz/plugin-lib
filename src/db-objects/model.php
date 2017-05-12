@@ -43,7 +43,7 @@ abstract class Model {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Manager
+	 * @var Manager
 	 */
 	protected $manager;
 
@@ -55,9 +55,8 @@ abstract class Model {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model.
-	 * @param object|null                                   $db_obj  Optional. The database object or
-	 *                                                               null for a new instance.
+	 * @param Manager     $manager The manager instance for the model.
+	 * @param object|null $db_obj  Optional. The database object or null for a new instance.
 	 */
 	public function __construct( $manager, $db_obj = null ) {
 		$this->manager = $manager;
@@ -418,9 +417,9 @@ abstract class Model {
 			 *
 			 * @since 1.0.0
 			 *
-			 * @param null                                          $pre     Value to allow short-circuiting.
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model to add.
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+			 * @param null    $pre     Value to allow short-circuiting.
+			 * @param Model   $model   The model to add.
+			 * @param Manager $manager Manager instance.
 			 */
 			return apply_filters( "{$prefix}_pre_add_{$singular_slug}", $pre, $this, $this->manager );
 		}
@@ -436,9 +435,9 @@ abstract class Model {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param null                                          $pre     Value to allow short-circuiting.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model to update.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+		 * @param null    $pre     Value to allow short-circuiting.
+		 * @param Model   $model   The model to update.
+		 * @param Manager $manager Manager instance.
 		 */
 		return apply_filters( "{$prefix}_pre_update_{$singular_slug}", $pre, $this, $this->manager );
 	}
@@ -466,9 +465,9 @@ abstract class Model {
 			 *
 			 * @since 1.0.0
 			 *
-			 * @param bool|WP_Error                                 $result  Result of the sync process.
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model that has been added.
-			 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+			 * @param bool|WP_Error $result  Result of the sync process.
+			 * @param Model         $model   The model that has been added.
+			 * @param Manager       $manager Manager instance.
 			 */
 			return apply_filters( "{$prefix}_post_add_{$singular_slug}", $result, $this, $this->manager );
 		}
@@ -481,9 +480,9 @@ abstract class Model {
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param bool|WP_Error                                 $result  Result of the sync process.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model   $model   The model that has been updated.
-		 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager Manager instance.
+		 * @param bool|WP_Error $result  Result of the sync process.
+		 * @param Model         $model   The model that has been updated.
+		 * @param Manager       $manager Manager instance.
 		 */
 		return apply_filters( "{$prefix}_post_update_{$singular_slug}", $result, $this, $this->manager );
 	}

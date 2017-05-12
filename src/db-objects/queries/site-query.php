@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection;
 use WP_Site_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query' ) ) :
@@ -28,7 +29,7 @@ class Site_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of site query arguments. See `WP_Site_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection Collection of sites.
+	 * @return Site_Collection Collection of sites.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +57,7 @@ class Site_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Site_Collection Results as a collection.
+	 * @return Site_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->sites;

@@ -10,6 +10,14 @@ namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Managers;
 
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Storage;
 use Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Meta_Manager_Trait;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Network_Query;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Network_Manager;
+use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Meta;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Network_Manager' ) ) :
 
@@ -30,21 +38,21 @@ class Network_Manager extends Core_Manager {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                                               $prefix   The instance prefix.
-	 * @param array                                                                $services {
+	 * @param string                       $prefix       The instance prefix.
+	 * @param array                        $services     {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB            $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Meta          $meta          The meta instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type DB            $db            The database instance.
+	 *     @type Cache         $cache         The cache instance.
+	 *     @type Meta          $meta          The meta instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations_Network_Manager $translations Translations instance.
+	 * @param Translations_Network_Manager $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
-		$this->class_name            = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Network';
-		$this->collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Network_Collection';
-		$this->query_class_name      = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Network_Query';
+		$this->class_name            = Network::class;
+		$this->collection_class_name = Network_Collection::class;
+		$this->query_class_name      = Network_Query::class;
 
 		$this->singular_slug = 'network';
 		$this->plural_slug   = 'networks';

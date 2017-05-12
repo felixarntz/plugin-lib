@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Models;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Manager;
 use WP_Site;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site' ) ) :
@@ -34,22 +35,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Site' ) ) :
  * @property-read int $id
  */
 class Site extends Core_Model {
-	/**
-	 * Constructor.
-	 *
-	 * Sets the ID and fetches relevant data.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager $manager The manager instance for the model.
-	 * @param WP_Site|null                                  $db_obj  Optional. The database object or
-	 *                                                               null for a new instance.
-	 */
-	public function __construct( $manager, $db_obj = null ) {
-		parent::__construct( $manager, $db_obj );
-	}
-
 	/**
 	 * Magic isset-er.
 	 *

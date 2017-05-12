@@ -12,6 +12,10 @@ use Leaves_And_Love\Plugin_Lib\Service;
 use Leaves_And_Love\Plugin_Lib\Traits\Container_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Manager;
+use Leaves_And_Love\Plugin_Lib\DB;
+use Leaves_And_Love\Plugin_Lib\Cache;
+use Leaves_And_Love\Plugin_Lib\Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 
@@ -22,8 +26,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
  *
  * @since 1.0.0
  *
- * @method Leaves_And_Love\Plugin_Lib\DB    db()
- * @method Leaves_And_Love\Plugin_Lib\Cache cache()
+ * @method DB    db()
+ * @method Cache cache()
  */
 abstract class Manager extends Service {
 	use Container_Service_Trait, Hook_Service_Trait, Translations_Service_Trait;
@@ -35,7 +39,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model';
+	protected $class_name = Model::class;
 
 	/**
 	 * The collection class name.
@@ -44,7 +48,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $collection_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collection';
+	protected $collection_class_name = Collection::class;
 
 	/**
 	 * The query class name.
@@ -53,7 +57,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 * @var string
 	 */
-	protected $query_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query';
+	protected $query_class_name = Query::class;
 
 	/**
 	 * Singular slug to use.
@@ -117,7 +121,7 @@ abstract class Manager extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_db = 'Leaves_And_Love\Plugin_Lib\DB';
+	protected static $service_db = DB::class;
 
 	/**
 	 * Cache service definition.
@@ -127,7 +131,7 @@ abstract class Manager extends Service {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_cache = 'Leaves_And_Love\Plugin_Lib\Cache';
+	protected static $service_cache = Cache::class;
 
 	/**
 	 * Constructor.
@@ -135,15 +139,15 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                               $prefix   The instance prefix.
-	 * @param array                                                $services {
+	 * @param string               $prefix       The instance prefix.
+	 * @param array                $services     {
 	 *     Array of service instances.
 	 *
-	 *     @type Leaves_And_Love\Plugin_Lib\DB            $db            The database instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Cache         $cache         The cache instance.
-	 *     @type Leaves_And_Love\Plugin_Lib\Error_Handler $error_handler The error handler instance.
+	 *     @type DB            $db            The database instance.
+	 *     @type Cache         $cache         The cache instance.
+	 *     @type Error_Handler $error_handler The error handler instance.
 	 * }
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 * @param Translations_Manager $translations Translations instance.
 	 */
 	public function __construct( $prefix, $services, $translations ) {
 		$this->set_prefix( $prefix );
@@ -171,7 +175,7 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model The new model object.
+	 * @return Model The new model object.
 	 */
 	public function create() {
 		$class_name = $this->class_name;
@@ -201,10 +205,8 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param int|Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model_id ID of the model to get. Can be an
-	 *                                                           actual instance too.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null The model with the requested ID, or null if
-	 *                                                   it does not exist.
+	 * @param int|Model $model_id ID of the model to get. Can be an actual instance too.
+	 * @return Model|null The model with the requested ID, or null if it does not exist.
 	 */
 	public function get( $model_id ) {
 		if ( is_a( $model_id, $this->class_name ) ) {
@@ -240,7 +242,7 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Query Query instance.
+	 * @return Query Query instance.
 	 */
 	public function create_query_object() {
 		$class_name = $this->query_class_name;
@@ -255,9 +257,8 @@ abstract class Manager extends Service {
 	 * @access public
 	 *
 	 * @param string|array $query Array or query string of model query arguments. See
-	 *                            `Leaves_And_Love\Plugin_Lib\DB_Objects\Query::query()` for
-	 *                            more information.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
+	 *                            {@see Query::query()} for more information.
+	 * @return Collection Collection of models.
 	 */
 	public function query( $query = array() ) {
 		$query_instance = $this->create_query_object();
@@ -271,12 +272,12 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param array  $models  The model IDs, objects or types for this collection.
-	 * @param int    $total   Optional. The total amount of models in the collection.
-	 *                        Default is the number of models.
-	 * @param string $fields  Optional. Mode of the models passed. Default 'ids'.
+	 * @param array  $models The model IDs, objects or types for this collection.
+	 * @param int    $total  Optional. The total amount of models in the collection.
+	 *                       Default is the number of models.
+	 * @param string $fields Optional. Mode of the models passed. Default 'ids'.
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collection Collection of models.
+	 * @return Collection Collection of models.
 	 */
 	public function get_collection( $models, $total = 0, $fields = 'ids' ) {
 		$class_name = $this->collection_class_name;
@@ -678,8 +679,8 @@ abstract class Manager extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int                                         $model_id ID of the model to set.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model    Model to set for the ID.
+	 * @param int   $model_id ID of the model to set.
+	 * @param Model $model    Model to set for the ID.
 	 * @return bool True on success, or false on failure.
 	 */
 	protected function storage_set( $model_id, $model ) {
@@ -693,7 +694,7 @@ abstract class Manager extends Service {
 	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to get.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null The model on success, or null if it doesn't exist.
+	 * @return Model|null The model on success, or null if it doesn't exist.
 	 */
 	protected function storage_get( $model_id ) {
 		return Storage::retrieve( $this->cache_group, $model_id );

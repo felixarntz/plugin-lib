@@ -48,7 +48,7 @@ class Dependency_Resolver {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field
+	 * @var Field
 	 */
 	protected $field;
 
@@ -57,7 +57,7 @@ class Dependency_Resolver {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Fields\Field_Manager
+	 * @var Field_Manager
 	 */
 	protected $field_manager;
 
@@ -67,9 +67,9 @@ class Dependency_Resolver {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param array                                           $dependencies  Dependencies definition.
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field         $field         The field instance.
-	 * @param Leaves_And_Love\Plugin_Lib\Fields\Field_Manager $field_manager The field manager instance.
+	 * @param array         $dependencies  Dependencies definition.
+	 * @param Field         $field         The field instance.
+	 * @param Field_Manager $field_manager The field manager instance.
 	 */
 	public function __construct( $dependencies, $field, $field_manager ) {
 		$this->field         = $field;

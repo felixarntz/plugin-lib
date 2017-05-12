@@ -8,6 +8,9 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager;
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manager_Trait' ) ) :
 
 /**
@@ -35,7 +38,7 @@ trait Status_Manager_Trait {
 	 * @static
 	 * @var string
 	 */
-	protected static $service_statuses = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager';
+	protected static $service_statuses = Model_Status_Manager::class;
 
 	/**
 	 * Registers a new status.
@@ -58,7 +61,7 @@ trait Status_Manager_Trait {
 	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Type|null Type object, or null it it does not exist.
+	 * @return Model_Status|null Type object, or null it it does not exist.
 	 */
 	public function get_status( $slug ) {
 		return $this->statuses()->get( $slug );

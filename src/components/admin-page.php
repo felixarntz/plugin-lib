@@ -136,7 +136,7 @@ abstract class Admin_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\Components\Admin_Pages
+	 * @var Admin_Pages
 	 */
 	protected $manager = null;
 
@@ -146,8 +146,8 @@ abstract class Admin_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug    Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager Admin page manager instance.
+	 * @param string      $slug    Page slug.
+	 * @param Admin_Pages $manager Admin page manager instance.
 	 */
 	public function __construct( $slug, $manager ) {
 		$this->slug = $slug;

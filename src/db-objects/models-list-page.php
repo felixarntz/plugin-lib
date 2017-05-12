@@ -8,6 +8,10 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
+use Leaves_And_Love\Plugin_Lib\Components\Admin_Pages;
+use WP_Screen;
+use WP_Error;
+
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) ) :
 
 /**
@@ -21,7 +25,7 @@ abstract class Models_List_Page extends Manager_Page {
 	 *
 	 * @since 1.0.0
 	 * @access protected
-	 * @var Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Table
+	 * @var Models_List_Table
 	 */
 	protected $list_table;
 
@@ -32,7 +36,7 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @access protected
 	 * @var string
 	 */
-	protected $list_table_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Table';
+	protected $list_table_class_name = Models_List_Table::class;
 
 	/**
 	 * The slug of the admin page to create or edit a model.
@@ -49,9 +53,9 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                            $slug          Page slug.
-	 * @param Leaves_And_Love\Plugin_Lib\Components\Admin_Pages $manager       Admin page manager instance.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Manager     $model_manager Model manager instance.
+	 * @param string      $slug          Page slug.
+	 * @param Admin_Pages $manager       Admin page manager instance.
+	 * @param Manager     $model_manager Model manager instance.
 	 */
 	public function __construct( $slug, $manager, $model_manager ) {
 		parent::__construct( $slug, $manager, $model_manager );
@@ -267,7 +271,7 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param WP_Screen Current screen.
+	 * @param WP_Screen $screen Current screen.
 	 */
 	protected function setup_screen( $screen ) {
 		$screen->set_screen_reader_content( array(

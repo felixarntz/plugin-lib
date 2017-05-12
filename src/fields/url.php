@@ -8,7 +8,6 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Fields;
 
-use Leaves_And_Love\Plugin_Lib\Fields\Text_Base;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\URL' ) ) :
@@ -59,7 +58,7 @@ class URL extends Text_Base {
 				return new WP_Error( 'field_url_invalid', sprintf( $this->manager->get_message( 'field_url_invalid' ), $value, $this->label ) );
 			}
 
-			$parsed_url = parse_url( $value );
+			$parsed_url = wp_parse_url( $value );
 			if ( empty( $parsed_url['host'] ) ) {
 				return new WP_Error( 'field_url_invalid', sprintf( $this->manager->get_message( 'field_url_invalid' ), $value, $this->label ) );
 			}

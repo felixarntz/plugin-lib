@@ -43,9 +43,9 @@ class Storage {
 	 * @access public
 	 * @static
 	 *
-	 * @param string                                      $cache_group The object cache group.
-	 * @param int                                         $model_id    ID of the model to set.
-	 * @param Leaves_And_Love\Plugin_Lib\DB_Objects\Model $model       Model to set for the ID.
+	 * @param string $cache_group The object cache group.
+	 * @param int    $model_id    ID of the model to set.
+	 * @param Model  $model       Model to set for the ID.
 	 * @return bool True on success, or false on failure.
 	 */
 	public static function store( $cache_group, $model_id, $model ) {
@@ -79,7 +79,7 @@ class Storage {
 	 *
 	 * @param string $cache_group The object cache group.
 	 * @param int    $model_id    ID of the model to retrieve.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|null The model on success, or null if it doesn't exist.
+	 * @return Model|null The model on success, or null if it doesn't exist.
 	 */
 	public static function retrieve( $cache_group, $model_id ) {
 		if ( ! isset( self::$models[ $cache_group ] ) ) {

@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Translations_Service_Trait;
+use Leaves_And_Love\Plugin_Lib\Translations\Translations_Error_Handler;
 use Leaves_And_Love\Plugin_Lib\Translations\Translations_Base_Error_Handler;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
@@ -31,8 +32,8 @@ class Error_Handler extends Service {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string                                               $prefix       The instance prefix.
-	 * @param Leaves_And_Love\Plugin_Lib\Translations\Translations $translations Translations instance.
+	 * @param string                     $prefix       The instance prefix.
+	 * @param Translations_Error_Handler $translations Translations instance.
 	 */
 	public function __construct( $prefix, $translations ) {
 		$this->set_prefix( $prefix );

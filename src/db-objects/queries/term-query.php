@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection;
 use WP_Term_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query' ) ) :
@@ -28,7 +29,7 @@ class Term_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of term query arguments. See `WP_Term_Query::__construct()`
 	 *                            for a list of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection Collection of terms.
+	 * @return Term_Collection Collection of terms.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +57,7 @@ class Term_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Term_Collection Results as a collection.
+	 * @return Term_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = null !== $this->original->terms ? $this->original->terms : array();

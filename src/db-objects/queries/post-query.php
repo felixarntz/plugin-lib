@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Queries;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection;
 use WP_Query;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Post_Query' ) ) :
@@ -28,7 +29,7 @@ class Post_Query extends Core_Query {
 	 *
 	 * @param string|array $query Array or query string of post query arguments. See `WP_Query::parse_query()` for a list
 	 *                            of supported arguments.
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection Collection of posts.
+	 * @return Post_Collection Collection of posts.
 	 */
 	public function query( $query ) {
 		if ( isset( $query['fields'] ) && 'ids' !== $query['fields'] ) {
@@ -56,7 +57,7 @@ class Post_Query extends Core_Query {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Post_Collection Results as a collection.
+	 * @return Post_Collection Results as a collection.
 	 */
 	protected function parse_results_collection() {
 		$ids = $this->original->posts;

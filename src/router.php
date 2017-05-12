@@ -9,6 +9,8 @@
 namespace Leaves_And_Love\Plugin_Lib;
 
 use Leaves_And_Love\Plugin_Lib\Traits\Hook_Service_Trait;
+use WP_Query;
+use WP;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 
@@ -78,7 +80,7 @@ class Router extends Service {
 	 */
 	public function get_current_request_url() {
 		$current_url = trim( esc_url_raw( add_query_arg( array() ) ), '/' );
-		$home_path = trim( parse_url( home_url(), PHP_URL_PATH ), '/' );
+		$home_path = trim( wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
 
 		if ( $home_path && 0 === strpos( $current_url, $home_path ) ) {
 			$current_url = trim( substr( $current_url, strlen( $home_path ) ), '/' );
@@ -114,7 +116,7 @@ class Router extends Service {
 		$handle_callback = null;
 		$url_path = '';
 
-		if ( '' != get_option( 'permalink_structure' ) ) {
+		if ( '' !== (string) get_option( 'permalink_structure' ) ) {
 			uasort( $routes, array( $this, 'sort_callback_pattern_length' ) );
 
 			$current_url = $this->get_current_request_url();

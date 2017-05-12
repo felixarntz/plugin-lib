@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects\Traits;
 
+use Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controller;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\REST_API_Manager_Trait' ) ) :
 
 /**
@@ -25,7 +27,7 @@ trait REST_API_Manager_Trait {
 	 * @access protected
 	 * @var string
 	 */
-	protected $rest_controller_class_name = 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controller';
+	protected $rest_controller_class_name = REST_Models_Controller::class;
 
 	/**
 	 * Registers the routes for the REST controller.
