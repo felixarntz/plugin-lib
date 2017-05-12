@@ -421,7 +421,7 @@ abstract class Model {
 			 * @param Model   $model   The model to add.
 			 * @param Manager $manager Manager instance.
 			 */
-			return apply_filters( "{$prefix}_pre_add_{$singular_slug}", $pre, $this, $this->manager );
+			return apply_filters( "{$prefix}pre_add_{$singular_slug}", $pre, $this, $this->manager );
 		}
 
 		/**
@@ -439,7 +439,7 @@ abstract class Model {
 		 * @param Model   $model   The model to update.
 		 * @param Manager $manager Manager instance.
 		 */
-		return apply_filters( "{$prefix}_pre_update_{$singular_slug}", $pre, $this, $this->manager );
+		return apply_filters( "{$prefix}pre_update_{$singular_slug}", $pre, $this, $this->manager );
 	}
 
 	/**
@@ -469,7 +469,7 @@ abstract class Model {
 			 * @param Model         $model   The model that has been added.
 			 * @param Manager       $manager Manager instance.
 			 */
-			return apply_filters( "{$prefix}_post_add_{$singular_slug}", $result, $this, $this->manager );
+			return apply_filters( "{$prefix}post_add_{$singular_slug}", $result, $this, $this->manager );
 		}
 
 		/**
@@ -484,7 +484,7 @@ abstract class Model {
 		 * @param Model         $model   The model that has been updated.
 		 * @param Manager       $manager Manager instance.
 		 */
-		return apply_filters( "{$prefix}_post_update_{$singular_slug}", $result, $this, $this->manager );
+		return apply_filters( "{$prefix}post_update_{$singular_slug}", $result, $this, $this->manager );
 	}
 
 	/**

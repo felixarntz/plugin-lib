@@ -748,13 +748,13 @@ abstract class Manager extends Service {
 
 		if ( method_exists( $this, 'maybe_set_slug_property' ) ) {
 			$this->filters[] = array(
-				'name'     => "{$prefix}_pre_add_{$singular_slug}",
+				'name'     => "{$prefix}pre_add_{$singular_slug}",
 				'callback' => array( $this, 'maybe_set_slug_property' ),
 				'priority' => 100,
 				'num_args' => 2,
 			);
 			$this->filters[] = array(
-				'name'     => "{$prefix}_pre_update_{$singular_slug}",
+				'name'     => "{$prefix}pre_update_{$singular_slug}",
 				'callback' => array( $this, 'maybe_set_slug_property' ),
 				'priority' => 100,
 				'num_args' => 2,
@@ -763,7 +763,7 @@ abstract class Manager extends Service {
 
 		if ( method_exists( $this, 'maybe_set_author_property' ) ) {
 			$this->filters[] = array(
-				'name'     => "{$prefix}_pre_add_{$singular_slug}",
+				'name'     => "{$prefix}pre_add_{$singular_slug}",
 				'callback' => array( $this, 'maybe_set_author_property' ),
 				'priority' => 100,
 				'num_args' => 2,
@@ -772,7 +772,7 @@ abstract class Manager extends Service {
 
 		if ( method_exists( $this, 'maybe_set_date_property' ) ) {
 			$this->filters[] = array(
-				'name'     => "{$prefix}_pre_add_{$singular_slug}",
+				'name'     => "{$prefix}pre_add_{$singular_slug}",
 				'callback' => array( $this, 'maybe_set_date_property' ),
 				'priority' => 100,
 				'num_args' => 2,
