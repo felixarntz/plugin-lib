@@ -112,7 +112,7 @@ abstract class Leaves_And_Love_Plugin {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $main file        Path to the plugin's main file.
+	 * @param string $main_file        Path to the plugin's main file.
 	 * @param string $basedir_relative The relative base path to the other files of this plugin.
 	 *
 	 * @codeCoverageIgnore
@@ -120,7 +120,7 @@ abstract class Leaves_And_Love_Plugin {
 	public function __construct( $main_file, $basedir_relative = '' ) {
 		$this->main_file = $main_file;
 		$this->basedir_relative = $basedir_relative;
-		$this->minimum_php = '5.4';
+		$this->minimum_php = '5.5';
 		$this->minimum_wp = '4.7';
 
 		$this->load_base_properties();
