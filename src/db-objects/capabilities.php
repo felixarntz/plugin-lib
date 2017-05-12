@@ -453,8 +453,8 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int    $user_id  User ID.
-	 * @param array  $args     Additional arguments.
+	 * @param int   $user_id User ID.
+	 * @param array $args    Additional arguments.
 	 * @return string Mapped capability name.
 	 */
 	protected function map_read_item( $user_id, $args ) {
@@ -471,8 +471,8 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int    $user_id  User ID.
-	 * @param array  $args     Additional arguments.
+	 * @param int   $user_id User ID.
+	 * @param array $args    Additional arguments.
 	 * @return string Mapped capability name.
 	 */
 	protected function map_edit_item( $user_id, $args ) {
@@ -489,8 +489,8 @@ abstract class Capabilities extends Service {
 	 * @since 1.0.0
 	 * @access protected
 	 *
-	 * @param int   $user_id  User ID.
-	 * @param array $args     Additional arguments.
+	 * @param int   $user_id User ID.
+	 * @param array $args    Additional arguments.
 	 * @return string Mapped capability name.
 	 */
 	protected function map_delete_item( $user_id, $args ) {
