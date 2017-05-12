@@ -51,6 +51,15 @@ abstract class Capabilities extends Service {
 	protected $capability_mappings = array();
 
 	/**
+	 * Capability grant map, as `$original_cap => $required_cap_to_grant` pairs.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $grant_capabilities = array();
+
+	/**
 	 * Manager instance.
 	 *
 	 * @since 1.0.0
@@ -266,6 +275,40 @@ abstract class Capabilities extends Service {
 	}
 
 	/**
+	 * Grants capabilities based on other capabilities a user has.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string|array|bool $required_cap Either a single cap to grant all model capabilities
+	 *                                        to a user if they have that capability, or an array
+	 *                                        of `$base_capability_name => $required_cap` pairs to
+	 *                                        grant the individual capabilities more granularly. May
+	 *                                        also specify false to not grant the caps.
+	 */
+	public function grant_capabilities( $required_cap ) {
+		$this->grant_capabilities = array();
+
+		if ( is_array( $required_cap ) ) {
+			foreach ( $required_cap as $base_cap => $required ) {
+				if ( empty( $required ) ) {
+					continue;
+				}
+
+				if ( isset( $this->base_capabilities[ $base_cap ] ) ) {
+					$base_cap = $this->base_capabilities[ $base_cap ];
+				} elseif ( ! in_array( $base_cap, $this->base_capabilities, true ) ) {
+					continue;
+				}
+
+				$this->grant_capabilities[ $base_cap ] = $required;
+			}
+		} elseif ( ! empty( $required_cap ) ) {
+			$this->grant_capabilities = array_combine( $this->base_capabilities, array_fill( 0, count( $this->base_capabilities ), $required_cap ) );
+		}
+	}
+
+	/**
 	 * Sets the manager instance.
 	 *
 	 * @since 1.0.0
@@ -382,6 +425,25 @@ abstract class Capabilities extends Service {
 	}
 
 	/**
+	 * Grants capabilities via the `user_has_cap` filter.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $allcaps All capabilities the user has.
+	 * @return array All capabilities including new ones.
+	 */
+	protected function user_has_cap( $allcaps ) {
+		foreach ( $this->grant_capabilities as $base_cap => $required_cap ) {
+			if ( ! empty( $allcaps[ $required_cap ] ) ) {
+				$allcaps[ $base_cap ] = true;
+			}
+		}
+
+		return $allcaps;
+	}
+
+	/**
 	 * Maps the item reading capability.
 	 *
 	 * If the model uses author IDs and the item belongs to another author, the capability is
@@ -484,6 +546,12 @@ abstract class Capabilities extends Service {
 				'callback' => array( $this, 'map_meta_cap' ),
 				'priority' => 10,
 				'num_args' => 4,
+			),
+			array(
+				'name'     => 'user_has_cap',
+				'callback' => array( $this, 'user_has_cap' ),
+				'priority' => 10,
+				'num_args' => 1,
 			),
 		);
 	}
