@@ -31,6 +31,15 @@ trait Status_Manager_Trait {
 	protected $status_property = 'status';
 
 	/**
+	 * Internal storage for pending status changes.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $pending_status_changes = array();
+
+	/**
 	 * The status manager service definition.
 	 *
 	 * @since 1.0.0
@@ -103,6 +112,75 @@ trait Status_Manager_Trait {
 	 */
 	public function get_status_property() {
 		return $this->status_property;
+	}
+
+	/**
+	 * Prepares data for triggering a hook for transitioning the status property on a model.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param null  $pre   Null value from the pre-filter.
+	 * @param Model $model The model to modify.
+	 * @return null The unmodified pre-filter value.
+	 */
+	public function maybe_set_transition_status_property_data( $pre, $model ) {
+		$status_property = $this->get_status_property();
+
+		$primary_property = $this->get_primary_property();
+		if ( empty( $model->$primary_property ) ) {
+			return $pre;
+		}
+
+		$old_model_data = $this->fetch( $model->$primary_property );
+		$this->pending_status_changes[ $model->$primary_property ] = $old_model_data->$status_property;
+
+		return $pre;
+	}
+
+	/**
+	 * Triggers a hook for transitioning the status property on a model, if necessary.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param bool|WP_Error $result Result of the sync process.
+	 * @param Model         $model  The model to modify.
+	 * @return null The unmodified post-filter value.
+	 */
+	public function maybe_transition_status_property( $result, $model ) {
+		if ( is_wp_error( $result ) && in_array( $result->get_error_code(), array( 'db_insert_error', 'db_update_error' ), true ) ) {
+			return $result;
+		}
+
+		$primary_property = $this->get_primary_property();
+		$status_property = $this->get_status_property();
+
+		$old_status = '';
+		if ( false !== strpos( current_filter(), '_add_' ) ) {
+			$old_status = $this->statuses()->get_default();
+		} elseif ( ! empty( $this->pending_status_changes[ $model->$primary_property ] ) ) {
+			$old_status = $this->pending_status_changes[ $model->$primary_property ];
+			unset( $this->pending_status_changes[ $model->$primary_property ] );
+		}
+
+		if ( ! empty( $old_status ) && ! empty( $model->$status_property ) && $old_status !== $model->$status_property ) {
+			$prefix        = $this->get_prefix();
+			$singular_slug = $this->get_singular_slug();
+
+			/**
+			 * Fires when the status property of a model has changed.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param string $new_status New status of the model.
+			 * @param string $old_status Old status of the model.
+			 * @param Model  $model      The model object.
+			 */
+			do_action( "{$prefix}transition_{$singular_slug}_{$status_property}", $model->status_property, $old_status, $model );
+		}
+
+		return $result;
 	}
 }
 

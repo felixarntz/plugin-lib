@@ -779,6 +779,33 @@ abstract class Manager extends Service {
 			);
 		}
 
+		if ( method_exists( $this, 'maybe_set_transition_status_property_data' ) && method_exists( $this, 'maybe_transition_status_property' ) ) {
+			$this->filters[] = array(
+				'name'     => "{$prefix}pre_add_{$singular_slug}",
+				'callback' => array( $this, 'maybe_set_transition_status_property_data' ),
+				'priority' => 100,
+				'num_args' => 2,
+			);
+			$this->filters[] = array(
+				'name'     => "{$prefix}pre_update_{$singular_slug}",
+				'callback' => array( $this, 'maybe_set_transition_status_property_data' ),
+				'priority' => 100,
+				'num_args' => 2,
+			);
+			$this->filters[] = array(
+				'name'     => "{$prefix}post_add_{$singular_slug}",
+				'callback' => array( $this, 'maybe_transition_status_property' ),
+				'priority' => 100,
+				'num_args' => 2,
+			);
+			$this->filters[] = array(
+				'name'     => "{$prefix}post_update_{$singular_slug}",
+				'callback' => array( $this, 'maybe_transition_status_property' ),
+				'priority' => 100,
+				'num_args' => 2,
+			);
+		}
+
 		if ( method_exists( $this, 'register_rest_routes' ) ) {
 			$this->filters[] = array(
 				'name'     => 'rest_api_init',
