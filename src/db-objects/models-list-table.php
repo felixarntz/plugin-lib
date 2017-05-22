@@ -550,7 +550,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 					array(
 						'year'   => substr( $_REQUEST['m'], 0, 4 ),
 						'month'  => substr( $_REQUEST['m'], 4, 2 ),
-						'column' => $date_property,
 					),
 				);
 			}
