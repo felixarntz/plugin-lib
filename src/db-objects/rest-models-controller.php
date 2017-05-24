@@ -209,6 +209,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_read_items', $this->manager->get_message( 'rest_cannot_read_items' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! empty( $request[ $author_property ] ) && get_current_user_id() !== $request[ $author_property ] && ( ! $capabilities || ! $capabilities->current_user_can( 'read_others_items' ) ) ) {
+				return new WP_Error( 'rest_cannot_read_others_items', $this->manager->get_message( 'rest_cannot_read_others_items' ), array( 'status' => rest_authorization_required_code() ) );
+			}
+		}
+
 		return true;
 	}
 
@@ -282,6 +290,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 		$args['number'] = $special_args['per_page'];
 		$args['offset'] = ( $special_args['page'] - 1 ) * $special_args['per_page'];
 		$args['orderby'] = array( $special_args['orderby'] => $special_args['order'] );
+
+		if ( ! $this->manager->is_public() && method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! $capabilities || ! $capabilities->current_user_can( 'read_others_items' ) ) {
+				$args[ $author_property ] = get_current_user_id();
+			}
+		}
 
 		$collection = $this->manager->query( $args );
 
@@ -422,6 +438,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 			return new WP_Error( 'rest_cannot_create_items', $this->manager->get_message( 'rest_cannot_create_items' ), array( 'status' => rest_authorization_required_code() ) );
 		}
 
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! empty( $request[ $author_property ] ) && get_current_user_id() !== $request[ $author_property ] && ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) ) {
+				return new WP_Error( 'rest_cannot_create_others_items', $this->manager->get_message( 'rest_cannot_create_others_items' ), array( 'status' => rest_authorization_required_code() ) );
+			}
+		}
+
 		return true;
 	}
 
@@ -490,6 +514,14 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 
 		if ( ! $capabilities || ! $capabilities->user_can_edit( null, $request[ $primary_property ] ) ) {
 			return new WP_Error( 'rest_cannot_edit_item', $this->manager->get_message( 'rest_cannot_edit_item' ), array( 'status' => rest_authorization_required_code() ) );
+		}
+
+		if ( method_exists( $this->manager, 'get_author_property' ) ) {
+			$author_property = $this->manager->get_author_property();
+
+			if ( ! empty( $request[ $author_property ] ) && get_current_user_id() !== $request[ $author_property ] && ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) ) {
+				return new WP_Error( 'rest_cannot_edit_others_item', $this->manager->get_message( 'rest_cannot_edit_others_item' ), array( 'status' => rest_authorization_required_code() ) );
+			}
 		}
 
 		return true;
