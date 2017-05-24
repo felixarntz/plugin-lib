@@ -85,21 +85,15 @@ class Media extends Text_Base {
 	 * }
 	 */
 	public function __construct( $manager, $id, $args = array() ) {
-		if ( isset( $args['data-store'] ) ) {
-			if ( ! isset( $args['store'] ) ) {
-				$args['store'] = $args['data-store'];
-			} else {
-				$args['data-store'] = $args['store'];
-			}
+		if ( isset( $args['data-store'] ) && ! isset( $args['store'] ) ) {
+			$args['store'] = $args['data-store'];
 		}
 
-		if ( isset( $args['store'] ) && 'url' !== $args['store'] ) {
+		if ( isset( $args['store'] ) && 'url' !== $args['store'] || ! isset( $args['store'] ) ) {
 			$args['store'] = 'id';
 		}
 
-		if ( ! isset( $args['data-store'] ) ) {
-			$args['data-store'] = $args['store'];
-		}
+		$args['data-store'] = $args['store'];
 
 		if ( isset( $args['mime_types'] ) ) {
 			$mime_types = $this->verify_mime_types( $args['mime_types'] );
