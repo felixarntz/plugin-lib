@@ -729,6 +729,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 							$singular_slug = $this->model_manager->get_singular_slug();
 
 							if ( has_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions" ) ) {
+								add_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", array( $this, 'view_buttons' ), 10, 3 );
+
 								/**
 								 * Fires when the #minor-publishing-actions content for a model edit page should be rendered.
 								 *
@@ -756,6 +758,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 							$singular_slug = $this->model_manager->get_singular_slug();
 
 							if ( has_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions" ) ) {
+								add_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", array( $this, 'status_select' ), 10, 3 );
+
 								/**
 								 * Fires when the #misc-publishing-actions content for a model edit page should be rendered.
 								 *
