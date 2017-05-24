@@ -308,8 +308,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 			'primary_property'       => $primary_property,
 			'primary_property_value' => $this->model->$primary_property,
 			'i18n'                   => array(
-				'ok'     => $this->model_manager->get_message( 'edit_page_ok' ),
-				'cancel' => $this->model_manager->get_message( 'edit_page_cancel' ),
+				'ok'               => $this->model_manager->get_message( 'edit_page_ok' ),
+				'cancel'           => $this->model_manager->get_message( 'edit_page_cancel' ),
+				'confirm_deletion' => $this->model_manager->get_message( 'edit_page_confirm_deletion' ),
 			),
 		);
 		if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {

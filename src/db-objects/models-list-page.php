@@ -9,6 +9,7 @@
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
 use Leaves_And_Love\Plugin_Lib\Components\Admin_Pages;
+use Leaves_And_Love\Plugin_Lib\Assets;
 use WP_Screen;
 use WP_Error;
 
@@ -107,7 +108,20 @@ abstract class Models_List_Page extends Manager_Page {
 	 * @access public
 	 */
 	public function enqueue_assets() {
-		// Empty method body.
+		$assets = Assets::get_library_instance();
+
+		$assets->register_script( 'list-models', 'assets/dist/js/list-models.js', array(
+			'deps'          => array( 'jquery' ),
+			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+			'in_footer'     => true,
+			'enqueue'       => true,
+			'localize_name' => 'pluginLibListModelsData',
+			'localize_data' => array(
+				'i18n' => array(
+					'confirm_deletion' => $this->model_manager->get_message( 'list_page_confirm_deletion' ),
+				),
+			),
+		) );
 	}
 
 	/**

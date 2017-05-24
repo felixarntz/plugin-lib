@@ -49,6 +49,7 @@ class Translations_Manager extends Translations {
 			'list_page_filter_items_list'                           => $this->__translate( 'Filter models list', 'textdomain' ),
 			'list_page_items_list_navigation'                       => $this->__translate( 'Models list navigation', 'textdomain' ),
 			'list_page_items_list'                                  => $this->__translate( 'Models list', 'textdomain' ),
+			'list_page_confirm_deletion'                            => $this->_xtranslate( 'Are you sure you want to delete this model? You will not be able to restore it afterwards.', 'models list page', 'textdomain' ),
 			/* translators: %s: model title */
 			'bulk_action_cannot_delete_item'                        => $this->__translate( 'You are not allowed to delete the model &#8220;%s&#8221;.', 'textdomain' ),
 			/* translators: %s: model title */
@@ -83,6 +84,7 @@ class Translations_Manager extends Translations {
 			'edit_page_status_label'                                => $this->_xtranslate( 'Status', 'model status label', 'textdomain' ),
 			'edit_page_ok'                                          => $this->_xtranslate( 'OK', 'model slug buttons', 'textdomain' ),
 			'edit_page_cancel'                                      => $this->_xtranslate( 'Cancel', 'model slug buttons', 'textdomain' ),
+			'edit_page_confirm_deletion'                            => $this->_xtranslate( 'Are you sure you want to delete this model? You will not be able to restore it afterwards.', 'model edit page', 'textdomain' ),
 			'action_edit_item_invalid_type'                         => $this->__translate( 'The model type is invalid.', 'textdomain' ),
 			'action_edit_item_invalid_status'                       => $this->__translate( 'The model status is invalid.', 'textdomain' ),
 			'action_edit_item_cannot_publish'                       => $this->__translate( 'You are not allowed to publish this model.', 'textdomain' ),

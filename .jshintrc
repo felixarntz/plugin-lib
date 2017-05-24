@@ -17,6 +17,7 @@
     "wp",
     "ajaxurl",
     "pluginLibFieldsAPIData",
+    "pluginLibListModelsData",
     "pluginLibEditModelData"
   ],
   "strict"   : true,

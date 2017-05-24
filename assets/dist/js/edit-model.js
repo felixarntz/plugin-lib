@@ -6,6 +6,29 @@
 ( function( $, pluginLibData ) {
 	'use strict';
 
+	$( '.submitdelete' ).on( 'click', function( e ) {
+		if ( ! window.confirm( pluginLibData.i18n.confirm_deletion ) ) {
+			e.preventDefault();
+		}
+	});
+
+	function showWarningWithoutSave() {
+      window.onbeforeunload = function() {
+        return true;
+      };
+    }
+
+    $( '#post' ).on( 'change', '.plugin-lib-control', showWarningWithoutSave );
+    $( '#post' ).on( 'keydown', 'input[type="text"].plugin-lib-control', showWarningWithoutSave );
+    $( '#post' ).on( 'keydown', 'input[type="number"].plugin-lib-control', showWarningWithoutSave );
+    $( '#post' ).on( 'keydown', 'input[type="email"].plugin-lib-control', showWarningWithoutSave );
+    $( '#post' ).on( 'click', 'input[type="checkbox"]', showWarningWithoutSave );
+    $( '#post' ).on( 'click', 'input[type="radio"]', showWarningWithoutSave );
+
+    $( '#post' ).on( 'submit', function() {
+      window.onbeforeunload = null;
+    });
+
 	$( '.nav-tab' ).on( 'click', function( e ) {
 		var $this = $( this );
 		var $all  = $this.parent().children( '.nav-tab' );
