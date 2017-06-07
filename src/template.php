@@ -173,6 +173,39 @@ class Template extends Service {
 	}
 
 	/**
+	 * Transforms an array of attributes into an attribute string.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $attrs Array of `$key => $value` pairs.
+	 * @return string Attribute string.
+	 */
+	public function attrs( $attrs ) {
+		$output = '';
+
+		foreach ( $attrs as $attr => $value ) {
+			if ( is_bool( $value ) ) {
+				if ( $value ) {
+					$output .= ' ' . $attr;
+				}
+			} else {
+				if ( is_array( $value ) || is_object( $value ) ) {
+					$value = wp_json_encode( $value );
+				}
+
+				if ( is_string( $value ) && false !== strpos( $value, '"' ) ) {
+					$output .= ' ' . $attr . "='" . esc_attr( $value ) . "'";
+				} else {
+					$output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
+				}
+			}
+		}
+
+		return $output;
+	}
+
+	/**
 	 * Registers an additional template location.
 	 *
 	 * @since 1.0.0
