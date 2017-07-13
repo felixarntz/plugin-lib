@@ -177,7 +177,7 @@ trait Type_Manager_Trait {
 			 * @param string $old_type Old type of the model.
 			 * @param Model  $model    The model object.
 			 */
-			do_action( "{$prefix}transition_{$singular_slug}_{$type_property}", $model->type_property, $old_type, $model );
+			do_action( "{$prefix}transition_{$singular_slug}_{$type_property}", $model->$type_property, $old_type, $model );
 		}
 
 		return $result;

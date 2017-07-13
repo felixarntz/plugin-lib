@@ -177,7 +177,7 @@ trait Status_Manager_Trait {
 			 * @param string $old_status Old status of the model.
 			 * @param Model  $model      The model object.
 			 */
-			do_action( "{$prefix}transition_{$singular_slug}_{$status_property}", $model->status_property, $old_status, $model );
+			do_action( "{$prefix}transition_{$singular_slug}_{$status_property}", $model->$status_property, $old_status, $model );
 		}
 
 		return $result;
