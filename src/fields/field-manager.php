@@ -106,6 +106,16 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	protected static $defaults_registered = false;
 
 	/**
+	 * Internal flag for whether the current enqueue run is the first one.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 * @var array
+	 */
+	protected static $first_enqueue_run = true;
+
+	/**
 	 * Internal flags for enqueueing field assets.
 	 *
 	 * @since 1.0.0
@@ -116,7 +126,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	protected static $enqueued = array();
 
 	/**
-	 * Internal flags for printing JS templates.
+	 * Internal flags for JS templates printed.
 	 *
 	 * @since 1.0.0
 	 * @access protected
@@ -316,69 +326,125 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @access public
 	 */
 	public function enqueue() {
-		if ( $this->enqueued( '_core' ) ) {
-			return;
+		if ( ! $this->enqueued( '_core' ) ) {
+			$this->library_assets()->register_style( 'fields', 'assets/dist/css/fields.css', array(
+				'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
+				'enqueue' => true,
+			) );
+
+			$this->library_assets()->register_script( 'fields', 'assets/dist/js/fields.js', array(
+				'deps'          => array( 'jquery', 'underscore', 'backbone', 'wp-util' ),
+				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+				'in_footer'     => true,
+				'enqueue'       => true,
+				'localize_name' => 'pluginLibFieldsAPIData',
+				'localize_data' => $localize_data,
+			) );
+
+			$this->enqueued( '_core', true );
 		}
 
-		$main_dependencies = array( 'jquery', 'underscore', 'backbone', 'wp-util' );
-		$localize_data     = array(
-			'field_managers' => array(),
-		);
+		$prefixed_script_handle = str_replace( '_', '-', $this->library_assets()->get_prefix() ) . 'fields';
+
+		$script = wp_scripts()->registered[ $prefixed_script_handle ];
+
+		if ( ! isset( $script->extra['plugin_lib_data'] ) ) {
+			$script->extra['plugin_lib_data'] = array(
+				'field_managers' => array(),
+			);
+		}
+
+		if ( ! isset( $script->extra['plugin_lib_templates'] ) ) {
+			$script->extra['plugin_lib_templates'] = array();
+		}
 
 		$values = $this->get_values();
-
-		$localize_data['field_managers'][ $this->instance_id ] = array(
-			'fields' => array(),
-		);
 
 		$field_instances = $this->get_fields();
 
 		/** This is run to verify there are no circular dependencies. */
 		$this->resolve_dependency_order( $field_instances );
 
+		$field_data = array();
+		$type_templates = array();
 		foreach ( $field_instances as $id => $field_instance ) {
 			$type = $field_instance->slug;
 
 			if ( ! $this->enqueued( $type ) ) {
-				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+				list( $new_dependencies, $new_data ) = $field_instance->enqueue();
 
 				if ( ! empty( $new_dependencies ) ) {
-					$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+					$script->deps = array_merge( $script->deps, $new_dependencies );
 				}
 
-				if ( ! empty( $new_localize_data ) ) {
-					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+				if ( ! empty( $new_data ) ) {
+					$script->extra['plugin_lib_data'] = array_merge_recursive( $script->extra['plugin_lib_data'], $new_data );
 				}
 
 				$this->enqueued( $type, true );
 			}
 
+			if ( ! $this->templates_printed( $type ) ) {
+				$type_template = array();
+
+				ob_start();
+				$field_instance->print_label_template();
+				$type_template['label'] = ob_get_clean();
+
+				ob_start();
+				$field_instance->print_content_template();
+				$type_template['content'] = ob_get_clean();
+
+				ob_start();
+				$field_instance->print_repeatable_item_template();
+				$type_template['repeatable_item'] = ob_get_clean();
+
+				$type_templates[ $type ] = $type_template;
+
+				$this->templates_printed( $type, true );
+			}
+
 			$value = isset( $values[ $id ] ) ? $values[ $id ] : $field_instance->default;
 
-			$localize_data['field_managers'][ $this->instance_id ]['fields'][ $id ] = $field_instance->to_json( $value );
+			$field_data[ $id ] = $field_instance->to_json( $value );
 		}
 
-		$this->library_assets()->register_style( 'fields', 'assets/dist/css/fields.css', array(
-			'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
-			'enqueue' => true,
-		) );
-
-		$this->library_assets()->register_script( 'fields', 'assets/dist/js/fields.js', array(
-			'deps'          => $main_dependencies,
-			'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
-			'in_footer'     => true,
-			'enqueue'       => true,
-			'localize_name' => 'pluginLibFieldsAPIData',
-			'localize_data' => $localize_data,
-		) );
-
-		if ( is_admin() ) {
-			add_action( 'admin_footer', array( $this, 'print_templates' ), 1, 0 );
-		} else {
-			add_action( 'wp_footer', array( $this, 'print_templates' ), 1, 0 );
+		if ( ! empty( $field_data ) ) {
+			$script->extra['plugin_lib_data']['field_managers'][ $this->instance_id ] = array(
+				'fields' => $field_data,
+			);
 		}
 
-		$this->enqueued( '_core', true );
+		if ( ! empty( $type_templates ) ) {
+			$script->extra['plugin_lib_templates'] = array_merge( $script->extra['plugin_lib_templates'], $type_templates );
+		}
+
+		if ( self::$first_enqueue_run ) {
+			$data_hook_name      = is_admin() ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts';
+			$templates_hook_name = is_admin() ? 'admin_footer' : 'wp_footer';
+
+			add_action( $data_hook_name, function() use ( $script ) {
+				$output = 'var pluginLibFieldsAPIData = ' . wp_json_encode( $script->extra['plugin_lib_data'] ) . ';';
+				wp_scripts()->add_inline_script( $script->handle, $output, 'before' );
+			}, 9999, 0 );
+			add_action( $templates_hook_name, function() use ( $script ) {
+				foreach ( $script->extra['plugin_lib_templates'] as $type => $templates ) {
+					?>
+					<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-label">
+						<?php echo $templates['label']; ?>
+					</script>
+					<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-content">
+						<?php echo $templates['content']; ?>
+					</script>
+					<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-repeatable-item">
+						<?php echo $templates['repeatable_item']; ?>
+					</script>
+					<?php
+				}
+			}, 1, 0 );
+
+			self::$first_enqueue_run = false;
+		}
 	}
 
 	/**
@@ -402,39 +468,23 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	}
 
 	/**
-	 * Prints field templates for JavaScript.
+	 * Checks whether templates for a specific type have been printed.
 	 *
 	 * @since 1.0.0
 	 * @access public
+	 *
+	 * @param string    $type Type to check for.
+	 * @param bool|null $set  Optional. A boolean in case the value should be set. Default null.
+	 * @return bool True if the templates have been printed at the time of calling the function,
+	 *              false otherwise.
 	 */
-	public function print_templates() {
-		if ( isset( self::$templates_printed['_core'] ) && self::$templates_printed['_core'] ) {
-			return;
+	public function templates_printed( $type, $set = null ) {
+		$result = isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ];
+		if ( null !== $set ) {
+			self::$templates_printed[ $type ] = (bool) $set;
 		}
 
-		foreach ( $this->get_fields() as $id => $field_instance ) {
-			$type = $field_instance->slug;
-
-			if ( isset( self::$templates_printed[ $type ] ) && self::$templates_printed[ $type ] ) {
-				continue;
-			}
-
-			?>
-			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-label">
-				<?php echo $field_instance->print_label_template(); ?>
-			</script>
-			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-content">
-				<?php echo $field_instance->print_content_template(); ?>
-			</script>
-			<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $field_instance->slug; ?>-repeatable-item">
-				<?php echo $field_instance->print_repeatable_item_template(); ?>
-			</script>
-			<?php
-
-			self::$templates_printed[ $type ] = true;
-		}
-
-		self::$templates_printed['_core'] = true;
+		return $result;
 	}
 
 	/**

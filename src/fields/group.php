@@ -211,28 +211,28 @@ class Group extends Field implements Field_Manager_Interface {
 	 *               is an associative array of data to pass to the main script.
 	 */
 	public function enqueue() {
-		$main_dependencies = array();
-		$localize_data = array();
+		$deps = array();
+		$data = array();
 
 		foreach ( $this->fields as $id => $field_instance ) {
 			$type = $field_instance->slug;
 
 			if ( ! $this->manager->enqueued( $type ) ) {
-				list( $new_dependencies, $new_localize_data ) = $field_instance->enqueue();
+				list( $new_dependencies, $new_data ) = $field_instance->enqueue();
 
 				if ( ! empty( $new_dependencies ) ) {
-					$main_dependencies = array_merge( $main_dependencies, $new_dependencies );
+					$deps = array_merge( $deps, $new_dependencies );
 				}
 
-				if ( ! empty( $new_localize_data ) ) {
-					$localize_data = array_merge_recursive( $localize_data, $new_localize_data );
+				if ( ! empty( $new_data ) ) {
+					$data = array_merge_recursive( $data, $new_data );
 				}
 
 				$this->manager->enqueued( $type, true );
 			}
 		}
 
-		return array( $main_dependencies, $localize_data );
+		return array( $deps, $data );
 	}
 
 	/**
