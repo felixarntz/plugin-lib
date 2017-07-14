@@ -194,10 +194,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 *                                                that this argument should be replaced by the field ID.
 	 *     @type string   $name_prefix                The name prefix to create name attributes for fields.
 	 *     @type string   $render_mode                Render mode. Default 'form-table'.
-	 *     @type bool     $nest_section_fields        Whether values for the fields should be stored in
-	 *                                                separate sub-arrays per section. If enabled, dependencies
-	 *                                                might not work correctly in case of duplicate IDs.Default
-	 *                                                false.
 	 * }
 	 */
 	public function __construct( $prefix, $services, $args ) {
@@ -490,29 +486,11 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 			if ( false !== $id_key ) {
 				$values = array();
 
-				if ( $this->nest_section_fields ) {
-					$section_key = array_search( '{section}', $this->get_value_callback_args, true );
+				foreach ( $field_instances as $id => $field_instance ) {
+					$args = $this->get_value_callback_args;
+					$args[ $id_key ] = $id;
 
-					foreach ( $field_instances as $id => $field_instance ) {
-						$args = $this->get_value_callback_args;
-						$args[ $id_key ] = $id;
-						if ( false !== $section_key ) {
-							$args[ $section_key ] = $field_instance['section'];
-						}
-
-						if ( ! isset( $values[ $field_instance['section'] ] ) ) {
-							$values[ $field_instance['section'] ] = array();
-						}
-
-						$values[ $field_instance['section'] ][ $id ] = call_user_func_array( $this->get_value_callback, $args );
-					}
-				} else {
-					foreach ( $field_instances as $id => $field_instance ) {
-						$args = $this->get_value_callback_args;
-						$args[ $id_key ] = $id;
-
-						$values[ $id ] = call_user_func_array( $this->get_value_callback, $args );
-					}
+					$values[ $id ] = call_user_func_array( $this->get_value_callback, $args );
 				}
 
 				$this->current_values = $values;
@@ -548,77 +526,30 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 
 		$id_key = array_search( '{id}', $this->update_value_callback_args, true );
 		if ( false !== $id_key ) {
-			if ( $this->nest_section_fields ) {
-				$section_key = array_search( '{section}', $this->get_value_callback_args, true );
-
-				foreach ( $field_instances as $id => $field_instance ) {
-					$validated_value = $this->validate_value( $field_instance, $values, $errors );
-					if ( is_wp_error( $validated_value ) ) {
-						continue;
-					}
-
-					if ( ! isset( $this->current_values[ $field_instance['section'] ] ) ) {
-						$this->current_values[ $field_instance['section'] ] = array();
-					}
-
-					$this->current_values[ $field_instance['section'] ][ $id ] = $validated_value;
-
-					$args = $this->update_value_callback_args;
-					$args[ $id_key ] = $id;
-					$args[ $value_key ] = $validated_value;
-					if ( false !== $section_key ) {
-						$args[ $section_key ] = $field_instance['section'];
-					}
-
-					call_user_func_array( $this->update_value_callback, $args );
+			foreach ( $field_instances as $id => $field_instance ) {
+				$validated_value = $this->validate_value( $field_instance, $values, $errors );
+				if ( is_wp_error( $validated_value ) ) {
+					continue;
 				}
-			} else {
-				foreach ( $field_instances as $id => $field_instance ) {
-					$validated_value = $this->validate_value( $field_instance, $values, $errors );
-					if ( is_wp_error( $validated_value ) ) {
-						continue;
-					}
 
-					$this->current_values[ $id ] = $validated_value;
+				$this->current_values[ $id ] = $validated_value;
 
-					$args = $this->update_value_callback_args;
-					$args[ $id_key ] = $id;
-					$args[ $value_key ] = $validated_value;
+				$args = $this->update_value_callback_args;
+				$args[ $id_key ] = $id;
+				$args[ $value_key ] = $validated_value;
 
-					call_user_func_array( $this->update_value_callback, $args );
-				}
+				call_user_func_array( $this->update_value_callback, $args );
 			}
 		} else {
-			if ( $this->nest_section_fields ) {
-				foreach ( $field_instances as $id => $field_instance ) {
-					$validated_value = $this->validate_value( $field_instance, $values, $errors );
-					if ( is_wp_error( $validated_value ) ) {
-						continue;
-					}
-
-					if ( ! isset( $this->current_values[ $field_instance['section'] ] ) ) {
-						$this->current_values[ $field_instance['section'] ] = array();
-					}
-
-					$this->current_values[ $field_instance['section'] ][ $id ] = $validated_value;
-
-					if ( ! isset( $validated_values[ $field_instance['section'] ] ) ) {
-						$validated_values[ $field_instance['section'] ] = array();
-					}
-
-					$validated_values[ $field_instance['section'] ][ $id ] = $validated_value;
+			foreach ( $field_instances as $id => $field_instance ) {
+				$validated_value = $this->validate_value( $field_instance, $values, $errors );
+				if ( is_wp_error( $validated_value ) ) {
+					continue;
 				}
-			} else {
-				foreach ( $field_instances as $id => $field_instance ) {
-					$validated_value = $this->validate_value( $field_instance, $values, $errors );
-					if ( is_wp_error( $validated_value ) ) {
-						continue;
-					}
 
-					$this->current_values[ $id ] = $validated_value;
+				$this->current_values[ $id ] = $validated_value;
 
-					$validated_values[ $id ] = $validated_value;
-				}
+				$validated_values[ $id ] = $validated_value;
 			}
 
 			$args = $this->update_value_callback_args;
@@ -669,17 +600,13 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id      Field identifier.
-	 * @param string          $section Section identifier.
-	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
-	 *                                 Default null.
+	 * @param string          $id    Field identifier.
+	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
+	 *                               Default null.
 	 * @return string Field id attribute.
 	 */
-	public function make_id( $id, $section, $index = null ) {
+	public function make_id( $id, $index = null ) {
 		$field_id = str_replace( '_', '-', $id );
-		if ( $this->nest_section_fields ) {
-			$field_id = str_replace( '_', '-', $section ) . '_' . $field_id;
-		}
 
 		$instance_id = $this->get_instance_id();
 		if ( $instance_id ) {
@@ -703,23 +630,17 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id      Field identifier.
-	 * @param string          $section Section identifier.
-	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
-	 *                                 Default null.
+	 * @param string          $id    Field identifier.
+	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
+	 *                               Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id, $section, $index = null ) {
+	public function make_name( $id, $index = null ) {
 		$name_prefix = $this->name_prefix;
 
 		$field_name = $id;
 		if ( ! empty( $this->name_prefix ) ) {
-			if ( $this->nest_section_fields ) {
-				$field_name = $section . '][' . $field_name;
-			}
 			$field_name = $this->name_prefix . '[' . $field_name . ']';
-		} elseif ( $this->nest_section_fields ) {
-			$field_name = $section . '[' . $field_name . ']';
 		}
 
 		if ( null !== $index ) {
@@ -792,11 +713,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * @return mixed|WP_Error Validated value on success, error object on failure.
 	 */
 	protected function validate_value( $field, $values, $errors ) {
-		if ( $this->nest_section_fields ) {
-			$value = isset( $values[ $field->section ][ $field->id ] ) ? $values[ $field->section ][ $field->id ] : null;
-		} else {
-			$value = isset( $values[ $field->id ] ) ? $values[ $field->id ] : null;
-		}
+		$value = isset( $values[ $field->id ] ) ? $values[ $field->id ] : null;
 
 		$validated_value = $field->validate( $value );
 		if ( is_wp_error( $validated_value ) ) {
@@ -1166,24 +1083,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 		}
 
 		return $value;
-	}
-
-	/**
-	 * Parses whether to nest section fields.
-	 *
-	 * @since 1.0.0
-	 * @access protected
-	 * @static
-	 *
-	 * @param mixed $value The input value.
-	 * @return bool The parsed value.
-	 */
-	protected static function parse_arg_nest_section_fields( $value ) {
-		if ( is_bool( $value ) ) {
-			return $value;
-		}
-
-		return false;
 	}
 }
 

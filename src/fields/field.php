@@ -834,7 +834,7 @@ abstract class Field {
 	 * @return string `id` attribute value.
 	 */
 	protected function get_id_attribute() {
-		return $this->manager->make_id( $this->id, $this->section, $this->index );
+		return $this->manager->make_id( $this->id, $this->index );
 	}
 
 	/**
@@ -846,7 +846,7 @@ abstract class Field {
 	 * @return string `name` attribute value.
 	 */
 	protected function get_name_attribute() {
-		return $this->manager->make_name( $this->id, $this->section, $this->index );
+		return $this->manager->make_name( $this->id, $this->index );
 	}
 
 	/**

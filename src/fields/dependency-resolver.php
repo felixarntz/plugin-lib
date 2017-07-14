@@ -230,14 +230,9 @@ class Dependency_Resolver {
 			}
 		}
 
-		$section = '';
-		if ( ! empty( $dependency['section'] ) ) {
-			$section = $dependency['section'];
-		}
-
 		$fields = array();
 		foreach ( $dependency['fields'] as $field ) {
-			$fields[] = $this->field_manager->make_id( $field, $section );
+			$fields[] = $this->field_manager->make_id( $field );
 		}
 		$dependency['fields'] = $fields;
 
