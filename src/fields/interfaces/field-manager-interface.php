@@ -22,12 +22,13 @@ interface Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id    Field identifier.
-	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
-	 *                               Default null.
+	 * @param string          $id      Field identifier.
+	 * @param string          $section Section identifier.
+	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
+	 *                                 Default null.
 	 * @return string Field id attribute.
 	 */
-	public function make_id( $id, $index = null );
+	public function make_id( $id, $section, $index = null );
 
 	/**
 	 * Creates the name attribute for a given field identifier.
@@ -35,12 +36,13 @@ interface Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id    Field identifier.
-	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
-	 *                               Default null.
+	 * @param string          $id      Field identifier.
+	 * @param string          $section Section identifier.
+	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
+	 *                                 Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id, $index = null );
+	public function make_name( $id, $section, $index = null );
 
 	/**
 	 * Returns a specific manager message.

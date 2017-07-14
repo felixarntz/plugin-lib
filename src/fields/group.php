@@ -158,13 +158,14 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id    Field identifier.
-	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
-	 *                               Default null.
+	 * @param string          $id      Field identifier.
+	 * @param string          $section Section identifier.
+	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
+	 *                                 Default null.
 	 * @return string Field id attribute.
 	 */
-	public function make_id( $id, $index = null ) {
-		$field_id = $this->manager->make_id( $this->id, $this->index );
+	public function make_id( $id, $section, $index = null ) {
+		$field_id = $this->manager->make_id( $this->id, $this->section, $this->index );
 
 		return $field_id . '-' . str_replace( '_', '-', $id );
 	}
@@ -175,13 +176,14 @@ class Group extends Field implements Field_Manager_Interface {
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string          $id    Field identifier.
-	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
-	 *                               Default null.
+	 * @param string          $id      Field identifier.
+	 * @param string          $section Section identifier.
+	 * @param int|string|null $index   Optional. Index of the field, in case it is a repeatable field.
+	 *                                 Default null.
 	 * @return string Field name attribute.
 	 */
-	public function make_name( $id, $index = null ) {
-		$field_name = $this->manager->make_name( $this->id, $this->index );
+	public function make_name( $id, $section, $index = null ) {
+		$field_name = $this->manager->make_name( $this->id, $this->section, $this->index );
 
 		return $field_name . '[' . $id . ']';
 	}
