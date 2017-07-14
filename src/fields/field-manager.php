@@ -337,8 +337,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
 				'in_footer'     => true,
 				'enqueue'       => true,
-				'localize_name' => 'pluginLibFieldsAPIData',
-				'localize_data' => $localize_data,
 			) );
 
 			$this->enqueued( '_core', true );
