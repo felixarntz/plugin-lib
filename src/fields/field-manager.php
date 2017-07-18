@@ -421,11 +421,11 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 			$data_hook_name      = is_admin() ? 'admin_enqueue_scripts' : 'wp_enqueue_scripts';
 			$templates_hook_name = is_admin() ? 'admin_footer' : 'wp_footer';
 
-			add_action( $data_hook_name, function() use ( $script ) {
+			add_action( $data_hook_name, function() use ( &$script ) {
 				$output = 'var pluginLibFieldsAPIData = ' . wp_json_encode( $script->extra['plugin_lib_data'] ) . ';';
 				wp_scripts()->add_inline_script( $script->handle, $output, 'before' );
 			}, 9999, 0 );
-			add_action( $templates_hook_name, function() use ( $script ) {
+			add_action( $templates_hook_name, function() use ( &$script ) {
 				foreach ( $script->extra['plugin_lib_templates'] as $type => $templates ) {
 					?>
 					<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-label">
