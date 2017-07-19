@@ -948,6 +948,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$this->validate_custom_data( $form_data, $result );
 
+		$prefix = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+
 		/**
 		 * Fires right before the current model will be updated.
 		 *
