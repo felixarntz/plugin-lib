@@ -549,6 +549,12 @@ abstract class Model_Edit_Page extends Manager_Page {
 			return;
 		}
 
+		$id = null;
+		if ( $this->is_update ) {
+			$primary_property = $this->model_manager->get_primary_property();
+			$id = $this->model->$primary_property;
+		}
+
 		$prefix        = $this->model_manager->get_prefix();
 		$singular_slug = $this->model_manager->get_singular_slug();
 		$edit_url      = $this->get_model_edit_url();
@@ -668,7 +674,30 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @access protected
 	 */
 	protected function render_advanced_form_content() {
-		// Empty method body.
+		$id = null;
+		if ( $this->is_update ) {
+			$primary_property = $this->model_manager->get_primary_property();
+			$id = $this->model->$primary_property;
+		}
+
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+		$edit_url      = $this->get_model_edit_url();
+
+		/**
+		 * Fires when advanced form content for a model edit page should be rendered.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id       Current model ID, or null if new model.
+		 * @param Model    $model    Current model object.
+		 * @param Manager  $manager  Model manager instance.
+		 * @param string   $edit_url Model edit URL.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_advanced_form_content", $id, $this->model, $this->model_manager, $edit_url );
 	}
 
 	/**
