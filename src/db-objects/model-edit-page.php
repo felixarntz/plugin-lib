@@ -549,6 +549,10 @@ abstract class Model_Edit_Page extends Manager_Page {
 			return;
 		}
 
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+		$edit_url      = $this->get_model_edit_url();
+
 		$current_tab_id = key( $this->tabs );
 
 		$use_tabs = count( $this->tabs ) > 1;
@@ -570,27 +574,85 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 			<?php foreach ( $this->tabs as $tab_id => $tab_args ) :
 				$atts = $use_tabs ? ' aria-labelledby="' . esc_attr( 'tab-label-' . $tab_id ) . '" aria-hidden="' . ( $tab_id === $current_tab_id ? 'false' : 'true' ) . '" role="tabpanel"' : '';
-				$sections = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
+
+				$tab_args['sections'] = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
 				?>
 				<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; ?>>
 
-					<?php if ( ! empty( $tab_args['description'] ) ) : ?>
-						<p class="description"><?php echo $tab_args['description']; ?></p>
-					<?php endif; ?>
+					<?php
+					/**
+					 * Fires to render additional content before an edit model page tab's content.
+					 *
+					 * The dynamic parts of the hook name refer to the manager's prefix, its singular slug
+					 * and the tab's identifier respectively.
+					 *
+					 * @since 1.0.0
+					 *
+					 * @param int|null $id       Current model ID, or null if new model.
+					 * @param Model    $model    Current model object.
+					 * @param Manager  $manager  Model manager instance.
+					 * @param string   $edit_url Model edit URL.
+					 * @param array    $tab_args Array of tab arguments.
+					 */
+					do_action( "{$prefix}edit_{$singular_slug}_before_tab_{$tab_id}", $id, $this->model, $this->model_manager, $edit_url, $tab_args );
 
-					<?php foreach ( $sections as $section_id => $section_args ) : ?>
-						<div class="section">
-							<h3><?php echo $section_args['title']; ?></h3>
+					if ( has_action( "{$prefix}edit_{$singular_slug}_tab_{$tab_id}" ) ) :
+						/**
+						 * Fires to render content that replaces an edit model page tab's original content.
+						 *
+						 * If this hook is used, the original content will not be rendered.
+						 *
+						 * The dynamic parts of the hook name refer to the manager's prefix, its singular slug
+						 * and the tab's identifier respectively.
+						 *
+						 * @since 1.0.0
+						 *
+						 * @param int|null      $id            Current model ID, or null if new model.
+						 * @param Model         $model         Current model object.
+						 * @param Manager       $manager       Model manager instance.
+						 * @param string        $edit_url      Model edit URL.
+						 * @param array         $tab_args      Array of tab arguments.
+						 * @param Field_Manager $field_manager Model edit page field manager instance.
+						 */
+						do_action( "{$prefix}edit_{$singular_slug}_tab_{$tab_id}", $id, $this->model, $this->model_manager, $edit_url, $tab_args, $this->field_manager );
+					else : ?>
 
-							<?php if ( ! empty( $section_args['description'] ) ) : ?>
-								<p class="description"><?php echo $section_args['description']; ?></p>
-							<?php endif; ?>
+						<?php if ( ! empty( $tab_args['description'] ) ) : ?>
+							<p class="description"><?php echo $tab_args['description']; ?></p>
+						<?php endif; ?>
 
-							<table class="form-table">
-								<?php $this->field_manager->render( $tab_id . '-' . $section_id ); ?>
-							</table>
-						</div>
-					<?php endforeach; ?>
+						<?php foreach ( $tab_args['sections'] as $section_id => $section_args ) : ?>
+							<div class="section">
+								<h3><?php echo $section_args['title']; ?></h3>
+
+								<?php if ( ! empty( $section_args['description'] ) ) : ?>
+									<p class="description"><?php echo $section_args['description']; ?></p>
+								<?php endif; ?>
+
+								<table class="form-table">
+									<?php $this->field_manager->render( $tab_id . '-' . $section_id ); ?>
+								</table>
+							</div>
+						<?php endforeach; ?>
+
+					<?php endif;
+
+					/**
+					 * Fires to render additional content after an edit model page tab's content.
+					 *
+					 * The dynamic parts of the hook name refer to the manager's prefix, its singular slug
+					 * and the tab's identifier respectively.
+					 *
+					 * @since 1.0.0
+					 *
+					 * @param int|null $id       Current model ID, or null if new model.
+					 * @param Model    $model    Current model object.
+					 * @param Manager  $manager  Model manager instance.
+					 * @param string   $edit_url Model edit URL.
+					 * @param array    $tab_args Array of tab arguments.
+					 */
+					do_action( "{$prefix}edit_{$singular_slug}_after_tab_{$tab_id}", $id, $this->model, $this->model_manager, $edit_url, $tab_args );
+					?>
 
 				</div>
 			<?php endforeach; ?>
@@ -622,7 +684,9 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$id = $this->model->$primary_property;
 		}
 
-		$edit_url = $this->get_model_edit_url();
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+		$edit_url      = $this->get_model_edit_url();
 
 		?>
 		<div id="submitdiv" class="postbox">
@@ -634,9 +698,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 					<div id="minor-publishing">
 						<div id="minor-publishing-actions">
 							<?php
-							$prefix        = $this->model_manager->get_prefix();
-							$singular_slug = $this->model_manager->get_singular_slug();
-
 							/**
 							 * Fires when the #minor-publishing-actions content for a model edit page should be rendered.
 							 *
@@ -656,9 +717,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 						</div>
 						<div id="misc-publishing-actions">
 							<?php
-							$prefix        = $this->model_manager->get_prefix();
-							$singular_slug = $this->model_manager->get_singular_slug();
-
 							/**
 							 * Fires when the #misc-publishing-actions content for a model edit page should be rendered.
 							 *
@@ -679,9 +737,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 					</div>
 					<div id="major-publishing-actions">
 						<?php
-						$prefix        = $this->model_manager->get_prefix();
-						$singular_slug = $this->model_manager->get_singular_slug();
-
 						/**
 						 * Fires when the #major-publishing-actions content for a model edit page should be rendered.
 						 *
