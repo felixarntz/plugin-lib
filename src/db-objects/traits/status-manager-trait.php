@@ -182,6 +182,53 @@ trait Status_Manager_Trait {
 
 		return $result;
 	}
+
+	/**
+	 * Renders a status select field for the misc publishing area of the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int|null $id    Current model ID, or null if new model.
+	 * @param Model    $model Current model object.
+	 */
+	public function render_status_select( $id, $model ) {
+		if ( ! method_exists( $this, 'get_status_property' ) ) {
+			return;
+		}
+
+		$capabilities = $this->capabilities();
+
+		$status_property = $this->get_status_property();
+		$current_status = $model->$status_property;
+
+		if ( $capabilities && $capabilities->user_can_publish( null, $id ) ) {
+			$statuses = $this->statuses()->query();
+		} else {
+			$statuses = $this->statuses()->query( array(
+				'public'   => false,
+				'slug'     => $current_status,
+				'operator' => 'OR',
+			) );
+		}
+
+		if ( empty( $statuses ) ) {
+			return;
+		}
+
+		?>
+		<div class="misc-pub-section">
+			<div id="post-status-select">
+				<label for="post-status"><?php echo $this->get_message( 'edit_page_status_label' ); ?></label>
+				<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
+					<?php foreach ( $statuses as $status ) : ?>
+						<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</div>
+		</div>
+		<?php
+	}
 }
 
 endif;

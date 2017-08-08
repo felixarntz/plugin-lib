@@ -336,85 +336,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	}
 
 	/**
-	 * Renders buttons for frontend viewing and previewing.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param int|null $id      Current model ID, or null if new model.
-	 * @param Model    $model   Current model object.
-	 * @param Manager  $manager Model manager instance.
-	 */
-	public function view_buttons( $id, $model, $manager ) {
-		$view_routing = $manager->view_routing();
-		if ( ! $view_routing ) {
-			return;
-		}
-
-		$preview_text = $id ? $manager->get_message( 'edit_page_preview_changes' ) : $manager->get_message( 'edit_page_preview' );
-
-		$permalink = $view_routing->get_model_permalink( $model );
-
-		if ( ! empty( $permalink ) ) : ?>
-			<div id="view-action">
-				<a class="button" href="<?php echo esc_url( $permalink ); ?>" target="_blank"><?php echo $manager->get_message( 'edit_page_view' ); ?></a>
-			</div>
-		<?php endif; ?>
-		<div id="preview-action">
-			<button type="button" id="post-preview" class="preview button"><?php echo $preview_text; ?></button>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Renders a status select field.
-	 *
-	 * @since 1.0.0
-	 * @access public
-	 *
-	 * @param int|null $id      Current model ID, or null if new model.
-	 * @param Model    $model   Current model object.
-	 * @param Manager  $manager Model manager instance.
-	 */
-	public function status_select( $id, $model, $manager ) {
-		if ( ! method_exists( $manager, 'get_status_property' ) ) {
-			return;
-		}
-
-		$capabilities = $manager->capabilities();
-
-		$status_property = $manager->get_status_property();
-		$current_status = $model->$status_property;
-
-		if ( $capabilities && $capabilities->user_can_publish( null, $id ) ) {
-			$statuses = $manager->statuses()->query();
-		} else {
-			$statuses = $manager->statuses()->query( array(
-				'public'   => false,
-				'slug'     => $current_status,
-				'operator' => 'OR',
-			) );
-		}
-
-		if ( empty( $statuses ) ) {
-			return;
-		}
-
-		?>
-		<div class="misc-pub-section">
-			<div id="post-status-select">
-				<label for="post-status"><?php echo $manager->get_message( 'edit_page_status_label' ); ?></label>
-				<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
-					<?php foreach ( $statuses as $status ) : ?>
-						<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>
-					<?php endforeach; ?>
-				</select>
-			</div>
-		</div>
-		<?php
-	}
-
-	/**
 	 * AJAX callback to generate a model slug.
 	 *
 	 * @since 1.0.0
@@ -725,59 +646,43 @@ abstract class Model_Edit_Page extends Manager_Page {
 					<div id="minor-publishing">
 						<div id="minor-publishing-actions">
 							<?php
-
 							$prefix        = $this->model_manager->get_prefix();
 							$singular_slug = $this->model_manager->get_singular_slug();
 
-							if ( has_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions" ) ) {
-								add_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", array( $this, 'view_buttons' ), 10, 3 );
-
-								/**
-								 * Fires when the #minor-publishing-actions content for a model edit page should be rendered.
-								 *
-								 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
-								 * respectively.
-								 *
-								 * @since 1.0.0
-								 *
-								 * @param int|null $id      Current model ID, or null if new model.
-								 * @param Model    $model   Current model object.
-								 * @param Manager  $manager Model manager instance.
-								 */
-								do_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
-							} else {
-								$this->view_buttons( $id, $this->model, $this->model_manager );
-							}
-
+							/**
+							 * Fires when the #minor-publishing-actions content for a model edit page should be rendered.
+							 *
+							 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+							 * respectively.
+							 *
+							 * @since 1.0.0
+							 *
+							 * @param int|null $id      Current model ID, or null if new model.
+							 * @param Model    $model   Current model object.
+							 * @param Manager  $manager Model manager instance.
+							 */
+							do_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
 							?>
 							<div class="clear"></div>
 						</div>
 						<div id="misc-publishing-actions">
 							<?php
-
 							$prefix        = $this->model_manager->get_prefix();
 							$singular_slug = $this->model_manager->get_singular_slug();
 
-							if ( has_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions" ) ) {
-								add_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", array( $this, 'status_select' ), 10, 3 );
-
-								/**
-								 * Fires when the #misc-publishing-actions content for a model edit page should be rendered.
-								 *
-								 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
-								 * respectively.
-								 *
-								 * @since 1.0.0
-								 *
-								 * @param int|null $id      Current model ID, or null if new model.
-								 * @param Model    $model   Current model object.
-								 * @param Manager  $manager Model manager instance.
-								 */
-								do_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
-							} else {
-								$this->status_select( $id, $this->model, $this->model_manager );
-							}
-
+							/**
+							 * Fires when the #misc-publishing-actions content for a model edit page should be rendered.
+							 *
+							 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+							 * respectively.
+							 *
+							 * @since 1.0.0
+							 *
+							 * @param int|null $id      Current model ID, or null if new model.
+							 * @param Model    $model   Current model object.
+							 * @param Manager  $manager Model manager instance.
+							 */
+							do_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
 							?>
 						</div>
 						<div class="clear"></div>
