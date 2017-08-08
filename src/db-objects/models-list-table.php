@@ -777,22 +777,30 @@ abstract class Models_List_Table extends \WP_List_Table {
 		if ( method_exists( $this->manager, 'get_status_property' ) ) {
 			$status_property = $this->manager->get_status_property();
 
-			$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
+			$available_statuses = $this->manager->statuses()->query();
 			foreach ( $counts as $status => $number ) {
-				if ( '_total' === $status ) {
+				if ( '_total' === $status || ! isset( $available_statuses[ $status ] ) ) {
 					continue;
 				}
 
-				if ( in_array( $status, $internal_statuses, true ) ) {
+				if ( $available_statuses[ $status ]->internal ) {
 					continue;
+				}
+
+				$total += $number;
+
+				$view_label = $available_statuses[ $status ]->view_status_label;
+				if ( empty( $view_label ) ) {
+					$view_label = $this->manager->get_message( 'list_table_view_status_' . $status, true );
+					if ( empty( $view_label ) ) {
+						continue;
+					}
 				}
 
 				$views[ $status ] = array(
 					'url'   => add_query_arg( $status_property, $status, $list_url ),
-					'label' => sprintf( translate_nooped_plural( $this->manager->get_message( 'list_table_view_status_' . $status, true ), $number ), number_format_i18n( $number ) ),
+					'label' => sprintf( translate_nooped_plural( $view_label, $number ), number_format_i18n( $number ) ),
 				);
-
-				$total += $number;
 			}
 
 			if ( isset( $_REQUEST[ $status_property ] ) ) {

@@ -46,6 +46,10 @@ abstract class Model_Status extends Item {
 		if ( ! isset( $this->args['default'] ) ) {
 			$this->args['default'] = false;
 		}
+
+		if ( ! isset( $this->args['view_status_label'] ) ) {
+			$this->args['view_status_label'] = '';
+		}
 	}
 }
 
