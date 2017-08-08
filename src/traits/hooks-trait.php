@@ -8,6 +8,8 @@
 
 namespace Leaves_And_Love\Plugin_Lib\Traits;
 
+use ReflectionMethod;
+
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Hooks_Trait' ) ) :
 
 /**
@@ -222,6 +224,11 @@ trait Hooks_Trait {
 	 */
 	private function maybe_map_hook( $tag, $function, $priority, $accepted_args = 1 ) {
 		if ( ! is_array( $function ) || is_string( $function[0] ) || $this !== $function[0] ) {
+			return $function;
+		}
+
+		$reflection = new ReflectionMethod( $function[0], $function[1] );
+		if ( $reflection->isPublic() ) {
 			return $function;
 		}
 
