@@ -929,6 +929,27 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$id = null;
 		}
 
+		$prefix = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+
+		/**
+		 * Fires right before the current model will be updated.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+		 * respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string|WP_Error|null $short_circuit If not null, the process will be short-circuited.
+		 * @param int|null             $id            Current model ID, or null if new model.
+		 * @param Model                $model         Current model object.
+		 * @param Manager              $manager       Model manager instance.
+		 */
+		$short_circuit = apply_filters( "{$prefix}edit_{$singular_slug}_short_circuit", null, $id, $this->model, $this->model_manager );
+		if ( null !== $short_circuit ) {
+			return $short_circuit;
+		}
+
 		$form_data = wp_unslash( $_POST );
 
 		$result = $this->field_manager->update_values( $form_data );
@@ -937,9 +958,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 		}
 
 		$this->validate_custom_data( $form_data, $result );
-
-		$prefix = $this->model_manager->get_prefix();
-		$singular_slug = $this->model_manager->get_singular_slug();
 
 		/**
 		 * Fires right before the current model will be updated.
