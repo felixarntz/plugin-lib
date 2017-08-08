@@ -163,18 +163,7 @@ abstract class Manager_Page extends Admin_Page {
 	 * @return string Nonce action name.
 	 */
 	protected function get_nonce_action( $action_type = 'action', $model_id = null ) {
-		/* Let's be careful with this method, since the list table class still handles these nonces manually. */
-
-		$prefix = $this->model_manager->get_prefix();
-
-		if ( 'bulk_action' === $action_type ) {
-			return 'bulk-' . $prefix . $this->model_manager->get_plural_slug();
-		}
-
-		$base = 'row_action' === $action_type ? 'row-' : 'edit-';
-		$model_id = ! empty( $model_id ) ? '-' . absint( $model_id ) : '';
-
-		return $base . $prefix . $this->model_manager->get_singular_slug() . $model_id;
+		return $this->model_manager->get_nonce_action( $action_type, $model_id );
 	}
 
 	/**
