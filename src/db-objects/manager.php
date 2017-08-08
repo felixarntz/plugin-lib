@@ -885,6 +885,73 @@ abstract class Manager extends Service {
 				'num_args' => 2,
 			);
 		}
+
+		$this->actions[] = array(
+			'name'     => "{$prefix}edit_{$singular_slug}_major_publishing_actions",
+			'callback' => array( $this, 'render_delete_link' ),
+			'priority' => 11,
+			'num_args' => 4,
+		);
+		$this->actions[] = array(
+			'name'     => "{$prefix}edit_{$singular_slug}_major_publishing_actions",
+			'callback' => array( $this, 'render_edit_button' ),
+			'priority' => 12,
+			'num_args' => 2,
+		);
+	}
+
+	/**
+	 * Renders a delete link for the major publishing area of the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int|null $id       Current model ID, or null if new model.
+	 * @param Model    $model    Current model object.
+	 * @param Manager  $manager  Model manager instance.
+	 * @param string   $edit_url Model edit URL.
+	 */
+	public function render_delete_link( $id, $model, $manager, $edit_url ) {
+		if ( ! $id ) {
+			return;
+		}
+
+		$capabilities = $this->capabilities();
+
+		if ( ! $capabilities || ! $capabilities->user_can_delete( null, $id ) ) {
+			return;
+		}
+
+		// TODO.
+		$delete_url = add_query_arg( array(
+			'action'   => 'delete',
+			'_wpnonce' => wp_create_nonce( $this->get_nonce_action( 'action', $id ) ),
+		), $edit_url );
+
+		?>
+		<div id="delete-action">
+			<a class="submitdelete deletion" href="<?php echo esc_url( $delete_url ); ?>"><?php echo $this->get_message( 'edit_page_delete' ); ?></a>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Renders an edit button for the major publishing area of the model edit page.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param int|null $id    Current model ID, or null if new model.
+	 * @param Model    $model Current model object.
+	 */
+	public function render_edit_button( $id, $model ) {
+		$update_text = $id ? $this->get_message( 'edit_page_update' ) : $this->get_message( 'edit_page_create' );
+
+		?>
+		<div id="publishing-action">
+			<?php submit_button( $update_text, 'primary large', 'publish', false ); ?>
+		</div>
+		<?php
 	}
 }
 

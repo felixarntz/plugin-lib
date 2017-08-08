@@ -616,25 +616,13 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @access protected
 	 */
 	protected function render_submit_box() {
-		$capabilities = $this->model_manager->capabilities();
-
 		$id = null;
-		$update_text = $this->model_manager->get_message( 'edit_page_create' );
-		$delete_url = '';
-
 		if ( $this->is_update ) {
 			$primary_property = $this->model_manager->get_primary_property();
 			$id = $this->model->$primary_property;
-
-			$update_text = $this->model_manager->get_message( 'edit_page_update' );
-
-			if ( $capabilities && $capabilities->user_can_delete( null, $id ) ) {
-				$delete_url = add_query_arg( array(
-					'action'   => 'delete',
-					'_wpnonce' => wp_create_nonce( $this->get_nonce_action( 'action', $id ) ),
-				), $this->get_model_edit_url() );
-			}
 		}
+
+		$edit_url = $this->get_model_edit_url();
 
 		?>
 		<div id="submitdiv" class="postbox">
@@ -657,11 +645,12 @@ abstract class Model_Edit_Page extends Manager_Page {
 							 *
 							 * @since 1.0.0
 							 *
-							 * @param int|null $id      Current model ID, or null if new model.
-							 * @param Model    $model   Current model object.
-							 * @param Manager  $manager Model manager instance.
+							 * @param int|null $id       Current model ID, or null if new model.
+							 * @param Model    $model    Current model object.
+							 * @param Manager  $manager  Model manager instance.
+							 * @param string   $edit_url Model edit URL.
 							 */
-							do_action( "{$prefix}edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
+							do_action( "{$prefix}edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager, $edit_url );
 							?>
 							<div class="clear"></div>
 						</div>
@@ -678,24 +667,36 @@ abstract class Model_Edit_Page extends Manager_Page {
 							 *
 							 * @since 1.0.0
 							 *
-							 * @param int|null $id      Current model ID, or null if new model.
-							 * @param Model    $model   Current model object.
-							 * @param Manager  $manager Model manager instance.
+							 * @param int|null $id       Current model ID, or null if new model.
+							 * @param Model    $model    Current model object.
+							 * @param Manager  $manager  Model manager instance.
+							 * @param string   $edit_url Model edit URL.
 							 */
-							do_action( "{$prefix}edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
+							do_action( "{$prefix}edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager, $edit_url );
 							?>
 						</div>
 						<div class="clear"></div>
 					</div>
 					<div id="major-publishing-actions">
-						<div id="delete-action">
-							<?php if ( ! empty( $delete_url ) ) : ?>
-								<a class="submitdelete deletion" href="<?php echo esc_url( $delete_url ); ?>"><?php echo $this->model_manager->get_message( 'edit_page_delete' ); ?></a>
-							<?php endif; ?>
-						</div>
-						<div id="publishing-action">
-							<?php submit_button( $update_text, 'primary large', 'publish', false ); ?>
-						</div>
+						<?php
+						$prefix        = $this->model_manager->get_prefix();
+						$singular_slug = $this->model_manager->get_singular_slug();
+
+						/**
+						 * Fires when the #major-publishing-actions content for a model edit page should be rendered.
+						 *
+						 * The dynamic parts of the hook name refer to the manager's prefix and its singular slug
+						 * respectively.
+						 *
+						 * @since 1.0.0
+						 *
+						 * @param int|null $id       Current model ID, or null if new model.
+						 * @param Model    $model    Current model object.
+						 * @param Manager  $manager  Model manager instance.
+						 * @param string   $edit_url Model edit URL.
+						 */
+						do_action( "{$prefix}edit_{$singular_slug}_major_publishing_actions", $id, $this->model, $this->model_manager, $edit_url );
+						?>
 						<div class="clear"></div>
 					</div>
 				</div>
