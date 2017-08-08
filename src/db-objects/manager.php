@@ -844,7 +844,7 @@ abstract class Manager extends Service {
 
 		if ( method_exists( $this, 'render_view_buttons' ) ) {
 			$this->actions[] = array(
-				'name'     => "{$prefix}_edit_{$singular_slug}_minor_publishing_actions",
+				'name'     => "{$prefix}edit_{$singular_slug}_minor_publishing_actions",
 				'callback' => array( $this, 'render_view_buttons' ),
 				'priority' => 10,
 				'num_args' => 2,
@@ -853,7 +853,7 @@ abstract class Manager extends Service {
 
 		if ( method_exists( $this, 'render_status_select' ) ) {
 			$this->actions[] = array(
-				'name'     => "{$prefix}_edit_{$singular_slug}_misc_publishing_actions",
+				'name'     => "{$prefix}edit_{$singular_slug}_misc_publishing_actions",
 				'callback' => array( $this, 'render_status_select' ),
 				'priority' => 10,
 				'num_args' => 2,

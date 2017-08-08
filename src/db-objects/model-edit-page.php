@@ -661,7 +661,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 							 * @param Model    $model   Current model object.
 							 * @param Manager  $manager Model manager instance.
 							 */
-							do_action( "{$prefix}_edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
+							do_action( "{$prefix}edit_{$singular_slug}_minor_publishing_actions", $id, $this->model, $this->model_manager );
 							?>
 							<div class="clear"></div>
 						</div>
@@ -682,7 +682,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 							 * @param Model    $model   Current model object.
 							 * @param Manager  $manager Model manager instance.
 							 */
-							do_action( "{$prefix}_edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
+							do_action( "{$prefix}edit_{$singular_slug}_misc_publishing_actions", $id, $this->model, $this->model_manager );
 							?>
 						</div>
 						<div class="clear"></div>
@@ -869,7 +869,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 * @param Model    $model   Current model object.
 		 * @param Manager  $manager Model manager instance.
 		 */
-		do_action( "{$prefix}_edit_{$singular_slug}_before_update", $result, $id, $this->model, $this->model_manager );
+		do_action( "{$prefix}edit_{$singular_slug}_before_update", $result, $id, $this->model, $this->model_manager );
 
 		$update_result = $this->model->sync_upstream();
 		if ( is_wp_error( $update_result ) ) {
@@ -892,7 +892,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 * @param Model    $model   Current model object.
 		 * @param Manager  $manager Model manager instance.
 		 */
-		do_action( "{$prefix}_edit_{$singular_slug}_after_update", $result, $id, $this->model, $this->model_manager );
+		do_action( "{$prefix}edit_{$singular_slug}_after_update", $result, $id, $this->model, $this->model_manager );
 
 		if ( ! empty( $result->errors ) ) {
 			$message = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
