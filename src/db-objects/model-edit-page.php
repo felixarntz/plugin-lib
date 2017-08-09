@@ -974,13 +974,29 @@ abstract class Model_Edit_Page extends Manager_Page {
 		 */
 		do_action( "{$prefix}edit_{$singular_slug}_before_update", $result, $id, $this->model, $this->model_manager );
 
-		$update_result = $this->model->sync_upstream();
-		if ( is_wp_error( $update_result ) ) {
-			return new WP_Error( 'action_edit_item_internal_error', $this->model_manager->get_message( 'action_edit_item_internal_error' ) );
-		}
+		/**
+		 * Filters whether the current model should be synced upstream.
+		 *
+		 * Custom logic can fire here to update the object in another way.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool     $do_sync_upstream Whether to sync upstream. Default true.
+		 * @param WP_Error $result           Current error object. Might be empty.
+		 * @param int|null $id               Current model ID, or null if new model.
+		 * @param Model    $model            Current model object.
+		 * @param Manager  $manager          Model manager instance.
+		 */
+		$do_sync_upstream = apply_filters( "{$prefix}edit_{$singular_slug}_do_sync_upstream", true, $result, $id, $this->model, $this->model_manager );
 
-		$prefix        = $this->model_manager->get_prefix();
-		$singular_slug = $this->model_manager->get_singular_slug();
+		if ( $do_sync_upstream && ! is_wp_error( $do_sync_upstream ) ) {
+			$update_result = $this->model->sync_upstream();
+			if ( is_wp_error( $update_result ) ) {
+				return new WP_Error( 'action_edit_item_internal_error', $this->model_manager->get_message( 'action_edit_item_internal_error' ) );
+			}
+		} elseif ( is_wp_error( $do_sync_upstream ) ) {
+			return $do_sync_upstream;
+		}
 
 		/**
 		 * Fires after the current model has been updated.
