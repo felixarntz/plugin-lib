@@ -1102,6 +1102,9 @@
 
 		postRender: function( $el ) {
 			var autocompleteArgs = this.model.get( 'autocomplete' );
+			if ( ! autocompleteArgs ) {
+				autocompleteArgs = this.model.get( 'itemInitial' ).autocomplete;
+			}
 
 			$el.find( '.plugin-lib-control' ).autocomplete({
 				source: function( request, response ) {
