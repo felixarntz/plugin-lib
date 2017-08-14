@@ -632,7 +632,7 @@ abstract class Models_List_Table extends \WP_List_Table {
 		 *
 		 * @param Manager $manager The manager instance.
 		 */
-		do_action( "{$this->_args['plural']}_list_table_columns", $this->manager );
+		do_action( "{$this->_args['plural']}_list_table_print_filters", $this->manager );
 	}
 
 	/**
