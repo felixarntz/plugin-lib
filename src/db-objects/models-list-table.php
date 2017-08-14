@@ -612,6 +612,17 @@ abstract class Models_List_Table extends \WP_List_Table {
 		if ( method_exists( $this->manager, 'get_date_property' ) ) {
 			$this->months_dropdown( $this->manager->get_date_property() );
 		}
+
+		/**
+		 * Fires when the list table filters are printed.
+		 *
+		 * The dynamic part of the filter refers to the prefix and the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Manager $manager The manager instance.
+		 */
+		do_action( "{$this->_args['plural']}_list_table_columns", $this->manager );
 	}
 
 	/**
