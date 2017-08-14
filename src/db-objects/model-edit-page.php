@@ -428,6 +428,31 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$new_page_url = $this->url;
 		}
 
+		$id = null;
+		if ( $this->is_update ) {
+			$primary_property = $this->model_manager->get_primary_property();
+			$id = $this->model->$primary_property;
+		}
+
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+		$edit_url      = $this->get_model_edit_url();
+
+		/**
+		 * Fires to render additional content before the edit model page header.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its singular slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id       Current model ID, or null if new model.
+		 * @param Model    $model    Current model object.
+		 * @param Manager  $manager  Model manager instance.
+		 * @param string   $edit_url Model edit URL.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_before_header", $id, $this->model, $this->model_manager, $edit_url );
+
 		?>
 		<h1 class="wp-heading-inline">
 			<?php echo $this->title; ?>
@@ -442,6 +467,21 @@ abstract class Model_Edit_Page extends Manager_Page {
 		<?php
 
 		$this->print_current_message( 'action' );
+
+		/**
+		 * Fires to render additional content after the edit model page header.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its singular slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id       Current model ID, or null if new model.
+		 * @param Model    $model    Current model object.
+		 * @param Manager  $manager  Model manager instance.
+		 * @param string   $edit_url Model edit URL.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_after_header", $id, $this->model, $this->model_manager, $edit_url );
 	}
 
 	/**
