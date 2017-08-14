@@ -252,6 +252,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$capabilities = $this->model_manager->capabilities();
 		$primary_property = $this->model_manager->get_primary_property();
 
+		$id = null;
 		if ( isset( $_REQUEST[ $primary_property ] ) ) {
 			$id = absint( $_REQUEST[ $primary_property ] );
 
@@ -285,9 +286,40 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$this->title = $this->model_manager->get_message( 'edit_page_add_new_item' );
 		}
 
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+
+		/**
+		 * Fires before the current edit page request is handled.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its singular slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id      Current model ID, or null if new model.
+		 * @param Model    $model   Current model object.
+		 * @param Manager  $manager Model manager instance.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_before_handle_request", $id, $this->model, $this->model_manager );
+
 		$this->handle_actions();
 		$this->clean_referer();
 		$this->setup_screen( get_current_screen() );
+
+		/**
+		 * Fires after the current edit page request has been handled.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its singular slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id      Current model ID, or null if new model.
+		 * @param Model    $model   Current model object.
+		 * @param Manager  $manager Model manager instance.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_after_handle_request", $id, $this->model, $this->model_manager );
 	}
 
 	/**
