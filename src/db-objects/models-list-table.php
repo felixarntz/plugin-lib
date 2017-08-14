@@ -572,7 +572,17 @@ abstract class Models_List_Table extends \WP_List_Table {
 			$query_params['search'] = wp_unslash( trim( $_REQUEST['s'] ) );
 		}
 
-		return $query_params;
+		/**
+		 * Filters the query parameters for the list table query.
+		 *
+		 * The dynamic part of the filter refers to the prefix and the manager's plural slug.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array   $query_params The query parameters as `$key => $value` pairs.
+		 * @param Manager $manager      The manager instance.
+		 */
+		return apply_filters( "{$this->_args['plural']}_list_table_query_params", $query_params, $this->manager );
 	}
 
 	/**
