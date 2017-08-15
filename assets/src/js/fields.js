@@ -1026,13 +1026,20 @@
 
 		postRender: function( $el ) {
 			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
+			var editorData = $el.find( '.plugin-lib-control' ).data();
 			var editorSettings;
 
 			if ( wp.editor && wp.editor.initialize ) {
-				editorSettings = wp.editor.getDefaultSettings();
-				editorSettings.tinymce.wpautop = true;
+				editorSettings = _.extend( {}, wp.editor.getDefaultSettings() );
+				editorSettings.tinymce.wpautop = !! editorData.wpautop;
 
-				if ( true ) {
+				if ( 'simple' !== editorData.buttonMode ) {
+					editorSettings.tinymce.toolbar1 = 'formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,spellchecker,wp_adv';
+					editorSettings.tinymce.toolbar2 = 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo';
+					editorSettings.quicktags.buttons = 'strong,em,link,block,del,ins,img,ul,ol,li,code,close';
+				}
+
+				if ( editorData.mediaButtons ) {
 					editorSettings.tinymce.plugins += ',image';
 					editorSettings.tinymce.setup = function() {
 						var $tools = $el.find( '.wp-editor-wrap .wp-editor-tools' );
@@ -1050,9 +1057,6 @@
 						$tools.prepend( $mediaButtons );
 					}
 				}
-
-				console.log( this );
-				console.log( editorSettings );
 
 				wp.editor.initialize( editorId, editorSettings );
 				return;

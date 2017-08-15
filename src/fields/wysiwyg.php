@@ -55,6 +55,15 @@ class WYSIWYG extends Textarea {
 	protected $media_buttons = false;
 
 	/**
+	 * The editor button mode. Either 'regular' or 'simple'. Default 'regular'.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $button_mode = 'regular';
+
+	/**
 	 * Stores the editor markup for internal usage.
 	 *
 	 * @since 1.0.0
@@ -89,6 +98,73 @@ class WYSIWYG extends Textarea {
 	 * @var array|null
 	 */
 	protected $quicktags_settings = null;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param Field_Manager $manager Field manager instance.
+	 * @param string        $id      Field identifier.
+	 * @param array         $args    {
+	 *     Optional. Field arguments. Anything you pass in addition to the default supported arguments
+	 *     will be used as an attribute on the input. Default empty array.
+	 *
+	 *     @type string          $section       Section identifier this field belongs to. Default empty.
+	 *     @type string          $label         Field label. Default empty.
+	 *     @type string          $description   Field description. Default empty.
+	 *     @type mixed           $default       Default value for the field. Default null.
+	 *     @type bool|int        $repeatable    Whether this should be a repeatable field. An integer can also
+	 *                                          be passed to set the limit of repetitions allowed. Default false.
+	 *     @type array           $input_classes Array of CSS classes for the field input. Default empty array.
+	 *     @type array           $label_classes Array of CSS classes for the field label. Default empty array.
+	 *     @type callable        $validate      Custom validation callback. Will be executed after doing the regular
+	 *                                          validation if no errors occurred in the meantime. Default none.
+	 *     @type callable|string $before        Callback or string that should be used to generate output that will
+	 *                                          be printed before the field. Default none.
+	 *     @type callable|string $after         Callback or string that should be used to generate output that will
+	 *                                          be printed after the field. Default none.
+	 * }
+	 */
+	public function __construct( $manager, $id, $args = array() ) {
+		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
+			$data_args = array(
+				'wpautop'       => false,
+				'media_buttons' => false,
+				'button_mode'   => 'regular',
+			);
+
+			foreach ( $data_args as $data_arg => $default_value ) {
+				$data_arg_name = 'data-' . str_replace( '_', '-', $data_arg );
+				if ( isset( $args[ $data_arg_name ] ) && ! isset( $args[ $data_arg ] ) ) {
+					if ( is_bool( $default_value ) ) {
+						$args[ $data_arg ] = (bool) $args[ $data_arg_name ];
+					} else {
+						$args[ $data_arg ] = $args[ $data_arg_name ];
+					}
+				}
+
+				if ( ! isset( $args[ $data_arg ] ) ) {
+					$args[ $data_arg ] = $default_value;
+				}
+
+				if ( is_bool( $default_value ) ) {
+					$args[ $data_arg_name ] = $args[ $data_arg ] ? '1' : '0';
+				} else {
+					$args[ $data_arg_name ] = $args[ $data_arg ];
+				}
+			}
+
+			if ( isset( $args['input_classes'] ) ) {
+				$args['input_classes'][] = 'wp-editor-area';
+			} else {
+				$args['input_classes'] = array( 'wp-editor-area' );
+			}
+		}
+
+		parent::__construct( $manager, $id, $args );
+	}
 
 	/**
 	 * Enqueues the necessary assets for the field.
@@ -219,6 +295,7 @@ class WYSIWYG extends Textarea {
 
 			$data['wpautop']       = $this->wpautop;
 			$data['media_buttons'] = $this->media_buttons;
+			$data['button_mode']   = $this->button_mode;
 
 			return $data;
 		}
