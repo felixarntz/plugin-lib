@@ -74,6 +74,10 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 			margin-bottom: 0;
 		}
 	}
+
+	.postbox & {
+		max-width: none;
+	}
 }
 
 /* ----------------------------------------------------------------------------

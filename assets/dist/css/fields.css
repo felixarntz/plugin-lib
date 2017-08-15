@@ -79,6 +79,10 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	margin-bottom: 0;
 }
 
+.postbox .plugin-lib-group-control {
+	max-width: none;
+}
+
 /* ----------------------------------------------------------------------------
   3.0 - Polyfill for button links in WordPress < 4.8
 ---------------------------------------------------------------------------- */
