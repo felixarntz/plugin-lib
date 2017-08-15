@@ -91,6 +91,36 @@ class WYSIWYG extends Textarea {
 	protected $quicktags_settings = null;
 
 	/**
+	 * Enqueues the necessary assets for the field.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return array Array where the first element is an array of script handles and the second element
+	 *               is an associative array of data to pass to the main script.
+	 */
+	public function enqueue() {
+		$ret = parent::enqueue();
+
+		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
+			wp_enqueue_editor();
+
+			if ( ! empty( $GLOBALS['post'] ) ) {
+				wp_enqueue_media( array( 'post' => $GLOBALS['post']->ID ) );
+			} else {
+				wp_enqueue_media();
+			}
+
+			$ret[0][] = 'editor';
+			$ret[1] = array_merge( $ret[1], array(
+				'i18nWYSIWYGAddMediaButton' => __( 'Add Media' ),
+			) );
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
@@ -99,6 +129,11 @@ class WYSIWYG extends Textarea {
 	 * @param mixed $current_value Current field value.
 	 */
 	protected function render_single_input( $current_value ) {
+		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
+			parent::render_single_input( $current_value );
+			return;
+		}
+
 		$input_attrs = $this->get_input_attrs( array(), false );
 		$editor_id = $input_attrs['id'];
 
@@ -116,6 +151,11 @@ class WYSIWYG extends Textarea {
 	 * @access protected
 	 */
 	protected function print_single_input_template() {
+		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
+			parent::print_single_input_template();
+			return;
+		}
+
 		if ( user_can_richedit() ) {
 			$switch_class = 'tmce-active';
 			$autocomplete = ' autocomplete="off"';
@@ -174,6 +214,15 @@ class WYSIWYG extends Textarea {
 	 * @return array Field data to be JSON-encoded.
 	 */
 	protected function single_to_json( $current_value ) {
+		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
+			$data = parent::single_to_json( $current_value );
+
+			$data['wpautop']       = $this->wpautop;
+			$data['media_buttons'] = $this->media_buttons;
+
+			return $data;
+		}
+
 		$this->setup_editor( $current_value );
 
 		$data = parent::single_to_json( $current_value );

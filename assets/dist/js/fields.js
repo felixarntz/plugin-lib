@@ -1012,8 +1012,14 @@
 	fieldsAPI.FieldView.WYSIWYGFieldView = fieldsAPI.FieldView.extend({
 		preRender: function( $el ) {
 			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
+			var editor;
 
-			var editor = window.tinymce.get( editorId );
+			if ( wp.editor && wp.editor.remove ) {
+				wp.editor.remove( editorId );
+				return;
+			}
+
+			editor = window.tinymce.get( editorId );
 			if ( editor ) {
 				editor.save();
 				editor.remove();
@@ -1025,6 +1031,37 @@
 
 		postRender: function( $el ) {
 			var editorId = $el.find( '.plugin-lib-control' ).attr( 'id' );
+			var editorSettings;
+
+			if ( wp.editor && wp.editor.initialize ) {
+				editorSettings = wp.editor.getDefaultSettings();
+				editorSettings.tinymce.wpautop = true;
+
+				if ( true ) {
+					editorSettings.tinymce.plugins += ',image';
+					editorSettings.tinymce.setup = function() {
+						var $tools = $el.find( '.wp-editor-wrap .wp-editor-tools' );
+						var $mediaButtons = $( '<div>' ).attr({
+							id: 'wp-' + editorId + '-media-buttons',
+							class: 'wp-media-buttons'
+						}).append(
+							$( '<button>' ).attr({
+								type: 'button',
+								class: 'button insert-media add_media',
+								'data-editor': editorId
+							}).html( '<span class="wp-media-buttons-icon"></span> ' + fieldsAPIData.i18nWYSIWYGAddMediaButton )
+						);
+
+						$tools.prepend( $mediaButtons );
+					}
+				}
+
+				console.log( this );
+				console.log( editorSettings );
+
+				wp.editor.initialize( editorId, editorSettings );
+				return;
+			}
 
 			if ( _.isUndefined( window.tinyMCEPreInit.mceInit[ editorId ] ) || _.isUndefined( window.tinyMCEPreInit.qtInit[ editorId ] ) ) {
 				window.tinyMCEPreInit.mceInit[ editorId ] = this.model.get( 'tinyMCESettings' );
