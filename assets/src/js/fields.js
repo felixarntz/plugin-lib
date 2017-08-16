@@ -1055,7 +1055,9 @@
 						);
 
 						$tools.prepend( $mediaButtons );
-					}
+
+						$el.find( '.plugin-lib-control' ).trigger( 'editorInitialized' );
+					};
 				}
 
 				wp.editor.initialize( editorId, editorSettings );
