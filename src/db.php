@@ -610,6 +610,13 @@ class DB extends Service {
 		$queries = $this->replace_table_placeholders( $this->schema );
 
 		dbDelta( $queries );
+
+		/**
+		 * Fires when the plugin is installed on the current site.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( "{$this->get_prefix()}install" );
 	}
 
 	/**
@@ -623,6 +630,13 @@ class DB extends Service {
 			$db_table_name = $this->table_to_db_table( $prefixed_table_name );
 			$this->wpdb->query( "DROP TABLE $db_table_name" );
 		}
+
+		/**
+		 * Fires when the plugin is uninstalled from the current site.
+		 *
+		 * @since 1.0.0
+		 */
+		do_action( "{$this->get_prefix()}uninstall" );
 	}
 
 	/**
