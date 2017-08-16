@@ -188,6 +188,18 @@ abstract class Leaves_And_Love_Plugin {
 	}
 
 	/**
+	 * Returns the plugin version number.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @return string Version number.
+	 */
+	public function version() {
+		return $this->version;
+	}
+
+	/**
 	 * Returns the full path to a relative path for a plugin file or directory.
 	 *
 	 * @since 1.0.0
