@@ -101,14 +101,12 @@ class Dependency_Resolver {
 			$callback = $callbacks[ $dependency['callback'] ];
 
 			$field_values = array();
-			foreach ( $dependency['fields'] as $identifier ) {
-				$slug = str_replace( $instance_id . '_', '', $identifier );
-
+			foreach ( $dependency['fieldNames'] as $slug ) {
 				if ( ! isset( $values[ $slug ] ) ) {
 					$values[ $slug ] = null;
 				}
 
-				$field_values[ $identifier ] = $values[ $slug ];
+				$field_values[ $slug ] = $values[ $slug ];
 			}
 
 			$result = call_user_func( $callback, $dependency['prop'], $field_values, $dependency['args'] );
@@ -174,7 +172,7 @@ class Dependency_Resolver {
 	 * @access public
 	 *
 	 * @param string|array $props Optional. One or more properties to only return field identifiers
-	 *                           that affect those. Default empty.
+	 *                            that affect those. Default empty.
 	 * @return array Array of field identifiers.
 	 */
 	public function get_dependency_field_identifiers( $props = array() ) {
@@ -183,11 +181,11 @@ class Dependency_Resolver {
 		$props = (array) $props;
 
 		foreach ( $this->dependencies as $dependency ) {
-			if ( ! in_array( $dependency['prop'], $props, true ) ) {
+			if ( ! empty( $props ) && ! in_array( $dependency['prop'], $props, true ) ) {
 				continue;
 			}
 
-			foreach ( $dependency['fields'] as $identifier ) {
+			foreach ( $dependency['fieldNames'] as $identifier ) {
 				$field_identifiers[] = $identifier;
 			}
 		}
@@ -229,6 +227,8 @@ class Dependency_Resolver {
 				return false;
 			}
 		}
+
+		$dependency['fieldNames'] = $dependency['fields'];
 
 		$fields = array();
 		foreach ( $dependency['fields'] as $field ) {
