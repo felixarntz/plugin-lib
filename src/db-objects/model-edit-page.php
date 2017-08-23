@@ -365,6 +365,23 @@ abstract class Model_Edit_Page extends Manager_Page {
 			'localize_name' => 'pluginLibEditModelData',
 			'localize_data' => $data,
 		) );
+
+		$prefix        = $this->model_manager->get_prefix();
+		$singular_slug = $this->model_manager->get_singular_slug();
+
+		/**
+		 * Fires when edit page assets should be enqueued.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its singular slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int|null $id      Current model ID, or null if new model.
+		 * @param Model    $model   Current model object.
+		 * @param Manager  $manager Model manager instance.
+		 */
+		do_action( "{$prefix}edit_{$singular_slug}_enqueue_assets", $id, $this->model, $this->model_manager );
 	}
 
 	/**
