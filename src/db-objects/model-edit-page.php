@@ -370,7 +370,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 		$singular_slug = $this->model_manager->get_singular_slug();
 
 		/**
-		 * Fires when edit page assets should be enqueued.
+		 * Fires when model edit page assets should be enqueued.
 		 *
 		 * The dynamic parts of the hook name refer to the manager's prefix and
 		 * its singular slug respectively.

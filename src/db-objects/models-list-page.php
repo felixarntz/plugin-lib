@@ -122,6 +122,21 @@ abstract class Models_List_Page extends Manager_Page {
 				),
 			),
 		) );
+
+		$prefix      = $this->model_manager->get_prefix();
+		$plural_slug = $this->model_manager->get_plural_slug();
+
+		/**
+		 * Fires when models list page assets should be enqueued.
+		 *
+		 * The dynamic parts of the hook name refer to the manager's prefix and
+		 * its plural slug respectively.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param Manager $manager Model manager instance.
+		 */
+		do_action( "{$prefix}list_{$plural_slug}_enqueue_assets", $this->model_manager );
 	}
 
 	/**
