@@ -368,6 +368,7 @@ abstract class Model_Edit_Page extends Manager_Page {
 
 		$prefix        = $this->model_manager->get_prefix();
 		$singular_slug = $this->model_manager->get_singular_slug();
+		$id            = ! empty( $this->model->$primary_property ) ? (int) $this->model->$primary_property : null;
 
 		/**
 		 * Fires when model edit page assets should be enqueued.
