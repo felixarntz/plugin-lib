@@ -188,6 +188,20 @@ abstract class Models_List_Page extends Manager_Page {
 
 			<?php $this->list_table->search_box( $this->model_manager->get_message( 'list_page_search_items' ), $this->model_manager->get_singular_slug() ); ?>
 
+			<?php
+			if ( $this->parent_slug && false !== strpos( $this->parent_slug, '?' ) ) {
+				$query_string = wp_parse_url( self_admin_url( $this->parent_slug ), PHP_URL_QUERY );
+				if ( $query_string ) {
+					wp_parse_str( $query_string, $query_vars );
+					foreach ( $query_vars as $key => $value ) {
+						?>
+						<input type="hidden" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+						<?php
+					}
+				}
+			}
+			?>
+
 			<input type="hidden" name="page" value="<?php echo $this->slug; ?>" />
 
 			<?php if ( method_exists( $this->model_manager, 'get_author_property' ) && ( $author_property = $this->model_manager->get_author_property() ) && ! empty( $_REQUEST[ $author_property ] ) ) : ?>
