@@ -248,11 +248,11 @@ class Template extends Service {
 	 * Escapes output for usage as HTML text. Some very basic HTML is allowed.
 	 *
 	 * Allowed tags:
-	 * - <span> (with optional 'class' attribute)
-	 * - <strong> (with optional 'class' attribute)
-	 * - <em> (with optional 'class' attribute)
-	 * - <br> (with optional 'class' attribute)
-	 * - <a> (with optional 'class', 'href' and 'target' attributes)
+	 * - <span> (with optional 'id' and 'class' attributes)
+	 * - <strong> (with optional 'id' and 'class' attributes)
+	 * - <em> (with optional 'id' and 'class' attributes)
+	 * - <br> (with optional 'id' and 'class' attributes)
+	 * - <a> (with optional 'id', 'class', 'href' and 'target' attributes)
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -263,18 +263,23 @@ class Template extends Service {
 	public function esc_kses_basic( $output ) {
 		$allowed_html = array(
 			'span'   => array(
+				'id'    => array(),
 				'class' => array(),
 			),
 			'strong' => array(
+				'id'    => array(),
 				'class' => array(),
 			),
 			'em'     => array(
+				'id'    => array(),
 				'class' => array(),
 			),
 			'br'     => array(
+				'id'    => array(),
 				'class' => array(),
 			),
 			'a'      => array(
+				'id'     => array(),
 				'class'  => array(),
 				'href'   => array(),
 				'target' => array(),
