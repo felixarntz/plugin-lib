@@ -245,6 +245,19 @@ class Template extends Service {
 	}
 
 	/**
+	 * Escapes output for usage in a textarea. All HTML will be escaped.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_textarea( $output ) {
+		return esc_textarea( $output );
+	}
+
+	/**
 	 * Escapes output for usage as HTML text. Some very basic HTML is allowed.
 	 *
 	 * Allowed tags:
@@ -287,6 +300,19 @@ class Template extends Service {
 		);
 
 		return wp_kses( $output, $allowed_html );
+	}
+
+	/**
+	 * Escapes output for usage as HTML text. Common post HTML is allowed.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_kses_post( $output ) {
+		return wp_kses_post( $output );
 	}
 
 	/**
