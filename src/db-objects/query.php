@@ -415,11 +415,12 @@ abstract class Query {
 	 * @param array $non_cached_ids Array of model IDs.
 	 */
 	protected function update_cache( $non_cached_ids ) {
-		$table_name = $this->manager->get_table_name();
+		$table_name       = $this->manager->get_table_name();
+		$primary_property = $this->manager->get_primary_property();
 
-		$fresh_models = $this->manager->db()->get_results( sprintf( "SELECT %%{$table_name}%%.* FROM %%{$table_name}%% WHERE id IN (%s)", join( ",", array_map( 'intval', $non_cached_ids ) ) ) );
+		$fresh_models = $this->manager->db()->get_results( sprintf( "SELECT %%{$table_name}%%.* FROM %%{$table_name}%% WHERE {$primary_property} IN (%s)", join( ",", array_map( 'intval', $non_cached_ids ) ) ) );
 		foreach ( (array) $fresh_models as $model ) {
-			$this->manager->add_to_cache( $model->id, $model );
+			$this->manager->add_to_cache( $model->$primary_property, $model );
 		}
 	}
 
@@ -533,9 +534,10 @@ abstract class Query {
 	 *               being a boolean specifying whether to use the DISTINCT keyword.
 	 */
 	protected function parse_fields() {
-		$table_name = $this->manager->get_table_name();
+		$table_name       = $this->manager->get_table_name();
+		$primary_property = $this->manager->get_primary_property();
 
-		return array( '%' . $table_name . '%.id', false );
+		return array( '%' . $table_name . '%.' . $primary_property, false );
 	}
 
 	/**
