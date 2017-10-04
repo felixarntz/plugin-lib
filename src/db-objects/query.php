@@ -349,7 +349,7 @@ abstract class Query {
 	 * @return Collection Collection of models.
 	 */
 	protected function get_results() {
-		$key = md5( serialize( wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) ) ) );
+		$key = $this->get_cache_key( $this->query_vars );
 		$last_changed = $this->manager->get_from_cache( 'last_changed' );
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
@@ -390,6 +390,29 @@ abstract class Query {
 		}
 
 		return $this->create_collection( $model_ids, $total, $this->query_vars['fields'] );
+	}
+
+	/**
+	 * Gets the query cache key for a given set of query vars.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $query_vars Array of model query arguments.
+	 * @return string Cache key to use for the query.
+	 */
+	protected function get_cache_key( $query_vars ) {
+		$args = wp_array_slice_assoc( $query_vars, array_keys( $this->query_var_defaults ) );
+
+		// The following arguments do not affect the actual query.
+		$non_key_args = array( 'fields', 'update_cache', 'update_meta_cache' );
+		foreach ( $non_key_args as $arg ) {
+			if ( isset( $args[ $arg ] ) ) {
+				unset( $args[ $arg ] );
+			}
+		}
+
+		return md5( serialize( $args ) );
 	}
 
 	/**
