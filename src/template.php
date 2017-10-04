@@ -206,7 +206,7 @@ class Template extends Service {
 	}
 
 	/**
-	 * Escapes output so that no HTML is allowed.
+	 * Escapes output for usage as HTML text. All HTML will be escaped.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -219,7 +219,7 @@ class Template extends Service {
 	}
 
 	/**
-	 * Escapes output so that no HTML is allowed, to be used for inside HTML attributes.
+	 * Escapes output for usage inside HTML attributes. All HTML will be escaped.
 	 *
 	 * @since 1.0.0
 	 * @access public
@@ -232,7 +232,20 @@ class Template extends Service {
 	}
 
 	/**
-	 * Escapes output so that some very basic HTML is allowed.
+	 * Escapes output for usage as JS text.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_js( $output ) {
+		return esc_js( $output );
+	}
+
+	/**
+	 * Escapes output for usage as HTML text. Some very basic HTML is allowed.
 	 *
 	 * Allowed tags:
 	 * - <span> (with optional 'class' attribute)
