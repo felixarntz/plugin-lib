@@ -503,6 +503,9 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 
 		if ( ! $render_callback || ! is_callable( $render_callback ) ) {
 			switch ( $this->render_mode ) {
+				case 'divs':
+					$render_callback = array( $this, 'render_divs_row' );
+					break;
 				case 'form-table':
 				default:
 					$render_callback = array( $this, 'render_form_table_row' );
@@ -744,6 +747,28 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 				<?php $field->render_content( $value ); ?>
 			</td>
 		</tr>
+		<?php
+	}
+
+	/**
+	 * Renders a field in simple div markup with classes.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param Field $field Field instance.
+	 * @param mixed $value Current field value.
+	 */
+	protected function render_divs_row( $field, $value ) {
+		?>
+		<div<?php echo $field->get_wrap_attrs(); ?>>
+			<div class="plugin-lib-label-wrap">
+				<?php $field->render_label(); ?>
+			</div>
+			<div class="plugin-lib-control-wrap">
+				<?php $field->render_content( $value ); ?>
+			</div>
+		</div>
 		<?php
 	}
 
