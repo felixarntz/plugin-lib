@@ -206,6 +206,68 @@ class Template extends Service {
 	}
 
 	/**
+	 * Escapes output so that no HTML is allowed.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_html( $output ) {
+		return esc_html( $output );
+	}
+
+	/**
+	 * Escapes output so that no HTML is allowed, to be used for inside HTML attributes.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_attr( $output ) {
+		return esc_attr( $output );
+	}
+
+	/**
+	 * Escapes output so that some very basic HTML is allowed.
+	 *
+	 * Allowed tags:
+	 * - <span> (with optional 'class' attribute)
+	 * - <strong> (with optional 'class' attribute)
+	 * - <em> (with optional 'class' attribute)
+	 * - <a> (with optional 'class', 'href' and 'target' attributes)
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $output Output to escape.
+	 * @return string Escaped output.
+	 */
+	public function esc_kses_basic( $output ) {
+		$allowed_html = array(
+			'span'   => array(
+				'class' => array(),
+			),
+			'strong' => array(
+				'class' => array(),
+			),
+			'em'     => array(
+				'class' => array(),
+			),
+			'a'      => array(
+				'class'  => array(),
+				'href'   => array(),
+				'target' => array(),
+			),
+		);
+
+		return wp_kses( $output, $allowed_html );
+	}
+
+	/**
 	 * Registers an additional template location.
 	 *
 	 * @since 1.0.0
