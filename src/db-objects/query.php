@@ -150,6 +150,7 @@ abstract class Query {
 			'orderby'       => array( $primary_property => 'ASC' ),
 			'include'       => '',
 			'exclude'       => '',
+			'update_cache'  => true,
 		);
 
 		if ( method_exists( $this->manager, 'get_slug_property' ) ) {
@@ -373,7 +374,53 @@ abstract class Query {
 			$total = $cache_value['total'];
 		}
 
+		if ( $this->query_vars['update_cache'] ) {
+			$non_cached_ids = $this->get_non_cached_ids( $model_ids );
+			if ( ! empty( $non_cached_ids ) ) {
+				$this->update_cache( $non_cached_ids );
+			}
+		}
+
 		return $this->create_collection( $model_ids, $total, $this->query_vars['fields'] );
+	}
+
+	/**
+	 * Retrieves IDs that are not already present in the cache.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $model_ids The model IDs to check for.
+	 * @return array List of IDs not present in the cache.
+	 */
+	protected function get_non_cached_ids( $model_ids ) {
+		$clean = array();
+
+		foreach ( $model_ids as $id ) {
+			$id = (int) $id;
+			if ( false === $this->manager->get_from_cache( $id ) ) {
+				$clean[] = $id;
+			}
+		}
+
+		return $clean;
+	}
+
+	/**
+	 * Updates the cache for given models.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $non_cached_ids Array of model IDs.
+	 */
+	protected function update_cache( $non_cached_ids ) {
+		$table_name = $this->manager->get_table_name();
+
+		$fresh_models = $this->manager->db()->get_results( sprintf( "SELECT %%{$table_name}%%.* FROM %%{$table_name}%% WHERE id IN (%s)", join( ",", array_map( 'intval', $non_cached_ids ) ) ) );
+		foreach ( (array) $fresh_models as $model ) {
+			$this->manager->add_to_cache( $model->id, $model );
+		}
 	}
 
 	/**
