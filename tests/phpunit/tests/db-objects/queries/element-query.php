@@ -148,7 +148,10 @@ class Tests_Element_Query extends Unit_Test_Case {
 			'type'          => 'uniquetype',
 		);
 
-		$key = md5( serialize( wp_array_slice_assoc( array_merge( $defaults, $args ), array_keys( $defaults ) ) ) );
+		$key_args = wp_array_slice_assoc( array_merge( $defaults, $args ), array_keys( $defaults ) );
+		$key_args = array_diff_key( $key_args, array_flip( array( 'fields', 'update_cache', 'update_meta_cache' ) ) );
+		$key = md5( serialize( $key_args ) );
+
 		$last_changed = self::$manager->get_from_cache( 'last_changed' );
 		if ( ! $last_changed ) {
 			$last_changed = microtime();
