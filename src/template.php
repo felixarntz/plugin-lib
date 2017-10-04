@@ -251,6 +251,7 @@ class Template extends Service {
 	 * - <span> (with optional 'class' attribute)
 	 * - <strong> (with optional 'class' attribute)
 	 * - <em> (with optional 'class' attribute)
+	 * - <br> (with optional 'class' attribute)
 	 * - <a> (with optional 'class', 'href' and 'target' attributes)
 	 *
 	 * @since 1.0.0
@@ -268,6 +269,9 @@ class Template extends Service {
 				'class' => array(),
 			),
 			'em'     => array(
+				'class' => array(),
+			),
+			'br'     => array(
 				'class' => array(),
 			),
 			'a'      => array(
