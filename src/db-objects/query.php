@@ -186,6 +186,10 @@ abstract class Query {
 			$this->query_var_defaults['meta_key']   = '';
 			$this->query_var_defaults['meta_value'] = '';
 			$this->query_var_defaults['meta_query'] = '';
+
+			if ( method_exists( $this->manager, 'update_meta_cache' ) ) {
+				$this->query_var_defaults['update_meta_cache'] = true;
+			}
 		}
 	}
 
@@ -378,6 +382,10 @@ abstract class Query {
 			$non_cached_ids = $this->get_non_cached_ids( $model_ids );
 			if ( ! empty( $non_cached_ids ) ) {
 				$this->update_cache( $non_cached_ids );
+
+				if ( isset( $this->query_vars['update_meta_cache'] ) && $this->query_vars['update_meta_cache'] ) {
+					$this->manager->update_meta_cache( $non_cached_ids );
+				}
 			}
 		}
 

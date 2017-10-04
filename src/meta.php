@@ -271,6 +271,24 @@ class Meta extends Service {
 	}
 
 	/**
+	 * Updates the metadata cache for the specified objects.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param string $meta_type  Type of object metadata is for (e.g., row, column or module).
+	 * @param array  $object_ids Array of object IDs to update cache for.
+	 * @return array|false Metadata cache for the specified objects, or false on failure.
+	 */
+	public function update_cache( $meta_type, $object_ids ) {
+		if ( $this->is_prefixed_type( $meta_type ) ) {
+			$meta_type = $this->db()->get_prefix() . $meta_type;
+		}
+
+		return update_meta_cache( $meta_type, $object_ids );
+	}
+
+	/**
 	 * Checks whether a meta type must be prefixed.
 	 *
 	 * @since 1.0.0

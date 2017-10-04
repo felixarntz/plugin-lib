@@ -144,6 +144,19 @@ trait Meta_Manager_Trait {
 	}
 
 	/**
+	 * Updates the metadata cache for the specified objects.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param array $model_ids Array of object IDs to update cache for.
+	 * @return array|false Metadata cache for the specified objects, or false on failure.
+	 */
+	public function update_meta_cache( $model_ids ) {
+		return $this->meta()->update_cache( $this->meta_type, $model_ids );
+	}
+
+	/**
 	 * Returns the metadata type.
 	 *
 	 * @since 1.0.0
