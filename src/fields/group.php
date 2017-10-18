@@ -225,7 +225,7 @@ class Group extends Field implements Field_Manager_Interface {
 				}
 
 				if ( ! empty( $new_data ) ) {
-					$data = array_merge_recursive( $data, $new_data );
+					$data = array_merge( $data, $new_data );
 				}
 
 				$this->manager->enqueued( $type, true );

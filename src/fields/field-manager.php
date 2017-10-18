@@ -378,7 +378,7 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 				}
 
 				if ( ! empty( $new_data ) ) {
-					$script->extra['plugin_lib_data'] = array_merge_recursive( $script->extra['plugin_lib_data'], $new_data );
+					$script->extra['plugin_lib_data'] = array_merge( $script->extra['plugin_lib_data'], $new_data );
 				}
 
 				$this->enqueued( $type, true );
