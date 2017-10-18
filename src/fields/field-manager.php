@@ -204,6 +204,8 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 *                                                that this argument should be replaced by the field ID.
 	 *     @type string   $name_prefix                The name prefix to create name attributes for fields.
 	 *     @type string   $render_mode                Render mode. Default 'form-table'.
+	 *     @type bool     $skip_js_initialization     Whether to skip field initialization in JavaScript.
+	 *                                                Default false.
 	 * }
 	 */
 	public function __construct( $prefix, $services, $args ) {
@@ -409,7 +411,8 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 
 		if ( ! empty( $field_data ) ) {
 			$script->extra['plugin_lib_data']['field_managers'][ $this->instance_id ] = array(
-				'fields' => $field_data,
+				'skip_initialization' => $this->skip_js_initialization,
+				'fields'              => $field_data,
 			);
 		}
 
@@ -1156,6 +1159,20 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 		}
 
 		return $value;
+	}
+
+	/**
+	 * Parses whether JavaScript initialization should be skipped.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @static
+	 *
+	 * @param mixed $value The input value.
+	 * @return string The parsed value.
+	 */
+	protected static function parse_arg_skip_js_initialization( $value ) {
+		return (bool) $value;
 	}
 }
 

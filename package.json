@@ -18,7 +18,7 @@
     "url": "git://github.com/felixarntz/plugin-lib.git"
   },
   "bugs": {
-    "url" : "https://github.com/felixarntz/plugin-lib/issues"
+    "url": "https://github.com/felixarntz/plugin-lib/issues"
   },
   "license": "GPL-3.0",
   "engines": {

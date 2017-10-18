@@ -1481,6 +1481,10 @@
 		fieldsAPI.DependencyResolver.loadCallbacks();
 
 		_.each( fieldsAPIData.field_managers, function( instance, instanceId ) {
+			if ( instance.skip_initialization ) {
+				return;
+			}
+
 			fieldsAPI.FieldManager.instances[ instanceId ] = new fieldsAPI.FieldManager( _.values( instance.fields ), {
 				instanceId: instanceId
 			});
