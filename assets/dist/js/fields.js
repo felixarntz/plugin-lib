@@ -728,6 +728,11 @@
 
 		initialize: function() {
 			var $contentWrap = this.$( '.content-wrap' );
+			var content = $contentWrap.html();
+
+			if ( _.isString( content ) && ! content.trim().length || ! content ) {
+				return;
+			}
 
 			this.trigger( 'postRender', $contentWrap );
 		},
