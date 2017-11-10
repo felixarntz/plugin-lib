@@ -9,7 +9,7 @@
 			var attributeString = '';
 
 			_.each( attrs, function( value, attr ) {
-				if ( _.isBoolean( value ) ) {
+				if ( _.isBoolean( value ) && 0 !== attr.indexOf( 'data-' ) ) {
 					if ( value ) {
 						attributeString += ' ' + attr;
 					}
