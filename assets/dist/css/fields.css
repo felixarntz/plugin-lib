@@ -59,7 +59,7 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 
 .plugin-lib-input-choice-wrap {
 	display: inline-block;
-	padding: 5px 7px;
+	padding: 5px 15px 5px 0;
 }
 
 .plugin-lib-input-choice-wrap input[type="radio"],
