@@ -57,16 +57,14 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	max-width: 100px;
 }
 
-input[type="radio"].plugin-lib-radio-control,
-input[type="checkbox"].plugin-lib-multibox-control {
+.plugin-lib-input-choice-wrap {
 	display: inline-block;
-	margin: 5px 4px 5px 15px;
+	padding: 5px 7px;
 }
 
-input[type="radio"].plugin-lib-radio-control + label,
-input[type="checkbox"].plugin-lib-multibox-control + label {
-	display: inline-block;
-	margin: 5px 0;
+.plugin-lib-input-choice-wrap input[type="radio"],
+.plugin-lib-input-choice-wrap input[type="checkbox"] {
+	margin-right: 4px;
 }
 
 .plugin-lib-group-control {

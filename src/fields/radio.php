@@ -70,8 +70,10 @@ class Radio extends Select_Base {
 				$input_attrs['value']   = $value;
 				$input_attrs['checked'] = in_array( (string) $value, $current_value, true );
 				?>
-				<input<?php echo $this->attrs( $input_attrs ); ?>>
-				<label for="<?php echo esc_attr( $input_attrs['id'] ); ?>"><?php echo $label; ?></label>
+				<div class="plugin-lib-input-choice-wrap">
+					<input<?php echo $this->attrs( $input_attrs ); ?>>
+					<label for="<?php echo esc_attr( $input_attrs['id'] ); ?>"><?php echo $label; ?></label>
+				</div>
 			<?php endforeach; ?>
 		</fieldset>
 		<?php
@@ -97,11 +99,13 @@ class Radio extends Select_Base {
 			<legend class="screen-reader-text">{{ data.label }}</legend>
 
 			<# _.each( data.choices, function( label, value, obj ) { #>
-				<input type="<?php echo $type; ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
-					id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
-					name: data.inputAttrs.name
-				} ) ) }}} value="{{ value }}"<?php echo $checked; ?>>
-				<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
+				<div class="plugin-lib-input-choice-wrap">
+					<input type="<?php echo $type; ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
+						id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
+						name: data.inputAttrs.name
+					} ) ) }}} value="{{ value }}"<?php echo $checked; ?>>
+					<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
+				</div>
 			<# } ) #>
 		</fieldset>
 		<?php
