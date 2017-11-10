@@ -766,7 +766,11 @@
 		},
 
 		changeValue: function( e ) {
-			this.model.set( 'currentValue', this.getInputValue( this.$( e.target ) ) );
+			var value = this.getInputValue( this.$( e.target ) );
+
+			this.model.set( 'currentValue', value );
+
+			this.model.trigger( 'changeValue', this.model, value );
 		},
 
 		changeItemValue: function( e ) {
@@ -775,11 +779,15 @@
 			var itemIndex  = $item.parent().children().index( $item );
 
 			var items = this.model.get( 'items' );
-			if ( items[ itemIndex ] ) {
-				items[ itemIndex ].currentValue = this.getInputValue( $itemInput );
+			if ( ! items[ itemIndex ] ) {
+				return;
 			}
 
+			items[ itemIndex ].currentValue = this.getInputValue( $itemInput );
+
 			this.model.set( 'items', items );
+
+			this.model.trigger( 'changeItemValue', this.model, items[ itemIndex ], items[ itemIndex ].currentValue );
 		},
 
 		addItem: function( e ) {
@@ -812,6 +820,8 @@
 			} else {
 				$button.prop( 'disabled', false );
 			}
+
+			this.model.trigger( 'addItem', this.model, newItem );
 		},
 
 		addItemOnEnter: function( e ) {
@@ -847,35 +857,40 @@
 			var $item     = this.$( $button.data( 'target' ) );
 			var $wrap     = $item.parent();
 			var itemIndex = $wrap.children().index( $item );
+			var itemToRemove;
 
 			$button.prop( 'disabled', true );
 
-			if ( items[ itemIndex ] ) {
-				items.splice( itemIndex, 1 );
+			if ( ! items[ itemIndex ] ) {
+				return;
+			}
 
-				self.trigger( 'preRender', $item );
+			itemToRemove = items[ itemIndex ];
 
-				$item.remove();
+			items.splice( itemIndex, 1 );
 
-				if ( itemIndex < items.length ) {
-					items = _adjustRepeatableIndexes( this.model.get( 'itemInitial' ), items, itemIndex );
-					$wrap.children().each( function( index ) {
-						if ( index < itemIndex ) {
-							return;
-						}
+			self.trigger( 'preRender', $item );
 
-						var $itemToAdjust = $( this );
-						var $newItem      = self.repeatableItemTemplate( items[ index ] );
+			$item.remove();
 
-						self.trigger( 'preRender', $itemToAdjust );
-						self.undelegateEvents();
+			if ( itemIndex < items.length ) {
+				items = _adjustRepeatableIndexes( this.model.get( 'itemInitial' ), items, itemIndex );
+				$wrap.children().each( function( index ) {
+					if ( index < itemIndex ) {
+						return;
+					}
 
-						$itemToAdjust.replaceWith( $newItem );
+					var $itemToAdjust = $( this );
+					var $newItem      = self.repeatableItemTemplate( items[ index ] );
 
-						self.delegateEvents();
-						self.trigger( 'postRender', $newItem );
-					});
-				}
+					self.trigger( 'preRender', $itemToAdjust );
+					self.undelegateEvents();
+
+					$itemToAdjust.replaceWith( $newItem );
+
+					self.delegateEvents();
+					self.trigger( 'postRender', $newItem );
+				});
 			}
 
 			this.model.set( 'items', items );
@@ -883,6 +898,8 @@
 			if ( limit > 0 && items.length < limit ) {
 				$( 'button[data-target="#' + $wrap.attr( 'id' ) + '"]' ).prop( 'disabled', false ).show();
 			}
+
+			this.model.trigger( 'removeItem', this.model, itemToRemove );
 		},
 
 		remove: function() {
