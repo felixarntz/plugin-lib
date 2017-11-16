@@ -105,6 +105,8 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @param array $assoc_args Associative arguments.
 	 */
 	public function create( $args, $assoc_args ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		if ( method_exists( $this->manager, 'get_content_property' ) ) {
 			$content_property = $this->manager->get_content_property();
 
@@ -115,7 +117,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'edit' ) ) {
 				$input = \WP_CLI\Utils\get_flag_value( $assoc_args, $content_property, '' );
 
-				if ( $output = $this->_edit( $input, 'WP-CLI: New ' . $this->manager->get_singular_slug() ) ) {
+				if ( $output = $this->_edit( $input, 'WP-CLI: New ' . $singular_name ) ) {
 					$assoc_args[ $content_property ] = $output;
 				} else {
 					$assoc_args[ $content_property ] = $input;
@@ -163,14 +165,16 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @param array $assoc_args Associative arguments.
 	 */
 	public function edit( $args, $assoc_args ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$content_property = $this->manager->get_content_property();
 
 		$model = $this->fetcher->get_check( $args[0] );
 
-		$content = $this->_edit( $model->$content_property, sprintf( 'WP-CLI %s %d', $this->obj_type, $args[0] ) );
+		$content = $this->_edit( $model->$content_property, sprintf( 'WP-CLI %s %d', $singular_name, $args[0] ) );
 
 		if ( false === $content ) {
-			\WP_CLI::warning( sprintf( 'No change made to %s content.', $this->obj_type ), 'Aborted' );
+			\WP_CLI::warning( sprintf( 'No change made to %s content.', $singular_name ), 'Aborted' );
 		} else {
 			$this->update( $args, array( $content_property => $content ) );
 		}
@@ -294,8 +298,10 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_general_args( $name ) {
+		$plural_name = $this->prepare_type_for_output( $this->obj_type_plural );
+
 		return array(
-			'shortdesc' => sprintf( 'Manage %s.', $this->obj_type_plural ),
+			'shortdesc' => sprintf( 'Manage %s.', $plural_name ),
 		);
 	}
 
@@ -309,20 +315,22 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_create_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$synopsis = array();
 
 		if ( method_exists( $this->manager, 'get_content_property' ) ) {
 			$synopsis[] = array(
 				'name'        => 'file',
 				'type'        => 'positional',
-				'description' => sprintf( 'Read %1$s content from <file>. If this value is present, the `%2$s` argument will be ignored.', $this->obj_type, $this->manager->get_content_property() ),
+				'description' => sprintf( 'Read %1$s content from <file>. If this value is present, the `%2$s` argument will be ignored.', $singular_name, $this->manager->get_content_property() ),
 				'optional'    => true,
 			);
 		}
 
 		$synopsis[] = array(
 			'type'        => 'generic',
-			'description' => sprintf( 'Associative args for the new %s.', $this->obj_type ),
+			'description' => sprintf( 'Associative args for the new %s.', $singular_name ),
 			'optional'    => true,
 		);
 
@@ -330,7 +338,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			$synopsis[] = array(
 				'name'        => 'edit',
 				'type'        => 'flag',
-				'description' => sprintf( 'Immediately open the system editor to write or edit %s content.', $this->obj_type ),
+				'description' => sprintf( 'Immediately open the system editor to write or edit %s content.', $singular_name ),
 				'optional'    => true,
 			);
 		}
@@ -338,12 +346,12 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		$synopsis[] = array(
 			'name'        => 'porcelain',
 			'type'        => 'flag',
-			'description' => sprintf( 'Output just the new %s ID.', $this->obj_type ),
+			'description' => sprintf( 'Output just the new %s ID.', $singular_name ),
 			'optional'    => true,
 		);
 
 		return array(
-			'shortdesc' => sprintf( 'Create a new %s.', $this->obj_type ),
+			'shortdesc' => sprintf( 'Create a new %s.', $singular_name ),
 			'synopsis'  => $synopsis,
 		);
 	}
@@ -358,11 +366,14 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_update_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+		$plural_name   = $this->prepare_type_for_output( $this->obj_type_plural );
+
 		$synopsis = array(
 			array(
 				'name'        => $this->obj_id_key,
 				'type'        => 'positional',
-				'description' => sprintf( 'One or more IDs of %s to update.', $this->obj_type_plural ),
+				'description' => sprintf( 'One or more IDs of %s to update.', $plural_name ),
 				'repeating'   => true,
 			),
 		);
@@ -371,18 +382,18 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			$synopsis[] = array(
 				'name'        => 'file',
 				'type'        => 'positional',
-				'description' => sprintf( 'Read %1$s content from <file>. If this value is present, the `%2$s` argument will be ignored.', $this->obj_type, $this->manager->get_content_property() ),
+				'description' => sprintf( 'Read %1$s content from <file>. If this value is present, the `%2$s` argument will be ignored.', $singular_name, $this->manager->get_content_property() ),
 				'optional'    => true,
 			);
 		}
 
 		$synopsis[] = array(
 			'type'        => 'generic',
-			'description' => sprintf( 'One or more %s fields to update.', $this->obj_type ),
+			'description' => sprintf( 'One or more %s fields to update.', $singular_name ),
 		);
 
 		return array(
-			'shortdesc' => sprintf( 'Update one or more existing %s.', $this->obj_type_plural ),
+			'shortdesc' => sprintf( 'Update one or more existing %s.', $plural_name ),
 			'synopsis'  => $synopsis,
 		);
 	}
@@ -397,16 +408,18 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_edit_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$synopsis = array(
 			array(
 				'name'        => $this->obj_id_key,
 				'type'        => 'positional',
-				'description' => sprintf( 'The ID of the %s to edit.', $this->obj_type ),
+				'description' => sprintf( 'The ID of the %s to edit.', $singular_name ),
 			),
 		);
 
 		return array(
-			'shortdesc' => sprintf( 'Launch the system editor to edit %s content.', $this->obj_type ),
+			'shortdesc' => sprintf( 'Launch the system editor to edit %s content.', $singular_name ),
 			'synopsis'  => $synopsis,
 		);
 	}
@@ -421,28 +434,30 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	public function get_get_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$synopsis = array(
 			array(
 				'name'        => $this->obj_id_key,
 				'type'        => 'positional',
-				'description' => sprintf( 'The ID of the %s to get.', $this->obj_type ),
+				'description' => sprintf( 'The ID of the %s to get.', $singular_name ),
 			),
 			array(
 				'name'        => 'field',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Instead of returning the whole %s, return the value of a single field.', $this->obj_type ),
+				'description' => sprintf( 'Instead of returning the whole %s, return the value of a single field.', $singular_name ),
 				'optional'    => true,
 			),
 			array(
 				'name'        => 'fields',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Limit the output to specific %s fields. Defaults to all fields.', $this->obj_type ),
+				'description' => sprintf( 'Limit the output to specific %s fields. Defaults to all fields.', $singular_name ),
 				'optional'    => true,
 			),
 			array(
 				'name'        => 'format',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Render output in a particular format.', $this->obj_type ),
+				'description' => sprintf( 'Render output in a particular format.', $singular_name ),
 				'optional'    => true,
 				'default'     => 'table',
 				'options'     => array( 'table', 'csv', 'json', 'yaml' ),
@@ -453,13 +468,13 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			$synopsis[] = array(
 				'name'        => 'include_meta',
 				'type'        => 'flag',
-				'description' => sprintf( 'Include %s metadata as well.', $this->obj_type ),
+				'description' => sprintf( 'Include %s metadata as well.', $singular_name ),
 				'optional'    => true,
 			);
 		}
 
 		return array(
-			'shortdesc' => sprintf( 'Get details about a %s.', $this->obj_type ),
+			'shortdesc' => sprintf( 'Get details about a %s.', $singular_name ),
 			'synopsis'  => $synopsis,
 		);
 	}
@@ -474,17 +489,19 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_delete_args( $name ) {
+		$plural_name = $this->prepare_type_for_output( $this->obj_type_plural );
+
 		$synopsis = array(
 			array(
 				'name'        => $this->obj_id_key,
 				'type'        => 'positional',
-				'description' => sprintf( 'One or more IDs of %s to delete.', $this->obj_type_plural ),
+				'description' => sprintf( 'One or more IDs of %s to delete.', $plural_name ),
 				'repeating'   => true,
 			),
 		);
 
 		return array(
-			'shortdesc' => sprintf( 'Delete one or more existing %s.', $this->obj_type_plural ),
+			'shortdesc' => sprintf( 'Delete one or more existing %s.', $plural_name ),
 			'synopsis'  => $synopsis,
 		);
 	}
@@ -499,23 +516,26 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return array Command information.
 	 */
 	protected function get_list_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+		$plural_name   = $this->prepare_type_for_output( $this->obj_type_plural );
+
 		$synopsis = array(
 			array(
 				'name'        => 'field',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Print the value of a single field for each %s.', $this->obj_type ),
+				'description' => sprintf( 'Print the value of a single field for each %s.', $singular_name ),
 				'optional'    => true,
 			),
 			array(
 				'name'        => 'fields',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Limit the output to specific %s fields.', $this->obj_type ),
+				'description' => sprintf( 'Limit the output to specific %s fields.', $singular_name ),
 				'optional'    => true,
 			),
 			array(
 				'name'        => 'format',
 				'type'        => 'assoc',
-				'description' => sprintf( 'Render output in a particular format.', $this->obj_type ),
+				'description' => sprintf( 'Render output in a particular format.', $singular_name ),
 				'optional'    => true,
 				'default'     => 'table',
 				'options'     => array( 'table', 'csv', 'json', 'yaml', 'ids', 'count' ),
@@ -531,15 +551,30 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			$synopsis[] = array(
 				'name'        => 'include_meta',
 				'type'        => 'flag',
-				'description' => sprintf( 'Include %s metadata as well.', $this->obj_type ),
+				'description' => sprintf( 'Include %s metadata as well.', $singular_name ),
 				'optional'    => true,
 			);
 		}
 
 		return array(
-			'shortdesc' => sprintf( 'Get a list of %s.', $this->obj_type_plural ),
+			'shortdesc' => sprintf( 'Get a list of %s.', $plural_name ),
 			'synopsis'  => $synopsis,
 		);
+	}
+
+	/**
+	 * Prepares an object type slug for output.
+	 *
+	 * The method currently simply replaces underscores with spaces.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $type Object type slug.
+	 * @return string Object type slug prepared for output.
+	 */
+	protected function prepare_type_for_output( $type ) {
+		return str_replace( '_', ' ', $type );
 	}
 
 	/**
@@ -580,9 +615,11 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return bool|WP_Error True on success, or error object on failure.
 	 */
 	protected function update_callback( $params ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$model = $this->manager->get( $params[ $this->obj_id_key ] );
 		if ( ! $model ) {
-			return new WP_Error( 'cli_item_not_exists', sprintf( 'The %s %d does not exist.', $this->obj_type, $params[ $this->obj_id_key ] ) );
+			return new WP_Error( 'cli_item_not_exists', sprintf( 'The %s %d does not exist.', $singular_name, $params[ $this->obj_id_key ] ) );
 		}
 
 		unset( $params[ $this->obj_id_key ] );
@@ -605,14 +642,16 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @return bool|WP_Error True on success, or error object on failure.
 	 */
 	protected function delete_callback( $id, $assoc_args ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
 		$model = $this->manager->get( $id );
 		if ( ! $model ) {
-			$result = new WP_Error( 'cli_item_not_exists', sprintf( 'The %s %d does not exist.', $this->obj_type, $params[ $this->obj_id_key ] ) );
+			$result = new WP_Error( 'cli_item_not_exists', sprintf( 'The %s %d does not exist.', $singular_name, $params[ $this->obj_id_key ] ) );
 		} else {
 			$result = $model->delete();
 		}
 
-		return $this->wp_error_to_resp( $result, "Deleted $this->obj_type $id." );
+		return $this->wp_error_to_resp( $result, "Deleted $singular_name $id." );
 	}
 
 	/**
