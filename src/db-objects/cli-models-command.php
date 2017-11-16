@@ -75,6 +75,8 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @param string $name Base command name.
 	 */
 	public function add( $name ) {
+		\WP_CLI::add_command( "$name", $this, $this->get_general_args( $name ) );
+
 		\WP_CLI::add_command( "$name create", array( $this, 'create' ), $this->get_create_args( $name ) );
 		\WP_CLI::add_command( "$name update", array( $this, 'update' ), $this->get_update_args( $name ) );
 
@@ -283,6 +285,21 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	}
 
 	/**
+	 * Returns command information for the aggregate command that includes the other commands.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $name Base command name.
+	 * @return array Command information.
+	 */
+	protected function get_general_args( $name ) {
+		return array(
+			'shortdesc' => sprintf( 'Manage %s.', $this->obj_type_plural ),
+		);
+	}
+
+	/**
 	 * Returns command information for the 'create' command.
 	 *
 	 * @since 1.0.0
@@ -484,11 +501,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	protected function get_list_args( $name ) {
 		$synopsis = array(
 			array(
-				'type'        => 'generic',
-				'description' => 'One or more query arguments.',
-				'optional'    => true,
-			),
-			array(
 				'name'        => 'field',
 				'type'        => 'assoc',
 				'description' => sprintf( 'Print the value of a single field for each %s.', $this->obj_type ),
@@ -507,6 +519,11 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 				'optional'    => true,
 				'default'     => 'table',
 				'options'     => array( 'table', 'csv', 'json', 'yaml', 'ids', 'count' ),
+			),
+			array(
+				'type'        => 'generic',
+				'description' => 'One or more query arguments.',
+				'optional'    => true,
 			),
 		);
 
