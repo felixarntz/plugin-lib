@@ -86,7 +86,9 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 
 		\WP_CLI::add_command( "$name get", array( $this, 'get' ), $this->get_get_args( $name ) );
 		\WP_CLI::add_command( "$name delete", array( $this, 'delete' ), $this->get_delete_args( $name ) );
-		\WP_CLI::add_command( "$name list", array( $this, 'list_' ), $this->get_list_args( $name ) );
+		\WP_CLI::add_command( "$name list", function( $args, $assoc_args ) {
+			$this->list_( $args, $assoc_args );
+		}, $this->get_list_args( $name ) );
 
 		/* TODO: \WP_CLI::add_command( "$name generate", array( $this, 'generate' ), $this->get_generate_args( $name ) ); */
 
@@ -224,12 +226,12 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Gets a list of models.
 	 *
 	 * @since 1.0.0
-	 * @access public
+	 * @access protected
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
 	 */
-	public function list_( $args, $assoc_args ) {
+	protected function list_( $args, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
 		$query_args = array_merge( array( 'number' => -1 ), $assoc_args );
@@ -433,7 +435,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @param string $name Base command name.
 	 * @return array Command information.
 	 */
-	public function get_get_args( $name ) {
+	protected function get_get_args( $name ) {
 		$singular_name = $this->prepare_type_for_output( $this->obj_type );
 
 		$synopsis = array(
