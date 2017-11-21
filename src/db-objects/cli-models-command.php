@@ -193,15 +193,10 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	public function get( $args, $assoc_args ) {
 		$model = $this->fetcher->get_check( $args[0] );
 
-		$include_meta = false;
-		if ( method_exists( $this->manager, 'get_meta' ) && \WP_CLI\Utils\get_flag_value( $assoc_args, 'include_meta' ) ) {
-			$include_meta = true;
-		}
-
-		$data = $model->to_json( $include_meta );
+		$data = $model->to_json( false );
 
 		if ( empty( $assoc_args['fields'] ) ) {
-			$assoc_args['fields'] = array_keys( $data );
+			$assoc_args['fields'] = $this->obj_fields;
 		}
 
 		$formatter = $this->get_formatter( $assoc_args );
@@ -279,12 +274,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		if ( 'ids' === $formatter->format ) {
 			echo implode( ' ', $collection->get_raw() );
 		} else {
-			$include_meta = false;
-			if ( method_exists( $this->manager, 'get_meta' ) && \WP_CLI\Utils\get_flag_value( $assoc_args, 'include_meta' ) ) {
-				$include_meta = true;
-			}
-
-			$data = $collection->to_json( $include_meta );
+			$data = $collection->to_json( false );
 			$formatter->display_items( $data['models'] );
 		}
 	}
@@ -465,15 +455,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 			),
 		);
 
-		if ( method_exists( $this->manager, 'get_meta' ) ) {
-			$synopsis[] = array(
-				'name'        => 'include_meta',
-				'type'        => 'flag',
-				'description' => sprintf( 'Include %s metadata as well.', $singular_name ),
-				'optional'    => true,
-			);
-		}
-
 		return array(
 			'shortdesc' => sprintf( 'Get details about a %s.', $singular_name ),
 			'synopsis'  => $synopsis,
@@ -547,15 +528,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 				'optional'    => true,
 			),
 		);
-
-		if ( method_exists( $this->manager, 'get_meta' ) ) {
-			$synopsis[] = array(
-				'name'        => 'include_meta',
-				'type'        => 'flag',
-				'description' => sprintf( 'Include %s metadata as well.', $singular_name ),
-				'optional'    => true,
-			);
-		}
 
 		return array(
 			'shortdesc' => sprintf( 'Get a list of %s.', $plural_name ),
