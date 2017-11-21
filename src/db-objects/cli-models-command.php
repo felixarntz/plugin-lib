@@ -8,6 +8,7 @@
 
 namespace Leaves_And_Love\Plugin_Lib\DB_Objects;
 
+use Leaves_And_Love\Plugin_Lib\CLI_Command_Aggregate;
 use WP_Error;
 
 if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' ) ) :
@@ -75,7 +76,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * @param string $name Base command name.
 	 */
 	public function add( $name ) {
-		\WP_CLI::add_command( "$name", $this, $this->get_general_args( $name ) );
+		\WP_CLI::add_command( "$name", new CLI_Command_Aggregate(), $this->get_general_args( $name ) );
 
 		\WP_CLI::add_command( "$name create", array( $this, 'create' ), $this->get_create_args( $name ) );
 		\WP_CLI::add_command( "$name update", array( $this, 'update' ), $this->get_update_args( $name ) );
@@ -86,9 +87,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 
 		\WP_CLI::add_command( "$name get", array( $this, 'get' ), $this->get_get_args( $name ) );
 		\WP_CLI::add_command( "$name delete", array( $this, 'delete' ), $this->get_delete_args( $name ) );
-		\WP_CLI::add_command( "$name list", function( $args, $assoc_args ) {
-			$this->list_( $args, $assoc_args );
-		}, $this->get_list_args( $name ) );
+		\WP_CLI::add_command( "$name list", array( $this, 'list_' ), $this->get_list_args( $name ) );
 
 		/* TODO: \WP_CLI::add_command( "$name generate", array( $this, 'generate' ), $this->get_generate_args( $name ) ); */
 
@@ -226,12 +225,12 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Gets a list of models.
 	 *
 	 * @since 1.0.0
-	 * @access protected
+	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
 	 */
-	protected function list_( $args, $assoc_args ) {
+	public function list_( $args, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
 		$query_args = array_merge( array( 'number' => -1 ), $assoc_args );
