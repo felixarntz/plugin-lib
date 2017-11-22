@@ -92,7 +92,7 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		/* TODO: \WP_CLI::add_command( "$name generate", array( $this, 'generate' ), $this->get_generate_args( $name ) ); */
 
 		if ( method_exists( $this->manager, 'get_meta_type' ) ) {
-			\WP_CLI::add_command( "$name meta", new CLI_Model_Meta_Command( $this->manager ) );
+			\WP_CLI::add_command( "$name meta", new CLI_Model_Meta_Command( $this->manager ), $this->get_meta_args( $name ) );
 		}
 	}
 
@@ -532,6 +532,23 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 		return array(
 			'shortdesc' => sprintf( 'Get a list of %s.', $plural_name ),
 			'synopsis'  => $synopsis,
+		);
+	}
+
+	/**
+	 * Returns command information for the meta command that includes the other commands.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param string $name Base command name.
+	 * @return array Command information.
+	 */
+	protected function get_meta_args( $name ) {
+		$singular_name = $this->prepare_type_for_output( $this->obj_type );
+
+		return array(
+			'shortdesc' => sprintf( 'Manage %s metadata.', $singular_name ),
 		);
 	}
 
