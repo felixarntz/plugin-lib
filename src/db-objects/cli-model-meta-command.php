@@ -36,7 +36,10 @@ class CLI_Model_Meta_Command extends \WP_CLI\CommandWithMeta {
 	public function __construct( $manager ) {
 		$this->manager = $manager;
 
-		$this->meta_type = $this->manager->meta()->get_prefix() . $this->manager->get_meta_type();
+		$this->meta_type = $this->manager->get_meta_type();
+		if ( $this->manager->meta()->db()->table_exists( $this->meta_type . 'meta' ) ) {
+			$this->meta_type = $this->manager->meta()->get_prefix() . $this->meta_type;
+		}
 	}
 
 	/**
