@@ -839,11 +839,13 @@ abstract class View_Routing extends Service {
 	 * @access protected
 	 */
 	protected function rel_canonical() {
-		if ( ! $this->is_singular() ) {
-			return;
-		}
+		$permalink = '';
 
-		$permalink = $this->get_model_permalink( $this->current_model );
+		if ( $this->is_singular() ) {
+			$permalink = $this->get_model_permalink( $this->current_model );
+		} elseif ( $this->is_archive() ) {
+			$permalink = $this->get_archive_permalink();
+		}
 
 		if ( empty( $permalink ) ) {
 			return;
