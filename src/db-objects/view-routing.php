@@ -595,6 +595,15 @@ abstract class View_Routing extends Service {
 
 		$query_params = $this->get_query_params( $query_vars );
 
+		/**
+		 * Filters the query parameters to use for an archive request.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $query_params Original query parameters.
+		 */
+		$query_params = apply_filters( "{$this->manager->get_prefix()}{$this->manager->get_singular_slug()}_archive_query_params", $query_params );
+
 		$this->current_collection = $this->manager->query( $query_params );
 
 		$this->setup_view();
