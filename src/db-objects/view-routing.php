@@ -869,11 +869,13 @@ abstract class View_Routing extends Service {
 		if ( $this->is_archive() ) {
 			$this->template()->get_partial( $this->archive_template_name, array(
 				$this->collection_var_name => $this->current_collection,
+				'manager'                  => $this->manager,
 				'template'                 => $this->template(),
 			) );
 		} else {
 			$data = array(
 				$this->model_var_name => $this->current_model,
+				'manager'             => $this->manager,
 				'template'            => $this->template(),
 			);
 
