@@ -46,7 +46,9 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 ---------------------------------------------------------------------------- */
 
 .plugin-lib-select-control,
-.plugin-lib-select-control + .select2-container {
+.plugin-lib-select-control + .select2-container,
+.plugin-lib-multiselect-control,
+.plugin-lib-multiselect-control + .select2-container {
 	min-width: 200px;
 }
 
