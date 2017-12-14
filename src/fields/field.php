@@ -127,6 +127,15 @@ abstract class Field {
 	protected $label_classes = array();
 
 	/**
+	 * Array of CSS classes for the field wrap.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var array
+	 */
+	protected $wrap_classes = array();
+
+	/**
 	 * Label mode for this field's label.
 	 *
 	 * Accepts values 'explicit', 'implicit', 'no_assoc', 'aria_hidden' and 'skip'.
@@ -211,6 +220,7 @@ abstract class Field {
 	 *                                          be passed to set the limit of repetitions allowed. Default false.
 	 *     @type array           $input_classes Array of CSS classes for the field input. Default empty array.
 	 *     @type array           $label_classes Array of CSS classes for the field label. Default empty array.
+	 *     @type array           $wrap_classes  Array of CSS classes for the field wrap. Default empty array.
 	 *     @type callable        $validate      Custom validation callback. Will be executed after doing the regular
 	 *                                          validation if no errors occurred in the meantime. Default none.
 	 *     @type callable|string $before        Callback or string that should be used to generate output that will
@@ -1118,6 +1128,10 @@ abstract class Field {
 		if ( ! $this->display ) {
 			$wrap_attrs['class'] .= ' plugin-lib-hidden';
 			$wrap_attrs['aria-hidden'] = 'true';
+		}
+
+		if ( ! empty( $this->wrap_classes ) ) {
+			$wrap_attrs['class'] .= ' ' . implode( ' ', $this->wrap_classes );
 		}
 
 		if ( $as_string ) {
