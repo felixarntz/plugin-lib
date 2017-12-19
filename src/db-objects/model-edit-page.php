@@ -130,8 +130,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 			$this->manager->ajax()->register_action( 'model_generate_slug', array( $this, 'ajax_model_generate_slug' ) );
 			$this->manager->ajax()->register_action( 'model_verify_slug', array( $this, 'ajax_model_verify_slug' ) );
 		}
-
-		$this->add_page_content();
 	}
 
 	/**
@@ -249,6 +247,8 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * @access public
 	 */
 	public function handle_request() {
+		$this->add_page_content();
+
 		$capabilities = $this->model_manager->capabilities();
 		$primary_property = $this->model_manager->get_primary_property();
 
