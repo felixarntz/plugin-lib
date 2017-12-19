@@ -340,7 +340,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function render_label() {
+	public function render_label() {
 		$this->maybe_resolve_dependencies();
 
 		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-label-wrap' ) . '" class="label-wrap">';
@@ -372,7 +372,7 @@ abstract class Field {
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 */
-	public final function render_content( $current_value ) {
+	public function render_content( $current_value ) {
 		$this->maybe_resolve_dependencies();
 
 		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-content-wrap' ) . '" class="content-wrap">';
@@ -412,7 +412,7 @@ abstract class Field {
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 */
-	public final function render_input( $current_value ) {
+	public function render_input( $current_value ) {
 		$this->maybe_resolve_dependencies();
 
 		if ( $this->is_repeatable() ) {
@@ -462,7 +462,7 @@ abstract class Field {
 	 *
 	 * @param mixed $current_value Current value of the item.
 	 */
-	public final function render_repeatable_item( $current_value ) {
+	public function render_repeatable_item( $current_value ) {
 		$this->maybe_resolve_dependencies();
 
 		$this->open_repeatable_item_wrap();
@@ -479,7 +479,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function print_label_template() {
+	public function print_label_template() {
 		?>
 		<div id="{{ data.id }}-label-wrap" class="label-wrap">
 			<# if ( ! _.isEmpty( data.label ) && 'skip' != data.labelMode ) { #>
@@ -499,7 +499,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function print_content_template() {
+	public function print_content_template() {
 		?>
 		<div id="{{ data.id }}-content-wrap" class="content-wrap">
 			<# if ( ! _.isEmpty( data.before ) ) { #>
@@ -525,7 +525,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function print_input_template() {
+	public function print_input_template() {
 		?>
 		<# if ( data.repeatable ) { #>
 			<?php $this->print_open_repeatable_wrap_template(); ?>
@@ -549,7 +549,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function print_repeatable_item_template() {
+	public function print_repeatable_item_template() {
 		$this->print_open_repeatable_item_wrap_template();
 
 		$this->print_label_template();
@@ -567,7 +567,7 @@ abstract class Field {
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
 	 */
-	public final function to_json( $current_value ) {
+	public function to_json( $current_value ) {
 		$this->maybe_resolve_dependencies();
 
 		if ( $this->is_repeatable() ) {
@@ -659,7 +659,7 @@ abstract class Field {
 	 * @return mixed|WP_Error The validated value on success, or an error
 	 *                        object on failure.
 	 */
-	public final function validate( $value = null ) {
+	public function validate( $value = null ) {
 		$this->maybe_resolve_dependencies();
 
 		if ( $this->is_repeatable() ) {
@@ -865,7 +865,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function open_repeatable_wrap() {
+	protected function open_repeatable_wrap() {
 		$id = $this->get_id_attribute();
 
 		$wrap_attrs = array(
@@ -882,7 +882,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function close_repeatable_wrap() {
+	protected function close_repeatable_wrap() {
 		echo '</span>';
 	}
 
@@ -892,7 +892,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function open_repeatable_item_wrap() {
+	protected function open_repeatable_item_wrap() {
 		$id = $this->get_id_attribute();
 
 		$wrap_attrs = array(
@@ -909,7 +909,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function close_repeatable_item_wrap() {
+	protected function close_repeatable_item_wrap() {
 		echo '</span>';
 	}
 
@@ -922,7 +922,7 @@ abstract class Field {
 	 * @param bool $hide_button Optional. Whether to initially hide the 'Add' button.
 	 *                          Default false.
 	 */
-	protected final function render_repeatable_add_button( $hide_button = false ) {
+	protected function render_repeatable_add_button( $hide_button = false ) {
 		$this->render_repeatable_button( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), $this->label ), $hide_button );
 	}
 
@@ -932,7 +932,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function render_repeatable_remove_button() {
+	protected function render_repeatable_remove_button() {
 		$this->render_repeatable_button( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), $this->label ) );
 	}
 
@@ -947,7 +947,7 @@ abstract class Field {
 	 * @param bool   $hide_button Optional. Whether to initially hide the button.
 	 *                            Default false.
 	 */
-	protected final function render_repeatable_button( $mode, $message, $hide_button = false ) {
+	protected function render_repeatable_button( $mode, $message, $hide_button = false ) {
 		if ( ! $this->is_repeatable() ) {
 			return;
 		}
@@ -982,7 +982,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_open_repeatable_wrap_template() {
+	protected function print_open_repeatable_wrap_template() {
 		?>
 		<span id="{{ data.id }}-repeatable-wrap" class="plugin-lib-repeatable-wrap plugin-lib-repeatable-{{ data.slug }}-wrap">
 		<?php
@@ -994,7 +994,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_close_repeatable_wrap_template() {
+	protected function print_close_repeatable_wrap_template() {
 		?>
 		</span>
 		<?php
@@ -1006,7 +1006,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_open_repeatable_item_wrap_template() {
+	protected function print_open_repeatable_item_wrap_template() {
 		?>
 		<span id="{{ data.id }}-repeatable-item" class="plugin-lib-repeatable-item">
 		<?php
@@ -1018,7 +1018,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_close_repeatable_item_wrap_template() {
+	protected function print_close_repeatable_item_wrap_template() {
 		?>
 		</span>
 		<?php
@@ -1030,7 +1030,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_repeatable_add_button_template() {
+	protected function print_repeatable_add_button_template() {
 		$this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ data.label }}' ) );
 	}
 
@@ -1040,7 +1040,7 @@ abstract class Field {
 	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected final function print_repeatable_remove_button_template() {
+	protected function print_repeatable_remove_button_template() {
 		$this->print_repeatable_button_template( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), '{{ data.label }}' ) );
 	}
 
@@ -1053,7 +1053,7 @@ abstract class Field {
 	 * @param string $mode    Button mode. Either 'add' or 'remove'.
 	 * @param string $message Button message.
 	 */
-	protected final function print_repeatable_button_template( $mode, $message ) {
+	protected function print_repeatable_button_template( $mode, $message ) {
 		$style = '';
 
 		if ( 'remove' === $mode ) {

@@ -55,7 +55,7 @@ class Checkbox extends Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function render_label() {
+	public function render_label() {
 		$this->maybe_resolve_dependencies();
 
 		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-label-wrap' ) . '" class="label-wrap">';
@@ -77,7 +77,7 @@ class Checkbox extends Field {
 	 * @since 1.0.0
 	 * @access public
 	 */
-	public final function print_label_template() {
+	public function print_label_template() {
 		?>
 		<div id="{{ data.id }}-label-wrap" class="label-wrap">
 			<# if ( ! _.isEmpty( data.visualLabel ) ) { #>
@@ -96,7 +96,7 @@ class Checkbox extends Field {
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
 	 */
-	public final function to_json( $current_value ) {
+	public function to_json( $current_value ) {
 		$data = parent::to_json( $current_value );
 
 		$data['visualLabel'] = $this->visual_label;
