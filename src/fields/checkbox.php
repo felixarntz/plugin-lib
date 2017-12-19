@@ -174,6 +174,24 @@ class Checkbox extends Field {
 	protected function is_value_empty( $value ) {
 		return false;
 	}
+
+	/**
+	 * Returns the attributes for the field's label.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 *
+	 * @param array $label_attrs Array of custom label attributes.
+	 * @param bool  $as_string   Optional. Whether to return them as an attribute
+	 *                           string. Default true.
+	 * @return array|string Either an array of `$key => $value` pairs, or an
+	 *                      attribute string if `$as_string` is true.
+	 */
+	protected function get_label_attrs( $label_attrs = array(), $as_string = true ) {
+		$label_attrs['aria-hidden'] = 'true';
+
+		return parent::get_label_attrs( $label_attrs, $as_string );
+	}
 }
 
 endif;
