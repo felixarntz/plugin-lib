@@ -39,6 +39,72 @@ class Checkbox extends Field {
 	protected $label_mode = 'skip';
 
 	/**
+	 * Text used as visual label displayed similar to other field labels.
+	 *
+	 * It is however not the actual semantic label, it only exists for visual purposes.
+	 *
+	 * @since 1.0.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $visual_label = '';
+
+	/**
+	 * Renders the field's label.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function render_label() {
+		$this->maybe_resolve_dependencies();
+
+		echo '<div id="' . esc_attr( $this->get_id_attribute() . '-label-wrap' ) . '" class="label-wrap">';
+
+		if ( ! empty( $this->visual_label ) ) {
+			?>
+			<span<?php echo $this->get_label_attrs(); ?>>
+				<?php echo $this->visual_label; ?>
+			</span>
+			<?php
+		}
+
+		echo '</div>';
+	}
+
+	/**
+	 * Prints a label template.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 */
+	public final function print_label_template() {
+		?>
+		<div id="{{ data.id }}-label-wrap" class="label-wrap">
+			<# if ( ! _.isEmpty( data.visualLabel ) ) { #>
+				<span{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.visualLabel }}}</span>
+			<# } #>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Transforms all field data into an array to be passed to JavaScript applications.
+	 *
+	 * @since 1.0.0
+	 * @access public
+	 *
+	 * @param mixed $current_value Current value of the field.
+	 * @return array Field data to be JSON-encoded.
+	 */
+	public final function to_json( $current_value ) {
+		$data = parent::to_json( $current_value );
+
+		$data['visualLabel'] = $this->visual_label;
+
+		return $data;
+	}
+
+	/**
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0

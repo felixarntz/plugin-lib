@@ -482,7 +482,7 @@ abstract class Field {
 	public final function print_label_template() {
 		?>
 		<div id="{{ data.id }}-label-wrap" class="label-wrap">
-			<# if ( data.label && 'skip' != data.labelMode ) { #>
+			<# if ( ! _.isEmpty( data.label ) && 'skip' != data.labelMode ) { #>
 				<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
 					<span{{{ _.attrs( data.labelAttrs ) }}}>{{{ data.label }}}</span>
 				<# } else { #>
