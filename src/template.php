@@ -258,48 +258,62 @@ class Template extends Service {
 	}
 
 	/**
-	 * Escapes output for usage as HTML text. Some very basic HTML is allowed.
+	 * Escapes output for usage as HTML text, with some basic inline HTML allowed.
 	 *
-	 * Allowed tags:
-	 * - <span> (with optional 'id' and 'class' attributes)
-	 * - <strong> (with optional 'id' and 'class' attributes)
-	 * - <em> (with optional 'id' and 'class' attributes)
-	 * - <br> (with optional 'id' and 'class' attributes)
-	 * - <a> (with optional 'id', 'class', 'href' and 'target' attributes)
+	 * Allowed tags by default are 'span', 'strong', 'em', 'br', 'a', 'sup' and 'sub'.
+	 * Those are filterable to tweak.
 	 *
 	 * @since 1.0.0
 	 * @access public
 	 *
-	 * @param string $output Output to escape.
+	 * @param string $output          Output to escape.
+	 * @param array  $additional_tags Optional. Additional tags and attributes to allow. The
+	 *                                global attributes 'id', 'class' and 'style' are added
+	 *                                as allowed attributes automatically.
 	 * @return string Escaped output.
 	 */
-	public function esc_kses_basic( $output ) {
-		$allowed_html = array(
-			'span'   => array(
-				'id'    => array(),
-				'class' => array(),
-			),
-			'strong' => array(
-				'id'    => array(),
-				'class' => array(),
-			),
-			'em'     => array(
-				'id'    => array(),
-				'class' => array(),
-			),
-			'br'     => array(
-				'id'    => array(),
-				'class' => array(),
-			),
+	public function esc_kses_basic( $output, $additional_tags = array() ) {
+		$allowed_tags = array(
+			'span'   => array(),
+			'strong' => array(),
+			'em'     => array(),
+			'br'     => array(),
 			'a'      => array(
-				'id'     => array(),
-				'class'  => array(),
-				'href'   => array(),
-				'target' => array(),
+				'href'   => true,
+				'target' => true,
 			),
+			'sup'    => array(),
+			'sub'    => array(),
 		);
 
-		return wp_kses( $output, $allowed_html );
+		/**
+		 * Filters the basic allowed HTML tags.
+		 *
+		 * The global attributes 'id', 'class' and 'style' can be omitted since they are
+		 * added to all allowed tags automatically.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $allowed_tags Associative array of `$tag => $attributes` pairs where each
+		 *                            attribute must be the key and whether it is allowed the value.
+		 */
+		$allowed_tags = apply_filters( "{$this->get_prefix()}basic_allowed_tags", $allowed_tags );
+
+		if ( ! empty( $additional_tags ) ) {
+			$allowed_tags = array_merge_recursive( $allowed_tags, $additional_tags );
+		}
+
+		$global_attributes = array(
+			'id'    => true,
+			'class' => true,
+			'style' => true,
+		);
+
+		foreach ( $allowed_tags as $tag => $attributes ) {
+			$allowed_tags[ $tag ] = array_merge( $attributes, $global_attributes );
+		}
+
+		return wp_kses( $output, $allowed_tags );
 	}
 
 	/**
