@@ -268,8 +268,8 @@ class Template extends Service {
 	 *
 	 * @param string $output          Output to escape.
 	 * @param array  $additional_tags Optional. Additional tags and attributes to allow. The
-	 *                                global attributes 'id', 'class' and 'style' are added
-	 *                                as allowed attributes automatically.
+	 *                                global attributes 'id', 'class', 'style', 'role' and
+	 *                                'aria-hidden' are added as allowed attributes automatically.
 	 * @return string Escaped output.
 	 */
 	public function esc_kses_basic( $output, $additional_tags = array() ) {
@@ -289,8 +289,8 @@ class Template extends Service {
 		/**
 		 * Filters the basic allowed HTML tags.
 		 *
-		 * The global attributes 'id', 'class' and 'style' can be omitted since they are
-		 * added to all allowed tags automatically.
+		 * The global attributes 'id', 'class', 'style', 'role' and 'aria-hidden' can be omitted
+		 * since they are added to all allowed tags automatically.
 		 *
 		 * @since 1.0.0
 		 *
@@ -304,9 +304,11 @@ class Template extends Service {
 		}
 
 		$global_attributes = array(
-			'id'    => true,
-			'class' => true,
-			'style' => true,
+			'id'          => true,
+			'class'       => true,
+			'style'       => true,
+			'role'        => true,
+			'aria-hidden' => true,
 		);
 
 		foreach ( $allowed_tags as $tag => $attributes ) {
