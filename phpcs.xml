@@ -3,7 +3,7 @@
 	<description>A custom set of PHPCS rules for the Leaves And Love Plugin Library.</description>
 
 	<rule ref="WordPress">
-		<exclude name="WordPress.XSS.EscapeOutput"/>
+		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.VIP.SuperGlobalInputUsage"/>
 		<exclude name="WordPress.VIP.ValidatedSanitizedInput"/>
 		<exclude name="WordPress.Variables.GlobalVariables.OverrideProhibited"/>
