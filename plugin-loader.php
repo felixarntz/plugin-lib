@@ -27,7 +27,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Whether the loader has been initialized.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var bool
 	 */
@@ -37,7 +36,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Plugin class instances.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var array
 	 */
@@ -47,7 +45,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Loads a specific plugin.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $class_name       Name of the plugin's main class.
@@ -89,7 +86,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Returns a specific plugin's main class.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $class_name Name of the plugin's main class.
@@ -112,7 +108,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Renders an error notice for all plugins that could not be started.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 */
 	public static function error_notice() {
@@ -133,7 +128,6 @@ final class Leaves_And_Love_Plugin_Loader {
 	 * Adds the necessary hooks to bootstrap a plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param Leaves_And_Love_Plugin $instance  The plugin instance.
