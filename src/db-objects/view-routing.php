@@ -34,7 +34,6 @@ abstract class View_Routing extends Service {
 	 * singular model views.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $base = '';
@@ -45,7 +44,6 @@ abstract class View_Routing extends Service {
 	 * Will be appended to the base string.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $permalink = '';
@@ -54,7 +52,6 @@ abstract class View_Routing extends Service {
 	 * Query variable name for a singular page. This will only be used if pretty permalinks are not enabled.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $singular_query_var = '';
@@ -63,7 +60,6 @@ abstract class View_Routing extends Service {
 	 * Query variable name for a preview page. This will only be used if pretty permalinks are not enabled.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $preview_query_var = '';
@@ -72,7 +68,6 @@ abstract class View_Routing extends Service {
 	 * Query variable name for an archive page. This will only be used if pretty permalinks are not enabled.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $archive_query_var = '';
@@ -81,7 +76,6 @@ abstract class View_Routing extends Service {
 	 * Name of the template file for singular views.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $singular_template_name = '';
@@ -90,7 +84,6 @@ abstract class View_Routing extends Service {
 	 * Name of the template file for archive views.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $archive_template_name = '';
@@ -99,7 +92,6 @@ abstract class View_Routing extends Service {
 	 * Name for the current model variable that is used to pass it to the singular view template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $model_var_name = '';
@@ -108,7 +100,6 @@ abstract class View_Routing extends Service {
 	 * Name for the current collection variable that is used to pass it to the archive view template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $collection_var_name = '';
@@ -117,7 +108,6 @@ abstract class View_Routing extends Service {
 	 * Manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager = null;
@@ -126,7 +116,6 @@ abstract class View_Routing extends Service {
 	 * Holds the current model for a request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Model|null
 	 */
 	protected $current_model = null;
@@ -135,7 +124,6 @@ abstract class View_Routing extends Service {
 	 * Holds the current collection for a request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Collection|null
 	 */
 	protected $current_collection = null;
@@ -144,7 +132,6 @@ abstract class View_Routing extends Service {
 	 * Whether the current request is for a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $is_singular = false;
@@ -153,7 +140,6 @@ abstract class View_Routing extends Service {
 	 * Whether the current request is for a preview of a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $is_preview = false;
@@ -162,7 +148,6 @@ abstract class View_Routing extends Service {
 	 * Whether the current request is for a model archive.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $is_archive = false;
@@ -171,7 +156,6 @@ abstract class View_Routing extends Service {
 	 * The page number for an archive request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $paged = 1;
@@ -180,7 +164,6 @@ abstract class View_Routing extends Service {
 	 * Router service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -190,7 +173,6 @@ abstract class View_Routing extends Service {
 	 * Template service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -200,7 +182,6 @@ abstract class View_Routing extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   The instance prefix.
 	 * @param array  $services {
@@ -220,7 +201,6 @@ abstract class View_Routing extends Service {
 	 * Returns the permalink for a given model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The model object.
 	 * @return string Permalink for the model view, or empty if no permalink exists.
@@ -296,7 +276,6 @@ abstract class View_Routing extends Service {
 	 * The preview data is stored for a minute, meaning the preview link is valid for that period.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The model object.
 	 * @return string Permalink for the model preview, or empty if preview link could not be generated.
@@ -331,7 +310,6 @@ abstract class View_Routing extends Service {
 	 * Returns the permalink for the model archive.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $page Optional. Page number to get its archive permalink. Default 1.
 	 * @return string Permalink for the archive view.
@@ -359,7 +337,6 @@ abstract class View_Routing extends Service {
 	 * Returns the sample permalink for a given model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model  $model    The model object.
 	 * @param string $property Optional. Name of a property to keep its placeholder in the
@@ -423,7 +400,6 @@ abstract class View_Routing extends Service {
 	 * Checks whether the current request is for a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if the request is for a singular model, false otherwise.
 	 */
@@ -435,7 +411,6 @@ abstract class View_Routing extends Service {
 	 * Checks whether the current request is for a preview of a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if the request is for a preview of a singular model, false otherwise.
 	 */
@@ -447,7 +422,6 @@ abstract class View_Routing extends Service {
 	 * Checks whether the current request is for a model archive.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if the request is for a model archive, false otherwise.
 	 */
@@ -459,7 +433,6 @@ abstract class View_Routing extends Service {
 	 * Sets the manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager Manager instance.
 	 */
@@ -474,7 +447,6 @@ abstract class View_Routing extends Service {
 	 * Handles a request for a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $query_vars Array of query variables.
 	 * @return bool True if a singular model for the query variables was found, false otherwise.
@@ -514,7 +486,6 @@ abstract class View_Routing extends Service {
 	 * Handles a request for a preview of a singular model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $query_vars Array of query variables.
 	 * @return bool True if a valid preview and capabilities are met, false otherwise.
@@ -568,7 +539,6 @@ abstract class View_Routing extends Service {
 	 * Handles a request for a model archive.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $query_vars Array of query variables.
 	 * @return bool Always returns true.
@@ -617,7 +587,6 @@ abstract class View_Routing extends Service {
 	 * This method only works if the regular expression stores all dynamic parts under named array keys.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $matches Array of regular expression matches.
 	 * @return array Associative array of query variables.
@@ -640,7 +609,6 @@ abstract class View_Routing extends Service {
 	 * Sets up the class properties.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_vars() {
 		$this->base = $this->manager->get_message( 'view_routing_base' );
@@ -673,7 +641,6 @@ abstract class View_Routing extends Service {
 	 * Registers routes for the model singular views and archives.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function register_routes() {
 		if ( ! empty( $this->singular_query_var ) ) {
@@ -721,7 +688,6 @@ abstract class View_Routing extends Service {
 	 * Retrieves the array of parameters for the model query, based on query variables and defaults.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $query_vars Query variables for the current request.
 	 * @return array Query parameters for the model query.
@@ -776,7 +742,6 @@ abstract class View_Routing extends Service {
 	 * regular behavior of WordPress in order to correctly handle the custom model content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_view() {
 		$this->add_filter( 'pre_get_document_title', array( $this, 'set_document_title' ), 1, 1 );
@@ -788,7 +753,6 @@ abstract class View_Routing extends Service {
 	 * Returns the document title for a model singular or archive view.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $title Original title to be overridden.
 	 * @return string New document title.
@@ -836,7 +800,6 @@ abstract class View_Routing extends Service {
 	 * Prints the canonical header for a singular view.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function rel_canonical() {
 		$permalink = '';
@@ -858,7 +821,6 @@ abstract class View_Routing extends Service {
 	 * Loads the template for a singular view.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function load_template() {
 		/** This filter is documented in wp-includes/template-loader.php */

@@ -24,7 +24,6 @@ abstract class Model_Status extends Item {
 	 * Sets the status arguments and fills it with defaults.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Status arguments.
 	 */

@@ -20,7 +20,6 @@ class Storage {
 	 * All stored models.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var array
 	 */
@@ -30,7 +29,6 @@ class Storage {
 	 * Types that are global across all sites.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var array
 	 */
@@ -40,7 +38,6 @@ class Storage {
 	 * Stores a model in the storage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $cache_group The object cache group.
@@ -74,7 +71,6 @@ class Storage {
 	 * Retrieves a model from the storage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $cache_group The object cache group.
@@ -111,7 +107,6 @@ class Storage {
 	 * Checks whether a model is set in the storage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $cache_group The object cache group.
@@ -143,7 +138,6 @@ class Storage {
 	 * Instead their IDs are unique across all sites.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $cache_group The object cache group.
@@ -161,7 +155,6 @@ class Storage {
 	 * Checks whether an object cache group is registered as global.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param string $cache_group The object cache group.

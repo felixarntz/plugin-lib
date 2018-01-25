@@ -36,7 +36,6 @@ class Network_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                       $prefix       The instance prefix.
 	 * @param array                        $services     {
@@ -72,7 +71,6 @@ class Network_Manager extends Core_Manager {
 	 * Internal method to insert a new network into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new network, or false on failure.
@@ -105,7 +103,6 @@ class Network_Manager extends Core_Manager {
 	 * Internal method to update an existing network in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $network_id ID of the network to update.
 	 * @param array $args       Array of column => value pairs to update in the database row.
@@ -128,7 +125,6 @@ class Network_Manager extends Core_Manager {
 	 * Internal method to delete a network from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $network_id ID of the network to delete.
 	 * @return bool True on success, or false on failure.

@@ -29,7 +29,6 @@ trait Container_Service_Trait {
 	 * The internal service instances, as `$name => $instance` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $services = array();
@@ -40,7 +39,6 @@ trait Container_Service_Trait {
 	 * Supports retrieval of an internally used service.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $method_name Method name. Should be the name of a service.
 	 * @param array  $args        Method arguments. Unused here.
@@ -58,7 +56,6 @@ trait Container_Service_Trait {
 	 * Sets the services for this class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $services Array of passed services.
 	 */
@@ -90,7 +87,6 @@ trait Container_Service_Trait {
 	 * Returns the internal service definitions.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @return array Array of `$name => $class_name` pairs.

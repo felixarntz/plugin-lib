@@ -24,7 +24,6 @@ trait Sitewide_Model_Trait {
 	 * Site ID this model belongs to.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $__site_id = 0;
@@ -33,7 +32,6 @@ trait Sitewide_Model_Trait {
 	 * Whether sites are temporarily switched.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $__switched = false;
@@ -42,7 +40,6 @@ trait Sitewide_Model_Trait {
 	 * Retrieves the site ID of the model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return int The site ID.
 	 */
@@ -56,7 +53,6 @@ trait Sitewide_Model_Trait {
 	 * If the model is new (i.e. does not have an ID yet), it will be inserted to the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -77,7 +73,6 @@ trait Sitewide_Model_Trait {
 	 * to reset the model to the values stored in the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -95,7 +90,6 @@ trait Sitewide_Model_Trait {
 	 * Deletes the model from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -113,7 +107,6 @@ trait Sitewide_Model_Trait {
 	 * Returns an array representation of the model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
 	 *                           Default true.
@@ -133,7 +126,6 @@ trait Sitewide_Model_Trait {
 	 * Switches to the site the model belongs to if necessary.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function maybe_switch() {
 		if ( is_multisite() && $this->__site_id && get_current_blog_id() !== $this->__site_id ) {
@@ -146,7 +138,6 @@ trait Sitewide_Model_Trait {
 	 * Restores the current site after having switched.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function maybe_restore() {
 		if ( $this->__switched ) {

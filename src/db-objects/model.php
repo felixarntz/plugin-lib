@@ -24,7 +24,6 @@ abstract class Model {
 	 * Properties pending upstream synchronization.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $pending_properties = array();
@@ -33,7 +32,6 @@ abstract class Model {
 	 * Metadata pending upstream synchronization, as key => value pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $pending_meta = array();
@@ -42,7 +40,6 @@ abstract class Model {
 	 * The manager instance for the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -53,7 +50,6 @@ abstract class Model {
 	 * Sets the ID and fetches relevant data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager     $manager The manager instance for the model.
 	 * @param object|null $db_obj  Optional. The database object or null for a new instance.
@@ -76,7 +72,6 @@ abstract class Model {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -119,7 +114,6 @@ abstract class Model {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -163,7 +157,6 @@ abstract class Model {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -217,7 +210,6 @@ abstract class Model {
 	 * If the model is new (i.e. does not have an ID yet), it will be inserted to the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -283,7 +275,6 @@ abstract class Model {
 	 * to reset the model to the values stored in the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -312,7 +303,6 @@ abstract class Model {
 	 * Deletes the model from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return true|WP_Error True on success, or an error object on failure.
 	 */
@@ -342,7 +332,6 @@ abstract class Model {
 	 * Returns an array representation of the model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
 	 *                           Default true.
@@ -378,7 +367,6 @@ abstract class Model {
 	 * Returns the permalink for the model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Permalink, or empty string if no permalink exists.
 	 */
@@ -395,7 +383,6 @@ abstract class Model {
 	 * Runs a filter before a model will be synced upstream with the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param null $pre Value to allow short-circuiting the process.
 	 * @param bool $add Optional. Whether the model is being added. Default false.
@@ -446,7 +433,6 @@ abstract class Model {
 	 * Runs a filter after a model has been synced upstream with the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param true|WP_Error $result Result of the sync process.
 	 * @param bool          $add    Optional. Whether the model is being added. Default false.
@@ -491,7 +477,6 @@ abstract class Model {
 	 * Sets the properties of the model to those of a database row object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param object $db_obj The database object.
 	 */
@@ -516,7 +501,6 @@ abstract class Model {
 	 * Sets the value of an existing property in a type-safe way.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -539,7 +523,6 @@ abstract class Model {
 	 * Sets or gets the value of the primary property.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int|null $value Integer to set the value, null to retrieve it. Default null.
 	 * @return return int Current value of the primary property.
@@ -558,7 +541,6 @@ abstract class Model {
 	 * Returns all current values as $property => $value pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool $pending_only Whether to only return pending properties. Default false.
 	 * @return array Array of $property => $value pairs.
@@ -582,7 +564,6 @@ abstract class Model {
 	 * When overriding this method, always make sure to merge with the parent result.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Property blacklist.
 	 */

@@ -36,7 +36,6 @@ class Site_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                    $prefix       The instance prefix.
 	 * @param array                     $services     {
@@ -73,7 +72,6 @@ class Site_Manager extends Core_Manager {
 	 * Internal method to insert a new site into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new site, or false on failure.
@@ -126,7 +124,6 @@ class Site_Manager extends Core_Manager {
 	 * Internal method to update an existing site in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $site_id ID of the site to update.
 	 * @param array $args    Array of column => value pairs to update in the database row.
@@ -140,7 +137,6 @@ class Site_Manager extends Core_Manager {
 	 * Internal method to delete a site from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $site_id ID of the site to delete.
 	 * @return bool True on success, or false on failure.

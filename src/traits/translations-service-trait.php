@@ -22,7 +22,6 @@ trait Translations_Service_Trait {
 	 * Translations to print to the user.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Translations
 	 */
 	protected $translations;
@@ -31,7 +30,6 @@ trait Translations_Service_Trait {
 	 * Returns a translated message for a specific identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $identifier Translated message identifier.
 	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
@@ -46,7 +44,6 @@ trait Translations_Service_Trait {
 	 * Sets the translations instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Translations $translations Translations instance.
 	 */

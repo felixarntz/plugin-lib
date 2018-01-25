@@ -20,7 +20,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The plugin version.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $version;
@@ -29,7 +28,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The plugin prefix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $prefix;
@@ -38,7 +36,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The plugin vendor name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $vendor_name;
@@ -47,7 +44,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The plugin project name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $project_name;
@@ -56,7 +52,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The minimum required PHP version.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $minimum_php;
@@ -65,7 +60,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * The minimum required WordPress version.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $minimum_wp;
@@ -74,7 +68,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Path to the plugin's main file.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $main_file;
@@ -83,7 +76,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Relative base path to the other files of this plugin.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $basedir_relative;
@@ -92,7 +84,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Messages printed to the user.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $messages = array();
@@ -101,7 +92,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Error object if the class cannot be initialized.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var WP_Error|null
 	 */
 	protected $error;
@@ -110,7 +100,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $main_file        Path to the plugin's main file.
 	 * @param string $basedir_relative The relative base path to the other files of this plugin.
@@ -134,7 +123,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Dummy magic method to prevent Content Organizer from being cloned.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -146,7 +134,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Dummy magic method to prevent Content Organizer from being unserialized.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @codeCoverageIgnore
 	 */
@@ -161,7 +148,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * then return the respective instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $method_name Name of the method to call.
 	 * @param array  $args        Method arguments.
@@ -191,7 +177,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Returns the plugin version number.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Version number.
 	 */
@@ -203,7 +188,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Returns the full path to a relative path for a plugin file or directory.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $rel_path Relative path.
 	 * @return string Full path.
@@ -216,7 +200,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Returns the full URL to a relative path for a plugin file or directory.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $rel_path Relative path.
 	 * @return string Full URL.
@@ -231,7 +214,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * This method can only be executed once.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function load() {
 		if ( did_action( $this->prefix . 'loaded' ) ) {
@@ -265,7 +247,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * This method can only be executed once.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function start() {
 		if ( did_action( $this->prefix . 'started' ) ) {
@@ -288,7 +269,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Checks whether the plugin can run on this setup.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return WP_Error|null Error object if the plugin cannot run on this setup, null otherwise.
 	 */
@@ -308,7 +288,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Instantiates a specific plugin service.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
 	 * @param mixed  $args,...   Optional arguments to pass to the constructor. It is recommended to pass
@@ -328,7 +307,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Instantiates a specific library service.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
 	 * @param mixed  $args,...   Optional arguments to pass to the constructor. It is recommended to pass
@@ -348,7 +326,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Instantiates a specific plugin class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
 	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
@@ -366,7 +343,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Instantiates a specific library class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $class_name The class name, without basic namespace.
 	 * @param mixed  $args,...   Optional arguments to pass to the constructor.
@@ -384,7 +360,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Loads the base properties of the class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function load_base_properties();
 
@@ -392,7 +367,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Loads the plugin's textdomain.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function load_textdomain();
 
@@ -400,7 +374,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Loads the class messages.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function load_messages();
 
@@ -408,7 +381,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Instantiates the plugin services.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function instantiate_services();
 
@@ -416,7 +388,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * Adds the necessary plugin hooks.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function add_hooks();
 
@@ -426,7 +397,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * This is a helper method that wraps WordPress' `load_plugin_textdomain()`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $textdomain Textdomain to load.
 	 * @param string $rel_path   Optional. Relative path to the languages directory. Default empty.
@@ -450,7 +420,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * a check whether these dependencies already exist.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if the dependencies are loaded, false otherwise.
 	 */
@@ -464,7 +433,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * This private method is called only internally.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param array $params Array of parameters for the originally called method.
 	 * @return Leaves_And_Love\Plugin_Lib\Service|null The service instance, or null if invalid.
@@ -491,7 +459,6 @@ abstract class Leaves_And_Love_Plugin {
 	 * This private method is called only internally.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param array $params Array of parameters for the originally called method.
 	 * @return object The class instance.

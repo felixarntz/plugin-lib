@@ -32,7 +32,6 @@ abstract class Query {
 	 * The manager instance for the query.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -43,7 +42,6 @@ abstract class Query {
 	 * Contains placeholders that need to be filled with `$request_args`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $request = '';
@@ -52,7 +50,6 @@ abstract class Query {
 	 * Arguments that need to be escaped in the database query.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $request_args = array();
@@ -61,7 +58,6 @@ abstract class Query {
 	 * SQL query clauses.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $sql_clauses = array(
@@ -77,7 +73,6 @@ abstract class Query {
 	 * Query vars set by the user.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $query_vars = array();
@@ -86,7 +81,6 @@ abstract class Query {
 	 * Default values for query vars.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $query_var_defaults = array();
@@ -95,7 +89,6 @@ abstract class Query {
 	 * The results for the query.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Collection
 	 */
 	protected $results;
@@ -104,7 +97,6 @@ abstract class Query {
 	 * Metadata query container.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var WP_Meta_Query
 	 */
 	private $meta_query;
@@ -113,7 +105,6 @@ abstract class Query {
 	 * Date query container.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var WP_Date_Query
 	 */
 	private $date_query;
@@ -122,7 +113,6 @@ abstract class Query {
 	 * Metadata query clauses.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var array
 	 */
 	private $meta_query_clauses = array();
@@ -133,7 +123,6 @@ abstract class Query {
 	 * Sets the manager instance and assigns the defaults.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance for the model query.
 	 */
@@ -197,7 +186,6 @@ abstract class Query {
 	 * Magic isset-er.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if property is set, false otherwise.
@@ -230,7 +218,6 @@ abstract class Query {
 	 * Magic getter.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value.
@@ -263,7 +250,6 @@ abstract class Query {
 	 * Sets up the query for retrieving models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $query {
 	 *      Array or query string of model query arguments.
@@ -293,7 +279,6 @@ abstract class Query {
 	 * Parses arguments passed to the model query with default query arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @see Query::query()
 	 *
@@ -344,7 +329,6 @@ abstract class Query {
 	 * Retrieves a list of models matching the query vars.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return Collection Collection of models.
 	 */
@@ -396,7 +380,6 @@ abstract class Query {
 	 * Gets the query cache key for a given set of query vars.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $query_vars Array of model query arguments.
 	 * @return string Cache key to use for the query.
@@ -419,7 +402,6 @@ abstract class Query {
 	 * Retrieves IDs that are not already present in the cache.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $model_ids The model IDs to check for.
 	 * @return array List of IDs not present in the cache.
@@ -441,7 +423,6 @@ abstract class Query {
 	 * Updates the cache for given models.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $non_cached_ids Array of model IDs.
 	 */
@@ -459,7 +440,6 @@ abstract class Query {
 	 * Creates a collection object from the query results.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array  $model_ids The model IDs, or objects for this collection.
 	 * @param int    $total     Optional. The total amount of models in the collection. Default is the
@@ -483,7 +463,6 @@ abstract class Query {
 	 * Used internally to get a list of model IDs matching the query vars.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of model IDs.
 	 */
@@ -559,7 +538,6 @@ abstract class Query {
 	 * Parses the SQL fields value.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array with the first element being the fields part of the SQL query and the second
 	 *               being a boolean specifying whether to use the DISTINCT keyword.
@@ -575,7 +553,6 @@ abstract class Query {
 	 * Parses the SQL join value.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string Join value for the SQL query.
 	 */
@@ -591,7 +568,6 @@ abstract class Query {
 	 * Parses the SQL where clause.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array with the first element being the array of SQL where clauses and the second
 	 *               being the array of arguments for those where clauses.
@@ -652,7 +628,6 @@ abstract class Query {
 	 * Parses the SQL groupby clause.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string Groupby value for the SQL query.
 	 */
@@ -670,7 +645,6 @@ abstract class Query {
 	 * Parses the SQL orderby clause.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string|array $orderby The $orderby query var.
 	 * @return string The orderby clause.
@@ -708,7 +682,6 @@ abstract class Query {
 	 * Parses a single $orderby element.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $orderby The orderby field. Must be valid.
 	 * @return string The parsed orderby SQL string.
@@ -745,7 +718,6 @@ abstract class Query {
 	 * Parses a single $order element.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $order   The order value. Either 'ASC' or 'DESC'.
 	 * @param string $orderby The orderby field. Must be valid.
@@ -769,7 +741,6 @@ abstract class Query {
 	 * values if $support_array is specified as true.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array         $where             The input where array to modify.
 	 * @param array         $args              The input arguments array to modify.
@@ -820,7 +791,6 @@ abstract class Query {
 	 * query variable. Both of these must contain an array with a whitelist or blacklist respectively.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array         $where             The input where array to modify.
 	 * @param array         $args              The input arguments array to modify.
@@ -864,7 +834,6 @@ abstract class Query {
 	 * Returns the fields that are valid to be used in orderby clauses.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of valid orderby fields.
 	 */
@@ -906,7 +875,6 @@ abstract class Query {
 	 * Returns the fields that are searchable.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of database column names.
 	 */
@@ -928,7 +896,6 @@ abstract class Query {
 	 * Used internally to generate an SQL string for searching across multiple columns.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -961,7 +928,6 @@ abstract class Query {
 	 * These depend on the current meta query.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @return array Array of meta orderby fields.
 	 */

@@ -31,7 +31,6 @@ class Admin_Pages extends Service {
 	 * Added admin pages.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $pages = array();
@@ -40,7 +39,6 @@ class Admin_Pages extends Service {
 	 * Hook suffixes of the added admin pages.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $hook_suffix_map = array();
@@ -49,7 +47,6 @@ class Admin_Pages extends Service {
 	 * Assets service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -59,7 +56,6 @@ class Admin_Pages extends Service {
 	 * AJAX service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -69,7 +65,6 @@ class Admin_Pages extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   The prefix for all shortcodes.
 	 * @param array  $services {
@@ -93,7 +88,6 @@ class Admin_Pages extends Service {
 	 * This method must be called before the 'admin_menu' action.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string            $slug                 Page slug.
 	 * @param string|Admin_Page $class_name           Either the name of the class to handle the
@@ -157,7 +151,6 @@ class Admin_Pages extends Service {
 	 * Gets a specific admin page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug                 Page slug.
 	 * @param string $administration_panel Optional. Either 'site', 'network' or 'user'.
@@ -178,7 +171,6 @@ class Admin_Pages extends Service {
 	 * Checks whether a specific admin page exists.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug                 Page slug.
 	 * @param string $administration_panel Optional. Either 'site', 'network' or 'user'.
@@ -197,7 +189,6 @@ class Admin_Pages extends Service {
 	 * This method must be called before the 'admin_menu' action.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug                 Page slug.
 	 * @param string $administration_panel Optional. Either 'site', 'network' or 'user'.
@@ -220,7 +211,6 @@ class Admin_Pages extends Service {
 	 * Adds all the available admin pages to the WordPress menu.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function add_pages() {
 		$administration_panel = 'site';
@@ -268,7 +258,6 @@ class Admin_Pages extends Service {
 	 * Registers all available settings pages content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function register_settings() {
 		$administration_panel = 'site';
@@ -295,7 +284,6 @@ class Admin_Pages extends Service {
 	 * Enqueues assets for the current admin page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $hook_suffix Hook suffix of the current admin page.
 	 */
@@ -322,7 +310,6 @@ class Admin_Pages extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->actions = array(

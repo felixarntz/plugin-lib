@@ -22,7 +22,6 @@ class Color extends Text_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'color';
@@ -31,7 +30,6 @@ class Color extends Text_Base {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'ColorFieldView';
@@ -40,7 +38,6 @@ class Color extends Text_Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -74,7 +71,6 @@ class Color extends Text_Base {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -94,7 +90,6 @@ class Color extends Text_Base {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.

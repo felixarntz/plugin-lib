@@ -24,7 +24,6 @@ trait REST_API_Manager_Trait {
 	 * The REST controller class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $rest_controller_class_name = REST_Models_Controller::class;
@@ -33,7 +32,6 @@ trait REST_API_Manager_Trait {
 	 * Registers the routes for the REST controller.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function register_rest_routes() {
 		$class_name = $this->rest_controller_class_name;

@@ -22,7 +22,6 @@ abstract class Text_Base extends Field {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'text';
@@ -31,7 +30,6 @@ abstract class Text_Base extends Field {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -50,7 +48,6 @@ abstract class Text_Base extends Field {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		?>
@@ -63,7 +60,6 @@ abstract class Text_Base extends Field {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -92,7 +88,6 @@ abstract class Text_Base extends Field {
 	 * Checks whether a value is considered empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to check whether its empty.
 	 * @return bool True if the value is considered empty, false otherwise.
@@ -109,7 +104,6 @@ abstract class Text_Base extends Field {
 	 * Returns names of the properties that must not be set through constructor arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of forbidden properties.
 	 */

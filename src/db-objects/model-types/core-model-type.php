@@ -25,7 +25,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * The original Core object for this model type.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var object
 	 */
 	protected $original;
@@ -36,7 +35,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Sets the type slug and additional arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Core_Model_Type_Manager $owner Parent registry.
 	 * @param string                  $slug  Type slug.
@@ -57,7 +55,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -80,7 +77,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -115,7 +111,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -142,7 +137,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Returns an array representation of the model type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array including all model type information.
 	 */
@@ -158,7 +152,6 @@ abstract class Core_Model_Type extends Model_Type {
 	 * Returns the default type arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Default type arguments.
 	 */

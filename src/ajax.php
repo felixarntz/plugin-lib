@@ -27,7 +27,6 @@ class AJAX extends Service {
 	 * Registered AJAX actions, as `$name => $args` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $ajax_actions = array();
@@ -36,7 +35,6 @@ class AJAX extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string            $prefix       The prefix for all AJAX actions.
 	 * @param Translations_AJAX $translations Translations instance.
@@ -52,7 +50,6 @@ class AJAX extends Service {
 	 * Registers an action.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string   $name     Action name.
 	 * @param callable $callback Callback to handle the action. Must return a response or an error object.
@@ -88,7 +85,6 @@ class AJAX extends Service {
 	 * Handles an AJAX request.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function request() {
 		$request_data = wp_unslash( $_REQUEST );
@@ -127,7 +123,6 @@ class AJAX extends Service {
 	 * Returns a nonce for a specific AJAX action.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $action Action name.
 	 * @return string Nonce for the action, or empty string if action not registered.
@@ -152,7 +147,6 @@ class AJAX extends Service {
 	 * Adds AJAX action hooks.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function add_ajax_actions() {
 		if ( ! wp_doing_ajax() ) {
@@ -174,7 +168,6 @@ class AJAX extends Service {
 	 * Returns the action name to use when working with nonces.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $action Action name.
 	 * @return string Nonce action.
@@ -189,7 +182,6 @@ class AJAX extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->actions = array(

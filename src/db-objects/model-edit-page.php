@@ -26,7 +26,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * The current model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Model
 	 */
 	protected $model;
@@ -35,7 +34,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Whether the page is currently in update scope.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $is_update = false;
@@ -44,7 +42,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * The slug of the admin page to list models.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $list_page_slug = '';
@@ -53,7 +50,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Array of tabs as `$id => $args` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $tabs = array();
@@ -62,7 +58,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Array of sections as `$id => $args` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $sections = array();
@@ -71,7 +66,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Field manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Field_Manager
 	 */
 	protected $field_manager = null;
@@ -80,7 +74,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug          Page slug.
 	 * @param Admin_Pages $manager       Admin page manager instance.
@@ -136,7 +129,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Adds a tab to the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Tab identifier.
 	 * @param array  $args {
@@ -157,7 +149,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Adds a section to the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Section identifier.
 	 * @param array  $args {
@@ -180,7 +171,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Adds a field control to the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id      Field identifier.
 	 * @param string $type    Identifier of the type.
@@ -216,7 +206,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Used as callback for the field manager.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $field_slug Field slug to retrieve its value.
 	 * @return mixed Field value, or null if not set.
@@ -231,7 +220,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Used as callback for the field manager.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $field_slug Field slug to update its value.
 	 * @param mixed  $value      Field value to set.
@@ -244,7 +232,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Handles a request to the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function handle_request() {
 		$this->add_page_content();
@@ -326,7 +313,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Enqueues assets to load on the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		$this->field_manager->enqueue();
@@ -389,7 +375,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * AJAX callback to generate a model slug.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $request_data Request data.
 	 * @return array|WP_Error Response data, or error object on failure.
@@ -434,7 +419,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * AJAX callback to verify a model slug.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $request_data Request data.
 	 * @return array|WP_Error Response data, or error object on failure.
@@ -468,7 +452,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_header() {
 		$capabilities = $this->model_manager->capabilities();
@@ -538,7 +521,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page form.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_form() {
 		$id = null;
@@ -580,7 +562,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page main form header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_form_header() {
 		if ( method_exists( $this->model_manager, 'get_title_property' ) ) {
@@ -632,7 +613,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page main form content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_form_content() {
 		if ( empty( $this->tabs ) ) {
@@ -761,7 +741,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page advanced form content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_advanced_form_content() {
 		$id = null;
@@ -794,7 +773,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Renders the edit page submit box.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_submit_box() {
 		$id = null;
@@ -885,7 +863,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * These actions are usually row actions from the models list page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function handle_actions() {
 		if ( ! isset( $_REQUEST['action'] ) ) {
@@ -971,7 +948,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Sets up the screen with screen reader content, options and help tabs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param WP_Screen $screen Current screen.
 	 */
@@ -989,7 +965,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * ID of the current model appended in the query string.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string Model edit URL.
 	 */
@@ -1009,7 +984,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * This is the general action to update a model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int|null $id ID of the model to update. Might be empty when creating.
 	 * @return string|WP_Error Feedback message, or error object on failure.
@@ -1125,7 +1099,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * This method always terminates the current request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int|null $id ID of the model to update. Might be empty when creating.
 	 */
@@ -1163,7 +1136,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * This method is called from within the 'edit' action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array    $form_data Form POST data.
 	 * @param WP_Error $error     Error object to add errors to.
@@ -1221,7 +1193,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Handles the 'delete' action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $id ID of the model to delete.
 	 * @return string|WP_Error Feedback message, or error object on failure.
@@ -1251,7 +1222,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * Handles the 'delete' row action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $id ID of the model to delete.
 	 * @return string|WP_Error Feedback message, or error object on failure.
@@ -1267,7 +1237,6 @@ abstract class Model_Edit_Page extends Manager_Page {
 	 * `add_field()` to populate the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function add_page_content();
 }

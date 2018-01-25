@@ -24,7 +24,6 @@ class Assets extends Service {
 	 * Internal lookup for third party scripts.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $third_party_scripts = array();
@@ -33,7 +32,6 @@ class Assets extends Service {
 	 * Internal lookup for third party stylesheets.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $third_party_styles = array();
@@ -42,7 +40,6 @@ class Assets extends Service {
 	 * Assets instance for the library itself.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var Leaves_And_Love\Plugin_Lib\Assets
 	 */
@@ -52,7 +49,6 @@ class Assets extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The prefix for all AJAX actions.
 	 * @param array  $args   {
@@ -71,7 +67,6 @@ class Assets extends Service {
 	 * Registers a script.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $handle Script handle.
 	 * @param string $src    Relative path to the script from the plugin's base directory.
@@ -117,7 +112,6 @@ class Assets extends Service {
 	 * Enqueues a previously registered script.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $handle Script handle.
 	 */
@@ -133,7 +127,6 @@ class Assets extends Service {
 	 * Registers a stylesheet.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $handle Stylesheet handle.
 	 * @param string $src    Relative path to the stylesheet from the plugin's base directory.
@@ -170,7 +163,6 @@ class Assets extends Service {
 	 * Enqueues a previously registered stylesheet.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $handle Stylesheet handle.
 	 */
@@ -186,7 +178,6 @@ class Assets extends Service {
 	 * Checks whether a specific asset file exists in the filesystem.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $src Relative asset path.
 	 * @return bool True if the file exists, false otherwise.
@@ -212,7 +203,6 @@ class Assets extends Service {
 	 * Only assets that are recognized as third-party assets are not prefixed.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $handle Asset handle.
 	 * @param string $src    Relative asset handle.
@@ -240,7 +230,6 @@ class Assets extends Service {
 	 * Prefixes a handle.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $handle Asset handle.
 	 * @return string Prefixed asset handle.
@@ -255,7 +244,6 @@ class Assets extends Service {
 	 * The method also automatically handles loading a minified vs non-minified file.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $src Relative asset path.
 	 * @return string|bool Full asset URL, or false if the path
@@ -271,7 +259,6 @@ class Assets extends Service {
 	 * The method also automatically handles loading a minified vs non-minified file.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $src Relative asset path.
 	 * @param bool   $url Whether to return the URL instead of the path. Default false.
@@ -321,7 +308,6 @@ class Assets extends Service {
 	 * Returns the assets instance for the library itself.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @return Leaves_And_Love\Plugin_Lib\Assets The library assets instance.
@@ -341,7 +327,6 @@ class Assets extends Service {
 	 * Parses the path callback.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -355,7 +340,6 @@ class Assets extends Service {
 	 * Parses the URL callback.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.

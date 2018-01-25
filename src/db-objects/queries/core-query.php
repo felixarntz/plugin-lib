@@ -26,7 +26,6 @@ abstract class Core_Query extends Query {
 	 * The original Core object for this query.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var object
 	 */
 	protected $original;
@@ -37,7 +36,6 @@ abstract class Core_Query extends Query {
 	 * Sets the manager instance and assigns the defaults.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance for the model query.
 	 */
@@ -51,7 +49,6 @@ abstract class Core_Query extends Query {
 	 * Magic isset-er.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if property is set, false otherwise.
@@ -76,7 +73,6 @@ abstract class Core_Query extends Query {
 	 * Magic getter.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value.
@@ -105,7 +101,6 @@ abstract class Core_Query extends Query {
 	 * Sets up the query for retrieving models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $query Array or query string of query arguments.
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Collections\Core_Collection Collection of models.
@@ -122,7 +117,6 @@ abstract class Core_Query extends Query {
 	 * Returns the original Core object for this query.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return object WordPress Core object.
 	 */
@@ -134,7 +128,6 @@ abstract class Core_Query extends Query {
 	 * Instantiates the internal Core query object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return object Internal Core query object.
 	 */
@@ -144,7 +137,6 @@ abstract class Core_Query extends Query {
 	 * Parses the results of the internal Core query into a collection.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return Collection Results as a collection.
 	 */

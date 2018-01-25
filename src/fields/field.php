@@ -22,7 +22,6 @@ abstract class Field {
 	 * Field manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var  Field_Manager
 	 */
 	protected $manager = null;
@@ -31,7 +30,6 @@ abstract class Field {
 	 * Dependency resolver for this field, if applicable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Dependency_Resolver|null
 	 */
 	protected $dependency_resolver = null;
@@ -40,7 +38,6 @@ abstract class Field {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = '';
@@ -49,7 +46,6 @@ abstract class Field {
 	 * Field identifier. Used to create the id and name attributes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $id = '';
@@ -58,7 +54,6 @@ abstract class Field {
 	 * Section identifier this field belongs to.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $section = '';
@@ -67,7 +62,6 @@ abstract class Field {
 	 * Field label.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $label = '';
@@ -76,7 +70,6 @@ abstract class Field {
 	 * Field description.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $description = '';
@@ -85,7 +78,6 @@ abstract class Field {
 	 * Default value of the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var mixed
 	 */
 	protected $default = null;
@@ -94,7 +86,6 @@ abstract class Field {
 	 * Whether to display this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $display = true;
@@ -103,7 +94,6 @@ abstract class Field {
 	 * Whether this is a repeatable field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $repeatable = false;
@@ -112,7 +102,6 @@ abstract class Field {
 	 * Array of CSS classes for the field input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $input_classes = array();
@@ -121,7 +110,6 @@ abstract class Field {
 	 * Array of CSS classes for the field label.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $label_classes = array();
@@ -130,7 +118,6 @@ abstract class Field {
 	 * Array of CSS classes for the field wrap.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $wrap_classes = array();
@@ -141,7 +128,6 @@ abstract class Field {
 	 * Accepts values 'explicit', 'implicit', 'no_assoc', 'aria_hidden' and 'skip'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $label_mode = 'explicit';
@@ -150,7 +136,6 @@ abstract class Field {
 	 * Array of additional input attributes as `$key => $value` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $input_attrs = array();
@@ -159,7 +144,6 @@ abstract class Field {
 	 * Custom validation callback.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var callable|null
 	 */
 	protected $validate = null;
@@ -168,7 +152,6 @@ abstract class Field {
 	 * Callback or string for output to print before the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var callable|string|null
 	 */
 	protected $before = null;
@@ -177,7 +160,6 @@ abstract class Field {
 	 * Callback or string for output to print after the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var callable|string|null
 	 */
 	protected $after = null;
@@ -186,7 +168,6 @@ abstract class Field {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'FieldView';
@@ -195,7 +176,6 @@ abstract class Field {
 	 * Internal index counter for repeatable fields.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int|null
 	 */
 	protected $index = null;
@@ -204,7 +184,6 @@ abstract class Field {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -279,7 +258,6 @@ abstract class Field {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -298,7 +276,6 @@ abstract class Field {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -323,7 +300,6 @@ abstract class Field {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -338,7 +314,6 @@ abstract class Field {
 	 * Renders the field's label.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function render_label() {
 		$this->maybe_resolve_dependencies();
@@ -368,7 +343,6 @@ abstract class Field {
 	 * Renders the field's main content including the input.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 */
@@ -408,7 +382,6 @@ abstract class Field {
 	 * Renders the field's input.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 */
@@ -458,7 +431,6 @@ abstract class Field {
 	 * Renders an item of the field if it is repeatable.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $current_value Current value of the item.
 	 */
@@ -477,7 +449,6 @@ abstract class Field {
 	 * Prints a label template.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function print_label_template() {
 		?>
@@ -497,7 +468,6 @@ abstract class Field {
 	 * Prints a content template including the input.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function print_content_template() {
 		?>
@@ -523,7 +493,6 @@ abstract class Field {
 	 * Prints an input template.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function print_input_template() {
 		?>
@@ -547,7 +516,6 @@ abstract class Field {
 	 * Prints a template for one item of a repeatable.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function print_repeatable_item_template() {
 		$this->print_open_repeatable_item_wrap_template();
@@ -562,7 +530,6 @@ abstract class Field {
 	 * Transforms all field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -652,7 +619,6 @@ abstract class Field {
 	 * Validates a value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -724,7 +690,6 @@ abstract class Field {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -734,7 +699,6 @@ abstract class Field {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function print_single_input_template();
 
@@ -742,7 +706,6 @@ abstract class Field {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -775,7 +738,6 @@ abstract class Field {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -790,7 +752,6 @@ abstract class Field {
 	 * This method returns an error if the value of a required field is empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Vaule to handle pre-validation for.
 	 * @return mixed|WP_Error The value on success, or an error object on failure.
@@ -809,7 +770,6 @@ abstract class Field {
 	 * This method checks whether a custom validation callback is set and executes it.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Vaule to handle post-validation for.
 	 * @return mixed|WP_Error The value on success, or an error object on failure.
@@ -826,7 +786,6 @@ abstract class Field {
 	 * Checks whether a value is considered empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to check whether its empty.
 	 * @return bool True if the value is considered empty, false otherwise.
@@ -839,7 +798,6 @@ abstract class Field {
 	 * Returns the `id` attribute for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string `id` attribute value.
 	 */
@@ -851,7 +809,6 @@ abstract class Field {
 	 * Returns the `name` attribute for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string `name` attribute value.
 	 */
@@ -863,7 +820,6 @@ abstract class Field {
 	 * Opens the wrap for a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function open_repeatable_wrap() {
 		$id = $this->get_id_attribute();
@@ -880,7 +836,6 @@ abstract class Field {
 	 * Closes the wrap for a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function close_repeatable_wrap() {
 		echo '</span>';
@@ -890,7 +845,6 @@ abstract class Field {
 	 * Opens the wrap for a repeatable field list item.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function open_repeatable_item_wrap() {
 		$id = $this->get_id_attribute();
@@ -907,7 +861,6 @@ abstract class Field {
 	 * Closes the wrap for a repeatable field list item.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function close_repeatable_item_wrap() {
 		echo '</span>';
@@ -917,7 +870,6 @@ abstract class Field {
 	 * Renders a button to add a new item to a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool $hide_button Optional. Whether to initially hide the 'Add' button.
 	 *                          Default false.
@@ -930,7 +882,6 @@ abstract class Field {
 	 * Renders a button to remove an existing item from a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_repeatable_remove_button() {
 		$this->render_repeatable_button( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), $this->label ) );
@@ -940,7 +891,6 @@ abstract class Field {
 	 * Renders an add or remove button for a repeatable field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $mode        Either 'add' or 'remove'.
 	 * @param string $message     The message to display on the button.
@@ -980,7 +930,6 @@ abstract class Field {
 	 * Prints an open wrap template for a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_open_repeatable_wrap_template() {
 		?>
@@ -992,7 +941,6 @@ abstract class Field {
 	 * Prints an close wrap template for a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_close_repeatable_wrap_template() {
 		?>
@@ -1004,7 +952,6 @@ abstract class Field {
 	 * Prints an open wrap template for a repeatable field list item.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_open_repeatable_item_wrap_template() {
 		?>
@@ -1016,7 +963,6 @@ abstract class Field {
 	 * Prints an close wrap template for a repeatable field list item.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_close_repeatable_item_wrap_template() {
 		?>
@@ -1028,7 +974,6 @@ abstract class Field {
 	 * Prints a button template to add a new item to a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_repeatable_add_button_template() {
 		$this->print_repeatable_button_template( 'add', sprintf( $this->manager->get_message( 'field_repeatable_add_button' ), '{{ data.label }}' ) );
@@ -1038,7 +983,6 @@ abstract class Field {
 	 * Prints a button template to remove an existing item from a repeatable field list.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_repeatable_remove_button_template() {
 		$this->print_repeatable_button_template( 'remove', sprintf( $this->manager->get_message( 'field_repeatable_remove_button' ), '{{ data.label }}' ) );
@@ -1048,7 +992,6 @@ abstract class Field {
 	 * Prints an add or remove button template for a repeatable field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $mode    Button mode. Either 'add' or 'remove'.
 	 * @param string $message Button message.
@@ -1079,7 +1022,6 @@ abstract class Field {
 	 * Returns whether this field is repeatable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if the field is repeatable, false otherwise.
 	 */
@@ -1091,7 +1033,6 @@ abstract class Field {
 	 * Returns the amount of times the field can be repeated.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return int Repeat limit. Equals 0 if the field is not repeatable or
 	 *             if there is no limit set.
@@ -1110,7 +1051,6 @@ abstract class Field {
 	 * The wrap element is controlled by the field manager, so this method needs to be public.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool $as_string Optional. Whether to return the attributes as an attribute string.
 	 *                        Default true.
@@ -1145,7 +1085,6 @@ abstract class Field {
 	 * Returns the attributes for the field's label.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $label_attrs Array of custom label attributes.
 	 * @param bool  $as_string   Optional. Whether to return them as an attribute
@@ -1183,7 +1122,6 @@ abstract class Field {
 	 * Returns the attributes for the field's input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $input_attrs Array of custom input attributes.
 	 * @param bool  $as_string   Optional. Whether to return them as an attribute
@@ -1219,7 +1157,6 @@ abstract class Field {
 	 * Transforms an array of attributes into an attribute string.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $attrs Array of `$key => $value` pairs.
 	 * @return string Attribute string.
@@ -1252,7 +1189,6 @@ abstract class Field {
 	 * Resolves all dependencies of this field, if applicable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if dependencies were resolved, false if nothing changed.
 	 */
@@ -1281,7 +1217,6 @@ abstract class Field {
 	 * Returns names of the properties that must not be set through constructor arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of forbidden properties.
 	 */

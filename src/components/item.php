@@ -22,7 +22,6 @@ abstract class Item {
 	 * Parent registry.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Item_Registry
 	 */
 	protected $owner;
@@ -31,7 +30,6 @@ abstract class Item {
 	 * Item slug.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug;
@@ -40,7 +38,6 @@ abstract class Item {
 	 * Item arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $args = array();
@@ -51,7 +48,6 @@ abstract class Item {
 	 * Sets the item slug and additional arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Item_Registry $owner Parent registry.
 	 * @param string        $slug  Item slug.
@@ -75,7 +71,6 @@ abstract class Item {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -94,7 +89,6 @@ abstract class Item {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -117,7 +111,6 @@ abstract class Item {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -135,7 +128,6 @@ abstract class Item {
 	 * Returns an array representation of the item.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array including all item information.
 	 */
@@ -147,7 +139,6 @@ abstract class Item {
 	 * Sets the item arguments and fills it with defaults.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Item arguments.
 	 */
@@ -159,7 +150,6 @@ abstract class Item {
 	 * Returns the default item arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Default item arguments.
 	 */

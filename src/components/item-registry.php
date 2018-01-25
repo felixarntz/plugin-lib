@@ -26,7 +26,6 @@ abstract class Item_Registry extends Service {
 	 * Items container.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $items = array();
@@ -35,7 +34,6 @@ abstract class Item_Registry extends Service {
 	 * The item class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $item_class_name = Item::class;
@@ -44,7 +42,6 @@ abstract class Item_Registry extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The instance prefix.
 	 */
@@ -58,7 +55,6 @@ abstract class Item_Registry extends Service {
 	 * Registers a new item.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug for the item.
 	 * @param array  $args Optional. Array of item arguments. Default empty.
@@ -80,7 +76,6 @@ abstract class Item_Registry extends Service {
 	 * Retrieves an item object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the item.
 	 * @return Item|null Type object, or null it it does not exist.
@@ -100,7 +95,6 @@ abstract class Item_Registry extends Service {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args {
 	 *     Array of arguments for querying items. Any field available on the item can be passed
@@ -172,7 +166,6 @@ abstract class Item_Registry extends Service {
 	 * Unregisters an existing item.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the item.
 	 * @return bool True on success, false on failure.
@@ -191,7 +184,6 @@ abstract class Item_Registry extends Service {
 	 * Transforms a list of item objects into a list of item arrays.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $items List of item objects.
 	 * @return array List of item arrays.
@@ -212,7 +204,6 @@ abstract class Item_Registry extends Service {
 	 * Transforms a list of item arrays into a list of item objects.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $items List of item arrays.
 	 * @return array List of item objects.
@@ -233,7 +224,6 @@ abstract class Item_Registry extends Service {
 	 * Registers default items.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function register_defaults();
 }

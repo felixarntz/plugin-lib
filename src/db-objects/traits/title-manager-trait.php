@@ -22,7 +22,6 @@ trait Title_Manager_Trait {
 	 * The title property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $title_property = 'title';
@@ -31,7 +30,6 @@ trait Title_Manager_Trait {
 	 * Returns the name of the title property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the title property.
 	 */

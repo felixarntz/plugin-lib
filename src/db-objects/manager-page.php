@@ -24,7 +24,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * The manager instance for the models.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $model_manager;
@@ -33,7 +32,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug          Page slug.
 	 * @param Admin_Pages $manager       Admin page manager instance.
@@ -49,7 +47,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Renders the list page content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function render() {
 		?>
@@ -65,7 +62,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Returns the current referer.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string HTTP referer.
 	 */
@@ -82,7 +78,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Redirects to a clean URL if the referer is part of the current URL.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function clean_referer() {
 		if ( empty( $_REQUEST['_wp_http_referer'] ) ) {
@@ -97,7 +92,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Appends a query variable for a feedback message to a redirect URL.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string          $redirect_url Redirect URL.
 	 * @param string|WP_Error $message      Message string or error object.
@@ -125,7 +119,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Prints the current feedback message based on the query variable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $action_type Optional. The action type. Default 'action'.
 	 */
@@ -155,7 +148,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Returns the nonce action name for a given action type and model ID.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $action_type Optional. Action type. Either 'bulk_action', 'row_action' or 'action'.
 	 *                            Default 'action'.
@@ -170,7 +162,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Renders the page header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function render_header();
 
@@ -178,7 +169,6 @@ abstract class Manager_Page extends Admin_Page {
 	 * Renders the page form.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function render_form();
 }

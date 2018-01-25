@@ -20,7 +20,6 @@ class Dependency_Resolver {
 	 * Dependencies definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $dependencies = array();
@@ -29,7 +28,6 @@ class Dependency_Resolver {
 	 * Whether the dependencies have been resolved.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $resolved = false;
@@ -38,7 +36,6 @@ class Dependency_Resolver {
 	 * Callbacks used for resolving dependencies.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $callbacks = array();
@@ -47,7 +44,6 @@ class Dependency_Resolver {
 	 * Field instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Field
 	 */
 	protected $field;
@@ -56,7 +52,6 @@ class Dependency_Resolver {
 	 * Field manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Field_Manager
 	 */
 	protected $field_manager;
@@ -65,7 +60,6 @@ class Dependency_Resolver {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array         $dependencies  Dependencies definition.
 	 * @param Field         $field         The field instance.
@@ -82,7 +76,6 @@ class Dependency_Resolver {
 	 * Resolves all dependencies.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of field properties and their resolved values.
 	 */
@@ -127,7 +120,6 @@ class Dependency_Resolver {
 	 * Returns whether the dependencies have been resolved at least once.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if dependencies have been resolved, false otherwise.
 	 */
@@ -139,7 +131,6 @@ class Dependency_Resolver {
 	 * Returns the field dependency definition.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Dependency definition.
 	 */
@@ -151,7 +142,6 @@ class Dependency_Resolver {
 	 * Returns the field properties that depend on other fields.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of properties.
 	 */
@@ -169,7 +159,6 @@ class Dependency_Resolver {
 	 * Returns the identifiers of the field that this field depends on.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $props Optional. One or more properties to only return field identifiers
 	 *                            that affect those. Default empty.
@@ -197,7 +186,6 @@ class Dependency_Resolver {
 	 * Parses the dependencies for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $dependencies Array of dependency arrays.
 	 * @return array Parsed dependencies array.
@@ -210,7 +198,6 @@ class Dependency_Resolver {
 	 * Parses a single dependency array.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $dependency Dependency array.
 	 * @return array|bool Parsed dependency array, or false if invalid.
@@ -252,7 +239,6 @@ class Dependency_Resolver {
 	 * Gets the whitelist for properties to be handled by dependencies.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Key whitelist.
 	 */
@@ -270,7 +256,6 @@ class Dependency_Resolver {
 	 * Checks whether a property exists on the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop Key to check for.
 	 * @return bool True if the property exists on the field, otherwise false.
@@ -283,7 +268,6 @@ class Dependency_Resolver {
 	 * Returns the available callbacks for resolving field dependencies.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Associative array of callback identifiers and their functions.
 	 */
@@ -311,7 +295,6 @@ class Dependency_Resolver {
 	 * Callback depending on whether the depending fields' values are true-ish.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -335,7 +318,6 @@ class Dependency_Resolver {
 	 * Callback depending on whether the depending fields' values are false-ish.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -359,7 +341,6 @@ class Dependency_Resolver {
 	 * Callback helper for `get_data_by_condition_true` and `get_data_by_condition_false`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -410,7 +391,6 @@ class Dependency_Resolver {
 	 * Callback depending on whether the depending fields' values are greater than a given breakpoint.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -436,7 +416,6 @@ class Dependency_Resolver {
 	 * Callback depending on whether the depending fields' values are lower than a given breakpoint.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -462,7 +441,6 @@ class Dependency_Resolver {
 	 * Callback helper for `get_data_by_condition_greater_than` and `get_data_by_condition_lower_than`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -534,7 +512,6 @@ class Dependency_Resolver {
 	 * Callback depending on a map of depending field values and what they should trigger.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -591,7 +568,6 @@ class Dependency_Resolver {
 	 * Callback depending on a named map of depending field values and what they should trigger.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prop         Property that is modified.
 	 * @param array  $field_values Array of depending field identifiers and their current values.
@@ -660,7 +636,6 @@ class Dependency_Resolver {
 	 * If the values cannot be merged, $value will simply override $result.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed  $result   Result to merge into.
 	 * @param mixed  $value    Value to merge into $result.

@@ -24,7 +24,6 @@ abstract class Core_Manager extends Manager {
 	 * The callback to fetch an item from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var callable
 	 */
 	protected $fetch_callback;
@@ -33,7 +32,6 @@ abstract class Core_Manager extends Manager {
 	 * Adds a new model to the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new model, or false on failure.
@@ -51,7 +49,6 @@ abstract class Core_Manager extends Manager {
 	 * Updates an existing model in the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int   $model_id ID of the model to update.
 	 * @param array $args     Array of column => value pairs to update in the database row.
@@ -72,7 +69,6 @@ abstract class Core_Manager extends Manager {
 	 * Deletes an model from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the model to delete.
 	 * @return bool True on success, or false on failure.
@@ -94,7 +90,6 @@ abstract class Core_Manager extends Manager {
 	 * Fetches the Core object for a specific ID.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the object to fetch.
 	 * @return object|null The Core object for the requested ID, or null if it does not exist.
@@ -107,7 +102,6 @@ abstract class Core_Manager extends Manager {
 	 * Adds data to the model cache, if the cache key doesn't already exist.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The data to add to the cache.
@@ -123,7 +117,6 @@ abstract class Core_Manager extends Manager {
 	 * Removes model cache contents matching key.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key What the contents in the cache are called.
 	 * @return bool True on successful removal, false on failure.
@@ -136,7 +129,6 @@ abstract class Core_Manager extends Manager {
 	 * Retrieves model cache contents from the cache by key.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string  $key   The key under which the cache contents are stored.
 	 * @param bool        $force Optional. Whether to force an update of the local cache from the
@@ -153,7 +145,6 @@ abstract class Core_Manager extends Manager {
 	 * Replaces contents of the model cache with new data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The key for the cache data that should be replaced.
 	 * @param mixed      $data   The new data to store in the cache.
@@ -173,7 +164,6 @@ abstract class Core_Manager extends Manager {
 	 * always write data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The contents to store in the cache.
@@ -189,7 +179,6 @@ abstract class Core_Manager extends Manager {
 	 * Adds the database table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function add_database_table() {
 		/* Core tables already exist. */
@@ -201,7 +190,6 @@ abstract class Core_Manager extends Manager {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		/* No hooks should be executed for core models. */
@@ -213,7 +201,6 @@ abstract class Core_Manager extends Manager {
 	 * Internal method to insert a new model into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new model, or false on failure.
@@ -224,7 +211,6 @@ abstract class Core_Manager extends Manager {
 	 * Internal method to update an existing model in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $model_id ID of the model to update.
 	 * @param array $args     Array of column => value pairs to update in the database row.
@@ -236,7 +222,6 @@ abstract class Core_Manager extends Manager {
 	 * Internal method to delete a model from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to delete.
 	 * @return bool True on success, or false on failure.

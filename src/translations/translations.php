@@ -25,7 +25,6 @@ abstract class Translations {
 	 * All translation identifiers and their strings.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $translations = array();
@@ -34,7 +33,6 @@ abstract class Translations {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function __construct() {
 		$this->init();
@@ -44,7 +42,6 @@ abstract class Translations {
 	 * Returns a string for a specific identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $identifier Translation string identifier.
 	 * @param bool   $noop       Optional. Whether this is a noop string. Default false.
@@ -74,7 +71,6 @@ abstract class Translations {
 	 * Returns all translation strings.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of all translation identifiers and their strings.
 	 */
@@ -86,7 +82,6 @@ abstract class Translations {
 	 * Initializes the translation strings.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function init();
 
@@ -94,7 +89,6 @@ abstract class Translations {
 	 * Dummy method for __() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $message    Untranslated string.
 	 * @param string $textdomain Textdomain for the translation.
@@ -108,7 +102,6 @@ abstract class Translations {
 	 * Dummy method for _n() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $singular_message Untranslated string.
 	 * @param string $plural_message   Untranslated string.
@@ -128,7 +121,6 @@ abstract class Translations {
 	 * Dummy method for _x() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $message    Untranslated string.
 	 * @param string $context    Context information for translators.
@@ -143,7 +135,6 @@ abstract class Translations {
 	 * Dummy method for _nx() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $singular_message Untranslated string.
 	 * @param string $plural_message   Untranslated string.
@@ -164,7 +155,6 @@ abstract class Translations {
 	 * Dummy method for _n_noop() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $singular_message Untranslated string.
 	 * @param string $plural_message   Untranslated string.
@@ -186,7 +176,6 @@ abstract class Translations {
 	 * Dummy method for _nx_noop() translations.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $singular_message Untranslated string.
 	 * @param string $plural_message   Untranslated string.

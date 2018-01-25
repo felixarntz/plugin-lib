@@ -23,7 +23,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -32,7 +31,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Object type plural.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $obj_type_plural = '';
@@ -41,7 +39,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance.
 	 */
@@ -71,7 +68,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Adds the command to WP-CLI.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name Base command name.
 	 */
@@ -100,7 +96,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Creates a new model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -133,7 +128,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Updates one or more existing models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -160,7 +154,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Launches the system editor to edit model content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -185,7 +178,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Gets details about a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -207,7 +199,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Deletes one or more existing models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -220,7 +211,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Gets a list of models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args       Positional arguments.
 	 * @param array $assoc_args Associative arguments.
@@ -283,7 +273,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the aggregate command that includes the other commands.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -300,7 +289,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'create' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -351,7 +339,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'update' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -393,7 +380,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'edit' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -419,7 +405,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'get' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -465,7 +450,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'delete' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -492,7 +476,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the 'list' command.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -539,7 +522,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Returns command information for the meta command that includes the other commands.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $name Base command name.
 	 * @return array Command information.
@@ -558,7 +540,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * The method currently simply replaces underscores with spaces.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $type Object type slug.
 	 * @return string Object type slug prepared for output.
@@ -571,7 +552,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Internal callback to create a new model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $params Parameters as `$key => $value` pairs.
 	 * @return int|WP_Error New model ID, or error object on failure.
@@ -599,7 +579,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Internal callback to update a model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $params Parameters as `$key => $value` pairs.
 	 * @return bool|WP_Error True on success, or error object on failure.
@@ -625,7 +604,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Internal callback to delete a model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $id         Model ID.
 	 * @param array $assoc_args Associative arguments.
@@ -648,7 +626,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Opens the system editor to write content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $content Initial content.
 	 * @param string $title   Title.
@@ -662,7 +639,6 @@ abstract class CLI_Models_Command extends \WP_CLI\CommandWithDBObject {
 	 * Reads model content from file or STDIN.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $arg Supplied argument.
 	 * @return string Model content.

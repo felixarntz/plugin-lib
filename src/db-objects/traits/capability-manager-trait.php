@@ -24,7 +24,6 @@ trait Capability_Manager_Trait {
 	 * The capabilities service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */

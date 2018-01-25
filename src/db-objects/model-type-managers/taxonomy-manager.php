@@ -24,7 +24,6 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   The instance prefix.
 	 */
@@ -40,7 +39,6 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * Registers a new type in Core.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $slug Unique slug for the type.
 	 * @param array  $args Optional. Array of type arguments. Default empty.
@@ -65,7 +63,6 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * Retrieves a type object from Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return object|null Type object, or null it it does not exist.
@@ -86,7 +83,6 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array|string $args     Optional. An array of key => value arguments
 	 *                               to match against the type objects. Default
@@ -107,7 +103,6 @@ class Taxonomy_Manager extends Core_Model_Type_Manager {
 	 * Unregisters an existing type in Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return bool True on success, false on failure.

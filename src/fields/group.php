@@ -25,7 +25,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'group';
@@ -34,7 +33,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'GroupFieldView';
@@ -43,7 +41,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Fields that are part of this group.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $fields = array();
@@ -52,7 +49,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -120,7 +116,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Proxies the manager's AJAX API class instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return AJAX AJAX API class instance.
 	 */
@@ -132,7 +127,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Proxies the manager's Assets API class instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return Assets Assets API class instance.
 	 */
@@ -144,7 +138,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Proxies the manager's library assets API class instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return Assets Library assets API class instance.
 	 */
@@ -156,7 +149,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Creates the id attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -173,7 +165,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Creates the name attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -190,7 +181,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $identifier Identifier for the message.
 	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
@@ -205,7 +195,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -239,7 +228,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -270,7 +258,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		?>
@@ -292,7 +279,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -318,7 +304,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -367,7 +352,6 @@ class Group extends Field implements Field_Manager_Interface {
 	 * Checks whether a value is considered empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to check whether its empty.
 	 * @return bool True if the value is considered empty, false otherwise.

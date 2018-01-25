@@ -24,7 +24,6 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The instance prefix.
 	 */
@@ -40,7 +39,6 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * Registers a new status in Core.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $slug Unique slug for the status.
 	 * @param array  $args Optional. Array of status arguments. Default empty.
@@ -59,7 +57,6 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * Retrieves a status object from Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return object|null Status object, or null it it does not exist.
@@ -75,7 +72,6 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array|string $args     Optional. An array of key => value arguments
 	 *                               to match against the status objects. Default
@@ -96,7 +92,6 @@ class Post_Status_Manager extends Core_Model_Status_Manager {
 	 * Unregisters an existing status in Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return bool True on success, false on failure.

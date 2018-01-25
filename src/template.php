@@ -26,7 +26,6 @@ class Template extends Service {
 	 * Custom template locations.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var array
 	 */
 	private $locations = array();
@@ -37,7 +36,6 @@ class Template extends Service {
 	 * Sets the default template location and the theme subdirectory name.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The prefix for the theme subdirectory.
 	 * @param array  $args   {
@@ -58,7 +56,6 @@ class Template extends Service {
 	 * the template in the default location. It furthermore allows to pass data to the template.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug The template slug.
 	 * @param array  $data Optional. Data to pass on to the template. May contain a 'template_suffix'
@@ -82,7 +79,6 @@ class Template extends Service {
 	 * Locates and optionally loads a specific template file.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $template_names Template names to look for.
 	 * @param array $data           Optional. Data to pass on to the template. Default empty array.
@@ -153,7 +149,6 @@ class Template extends Service {
 	 * Loads a specific file.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $_template_file The file to load.
 	 * @param array  $data           Optional. Data to pass on to the template. Default empty array.
@@ -176,7 +171,6 @@ class Template extends Service {
 	 * Transforms an array of attributes into an attribute string.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $attrs Array of `$key => $value` pairs.
 	 * @return string Attribute string.
@@ -209,7 +203,6 @@ class Template extends Service {
 	 * Escapes output for usage as HTML text. All HTML will be escaped.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output Output to escape.
 	 * @return string Escaped output.
@@ -222,7 +215,6 @@ class Template extends Service {
 	 * Escapes output for usage inside HTML attributes. All HTML will be escaped.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output Output to escape.
 	 * @return string Escaped output.
@@ -235,7 +227,6 @@ class Template extends Service {
 	 * Escapes output for usage as JS text.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output Output to escape.
 	 * @return string Escaped output.
@@ -248,7 +239,6 @@ class Template extends Service {
 	 * Escapes output for usage in a textarea. All HTML will be escaped.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output Output to escape.
 	 * @return string Escaped output.
@@ -264,7 +254,6 @@ class Template extends Service {
 	 * Those are filterable to tweak.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output          Output to escape.
 	 * @param array  $additional_tags Optional. Additional tags and attributes to allow. The
@@ -322,7 +311,6 @@ class Template extends Service {
 	 * Escapes output for usage as HTML text. Common post HTML is allowed.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $output Output to escape.
 	 * @return string Escaped output.
@@ -335,7 +323,6 @@ class Template extends Service {
 	 * Registers an additional template location.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name     Unique identifier for the location.
 	 * @param string $path     Path to the location.
@@ -356,7 +343,6 @@ class Template extends Service {
 	 * Unregisters an additional template location.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name Unique identifier for the location.
 	 * @return bool True on success, false on failure.
@@ -375,7 +361,6 @@ class Template extends Service {
 	 * Parses the default location.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.

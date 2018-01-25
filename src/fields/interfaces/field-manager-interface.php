@@ -20,7 +20,6 @@ interface Field_Manager_Interface {
 	 * Creates the id attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -33,7 +32,6 @@ interface Field_Manager_Interface {
 	 * Creates the name attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -46,7 +44,6 @@ interface Field_Manager_Interface {
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $identifier Identifier for the message.
 	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.

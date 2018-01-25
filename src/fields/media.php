@@ -22,7 +22,6 @@ class Media extends Text_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'media';
@@ -31,7 +30,6 @@ class Media extends Text_Base {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'MediaFieldView';
@@ -42,7 +40,6 @@ class Media extends Text_Base {
 	 * Accepts either 'id' or 'url'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $store = 'id';
@@ -51,7 +48,6 @@ class Media extends Text_Base {
 	 * MIME Types to allow.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string|array
 	 */
 	protected $mime_types = 'all';
@@ -60,7 +56,6 @@ class Media extends Text_Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -113,7 +108,6 @@ class Media extends Text_Base {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -159,7 +153,6 @@ class Media extends Text_Base {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -177,7 +170,6 @@ class Media extends Text_Base {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -219,7 +211,6 @@ class Media extends Text_Base {
 	 * Checks a filetype of an attachment.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int          $id             Attachment ID.
 	 * @param string|array $accepted_types Optional. One or more accepted types. Default 'all' to allow everything.
@@ -239,7 +230,6 @@ class Media extends Text_Base {
 	 * Returns the file extension of an attachment.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $id Attachment ID.
 	 * @return string|bool File extension, or false if none could be detected.
@@ -262,7 +252,6 @@ class Media extends Text_Base {
 	 * Checks the extension of an attachment.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string       $extension      Attachment file extension.
 	 * @param string|array $accepted_types Optional. One or more accepted types. Default 'all' to allow everything.
@@ -312,7 +301,6 @@ class Media extends Text_Base {
 	 * File extensions are parsed into their MIME types while invalid MIME types are stripped out.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string|array $accepted_types One or more accepted types. Providing 'all' will allow everything, returning an empty array.
 	 * @return array An array of valid MIME types, or an empty array if there are no restrictions.
@@ -371,7 +359,6 @@ class Media extends Text_Base {
 	 * Returns all MIME types allowed by WordPress.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of allowed MIME types as `$extension => $mime_type` pairs.
 	 */

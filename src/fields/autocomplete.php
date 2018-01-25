@@ -23,7 +23,6 @@ class Autocomplete extends Text_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'autocomplete';
@@ -32,7 +31,6 @@ class Autocomplete extends Text_Base {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'AutocompleteFieldView';
@@ -41,7 +39,6 @@ class Autocomplete extends Text_Base {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'text';
@@ -50,7 +47,6 @@ class Autocomplete extends Text_Base {
 	 * Autocomplete arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $autocomplete = array();
@@ -59,7 +55,6 @@ class Autocomplete extends Text_Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -105,7 +100,6 @@ class Autocomplete extends Text_Base {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -124,7 +118,6 @@ class Autocomplete extends Text_Base {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -163,7 +156,6 @@ class Autocomplete extends Text_Base {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		?>
@@ -177,7 +169,6 @@ class Autocomplete extends Text_Base {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -199,7 +190,6 @@ class Autocomplete extends Text_Base {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -236,7 +226,6 @@ class Autocomplete extends Text_Base {
 	 * Returns the attributes for the field's input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $input_attrs Array of custom input attributes.
 	 * @param bool  $as_string   Optional. Whether to return them as an attribute
@@ -261,7 +250,6 @@ class Autocomplete extends Text_Base {
 	 * Placeholders can only be replaced with scalar values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $placeholder_string Placeholder string.
 	 * @param array  $data               Associative array of data.
@@ -290,7 +278,6 @@ class Autocomplete extends Text_Base {
 	 * Retrieves the value of a specific field in a possibly nested array.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $field_path Path of field names to follow to the value.
 	 * @param array $data       Associative array of data.

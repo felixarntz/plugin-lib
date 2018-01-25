@@ -23,7 +23,6 @@ final class Service_Instantiator {
 	 * Contains the service instances for all plugins.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @var array
@@ -34,7 +33,6 @@ final class Service_Instantiator {
 	 * Instantiates a specific class.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $class_name Fully qualified service class name.
@@ -75,7 +73,6 @@ final class Service_Instantiator {
 	 * Fills a specific parameter for a class constructor.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param string $param      Parameter name.
@@ -103,7 +100,6 @@ final class Service_Instantiator {
 	 * Fills the $services parameter of a constructor.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param string $class_name Fully qualified service class name.
@@ -144,7 +140,6 @@ final class Service_Instantiator {
 	 * Fills the $args parameter of a constructor.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param string $class_name Fully qualified service class name.
@@ -173,7 +168,6 @@ final class Service_Instantiator {
 	 * Fills the $translations parameter of a constructor.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param string $class_name Fully qualified service class name.
@@ -204,7 +198,6 @@ final class Service_Instantiator {
 	 * Returns the parameters for a specific class constructor.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @param ReflectionClass $reflected_class The reflected class.

@@ -25,7 +25,6 @@ class Comment_Query extends Core_Query {
 	 * Sets up the query for retrieving comments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $query Array or query string of comment query arguments. See `WP_Comment_Query::__construct()`
 	 *                            for a list of supported arguments.
@@ -43,7 +42,6 @@ class Comment_Query extends Core_Query {
 	 * Instantiates the internal Core query object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return object Internal Core query object.
 	 */
@@ -55,7 +53,6 @@ class Comment_Query extends Core_Query {
 	 * Parses the results of the internal Core query into a collection.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return Comment_Collection Results as a collection.
 	 */

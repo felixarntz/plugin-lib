@@ -28,7 +28,6 @@ class Options extends Service {
 	 * An array of options stored in network.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $network_stored = array();
@@ -39,7 +38,6 @@ class Options extends Service {
 	 * This sets the option prefix and initializes the default options stored in network.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The prefix for all options.
 	 */
@@ -53,7 +51,6 @@ class Options extends Service {
 	 * Retrieves an option value based on the option name.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string  $option  Name of the option to retrieve.
 	 * @param boolean $default Optional. Value to return if the option doesn't exist. Default false.
@@ -80,7 +77,6 @@ class Options extends Service {
 	 * Existing options will not be updated.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option Name of the option to add.
 	 * @param mixed  $value  Option value, can be anything.
@@ -109,7 +105,6 @@ class Options extends Service {
 	 * If not existing, it will be added.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option Name of the option to update.
 	 * @param mixed  $value  Option value, can be anything.
@@ -134,7 +129,6 @@ class Options extends Service {
 	 * Returns false if option was already removed.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option Name of the option to remove.
 	 * @return bool True if option was removed, otherwise false.
@@ -163,7 +157,6 @@ class Options extends Service {
 	 * Retrieves the option values based on the option name for all sites in a network.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option     Name of the option to retrieve.
 	 * @param int    $network_id Optional. Network ID to receive the option values for. Default is
@@ -186,7 +179,6 @@ class Options extends Service {
 	 * Retrieves the networks where a specific option is stored.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @global wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -214,7 +206,6 @@ class Options extends Service {
 	 * On Multisite however, it will remove all values of that option name for the entire network.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option     Name of the option to flush.
 	 * @param int    $network_id Optional. Network ID to flush the option in. Default is the current network.
@@ -232,7 +223,6 @@ class Options extends Service {
 	 * Checks whether an option is registered to be stored in network.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $option Name of the option to check for.
 	 * @return boolean True if option is registered to be stored in network, otherwise false.
@@ -245,7 +235,6 @@ class Options extends Service {
 	 * Registers an option to be stored in network.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $option Name of the option (or an array of option names) to register.
 	 */
@@ -262,7 +251,6 @@ class Options extends Service {
 	 * adds them to the network options array and removes the option from the single site.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $network_options The array of network options to add to the network.
 	 * @return array The modified network options including the options to migrate.
@@ -293,7 +281,6 @@ class Options extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->filters = array(

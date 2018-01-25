@@ -39,7 +39,6 @@ class User extends Core_Model {
 	 * Sets the ID and fetches relevant data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager      $manager The manager instance for the model.
 	 * @param WP_User|null $db_obj  Optional. The database object or null for a new instance.
@@ -56,7 +55,6 @@ class User extends Core_Model {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -75,7 +73,6 @@ class User extends Core_Model {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -94,7 +91,6 @@ class User extends Core_Model {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -117,7 +113,6 @@ class User extends Core_Model {
 	 * When overriding this method, always make sure to merge with the parent result.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Property blacklist.
 	 */
@@ -136,7 +131,6 @@ class User extends Core_Model {
 	 * This method is called if a new object has been instantiated.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function set_default_object() {
 		$db_obj = new \stdClass();
@@ -168,7 +162,6 @@ class User extends Core_Model {
 	 * Returns the names of all properties that are part of the database object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */

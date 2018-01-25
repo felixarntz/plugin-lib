@@ -29,7 +29,6 @@ class Extensions extends Service {
 	 * Array of registered extensions.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $extensions = array();
@@ -38,7 +37,6 @@ class Extensions extends Service {
 	 * Name of the base class all extensions must inherit.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $base_class = Extension::class;
@@ -47,7 +45,6 @@ class Extensions extends Service {
 	 * The main plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Leaves_And_Love_Plugin
 	 */
 	protected $plugin = null;
@@ -56,7 +53,6 @@ class Extensions extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                  $prefix       The prefix.
 	 * @param Translations_Extensions $translations Translations instance.
@@ -72,7 +68,6 @@ class Extensions extends Service {
 	 * Registers a new extension.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name             Identifier for the extension.
 	 * @param string $class_name       Name of the extension class.
@@ -112,7 +107,6 @@ class Extensions extends Service {
 	 * Returns a specific extension class.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name Identifier of the extension.
 	 * @return Extension|null Extension instance, or null if it is not registered.
@@ -129,7 +123,6 @@ class Extensions extends Service {
 	 * Checks whether a specific extension is registered.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $name Identifier of the extension.
 	 * @return bool True if the extension is registered, false otherwise.
@@ -142,7 +135,6 @@ class Extensions extends Service {
 	 * Sets the main plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Leaves_And_Love_Plugin $plugin Plugin instance.
 	 */
@@ -154,7 +146,6 @@ class Extensions extends Service {
 	 * Adds the service hooks.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function add_hooks() {
 		if ( $this->hooks_added ) {
@@ -174,7 +165,6 @@ class Extensions extends Service {
 	 * Removes the service hooks.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function remove_hooks() {
 		if ( ! $this->hooks_added ) {
@@ -196,7 +186,6 @@ class Extensions extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		// Empty method body.

@@ -22,7 +22,6 @@ abstract class Select_Base extends Field {
 	 * Available choices to select from.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $choices = array();
@@ -31,7 +30,6 @@ abstract class Select_Base extends Field {
 	 * Whether this field accepts multiple values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $multi = false;
@@ -40,7 +38,6 @@ abstract class Select_Base extends Field {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -60,7 +57,6 @@ abstract class Select_Base extends Field {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -105,7 +101,6 @@ abstract class Select_Base extends Field {
 	 * Returns the attributes for the field's input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $input_attrs Array of custom input attributes.
 	 * @param bool  $as_string   Optional. Whether to return them as an attribute
@@ -131,7 +126,6 @@ abstract class Select_Base extends Field {
 	 * Returns names of the properties that must not be set through constructor arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of forbidden properties.
 	 */

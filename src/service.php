@@ -20,7 +20,6 @@ abstract class Service {
 	 * Prefix for class functionality.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string|bool
 	 */
 	protected $prefix = false;
@@ -29,7 +28,6 @@ abstract class Service {
 	 * Returns the instance prefix.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string|bool Instance prefix, or false if no prefix is set.
 	 */
@@ -41,7 +39,6 @@ abstract class Service {
 	 * Sets the instance prefix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prefix Instance prefix.
 	 */

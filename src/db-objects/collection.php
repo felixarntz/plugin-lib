@@ -26,7 +26,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * The manager instance for the collection.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -35,7 +34,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Models in this collection.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $models = array();
@@ -44,7 +42,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * The total amount of models for the collection.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $total = 0;
@@ -53,7 +50,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * The position in $models for the Iterator interface.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $position = 0;
@@ -62,7 +58,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Field mode of the collection. Either 'ids' or 'objects'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $fields = 'ids';
@@ -74,7 +69,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * The `$fields` parameter must be set according to the kind of `$models` specified.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance for the model collection.
 	 * @param array   $models  The model IDs, or objects for this collection.
@@ -101,7 +95,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Transforms all models in the collection into model objects.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -116,7 +109,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Transforms all models in the collection into model IDs.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True on success, false on failure.
 	 */
@@ -131,7 +123,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Returns the mode of the models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Either 'ids', or 'objects'.
 	 */
@@ -143,7 +134,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Returns the total amount of models in the collection.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return int The total amount of models in the collection.
 	 */
@@ -155,7 +145,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Returns an array representation of the collection.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool $include_meta Optional. Whether to include metadata for each model in the collection.
 	 *                           Default true.
@@ -183,7 +172,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Returns the raw collection array.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Raw collection array.
 	 *
@@ -197,7 +185,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements ArrayAccess.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $offset Offset to check for.
 	 * @return bool True if the model and that offset exists, false otherwise.
@@ -210,7 +197,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements ArrayAccess.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $offset Offset to get model for.
 	 * @return Model|null Model at the offset, or null if it does not exist.
@@ -250,7 +236,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Iterator.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return Model|null Model at the current position, or null if it is invalid.
 	 */
@@ -266,7 +251,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Iterator.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return int Current position.
 	 */
@@ -278,7 +262,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Iterator.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function next() {
 		++$this->position;
@@ -288,7 +271,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Iterator.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function rewind() {
 		$this->position = 0;
@@ -298,7 +280,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Iterator.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if the current position is valid, false otherwise.
 	 */
@@ -310,7 +291,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Implements Countable.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return int Number of models.
 	 */
@@ -322,7 +302,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Transforms an model ID into an model object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model|int $model Model object or model ID.
 	 * @return Model The model object.
@@ -335,7 +314,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Transforms an model object into an model ID.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model|int $model Model object or model ID.
 	 * @return int The model ID.
@@ -358,7 +336,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Transforms an model object into an array representation.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model $model        Model object.
 	 * @param bool  $include_meta Whether to include metadata for each model in the
@@ -377,7 +354,6 @@ abstract class Collection implements ArrayAccess, Iterator, Countable {
 	 * Returns the valid modes for `$fields`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of valid modes.
 	 */

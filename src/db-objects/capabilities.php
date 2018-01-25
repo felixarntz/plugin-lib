@@ -27,7 +27,6 @@ abstract class Capabilities extends Service {
 	 * Base capabilities.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $base_capabilities = array();
@@ -36,7 +35,6 @@ abstract class Capabilities extends Service {
 	 * Meta capabilities.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $meta_capabilities = array();
@@ -45,7 +43,6 @@ abstract class Capabilities extends Service {
 	 * Capability mappings, as `$original_cap => $mapped_cap` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $capability_mappings = array();
@@ -54,7 +51,6 @@ abstract class Capabilities extends Service {
 	 * Capability grant map, as `$original_cap => $required_cap_to_grant` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $grant_capabilities = array();
@@ -63,7 +59,6 @@ abstract class Capabilities extends Service {
 	 * Manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager = null;
@@ -72,7 +67,6 @@ abstract class Capabilities extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The instance prefix.
 	 */
@@ -84,7 +78,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a user can read items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. User ID. Default is the current user.
 	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
@@ -98,7 +91,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a user can create items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. User ID. Default is the current user.
 	 * @return bool True if the user can create items, false otherwise.
@@ -115,7 +107,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a user can edit items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. User ID. Default is the current user.
 	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
@@ -129,7 +120,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a user can delete items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. User ID. Default is the current user.
 	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
@@ -143,7 +133,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a user can publish items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. User ID. Default is the current user.
 	 * @param int $item_id Optional. Item ID, if checking for a specific item. Default null.
@@ -157,7 +146,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether the current user has the requested capability.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $capability Capability to check for.
 	 * @return bool Whether the current user has the capability.
@@ -178,7 +166,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether a specific user has the requested capability.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $user_id    The user ID.
 	 * @param string $capability Capability to check for.
@@ -200,7 +187,6 @@ abstract class Capabilities extends Service {
 	 * Returns all available capabilities.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $mode Optional. Either 'all', 'base' or 'meta'. Default 'all'.
 	 * @return array List of capabilities.
@@ -226,7 +212,6 @@ abstract class Capabilities extends Service {
 	 * By default, mapping is entirely disabled.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array|false $mode The new mapping mode. This can either be set to 'meta'
 	 *                                 in order to map meta capabilities only, a plural slug
@@ -278,7 +263,6 @@ abstract class Capabilities extends Service {
 	 * Grants capabilities based on other capabilities a user has.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array|bool $required_cap Either a single cap to grant all model capabilities
 	 *                                        to a user if they have that capability, or an array
@@ -312,7 +296,6 @@ abstract class Capabilities extends Service {
 	 * Sets the manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager Manager instance.
 	 */
@@ -327,7 +310,6 @@ abstract class Capabilities extends Service {
 	 * Sets the supported capabilities.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function set_capabilities() {
 		$prefix = $this->get_prefix();
@@ -364,7 +346,6 @@ abstract class Capabilities extends Service {
 	 * Checks whether the user can perform a specific action on a given item.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $action  Action name. Either 'read', 'edit', 'delete' or 'publish'.
 	 * @param int    $user_id Optional. User ID. Default is the current user.
@@ -394,7 +375,6 @@ abstract class Capabilities extends Service {
 	 * Maps capabilities via the `map_meta_cap` filter.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array  $caps    Required capabilities.
 	 * @param string $cap     Capability name.
@@ -428,7 +408,6 @@ abstract class Capabilities extends Service {
 	 * Grants capabilities via the `user_has_cap` filter.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $allcaps All capabilities the user has.
 	 * @return array All capabilities including new ones.
@@ -451,7 +430,6 @@ abstract class Capabilities extends Service {
 	 * reading items capability.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $user_id User ID.
 	 * @param array $args    Additional arguments.
@@ -469,7 +447,6 @@ abstract class Capabilities extends Service {
 	 * editing items capability.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $user_id User ID.
 	 * @param array $args    Additional arguments.
@@ -487,7 +464,6 @@ abstract class Capabilities extends Service {
 	 * deleting items capability.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $user_id User ID.
 	 * @param array $args    Additional arguments.
@@ -501,7 +477,6 @@ abstract class Capabilities extends Service {
 	 * Maps a specific item capability.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $action  Action name. Either 'read', 'edit' or 'delete'.
 	 * @param int    $user_id User ID.
@@ -537,7 +512,6 @@ abstract class Capabilities extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->filters = array(

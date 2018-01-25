@@ -30,7 +30,6 @@ class Error_Handler extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                     $prefix       The instance prefix.
 	 * @param Translations_Error_Handler $translations Translations instance.
@@ -44,7 +43,6 @@ class Error_Handler extends Service {
 	 * Marks a function as deprecated and inform when it has been used.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $function    The function that was called.
 	 * @param string $version     The version of the plugin that deprecated the function.
@@ -66,7 +64,6 @@ class Error_Handler extends Service {
 	 * Marks a function argument as deprecated and inform when it has been used.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $function The function that was called.
 	 * @param string $version  The version of the plugin that deprecated the argument used.
@@ -88,7 +85,6 @@ class Error_Handler extends Service {
 	 * Marks a deprecated action or filter hook as deprecated and throws a notice.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $hook        The hook that was used.
 	 * @param string $version     The version of the plugin that deprecated the hook.
@@ -113,7 +109,6 @@ class Error_Handler extends Service {
 	 * Marks something as being incorrectly called.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $function The function that was called.
 	 * @param string $message  A message explaining what has been done incorrectly.
@@ -137,7 +132,6 @@ class Error_Handler extends Service {
 	 * Marks missing services passed to a service.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $function      The function that was called.
 	 * @param array  $service_names The names of the services that are missing.
@@ -153,7 +147,6 @@ class Error_Handler extends Service {
 	 * as the base handler is necessary for fallback notices.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @return Leaves_And_Love\Plugin_Lib\Error_Handler Base handler instance.

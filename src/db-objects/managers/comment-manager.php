@@ -37,7 +37,6 @@ class Comment_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                       $prefix       The instance prefix.
 	 * @param array                        $services     {
@@ -76,7 +75,6 @@ class Comment_Manager extends Core_Manager {
 	 * Fetches the comment object for a specific ID.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the object to fetch.
 	 * @return object|null The comment object for the requested ID, or null if it does not exist.
@@ -90,7 +88,6 @@ class Comment_Manager extends Core_Manager {
 	 * Internal method to insert a new comment into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new comment, or false on failure.
@@ -103,7 +100,6 @@ class Comment_Manager extends Core_Manager {
 	 * Internal method to update an existing comment in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $comment_id ID of the comment to update.
 	 * @param array $args       Array of column => value pairs to update in the database row.
@@ -119,7 +115,6 @@ class Comment_Manager extends Core_Manager {
 	 * Internal method to delete a comment from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $comment_id ID of the comment to delete.
 	 * @return bool True on success, or false on failure.

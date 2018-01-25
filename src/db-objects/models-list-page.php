@@ -25,7 +25,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * The list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Models_List_Table
 	 */
 	protected $list_table;
@@ -34,7 +33,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * The list table class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $list_table_class_name = Models_List_Table::class;
@@ -43,7 +41,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * The slug of the admin page to create or edit a model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $edit_page_slug = '';
@@ -52,7 +49,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug          Page slug.
 	 * @param Admin_Pages $manager       Admin page manager instance.
@@ -87,7 +83,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Handles a request to the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function handle_request() {
 		if ( ! $this->current_user_can() ) {
@@ -105,7 +100,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Enqueues assets to load on the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		$assets = Assets::get_library_instance();
@@ -143,7 +137,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Renders the list page header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_header() {
 		$capabilities = $this->model_manager->capabilities();
@@ -178,7 +171,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Renders the list page form.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_form() {
 		$this->list_table->views();
@@ -217,7 +209,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Sets up the list table instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_list_table() {
 		$class_name = $this->list_table_class_name;
@@ -238,7 +229,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Handles bulk actions when necessary.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function handle_actions() {
 		$doaction = $this->list_table->current_action();
@@ -302,7 +292,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Prepares the models in the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function prepare_list_table() {
 		$this->list_table->prepare_items();
@@ -312,7 +301,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Sets up the screen with screen reader content, options and help tabs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param WP_Screen $screen Current screen.
 	 */
@@ -333,7 +321,6 @@ abstract class Models_List_Page extends Manager_Page {
 	 * Handles the 'delete' bulk action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $ids IDs of the models to delete.
 	 * @return string|WP_Error Feedback message, or error object on failure.

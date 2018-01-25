@@ -24,7 +24,6 @@ trait Meta_Manager_Trait {
 	 * The Metadata API service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -34,7 +33,6 @@ trait Meta_Manager_Trait {
 	 * The metadata type.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $meta_type = 'model';
@@ -43,7 +41,6 @@ trait Meta_Manager_Trait {
 	 * Adds metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $model_id   ID of the model metadata is for.
 	 * @param string $meta_key   Metadata key.
@@ -63,7 +60,6 @@ trait Meta_Manager_Trait {
 	 * ID and metadata key, the metadata will be added.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $model_id   ID of the model metadata is for.
 	 * @param string $meta_key   Metadata key.
@@ -80,7 +76,6 @@ trait Meta_Manager_Trait {
 	 * Deletes metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $model_id   ID of the model metadata is for.
 	 * @param string $meta_key   Metadata key.
@@ -102,7 +97,6 @@ trait Meta_Manager_Trait {
 	 * Retrieves metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $model_id  ID of the model metadata is for.
 	 * @param string $meta_key  Optional. Metadata key. If not specified, retrieve all metadata for
@@ -120,7 +114,6 @@ trait Meta_Manager_Trait {
 	 * Determines if a meta key is set for a given object
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int    $model_id  ID of the model metadata is for.
 	 * @param string $meta_key  Metadata key.
@@ -134,7 +127,6 @@ trait Meta_Manager_Trait {
 	 * Deletes all metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the model metadata is for.
 	 * @return bool True on successful delete, false on failure.
@@ -147,7 +139,6 @@ trait Meta_Manager_Trait {
 	 * Updates the metadata cache for the specified objects.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $model_ids Array of object IDs to update cache for.
 	 * @return array|false Metadata cache for the specified objects, or false on failure.
@@ -160,7 +151,6 @@ trait Meta_Manager_Trait {
 	 * Returns the metadata type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string The metadata type.
 	 */
@@ -172,7 +162,6 @@ trait Meta_Manager_Trait {
 	 * Adds the meta database table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function add_meta_database_table() {
 		$prefix = $this->db()->get_prefix();

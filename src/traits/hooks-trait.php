@@ -24,7 +24,6 @@ trait Hooks_Trait {
 	 * Reference for the internal hook closures.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var array
 	 */
 	private $hook_map = array();
@@ -33,7 +32,6 @@ trait Hooks_Trait {
 	 * Hooks a function or method to a specific action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string   $tag             The name of the action to hook the $function_to_add callback to.
 	 * @param callable $function_to_add The callback to be run when the action is run.
@@ -55,7 +53,6 @@ trait Hooks_Trait {
 	 * Checks if any action has been registered for a hook.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string        $tag               The name of the action hook.
 	 * @param callable|bool $function_to_check Optional. The callback to check for. Default false.
@@ -83,7 +80,6 @@ trait Hooks_Trait {
 	 * Removes a function from a specified action hook.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string   $tag                The action hook to which the function to be removed is hooked.
 	 * @param callable $function_to_remove The name of the function which should be removed.
@@ -100,7 +96,6 @@ trait Hooks_Trait {
 	 * Hooks a function or method to a specific filter action.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string   $tag             The name of the filter to hook the $function_to_add callback to.
 	 * @param callable $function_to_add The callback to be run when the filter is applied.
@@ -122,7 +117,6 @@ trait Hooks_Trait {
 	 * Checks if any filter has been registered for a hook.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string        $tag               The name of the filter hook.
 	 * @param callable|bool $function_to_check Optional. The callback to check for. Default false.
@@ -150,7 +144,6 @@ trait Hooks_Trait {
 	 * Removes a function from a specified filter hook.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string   $tag                The filter hook to which the function to be removed is hooked.
 	 * @param callable $function_to_remove The name of the function which should be removed.
@@ -167,7 +160,6 @@ trait Hooks_Trait {
 	 * Builds a unique ID for storage and retrieval.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param string   $tag      Used in counting how many hooks were applied.
 	 * @param callable $function Used for creating unique id.
@@ -186,7 +178,6 @@ trait Hooks_Trait {
 	 * Maps a hook to a closure that inherits the class' internal scope.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param string   $id            Unique hook ID.
 	 * @param callable $function      The callback to run when the hook is run.
@@ -212,7 +203,6 @@ trait Hooks_Trait {
 	 * Maps a hook to a closure if the callback is a private class method.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param string   $tag           The name of the hook.
 	 * @param callable $function      The callback to run when the hook is run.

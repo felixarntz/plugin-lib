@@ -20,7 +20,6 @@ class Multibox extends Radio {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'multibox';
@@ -29,7 +28,6 @@ class Multibox extends Radio {
 	 * Whether this field accepts multiple values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $multi = true;

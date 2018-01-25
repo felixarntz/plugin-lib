@@ -25,7 +25,6 @@ trait Status_Manager_Trait {
 	 * The status property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $status_property = 'status';
@@ -34,7 +33,6 @@ trait Status_Manager_Trait {
 	 * Internal storage for pending status changes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $pending_status_changes = array();
@@ -43,7 +41,6 @@ trait Status_Manager_Trait {
 	 * The status manager service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -53,7 +50,6 @@ trait Status_Manager_Trait {
 	 * Registers a new status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug for the status.
 	 * @param array  $args Optional. Array of status arguments. Default empty.
@@ -67,7 +63,6 @@ trait Status_Manager_Trait {
 	 * Retrieves a status object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return Model_Status|null Type object, or null it it does not exist.
@@ -80,7 +75,6 @@ trait Status_Manager_Trait {
 	 * Queries for multiple status objects.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args Array of query arguments.
 	 * @return array Array of status objects.
@@ -93,7 +87,6 @@ trait Status_Manager_Trait {
 	 * Unregisters an existing status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return bool True on success, false on failure.
@@ -106,7 +99,6 @@ trait Status_Manager_Trait {
 	 * Returns the name of the status property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the status property.
 	 */
@@ -118,7 +110,6 @@ trait Status_Manager_Trait {
 	 * Prepares data for triggering a hook for transitioning the status property on a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param null  $pre   Null value from the pre-filter.
 	 * @param Model $model The model to modify.
@@ -142,7 +133,6 @@ trait Status_Manager_Trait {
 	 * Triggers a hook for transitioning the status property on a model, if necessary.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool|WP_Error $result Result of the sync process.
 	 * @param Model         $model  The model to modify.
@@ -187,7 +177,6 @@ trait Status_Manager_Trait {
 	 * Renders a status select field for the misc publishing area of the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|null $id    Current model ID, or null if new model.
 	 * @param Model    $model Current model object.

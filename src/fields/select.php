@@ -20,7 +20,6 @@ class Select extends Select_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'select';
@@ -29,7 +28,6 @@ class Select extends Select_Base {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'SelectFieldView';
@@ -38,7 +36,6 @@ class Select extends Select_Base {
 	 * Option groups with choices to select from, if necessary.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $optgroups = array();
@@ -47,7 +44,6 @@ class Select extends Select_Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -81,7 +77,6 @@ class Select extends Select_Base {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -138,7 +133,6 @@ class Select extends Select_Base {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -187,7 +181,6 @@ class Select extends Select_Base {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		if ( $this->multi ) {
@@ -228,7 +221,6 @@ class Select extends Select_Base {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -244,7 +236,6 @@ class Select extends Select_Base {
 	 * Resolves all dependencies of this field, if applicable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if dependencies were resolved, false if nothing changed.
 	 */
@@ -265,7 +256,6 @@ class Select extends Select_Base {
 	 * Sets the choices property based on the optgroups property.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function optgroups_to_choices() {
 		if ( ! empty( $this->optgroups ) ) {

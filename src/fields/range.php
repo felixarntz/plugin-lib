@@ -20,7 +20,6 @@ class Range extends Number {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'range';
@@ -29,7 +28,6 @@ class Range extends Number {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'range';

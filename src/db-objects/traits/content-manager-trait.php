@@ -22,7 +22,6 @@ trait Content_Manager_Trait {
 	 * The content property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $content_property = 'content';
@@ -31,7 +30,6 @@ trait Content_Manager_Trait {
 	 * Returns the name of the content property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the content property.
 	 */

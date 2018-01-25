@@ -34,7 +34,6 @@ class Network extends Core_Model {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -57,7 +56,6 @@ class Network extends Core_Model {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -84,7 +82,6 @@ class Network extends Core_Model {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -108,7 +105,6 @@ class Network extends Core_Model {
 	 * Returns all current values as $property => $value pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool $pending_only Whether to only return pending properties. Default false.
 	 * @return array Array of $property => $value pairs.
@@ -128,7 +124,6 @@ class Network extends Core_Model {
 	 * This method is called if a new object has been instantiated.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function set_default_object() {
 		$this->original = new WP_Network( new \stdClass() );
@@ -138,7 +133,6 @@ class Network extends Core_Model {
 	 * Returns the names of all properties that are part of the database object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */

@@ -20,7 +20,6 @@ class Radio extends Select_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'radio';
@@ -31,7 +30,6 @@ class Radio extends Select_Base {
 	 * Accepts values 'explicit', 'implicit', 'no_assoc', 'aria_hidden' and 'skip'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $label_mode = 'aria_hidden';
@@ -40,7 +38,6 @@ class Radio extends Select_Base {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -83,7 +80,6 @@ class Radio extends Select_Base {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		if ( $this->multi ) {

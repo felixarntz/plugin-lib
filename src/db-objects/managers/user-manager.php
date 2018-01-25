@@ -37,7 +37,6 @@ class User_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                    $prefix       The instance prefix.
 	 * @param array                     $services     {
@@ -75,7 +74,6 @@ class User_Manager extends Core_Manager {
 	 * Internal method to insert a new user into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new user, or false on failure.
@@ -93,7 +91,6 @@ class User_Manager extends Core_Manager {
 	 * Internal method to update an existing user in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $user_id ID of the user to update.
 	 * @param array $args    Array of column => value pairs to update in the database row.
@@ -114,7 +111,6 @@ class User_Manager extends Core_Manager {
 	 * Internal method to delete a user from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $user_id ID of the user to delete.
 	 * @return bool True on success, or false on failure.

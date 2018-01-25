@@ -25,7 +25,6 @@ trait Type_Manager_Trait {
 	 * The type property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type_property = 'type';
@@ -34,7 +33,6 @@ trait Type_Manager_Trait {
 	 * Internal storage for pending type changes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $pending_type_changes = array();
@@ -43,7 +41,6 @@ trait Type_Manager_Trait {
 	 * The type manager service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -53,7 +50,6 @@ trait Type_Manager_Trait {
 	 * Registers a new type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug for the type.
 	 * @param array  $args Optional. Array of type arguments. Default empty.
@@ -67,7 +63,6 @@ trait Type_Manager_Trait {
 	 * Retrieves a type object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return Model_Type|null Type object, or null it it does not exist.
@@ -80,7 +75,6 @@ trait Type_Manager_Trait {
 	 * Queries for multiple type objects.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args Array of query arguments.
 	 * @return array Array of type objects.
@@ -93,7 +87,6 @@ trait Type_Manager_Trait {
 	 * Unregisters an existing type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return bool True on success, false on failure.
@@ -106,7 +99,6 @@ trait Type_Manager_Trait {
 	 * Returns the name of the type property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the type property.
 	 */
@@ -118,7 +110,6 @@ trait Type_Manager_Trait {
 	 * Prepares data for triggering a hook for transitioning the type property on a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param null  $pre   Null value from the pre-filter.
 	 * @param Model $model The model to modify.
@@ -142,7 +133,6 @@ trait Type_Manager_Trait {
 	 * Triggers a hook for transitioning the type property on a model, if necessary.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool|WP_Error $result Result of the sync process.
 	 * @param Model         $model  The model to modify.

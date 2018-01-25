@@ -24,7 +24,6 @@ class Cache extends Service {
 	 * This sets the cache group prefix.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The prefix for all cache groups.
 	 */
@@ -36,7 +35,6 @@ class Cache extends Service {
 	 * Adds data to the cache, if the cache key doesn't already exist.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The data to add to the cache.
@@ -54,7 +52,6 @@ class Cache extends Service {
 	 * Removes cache contents matching key and group.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key   What the contents in the cache are called.
 	 * @param string     $group Optional. Where the cache contents are grouped. Default 'general'.
@@ -68,7 +65,6 @@ class Cache extends Service {
 	 * Retrieves cache contents from the cache by key and group.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string  $key   The key under which the cache contents are stored.
 	 * @param string      $group Optional. Where the cache contents are grouped. Default 'general'.
@@ -86,7 +82,6 @@ class Cache extends Service {
 	 * Replaces contents of the cache with new data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The key for the cache data that should be replaced.
 	 * @param mixed      $data   The new data to store in the cache.
@@ -107,7 +102,6 @@ class Cache extends Service {
 	 * in that it will always write data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The contents to store in the cache.

@@ -24,7 +24,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Page description.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $description = '';
@@ -33,7 +32,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Array of sections as `$id => $args` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $sections = array();
@@ -42,7 +40,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Array of current values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $current_values = array();
@@ -51,7 +48,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Field manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Field_Manager
 	 */
 	protected $field_manager = null;
@@ -60,7 +56,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug    Page slug.
 	 * @param Admin_Pages $manager Admin page manager instance.
@@ -87,7 +82,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Handles a request to the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function handle_request() {
 		if ( ! $this->current_user_can() ) {
@@ -99,7 +93,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Adds a section to the settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Section identifier.
 	 * @param array  $args {
@@ -120,7 +113,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Adds a field to the settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id      Field identifier.
 	 * @param string $type    Identifier of the type.
@@ -145,7 +137,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Enqueues assets to load on the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		$this->field_manager->enqueue();
@@ -155,7 +146,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Renders the settings page content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @global string|null $parent_file Parent file for the current admin page.
 	 */
@@ -183,7 +173,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register() {
 		$this->add_page_content();
@@ -209,7 +198,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array  $values Array of values.
 	 * @param string $option Option name.
@@ -230,7 +218,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $section_args Array of section arguments.
 	 */
@@ -256,7 +243,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $field_args Array of field arguments.
 	 */
@@ -272,7 +258,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Renders the settings page header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function render_header() {
 		?>
@@ -292,7 +277,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Renders the settings page form.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $option Option name.
 	 */
@@ -310,7 +294,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * Validates field values for an array of fields.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array  $values Array of values.
 	 * @param string $option Option name.
@@ -342,7 +325,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * used to call the custom `do_settings_fields()` implementation.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @global $wp_settings_sections Storage array of all settings sections added to admin pages
 	 * @global $wp_settings_fields Storage array of settings fields and info about their pages/sections
@@ -382,7 +364,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * used to print additional attributes in the `<tr>` wrapper of each field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @global $wp_settings_fields Storage array of settings fields and their pages/sections
 	 *
@@ -429,7 +410,6 @@ abstract class Settings_Page extends Admin_Page {
 	 * This method should call the methods `add_section()` and `add_field()` to populate the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function add_page_content();
 }

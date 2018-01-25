@@ -26,7 +26,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -35,7 +34,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance.
 	 */
@@ -55,7 +53,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
@@ -91,7 +88,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Checks whether a given request has permission to read statuses.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|true True if the request has read access, WP_Error object otherwise.
@@ -114,7 +110,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Retrieves a collection of model statuses.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
@@ -137,7 +132,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Checks whether a given request has permission to read a status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|true True if the request has read access, WP_Error object otherwise.
@@ -166,7 +160,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Retrieves a specific model status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error object on failure.
@@ -187,7 +180,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Prepares a model status for response.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model_Status    $model_status Model status object.
 	 * @param WP_REST_Request $request      Request object.
@@ -217,7 +209,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Prepares links for the request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model_Status $model_status Model status object.
 	 * @return array Links for the given model status.
@@ -244,7 +235,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Retrieves the model status' schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Model status schema data.
 	 */
@@ -294,7 +284,6 @@ class REST_Model_Statuses_Controller extends WP_REST_Controller {
 	 * Retrieves the query params for collections.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Collection parameters.
 	 */

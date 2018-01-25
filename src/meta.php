@@ -33,7 +33,6 @@ class Meta extends Service {
 	 * The database service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -43,7 +42,6 @@ class Meta extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   The instance prefix.
 	 * @param array  $services {
@@ -62,7 +60,6 @@ class Meta extends Service {
 	 * Adds metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type  Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id  ID of the object metadata is for.
@@ -96,7 +93,6 @@ class Meta extends Service {
 	 * ID and metadata key, the metadata will be added.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type  Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id  ID of the object metadata is for.
@@ -133,7 +129,6 @@ class Meta extends Service {
 	 * Deletes metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type  Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id  ID of the object metadata is for.
@@ -165,7 +160,6 @@ class Meta extends Service {
 	 * Retrieves metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id ID of the object metadata is for.
@@ -217,7 +211,6 @@ class Meta extends Service {
 	 * Determines if a meta key is set for a given object
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id ID of the object metadata is for.
@@ -249,7 +242,6 @@ class Meta extends Service {
 	 * Deletes all metadata for the specified object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type  Type of object metadata is for (e.g. row, column or module).
 	 * @param int    $object_id  ID of the object metadata is for.
@@ -274,7 +266,6 @@ class Meta extends Service {
 	 * Updates the metadata cache for the specified objects.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $meta_type  Type of object metadata is for (e.g., row, column or module).
 	 * @param array  $object_ids Array of object IDs to update cache for.
@@ -292,7 +283,6 @@ class Meta extends Service {
 	 * Checks whether a meta type must be prefixed.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $meta_type Type of object metadata is for (e.g. row, column or module).
 	 * @return bool True if the meta type must be prefixed, false otherwise.

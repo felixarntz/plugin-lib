@@ -24,7 +24,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Array of tabs as `$id => $args` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $tabs = array();
@@ -33,7 +32,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug    Page slug.
 	 * @param Admin_Pages $manager Admin page manager instance.
@@ -49,7 +47,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Adds a tab to the settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Tab identifier.
 	 * @param array  $args {
@@ -90,7 +87,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Adds a section to the settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Section identifier.
 	 * @param array  $args {
@@ -121,7 +117,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Adds a field to the settings page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id      Field identifier.
 	 * @param string $type    Identifier of the type.
@@ -159,7 +154,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Enqueues assets to load on the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		if ( empty( $this->tabs ) ) {
@@ -175,7 +169,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Renders the settings page content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @global string|null $parent_file Parent file for the current admin page.
 	 */
@@ -216,7 +209,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register() {
 		$this->add_page_content();
@@ -244,7 +236,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * This method is only meant for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array  $values Array of values.
 	 * @param string $option Option name.
@@ -263,7 +254,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Renders the tab navigation.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $current_tab_id Identifier of the current tab.
 	 */
@@ -285,7 +275,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Renders the tab header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $current_tab_id Identifier of the current tab.
 	 */
@@ -301,7 +290,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * Returns the identifier of the current tab.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return string Identifier of the current tab.
 	 */
@@ -324,7 +312,6 @@ abstract class Tabbed_Settings_Page extends Settings_Page {
 	 * as h3 instead of h2 to account for the additional tab navigation.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @global $wp_settings_sections Storage array of all settings sections added to admin pages
 	 * @global $wp_settings_fields Storage array of settings fields and info about their pages/sections

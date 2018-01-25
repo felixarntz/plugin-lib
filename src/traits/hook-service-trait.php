@@ -24,7 +24,6 @@ trait Hook_Service_Trait {
 	 * The actions the service should trigger.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $actions = array();
@@ -33,7 +32,6 @@ trait Hook_Service_Trait {
 	 * The filters the service should trigger.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $filters = array();
@@ -42,7 +40,6 @@ trait Hook_Service_Trait {
 	 * Whether the hooks for the service have been added.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $hooks_added = false;
@@ -51,7 +48,6 @@ trait Hook_Service_Trait {
 	 * Adds the service hooks.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function add_hooks() {
 		if ( $this->hooks_added ) {
@@ -81,7 +77,6 @@ trait Hook_Service_Trait {
 	 * Removes the service hooks.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function remove_hooks() {
 		if ( ! $this->hooks_added ) {
@@ -111,7 +106,6 @@ trait Hook_Service_Trait {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function setup_hooks();
 }

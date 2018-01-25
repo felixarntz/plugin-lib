@@ -24,7 +24,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -33,7 +32,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @see \WP_List_Table::__construct() for more information on default arguments.
 	 *
@@ -70,7 +68,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Checks the current user's permissions.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool Whether the current user can edit items.
 	 */
@@ -84,7 +81,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Prepares the list of items for displaying.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function prepare_items() {
 		$per_page = $this->get_items_per_page( 'list_' . $this->_args['plural'] . '_per_page' );
@@ -108,7 +104,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Displays a message when there are no items.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function no_items() {
 		echo $this->manager->get_message( 'list_table_no_items' );
@@ -118,7 +113,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Displays the search box.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $text     The 'submit' button label.
 	 * @param string $input_id ID attribute value for the search input field.
@@ -138,7 +132,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Handles the checkbox column output.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The current model object.
 	 */
@@ -166,7 +159,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Handles the title column output.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The current model object.
 	 */
@@ -193,7 +185,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Handles the author column output.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The current model object.
 	 */
@@ -212,7 +203,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Handles the date column output.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The current model object.
 	 */
@@ -231,7 +221,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Handles the default column output.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model  $model       The current model object.
 	 * @param string $column_name The current column name.
@@ -284,7 +273,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Gets a list of columns.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Columns as `$slug => $label` pairs.
 	 */
@@ -308,7 +296,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Gets a list of sortable columns.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Sortable columns as `$slug => $orderby` pairs. $orderby
 	 *               can be a plain string or an array with the first element
@@ -335,7 +322,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Generates and display row actions links for the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model  $model       The model being acted upon.
 	 * @param string $column_name Current column name.
@@ -402,7 +388,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * this table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Views as `$slug => $link` pairs.
 	 */
@@ -449,7 +434,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * on this table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Bulk actions as `$slug => $label` pairs.
 	 */
@@ -481,7 +465,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Builds query parameters for the current request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $number Maximum number of models to query.
 	 * @param int $offset Offset to query models.
@@ -589,7 +572,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Prints extra controls to be displayed between bulk actions and pagination.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $which Either 'top' or 'bottom'.
 	 */
@@ -616,7 +598,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Prints input fields for filtering.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_filters() {
 		if ( method_exists( $this->manager, 'get_date_property' ) ) {
@@ -639,7 +620,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Displays a monthly dropdown for filtering.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @global WP_Locale $wp_locale
 	 *
@@ -705,7 +685,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Returns the available columns for the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Columns as `$slug => $label` pairs.
 	 */
@@ -732,7 +711,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Returns the sortable columns for the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Sortable columns as `$slug => $orderby` pairs. $orderby
 	 *               can be a plain string or an array with the first element
@@ -757,7 +735,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Returns the available views for the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $current  Slug of the current view, passed by reference. Should be
 	 *                         set properly in the method.
@@ -851,7 +828,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Returns the available bulk actions for the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Actions as `$slug => $data` pairs. The $data array must have the key
 	 *               'label'.
@@ -873,7 +849,6 @@ abstract class Models_List_Table extends \WP_List_Table {
 	 * Returns the available row actions for a given item in the list table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model  $model    The model for which to return row actions.
 	 * @param int    $model_id The model ID.

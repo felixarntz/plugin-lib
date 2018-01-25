@@ -22,7 +22,6 @@ final class Shortcode {
 	 * Shortcode tag.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var string
 	 */
 	private $tag;
@@ -31,7 +30,6 @@ final class Shortcode {
 	 * Hook to run for the shortcode.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var callable
 	 */
 	private $func;
@@ -40,7 +38,6 @@ final class Shortcode {
 	 * Additional arguments for this shortcode.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var array
 	 */
 	private $args;
@@ -49,7 +46,6 @@ final class Shortcode {
 	 * Shortcode manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var Shortcodes
 	 */
 	private $manager;
@@ -58,7 +54,6 @@ final class Shortcode {
 	 * Whether assets for this shortcode have been enqueued.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @var bool
 	 */
 	private $enqueued = false;
@@ -67,7 +62,6 @@ final class Shortcode {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string       $tag     Shortcode tag to be searched in content.
 	 * @param callable     $func    Hook to run when shortcode is found.
@@ -102,7 +96,6 @@ final class Shortcode {
 	 * Runs the shortcode hook for given attributes and content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array       $atts    Attributes to pass to the hook.
 	 * @param string|null $content Content wrapped by the shortcode, or null if a self-contained shortcode.
@@ -136,7 +129,6 @@ final class Shortcode {
 	 * Returns the tag name of the shortcode.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Shortcode tag.
 	 */
@@ -150,7 +142,6 @@ final class Shortcode {
 	 * This method will ensure that the callback will only be called once per script lifetime.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		if ( $this->enqueued ) {
@@ -170,7 +161,6 @@ final class Shortcode {
 	 * Checks whether an enqueue callback exists for this shortcode.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if an enqueue callback exists, otherwise false.
 	 */
@@ -182,7 +172,6 @@ final class Shortcode {
 	 * Creates a cache key from given attributes and content input.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 *
 	 * @param array       $atts    Attributes passed to the shortcode hook.
 	 * @param string|null $content Content wrapped by the shortcode, or null if self-contained.

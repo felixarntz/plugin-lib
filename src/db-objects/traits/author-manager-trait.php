@@ -22,7 +22,6 @@ trait Author_Manager_Trait {
 	 * The author property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $author_property = 'author';
@@ -31,7 +30,6 @@ trait Author_Manager_Trait {
 	 * Returns the name of the author property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the author property.
 	 */
@@ -43,7 +41,6 @@ trait Author_Manager_Trait {
 	 * Sets the author property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param null  $pre   Null value from the pre-filter.
 	 * @param Model $model The model to modify.

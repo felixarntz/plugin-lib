@@ -20,7 +20,6 @@ class CLI_Model_Meta_Command extends \WP_CLI\CommandWithMeta {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -29,7 +28,6 @@ class CLI_Model_Meta_Command extends \WP_CLI\CommandWithMeta {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance.
 	 */
@@ -46,7 +44,6 @@ class CLI_Model_Meta_Command extends \WP_CLI\CommandWithMeta {
 	 * Checks that the model with a specific ID exists.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $object_id Model ID.
 	 * @return int Model ID.

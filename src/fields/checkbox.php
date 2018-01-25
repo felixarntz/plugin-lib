@@ -22,7 +22,6 @@ class Checkbox extends Field {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'checkbox';
@@ -33,7 +32,6 @@ class Checkbox extends Field {
 	 * Accepts values 'explicit', 'implicit', 'no_assoc', 'aria_hidden' and 'skip'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $label_mode = 'skip';
@@ -44,7 +42,6 @@ class Checkbox extends Field {
 	 * It is however not the actual semantic label, it only exists for visual purposes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $visual_label = '';
@@ -53,7 +50,6 @@ class Checkbox extends Field {
 	 * Renders the field's label.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function render_label() {
 		$this->maybe_resolve_dependencies();
@@ -75,7 +71,6 @@ class Checkbox extends Field {
 	 * Prints a label template.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function print_label_template() {
 		?>
@@ -91,7 +86,6 @@ class Checkbox extends Field {
 	 * Transforms all field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -108,7 +102,6 @@ class Checkbox extends Field {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -129,7 +122,6 @@ class Checkbox extends Field {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		?>
@@ -143,7 +135,6 @@ class Checkbox extends Field {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -166,7 +157,6 @@ class Checkbox extends Field {
 	 * Checks whether a value is considered empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to check whether its empty.
 	 * @return bool True if the value is considered empty, false otherwise.
@@ -179,7 +169,6 @@ class Checkbox extends Field {
 	 * Returns the attributes for the field's label.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $label_attrs Array of custom label attributes.
 	 * @param bool  $as_string   Optional. Whether to return them as an attribute

@@ -22,7 +22,6 @@ class Text extends Text_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'text';
@@ -31,7 +30,6 @@ class Text extends Text_Base {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'text';
@@ -40,7 +38,6 @@ class Text extends Text_Base {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.

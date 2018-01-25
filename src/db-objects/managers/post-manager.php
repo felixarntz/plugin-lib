@@ -43,7 +43,6 @@ class Post_Manager extends Core_Manager {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                    $prefix       The instance prefix.
 	 * @param array                     $services     {
@@ -90,7 +89,6 @@ class Post_Manager extends Core_Manager {
 	 * Internal method to insert a new post into the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new post, or false on failure.
@@ -108,7 +106,6 @@ class Post_Manager extends Core_Manager {
 	 * Internal method to update an existing post in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $post_id ID of the post to update.
 	 * @param array $args    Array of column => value pairs to update in the database row.
@@ -129,7 +126,6 @@ class Post_Manager extends Core_Manager {
 	 * Internal method to delete a post from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $post_id ID of the post to delete.
 	 * @return bool True on success, or false on failure.

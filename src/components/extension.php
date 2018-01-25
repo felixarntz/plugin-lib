@@ -30,7 +30,6 @@ abstract class Extension extends Service {
 	 * Path to the extension's main file.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $main_file;
@@ -39,7 +38,6 @@ abstract class Extension extends Service {
 	 * Relative base path to the other files of this extension.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $basedir_relative;
@@ -48,7 +46,6 @@ abstract class Extension extends Service {
 	 * The extension vendor name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $vendor_name;
@@ -57,7 +54,6 @@ abstract class Extension extends Service {
 	 * The extension project name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $project_name;
@@ -66,7 +62,6 @@ abstract class Extension extends Service {
 	 * Parent plugin instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Leaves_And_Love_Plugin
 	 */
 	protected $parent_plugin = null;
@@ -75,7 +70,6 @@ abstract class Extension extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string                 $name             Extension name.
 	 * @param Leaves_And_Love_Plugin $plugin           Parent plugin instance.
@@ -98,7 +92,6 @@ abstract class Extension extends Service {
 	 * Returns the full path to a relative path for an extension file or directory.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $rel_path Relative path.
 	 * @return string Full path.
@@ -111,7 +104,6 @@ abstract class Extension extends Service {
 	 * Returns the full URL to a relative path for an extension file or directory.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $rel_path Relative path.
 	 * @return string Full URL.
@@ -126,7 +118,6 @@ abstract class Extension extends Service {
 	 * This method can only be executed once.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function load() {
 		if ( did_action( $this->get_prefix() . 'loaded' ) ) {
@@ -160,7 +151,6 @@ abstract class Extension extends Service {
 	 * Checks whether the extension can run on this setup.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return WP_Error|null Error object if the extension cannot run on this setup, null otherwise.
 	 */
@@ -172,7 +162,6 @@ abstract class Extension extends Service {
 	 * Loads the base properties of the class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function load_base_properties();
 
@@ -180,7 +169,6 @@ abstract class Extension extends Service {
 	 * Loads the extension's textdomain.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function load_textdomain();
 
@@ -188,7 +176,6 @@ abstract class Extension extends Service {
 	 * Instantiates the extension services.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function instantiate_services();
 
@@ -200,7 +187,6 @@ abstract class Extension extends Service {
 	 * a check whether these dependencies already exist.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if the dependencies are loaded, false otherwise.
 	 */

@@ -24,7 +24,6 @@ abstract class Model_Type_Manager extends Item_Registry {
 	 * The model type class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $item_class_name = Model_Type::class;
@@ -33,7 +32,6 @@ abstract class Model_Type_Manager extends Item_Registry {
 	 * Returns the slug of the default type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Default type.
 	 */
@@ -50,7 +48,6 @@ abstract class Model_Type_Manager extends Item_Registry {
 	 * Returns the slugs of all public types.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of public types.
 	 */

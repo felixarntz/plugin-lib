@@ -22,7 +22,6 @@ class Datetime extends Text_Base {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'datetime';
@@ -31,7 +30,6 @@ class Datetime extends Text_Base {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'text';
@@ -42,7 +40,6 @@ class Datetime extends Text_Base {
 	 * Accepts either 'datetime', 'date' or 'time'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $store = 'datetime';
@@ -51,7 +48,6 @@ class Datetime extends Text_Base {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'DatetimeFieldView';
@@ -60,7 +56,6 @@ class Datetime extends Text_Base {
 	 * Locale data.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -70,7 +65,6 @@ class Datetime extends Text_Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -118,7 +112,6 @@ class Datetime extends Text_Base {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -163,7 +156,6 @@ class Datetime extends Text_Base {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -183,7 +175,6 @@ class Datetime extends Text_Base {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -207,7 +198,6 @@ class Datetime extends Text_Base {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -246,7 +236,6 @@ class Datetime extends Text_Base {
 	 * Parses a value based on the $store property.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string|int $value Datetime string or timestamp.
 	 * @return string Parsed date/time/datetime string.
@@ -274,7 +263,6 @@ class Datetime extends Text_Base {
 	 * Formats a value based on the $store property.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string|int $value Datetime string or timestamp.
 	 * @return string Formatted date/time/datetime string.
@@ -302,7 +290,6 @@ class Datetime extends Text_Base {
 	 * Parses a value into a timestamp.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string|int $value Datetime string or timestamp.
 	 * @return int Timestamp.
@@ -326,7 +313,6 @@ class Datetime extends Text_Base {
 	 * back to English so that it can be used by PHP's date functions.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $value Date format string to untranslate into an English date format string.
 	 * @return string Untranslated date format string.
@@ -343,7 +329,6 @@ class Datetime extends Text_Base {
 	 * It looks at the localized parts of the date format string and replaces them by their English equivalents.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $matches Regular expression matches.
 	 * @return string Replacement.
@@ -384,7 +369,6 @@ class Datetime extends Text_Base {
 	 * Returns values to be considered as empty.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of empty-ish values.
 	 */
@@ -396,7 +380,6 @@ class Datetime extends Text_Base {
 	 * Sets up the $locale_data property if it has not been setup prior.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @global WP_Locale $wp_locale WordPress locale object.

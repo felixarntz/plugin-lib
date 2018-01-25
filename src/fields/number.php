@@ -22,7 +22,6 @@ class Number extends Field {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'number';
@@ -31,7 +30,6 @@ class Number extends Field {
 	 * Type attribute for the input.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $type = 'number';
@@ -40,7 +38,6 @@ class Number extends Field {
 	 * Unit to show after the control, if any.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $unit = '';
@@ -49,7 +46,6 @@ class Number extends Field {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -71,7 +67,6 @@ class Number extends Field {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		?>
@@ -88,7 +83,6 @@ class Number extends Field {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -104,7 +98,6 @@ class Number extends Field {
 	 * Validates a single value for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $value Value to validate. When null is passed, the method
 	 *                     assumes no value was sent.
@@ -138,7 +131,6 @@ class Number extends Field {
 	 * Parses a numeric value.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param float|int|string $value         Numeric value.
 	 * @param bool             $format_as_int Optional. Whether to parse the value as an integer. Default false.
@@ -156,7 +148,6 @@ class Number extends Field {
 	 * Formats a numeric value.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param float|int|string $value         Numeric value.
 	 * @param bool             $format_as_int Optional. Whether to format the value as an integer. Default false.
@@ -187,7 +178,6 @@ class Number extends Field {
 	 * Returns names of the properties that must not be set through constructor arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of forbidden properties.
 	 */

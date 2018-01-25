@@ -20,7 +20,6 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -29,7 +28,6 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance.
 	 */
@@ -43,7 +41,6 @@ class CLI_Model_Fetcher extends \WP_CLI\Fetchers\Base {
 	 * Gets a model by ID.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $arg Model ID.
 	 * @return Model|null Model object, or null if it does not exist.

@@ -30,7 +30,6 @@ class DB extends Service {
 	 * WordPress database abstraction object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var \wpdb
 	 */
 	protected $wpdb;
@@ -39,7 +38,6 @@ class DB extends Service {
 	 * Table names with their prefixes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $tables = array();
@@ -50,7 +48,6 @@ class DB extends Service {
 	 * The queries contain placeholders for the table names in the form of `%table_name%`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $schema = '';
@@ -61,7 +58,6 @@ class DB extends Service {
 	 * When changing the schema, this number should be increased as well.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $version = 0;
@@ -70,7 +66,6 @@ class DB extends Service {
 	 * The Option API service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -82,7 +77,6 @@ class DB extends Service {
 	 * This sets the table prefix and adds the tables.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -113,7 +107,6 @@ class DB extends Service {
 	 * Performs any SQL query.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $query    SQL query. Should use table placeholder instead of fully qualified table names.
 	 * @param array|mixed $args     Optional. The array of variables to substitute into the query's placeholders
@@ -134,7 +127,6 @@ class DB extends Service {
 	 * Retrieves one variable from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $query    SQL query. Should use table placeholder instead of fully qualified table names.
 	 * @param array|mixed $args     Optional. The array of variables to substitute into the query's placeholders
@@ -155,7 +147,6 @@ class DB extends Service {
 	 * Retrieves one row from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $query    SQL query. Should use table placeholder instead of fully qualified table names.
 	 * @param array|mixed $args     Optional. The array of variables to substitute into the query's placeholders
@@ -176,7 +167,6 @@ class DB extends Service {
 	 * Retrieves one column from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $query    SQL query. Should use table placeholder instead of fully qualified table names.
 	 * @param array|mixed $args     Optional. The array of variables to substitute into the query's placeholders
@@ -197,7 +187,6 @@ class DB extends Service {
 	 * Retrieves an entire SQL result set from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $query    SQL query. Should use table placeholder instead of fully qualified table names.
 	 * @param array|mixed $args     Optional. The array of variables to substitute into the query's placeholders
@@ -218,7 +207,6 @@ class DB extends Service {
 	 * Inserts a row into a database table.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
 	 * @param array  $data  Data to insert (in column => value pairs).
@@ -234,7 +222,6 @@ class DB extends Service {
 	 * Replaces a row into a database table.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
 	 * @param array  $data  Data to replace (in column => value pairs).
@@ -250,7 +237,6 @@ class DB extends Service {
 	 * Updates a row in a database table.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
 	 * @param array  $data  Data to update (in column => value pairs).
@@ -269,7 +255,6 @@ class DB extends Service {
 	 * Deletes a row in a database table.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
 	 * @param array  $where A named array of WHERE clauses (in column => value pairs). Multiple clauses will be
@@ -287,7 +272,6 @@ class DB extends Service {
 	 * Proxies to $wpdb.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if property is available, false otherwise.
@@ -307,7 +291,6 @@ class DB extends Service {
 	 * Proxies to $wpdb.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value if available, null otherwise.
@@ -327,7 +310,6 @@ class DB extends Service {
 	 * If outdated, the tables will be refreshed.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param bool $force Optional. Whether to force install regardless of the check. Default false.
 	 */
@@ -350,7 +332,6 @@ class DB extends Service {
 	 * for all sites in the entire setup are wiped out.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function uninstall() {
 		if ( is_multisite() ) {
@@ -377,7 +358,6 @@ class DB extends Service {
 	 * Sets the database version.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $version The database version.
 	 */
@@ -395,7 +375,6 @@ class DB extends Service {
 	 * `"id bigint(20) unsigned NOT NULL auto_increment"`
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table  Unprefixed name of database table.
 	 * @param array  $schema Array of lines for the database schema.
@@ -431,7 +410,6 @@ class DB extends Service {
 	 * Returns the name of a registered table in a specific format.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table Unprefixed table name.
 	 * @param string $mode  Optional. Either 'raw', 'prefixed' or 'full'. Default 'raw'.
@@ -459,7 +437,6 @@ class DB extends Service {
 	 * Checks whether a specific plugin database table is registered.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $table  Unprefixed name of database table.
 	 * @return bool True if the table is registered, false otherwise.
@@ -474,7 +451,6 @@ class DB extends Service {
 	 * Used internally by all `get_*()` methods of the class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $method_name Method name in `$wpdb` to call.
 	 * @param string $query       SQL query. Should use table placeholder instead of fully qualified table names.
@@ -511,7 +487,6 @@ class DB extends Service {
 	 * Handles insert and replace queries to the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $method_name Method name in `$wpdb` to call.
 	 * @param string $table       Name of the table. Will be replaced by the fully qualified database table name.
@@ -534,7 +509,6 @@ class DB extends Service {
 	 * Handles update queries to the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $table Name of the table. Will be replaced by the fully qualified database table name.
 	 * @param array  $data  Data to update (in column => value pairs).
@@ -560,7 +534,6 @@ class DB extends Service {
 	 * Prepares data prior to setting it in the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $data Data as $column => $value pairs.
 	 * @return array Prepared data.
@@ -579,7 +552,6 @@ class DB extends Service {
 	 * Prepares data after retrieving it from the database.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param object|string $data Database object or column value.
 	 * @return object|string|array Prepared database object or column value.
@@ -602,7 +574,6 @@ class DB extends Service {
 	 * Installs the database tables for the current site.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function install_single() {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -623,7 +594,6 @@ class DB extends Service {
 	 * Uninstalls the database tables for the current site.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function uninstall_single() {
 		foreach ( $this->tables as $prefixed_table_name ) {
@@ -646,7 +616,6 @@ class DB extends Service {
 	 * Used internally with `func_get_args()` results passed to it. The first argument will be omitted.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of method arguments.
 	 * @return array Array of query placeholder arguments.
@@ -668,7 +637,6 @@ class DB extends Service {
 	 * on several types of queries. This method automatically generates the necessary array.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $data Array of data (in column => value pairs).
 	 * @return array Format array to use with WordPress database methods.
@@ -692,7 +660,6 @@ class DB extends Service {
 	 * Replaces table placeholders in an SQL query.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $query SQL query with table placeholders.
 	 * @return string Valid SQL query with fully qualified table names.
@@ -708,7 +675,6 @@ class DB extends Service {
 	 * Transforms a basic table name into a placeholder for it.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $table_name The basic table name, without any prefixes.
 	 * @return string The table name placeholder.
@@ -721,7 +687,6 @@ class DB extends Service {
 	 * Transforms a prefixed table name into the full database table name for the current site.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $prefixed_table_name The table name with the plugin prefix.
 	 * @return string The full database table name.
@@ -736,7 +701,6 @@ class DB extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->actions = array(

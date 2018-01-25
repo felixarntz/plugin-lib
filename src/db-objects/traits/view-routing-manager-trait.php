@@ -24,7 +24,6 @@ trait View_Routing_Manager_Trait {
 	 * The view routing service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -34,7 +33,6 @@ trait View_Routing_Manager_Trait {
 	 * Renders buttons for frontend viewing and previewing for the minor publishing area of the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|null $id    Current model ID, or null if new model.
 	 * @param Model    $model Current model object.

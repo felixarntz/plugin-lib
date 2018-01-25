@@ -34,7 +34,6 @@ abstract class Admin_Page {
 	 * Page slug.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = '';
@@ -43,7 +42,6 @@ abstract class Admin_Page {
 	 * Page title.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $title = '';
@@ -52,7 +50,6 @@ abstract class Admin_Page {
 	 * Menu title.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $menu_title = '';
@@ -63,7 +60,6 @@ abstract class Admin_Page {
 	 * May be an array if a hierarchy of fallback capabilities should be used.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string|array
 	 */
 	protected $capability = '';
@@ -72,7 +68,6 @@ abstract class Admin_Page {
 	 * Icon URL for the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $icon_url = '';
@@ -81,7 +76,6 @@ abstract class Admin_Page {
 	 * Administration panel the page belongs to.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $administration_panel = 'site';
@@ -90,7 +84,6 @@ abstract class Admin_Page {
 	 * Parent page slug.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string|null
 	 */
 	protected $parent_slug = null;
@@ -99,7 +92,6 @@ abstract class Admin_Page {
 	 * Page position index.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var int
 	 */
 	protected $position = null;
@@ -108,7 +100,6 @@ abstract class Admin_Page {
 	 * Whether to not add a menu or submenu item for the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $skip_menu = false;
@@ -117,7 +108,6 @@ abstract class Admin_Page {
 	 * Page hook suffix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $hook_suffix = '';
@@ -126,7 +116,6 @@ abstract class Admin_Page {
 	 * URL to the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $url = '';
@@ -135,7 +124,6 @@ abstract class Admin_Page {
 	 * Parent manager for admin pages.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Admin_Pages
 	 */
 	protected $manager = null;
@@ -144,7 +132,6 @@ abstract class Admin_Page {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string      $slug    Page slug.
 	 * @param Admin_Pages $manager Admin page manager instance.
@@ -162,7 +149,6 @@ abstract class Admin_Page {
 	 * Handles a request to the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function handle_request() {
 		// Empty method body.
@@ -172,7 +158,6 @@ abstract class Admin_Page {
 	 * Enqueues assets to load on the page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue_assets() {
 		// Empty method body.
@@ -182,7 +167,6 @@ abstract class Admin_Page {
 	 * Renders the page content.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public abstract function render();
 
@@ -192,7 +176,6 @@ abstract class Admin_Page {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -207,7 +190,6 @@ abstract class Admin_Page {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -239,7 +221,6 @@ abstract class Admin_Page {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -262,7 +243,6 @@ abstract class Admin_Page {
 	 * The URL can be retrieved by accessing the class property $url.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function update_url() {
 		$parent_file = 'admin.php';
@@ -298,7 +278,6 @@ abstract class Admin_Page {
 	 * Checks whether the current user can access the page.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return bool True if the current user can access the page, false otherwise.
 	 */
@@ -322,7 +301,6 @@ abstract class Admin_Page {
 	 * Gets the names of properties with read-access.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */
@@ -334,7 +312,6 @@ abstract class Admin_Page {
 	 * Gets the names of properties with write-access.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */

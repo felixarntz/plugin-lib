@@ -25,7 +25,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Whether the loader has been initialized.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var bool
 	 */
@@ -35,7 +34,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Registered autoloader namespaces.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 * @var array
 	 */
@@ -45,7 +43,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Registers a namespace for autoloading.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $vendor_name  Vendor name of base namespace.
@@ -77,7 +74,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Checks whether a namespace is registered.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $vendor_name  Vendor name of base namespace.
@@ -100,7 +96,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Unregisters a namespace from autoloading.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $vendor_name  Vendor name of base namespace.
@@ -125,7 +120,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Returns the array of registered namespaces.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @return array Registered namespaces.
@@ -138,7 +132,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Tries to autoload a class.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $class_name Class name.
@@ -171,7 +164,6 @@ final class Leaves_And_Love_Autoloader {
 	 * Initializes the autoloader.
 	 *
 	 * @since 1.0.0
-	 * @access private
 	 * @static
 	 *
 	 * @return bool True on success, false on failure.

@@ -22,7 +22,6 @@ trait Slug_Manager_Trait {
 	 * The slug property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug_property = 'slug';
@@ -31,7 +30,6 @@ trait Slug_Manager_Trait {
 	 * Returns the name of the slug property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the slug property.
 	 */
@@ -46,7 +44,6 @@ trait Slug_Manager_Trait {
 	 * number will be appended to the slug until it is unique.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model  $model The model to set the slug on.
 	 * @param string $slug  Optional. Slug to set. If not provided, the model slug will
@@ -94,7 +91,6 @@ trait Slug_Manager_Trait {
 	 * the title if present.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model $model The model to generate the slug for.
 	 * @return string Generated slug, or empty string if no slug could be generated.
@@ -120,7 +116,6 @@ trait Slug_Manager_Trait {
 	 * the generated slug depends on the title if present.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of property names.
 	 */
@@ -136,7 +131,6 @@ trait Slug_Manager_Trait {
 	 * Sets the slug property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param null  $ret   Return value from the filter.
 	 * @param Model $model The model to modify.

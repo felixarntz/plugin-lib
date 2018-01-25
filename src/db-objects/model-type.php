@@ -24,7 +24,6 @@ abstract class Model_Type extends Item {
 	 * Sets the type arguments and fills it with defaults.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Type arguments.
 	 */

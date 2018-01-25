@@ -29,7 +29,6 @@ class Router extends Service {
 	 * The registered routes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $routes = array();
@@ -38,7 +37,6 @@ class Router extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix The instance prefix.
 	 */
@@ -52,7 +50,6 @@ class Router extends Service {
 	 * Adds a new route.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string   $slug            Unique identifier for this route.
 	 * @param string   $pattern         Regular expression to match.
@@ -74,7 +71,6 @@ class Router extends Service {
 	 * Returns the current request URL.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string The request URL.
 	 */
@@ -93,7 +89,6 @@ class Router extends Service {
 	 * Routes the request if one of the registered routes is matched.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool  $parse_request    Whether WordPress should parse the request.
 	 * @param WP    $wp               The WordPress main class instance.
@@ -212,7 +207,6 @@ class Router extends Service {
 	 * Filter that short-circuits the main query, returning an empty result.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param null|array $posts    Query results to set. If null, the SQL query will be executed.
 	 * @param WP_Query   $wp_query Current query instance.
@@ -238,7 +232,6 @@ class Router extends Service {
 	 * Filter to short-circuit the `WP::handle_404()` method and send a 200 status header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool     $handle_404 Whether to short-circuit the 404 handler.
 	 * @param WP_Query $wp_query   Current query instance.
@@ -258,7 +251,6 @@ class Router extends Service {
 	 * Filter to short-circuit the `WP::handle_404()` method and send a 404 status header.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool     $handle_404 Whether to short-circuit the 404 handler.
 	 * @param WP_Query $wp_query   Current query instance.
@@ -280,7 +272,6 @@ class Router extends Service {
 	 * Sorts routes by their pattern length in descending order.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $a One route to compare.
 	 * @param array $b The other route to compare.
@@ -301,7 +292,6 @@ class Router extends Service {
 	 * Sorts routes by their amount of raw query variables in descending order.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $a One route to compare.
 	 * @param array $b The other route to compare.
@@ -324,7 +314,6 @@ class Router extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$this->filters = array(

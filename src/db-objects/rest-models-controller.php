@@ -26,7 +26,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * The manager instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var Manager
 	 */
 	protected $manager;
@@ -35,7 +34,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Model types controller class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $types_controller_class_name = REST_Model_Types_Controller::class;
@@ -44,7 +42,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Model statuses controller class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $statuses_controller_class_name = REST_Model_Statuses_Controller::class;
@@ -53,7 +50,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * REST model types controller.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var REST_Model_Types_Controller
 	 */
 	protected $types_controller;
@@ -62,7 +58,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * REST model statuses controller.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var REST_Model_Statuses_Controller
 	 */
 	protected $statuses_controller;
@@ -71,7 +66,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager $manager The manager instance.
 	 */
@@ -103,7 +97,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Registers the routes for the objects of the controller.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function register_routes() {
 		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
@@ -167,7 +160,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to read models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has read access, WP_Error object otherwise.
@@ -224,7 +216,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Retrieves a collection of models.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -345,7 +336,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to read a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return bool|WP_Error True if the request has read access for the model, WP_Error object otherwise.
@@ -392,7 +382,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Retrieves a single model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -420,7 +409,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to create a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to create models, WP_Error object otherwise.
@@ -453,7 +441,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Creates a single model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -497,7 +484,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to update a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to update the item, WP_Error object otherwise.
@@ -531,7 +517,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Updates a single model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -566,7 +551,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to delete a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return true|WP_Error True if the request has access to delete the item, WP_Error object otherwise.
@@ -592,7 +576,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Deletes a single model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
@@ -631,7 +614,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Prepares a single model for create or update.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param WP_REST_Request $request Request object.
 	 * @return Leaves_And_Love\Plugin_Lib\DB_Objects\Model|WP_Error The prepared model, or WP_Error object on failure.
@@ -693,7 +675,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Prepares a single model output for response.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model           $model   Model object.
 	 * @param WP_REST_Request $request Request object.
@@ -727,7 +708,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Prepares a date for response.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $date The datetime string to prepare.
 	 * @return string|null ISO8601/RFC3339 formatted datetime.
@@ -744,7 +724,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Prepares links for the request.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Model $model Model object.
 	 * @return array Links for the given model.
@@ -794,7 +773,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Retrieves the model's schema, conforming to JSON Schema.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Model schema data.
 	 */
@@ -926,7 +904,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Retrieves the query params for the models collection.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Collection parameters.
 	 */
@@ -1081,7 +1058,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Sanitizes the model author.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $author    The author ID.
 	 * @param WP_REST_Request $request   Full details about the request.
@@ -1105,7 +1081,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Sanitizes the model status to set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $status    The status to set.
 	 * @param WP_REST_Request $request   Full details about the request.
@@ -1132,7 +1107,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Sanitizes and validates the list of model statuses.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array    $statuses  One or more model statuses.
 	 * @param WP_REST_Request $request   Full details about the request.
@@ -1168,7 +1142,6 @@ abstract class REST_Models_Controller extends WP_REST_Controller {
 	 * Sanitizes and validates the list of model types.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array    $types     One or more model types.
 	 * @param WP_REST_Request $request   Full details about the request.

@@ -33,7 +33,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Instance ID of this field manager. Used internally.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $instance_id = '';
@@ -42,7 +41,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Array of fields that are part of this manager, grouped by their `$section`.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $field_instances = array();
@@ -51,7 +49,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Section lookup map for field identifiers.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $section_lookup = array();
@@ -60,7 +57,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Array of current values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $current_values = array();
@@ -69,7 +65,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Field manager instances.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -79,7 +74,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Instance count of field managers per prefix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -89,7 +83,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Array of registered field types, as `$type => $class_name` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -99,7 +92,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Internal flag whether default types have been registered.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var bool
 	 */
@@ -109,7 +101,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Internal flag for whether the current enqueue run is the first one.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -119,7 +110,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Internal flags for enqueueing field assets.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -129,7 +119,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Internal flags for JS templates printed.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var array
 	 */
@@ -139,7 +128,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * The AJAX API service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -149,7 +137,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * The Assets API service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -159,7 +146,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * The Assets API service definition for the library itself.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -170,7 +156,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Translations to print to the user.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var Translations_Field_Manager
 	 */
@@ -180,7 +165,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   Prefix.
 	 * @param array  $services {
@@ -234,7 +218,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Adds a new field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id   Field identifier. Must be unique for this field manager.
 	 * @param string $type Identifier of the type.
@@ -271,7 +254,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Gets a specific field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id Field identifier.
 	 * @return Field|null Field instance, or null if it does not exist.
@@ -288,7 +270,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Checks whether a specific field exists.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id Field identifier.
 	 * @return bool True if the field exists, false otherwise.
@@ -305,7 +286,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Removes an existing field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $id Field identifier.
 	 * @return bool True on success, false on failure.
@@ -325,7 +305,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Enqueues the necessary assets for a list of fields.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 */
 	public function enqueue() {
 		if ( ! $this->enqueued( '_core' ) ) {
@@ -452,7 +431,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Checks whether dependencies for a specific type have been enqueued.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string    $type Type to check for.
 	 * @param bool|null $set  Optional. A boolean in case the value should be set. Default null.
@@ -472,7 +450,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Checks whether templates for a specific type have been printed.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string    $type Type to check for.
 	 * @param bool|null $set  Optional. A boolean in case the value should be set. Default null.
@@ -492,7 +469,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Renders a list of fields.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array|null $sections        Optional. Section identifier(s), to only render
 	 *                                           fields that belong to this section. Default null.
@@ -528,7 +504,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Gets the current values for all fields of this manager.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of values as `$id => $current_value` pairs.
 	 */
@@ -560,7 +535,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Updates the current values for a list of fields.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array             $values   New values to validate and store, as `$id => $new_value` pairs.
 	 * @param string|array|null $sections Optional. Section identifier(s), to only update values for
@@ -623,7 +597,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Returns an array of fields that are part of this field manager.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array|null $sections Optional. Section identifier(s), to only return
 	 *                                    fields that belong to this section. Default null.
@@ -652,7 +625,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Creates the id attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -682,7 +654,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Creates the name attribute for a given field identifier.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string          $id    Field identifier.
 	 * @param int|string|null $index Optional. Index of the field, in case it is a repeatable field.
@@ -708,7 +679,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Returns the ID of this instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string|null Instance ID.
 	 */
@@ -720,7 +690,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $identifier Identifier for the message.
 	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
@@ -735,7 +704,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Renders a field in form table mode.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Field $field Field instance.
 	 * @param mixed $value Current field value.
@@ -757,7 +725,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Renders a field in simple div markup with classes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Field $field Field instance.
 	 * @param mixed $value Current field value.
@@ -781,7 +748,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * The $errors object passed will automatically receive any occurring errors.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Field    $field  Field instance.
 	 * @param array    $values Array of all values to validate.
@@ -809,7 +775,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Sorts field instances by their dependencies so that those can be resolved in the correct order.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $field_instances Array of field instances.
 	 * @return array Array of field instances sorted by their dependencies.
@@ -828,7 +793,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Recursive helper method for sorting field instances by their dependencies.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Field $field_instance Field instance to recursively add its dependencies and itself.
 	 * @param array $all_instances  All field instances in the collection to sort.
@@ -879,7 +843,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Registers a field type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $type       Identifier of the type.
@@ -907,7 +870,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Retrieves the class name for a registered field type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $type Identifier of the type.
@@ -927,7 +889,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Checks whether a field type is registered.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $type Identifier of the type.
@@ -943,7 +904,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Unregisters a field type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @param string $type Identifier of the type.
@@ -965,7 +925,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Registers the default field types.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 */
 	protected static function register_default_field_types() {
@@ -1005,7 +964,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Sets the translations instance.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param Translations_Field_Manager $translations Translations instance.
 	 */
@@ -1019,7 +977,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Default callback used for the `$get_value_callback` argument.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param string $id Field identifier.
@@ -1035,7 +992,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Default callback used for the `$update_value_callback` argument.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param string $id    Field identifier.
@@ -1050,7 +1006,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the get value callback.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1068,7 +1023,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the get value callback args.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1086,7 +1040,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the update value callback.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1104,7 +1057,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the update value callback args.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1127,7 +1079,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the name prefix.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1145,7 +1096,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses the render mode.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.
@@ -1165,7 +1115,6 @@ class Field_Manager extends Service implements Field_Manager_Interface {
 	 * Parses whether JavaScript initialization should be skipped.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 *
 	 * @param mixed $value The input value.

@@ -47,7 +47,6 @@ class Comment extends Core_Model {
 	 * Sets the ID and fetches relevant data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager         $manager The manager instance for the model.
 	 * @param WP_Comment|null $db_obj  Optional. The database object or null for a new instance.
@@ -64,7 +63,6 @@ class Comment extends Core_Model {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -87,7 +85,6 @@ class Comment extends Core_Model {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -110,7 +107,6 @@ class Comment extends Core_Model {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -138,7 +134,6 @@ class Comment extends Core_Model {
 	 * This method is called if a new object has been instantiated.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function set_default_object() {
 		$this->original = new WP_Comment( new \stdClass() );
@@ -148,7 +143,6 @@ class Comment extends Core_Model {
 	 * Returns the names of all properties that are part of the database object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */

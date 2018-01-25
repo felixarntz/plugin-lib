@@ -20,7 +20,6 @@ class Multiselect extends Select {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'multiselect';
@@ -29,7 +28,6 @@ class Multiselect extends Select {
 	 * Whether this field accepts multiple values.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $multi = true;

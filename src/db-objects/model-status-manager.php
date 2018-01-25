@@ -24,7 +24,6 @@ abstract class Model_Status_Manager extends Item_Registry {
 	 * The model status class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $item_class_name = Model_Status::class;
@@ -33,7 +32,6 @@ abstract class Model_Status_Manager extends Item_Registry {
 	 * Returns the slug of the default status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Default status.
 	 */
@@ -50,7 +48,6 @@ abstract class Model_Status_Manager extends Item_Registry {
 	 * Returns the slugs of all public statuses.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of public statuses.
 	 */

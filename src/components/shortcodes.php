@@ -33,7 +33,6 @@ class Shortcodes extends Service {
 	 * Added shortcodes.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $shortcode_tags = array();
@@ -42,7 +41,6 @@ class Shortcodes extends Service {
 	 * Cache service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -52,7 +50,6 @@ class Shortcodes extends Service {
 	 * Template service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -62,7 +59,6 @@ class Shortcodes extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $prefix   The prefix for all shortcodes.
 	 * @param array  $services {
@@ -87,7 +83,6 @@ class Shortcodes extends Service {
 	 * The shortcode tag will automatically be prefixed with the plugin-wide prefix.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string       $tag  Shortcode tag to be searched in content.
 	 * @param callable     $func Hook to run when shortcode is found.
@@ -123,7 +118,6 @@ class Shortcodes extends Service {
 	 * Checks whether a specific shortcode tag exists.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $tag Shortcode tag to check for.
 	 * @return bool True if the shortcode tag exists, otherwise false.
@@ -138,7 +132,6 @@ class Shortcodes extends Service {
 	 * Retrieves a shortcode object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $tag Shortcode tag to retrieve object for.
 	 * @return Shortcode|null Shortcode object, or null if not exists.
@@ -157,7 +150,6 @@ class Shortcodes extends Service {
 	 * Removes a shortcode tag.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $tag Shortcode tag to remove.
 	 * @return bool True on success, false on failure.

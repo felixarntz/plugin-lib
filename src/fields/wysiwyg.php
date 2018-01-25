@@ -22,7 +22,6 @@ class WYSIWYG extends Textarea {
 	 * Field type identifier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $slug = 'wysiwyg';
@@ -31,7 +30,6 @@ class WYSIWYG extends Textarea {
 	 * Backbone view class name to use for this field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $backbone_view = 'WYSIWYGFieldView';
@@ -40,7 +38,6 @@ class WYSIWYG extends Textarea {
 	 * Whether to use wpautop() for the content.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $wpautop = false;
@@ -49,7 +46,6 @@ class WYSIWYG extends Textarea {
 	 * Whether to show buttons for adding media files.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $media_buttons = false;
@@ -58,7 +54,6 @@ class WYSIWYG extends Textarea {
 	 * The editor button mode. Either 'regular' or 'simple'. Default 'regular'.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $button_mode = 'regular';
@@ -67,7 +62,6 @@ class WYSIWYG extends Textarea {
 	 * Stores the editor markup for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array()|null
 	 */
 	protected $editor_markup = null;
@@ -76,7 +70,6 @@ class WYSIWYG extends Textarea {
 	 * Stores editor settings for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array|null
 	 */
 	protected $editor_settings = null;
@@ -85,7 +78,6 @@ class WYSIWYG extends Textarea {
 	 * Stores TinyMCE settings for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array|null
 	 */
 	protected $tinymce_settings = null;
@@ -94,7 +86,6 @@ class WYSIWYG extends Textarea {
 	 * Stores QuickTags settings for internal usage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array|null
 	 */
 	protected $quicktags_settings = null;
@@ -103,7 +94,6 @@ class WYSIWYG extends Textarea {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Field_Manager $manager Field manager instance.
 	 * @param string        $id      Field identifier.
@@ -170,7 +160,6 @@ class WYSIWYG extends Textarea {
 	 * Enqueues the necessary assets for the field.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array where the first element is an array of script handles and the second element
 	 *               is an associative array of data to pass to the main script.
@@ -200,7 +189,6 @@ class WYSIWYG extends Textarea {
 	 * Renders a single input for the field.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -224,7 +212,6 @@ class WYSIWYG extends Textarea {
 	 * Prints a single input template.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function print_single_input_template() {
 		if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) {
@@ -284,7 +271,6 @@ class WYSIWYG extends Textarea {
 	 * Transforms single field data into an array to be passed to JavaScript applications.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current value of the field.
 	 * @return array Field data to be JSON-encoded.
@@ -315,7 +301,6 @@ class WYSIWYG extends Textarea {
 	 * Sets up the editor markup and settings.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param mixed $current_value Current field value.
 	 */
@@ -369,7 +354,6 @@ class WYSIWYG extends Textarea {
 	 * Sets TinyMCE settings.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array  $settings  Array of TinyMCE settings.
 	 * @param string $editor_id Editor ID the settings belong to.
@@ -384,7 +368,6 @@ class WYSIWYG extends Textarea {
 	 * Sets QuickTags settings.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array  $settings  Array of QuickTags settings.
 	 * @param string $editor_id Editor ID the settings belong to.
@@ -399,7 +382,6 @@ class WYSIWYG extends Textarea {
 	 * Returns names of the properties that must not be set through constructor arguments.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of forbidden properties.
 	 */

@@ -36,7 +36,6 @@ abstract class Manager extends Service {
 	 * The model class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $class_name = Model::class;
@@ -45,7 +44,6 @@ abstract class Manager extends Service {
 	 * The collection class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $collection_class_name = Collection::class;
@@ -54,7 +52,6 @@ abstract class Manager extends Service {
 	 * The query class name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $query_class_name = Query::class;
@@ -63,7 +60,6 @@ abstract class Manager extends Service {
 	 * Singular slug to use.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $singular_slug = 'model';
@@ -72,7 +68,6 @@ abstract class Manager extends Service {
 	 * Plural slug to use.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $plural_slug = 'models';
@@ -81,7 +76,6 @@ abstract class Manager extends Service {
 	 * The model database table name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $table_name = 'models';
@@ -90,7 +84,6 @@ abstract class Manager extends Service {
 	 * The model cache group name.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $cache_group = 'models';
@@ -99,7 +92,6 @@ abstract class Manager extends Service {
 	 * The primary property for models.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $primary_property = 'id';
@@ -108,7 +100,6 @@ abstract class Manager extends Service {
 	 * Whether the models are publicly readable.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var bool
 	 */
 	protected $public = false;
@@ -117,7 +108,6 @@ abstract class Manager extends Service {
 	 * The database service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -127,7 +117,6 @@ abstract class Manager extends Service {
 	 * Cache service definition.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @static
 	 * @var string
 	 */
@@ -137,7 +126,6 @@ abstract class Manager extends Service {
 	 * Constructor.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string               $prefix       The instance prefix.
 	 * @param array                $services     {
@@ -173,7 +161,6 @@ abstract class Manager extends Service {
 	 * Creates a new model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return Model The new model object.
 	 */
@@ -203,7 +190,6 @@ abstract class Manager extends Service {
 	 * If an actual instance is passed to the method, it is simply passed through.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|Model $model_id ID of the model to get. Can be an actual instance too.
 	 * @return Model|null The model with the requested ID, or null if it does not exist.
@@ -240,7 +226,6 @@ abstract class Manager extends Service {
 	 * Creates a query instance.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return Query Query instance.
 	 */
@@ -254,7 +239,6 @@ abstract class Manager extends Service {
 	 * Queries models for specific criteria.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string|array $query Array or query string of model query arguments. See
 	 *                            {@see Query::query()} for more information.
@@ -270,7 +254,6 @@ abstract class Manager extends Service {
 	 * Transforms an array of models into a collection.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array  $models The model IDs, objects or types for this collection.
 	 * @param int    $total  Optional. The total amount of models in the collection.
@@ -289,7 +272,6 @@ abstract class Manager extends Service {
 	 * Adds a new model to the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args Array of column => value pairs for the new database row.
 	 * @return int|false The ID of the new model, or false on failure.
@@ -313,7 +295,6 @@ abstract class Manager extends Service {
 	 * Updates an existing model in the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int   $model_id ID of the model to update.
 	 * @param array $args     Array of column => value pairs to update in the database row.
@@ -340,7 +321,6 @@ abstract class Manager extends Service {
 	 * Deletes an model from the database.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the model to delete.
 	 * @return bool True on success, or false on failure.
@@ -366,7 +346,6 @@ abstract class Manager extends Service {
 	 * Fetches a database row for a specific ID.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $model_id ID of the row to fetch.
 	 * @return object|null The database row for the requested ID, or null if it does not exist.
@@ -395,7 +374,6 @@ abstract class Manager extends Service {
 	 * are returned as well.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int $user_id Optional. If provided and the manager supports authors,
 	 *                     only models by that user are counted. Default 0 (ignored).
@@ -456,7 +434,6 @@ abstract class Manager extends Service {
 	 * This is usually an integer ID denoting the database row.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the primary property.
 	 */
@@ -468,7 +445,6 @@ abstract class Manager extends Service {
 	 * Returns the singular slug.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Singular slug.
 	 */
@@ -480,7 +456,6 @@ abstract class Manager extends Service {
 	 * Returns the plural slug.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Plural slug.
 	 */
@@ -492,7 +467,6 @@ abstract class Manager extends Service {
 	 * Returns the database table name.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Table name.
 	 */
@@ -504,7 +478,6 @@ abstract class Manager extends Service {
 	 * Checks whether the models are publicly readable.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return bool True if models are public, false otherwise.
 	 */
@@ -516,7 +489,6 @@ abstract class Manager extends Service {
 	 * Returns a specific manager message.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $identifier Identifier for the message.
 	 * @param bool   $noop       Optional. Whether this is a noop message. Default false.
@@ -531,7 +503,6 @@ abstract class Manager extends Service {
 	 * Adds data to the model cache, if the cache key doesn't already exist.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The data to add to the cache.
@@ -547,7 +518,6 @@ abstract class Manager extends Service {
 	 * Removes model cache contents matching key.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key What the contents in the cache are called.
 	 * @return bool True on successful removal, false on failure.
@@ -560,7 +530,6 @@ abstract class Manager extends Service {
 	 * Retrieves model cache contents from the cache by key.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key   The key under which the cache contents are stored.
 	 * @param bool       $force Optional. Whether to force an update of the local cache from the
@@ -577,7 +546,6 @@ abstract class Manager extends Service {
 	 * Replaces contents of the model cache with new data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The key for the cache data that should be replaced.
 	 * @param mixed      $data   The new data to store in the cache.
@@ -597,7 +565,6 @@ abstract class Manager extends Service {
 	 * always write data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|string $key    The cache key to use for retrieval later.
 	 * @param mixed      $data   The contents to store in the cache.
@@ -613,7 +580,6 @@ abstract class Manager extends Service {
 	 * Returns the nonce action name for a given action type and model ID.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $action_type Optional. Action type. Either 'bulk_action', 'row_action' or 'action'.
 	 *                            Default 'action'.
@@ -639,7 +605,6 @@ abstract class Manager extends Service {
 	 * Cleans the cache for an model with a specific ID.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int         $model_id      ID of the model to clean the cache for.
 	 * @param object|null $new_db_object The new raw database object, or null if deleted.
@@ -663,7 +628,6 @@ abstract class Manager extends Service {
 	 * Cleans the count cache for a model if relevant changes have been applied.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param object|null $new_db_object The new raw database object, or null if deleted.
 	 * @param object|null $old_db_object The old raw database object, or null if added.
@@ -703,7 +667,6 @@ abstract class Manager extends Service {
 	 * Sets a model in the storage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int   $model_id ID of the model to set.
 	 * @param Model $model    Model to set for the ID.
@@ -717,7 +680,6 @@ abstract class Manager extends Service {
 	 * Retrieves a model from the storage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to get.
 	 * @return Model|null The model on success, or null if it doesn't exist.
@@ -730,7 +692,6 @@ abstract class Manager extends Service {
 	 * Checks whether a model is set in the storage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to check for.
 	 * @return bool True if the model is set, or false otherwise.
@@ -743,7 +704,6 @@ abstract class Manager extends Service {
 	 * Unsets a model in the storage.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int $model_id ID of the model to unset.
 	 * @return bool True on success, or false on failure.
@@ -756,7 +716,6 @@ abstract class Manager extends Service {
 	 * Adds the database table.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function add_database_table();
 
@@ -766,7 +725,6 @@ abstract class Manager extends Service {
 	 * This method must be implemented and then be called from the constructor.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function setup_hooks() {
 		$prefix        = $this->get_prefix();
@@ -904,7 +862,6 @@ abstract class Manager extends Service {
 	 * Renders a delete link for the major publishing area of the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|null $id       Current model ID, or null if new model.
 	 * @param Model    $model    Current model object.
@@ -939,7 +896,6 @@ abstract class Manager extends Service {
 	 * Renders an edit button for the major publishing area of the model edit page.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param int|null $id    Current model ID, or null if new model.
 	 * @param Model    $model Current model object.

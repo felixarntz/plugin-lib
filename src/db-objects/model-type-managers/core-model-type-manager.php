@@ -25,7 +25,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Slug of the default type.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $default = '';
@@ -34,7 +33,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Registers a new type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug for the type.
 	 * @param array  $args Optional. Array of type arguments. Default empty.
@@ -59,7 +57,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Retrieves a type object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return Model_Type|null Type object, or null it it does not exist.
@@ -88,7 +85,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args {
 	 *     Array of arguments for querying types. Any field available on the type can be passed
@@ -137,7 +133,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Unregisters an existing type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return bool True on success, false on failure.
@@ -159,7 +154,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Returns the slug of the default type.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Default type.
 	 */
@@ -175,7 +169,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Registers default types.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function register_defaults() {
 		/* Default core types already exist. */
@@ -185,7 +178,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Registers a new type in Core.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $slug Unique slug for the type.
 	 * @param array  $args Optional. Array of type arguments. Default empty.
@@ -197,7 +189,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Retrieves a type object from Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return object|null Type object, or null it it does not exist.
@@ -211,7 +202,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array|string $args     Optional. An array of key => value arguments
 	 *                               to match against the type objects. Default
@@ -230,7 +220,6 @@ abstract class Core_Model_Type_Manager extends Model_Type_Manager {
 	 * Unregisters an existing type in Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the type.
 	 * @return bool True on success, false on failure.

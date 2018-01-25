@@ -25,7 +25,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Slug of the default status.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $default = '';
@@ -34,7 +33,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Registers a new status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug for the status.
 	 * @param array  $args Optional. Array of status arguments. Default empty.
@@ -59,7 +57,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Retrieves a status object.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return Model_Status|null Status object, or null it it does not exist.
@@ -88,7 +85,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array $args {
 	 *     Array of arguments for querying statuses. Any field available on the status can be passed
@@ -137,7 +133,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Unregisters an existing status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return bool True on success, false on failure.
@@ -159,7 +154,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Returns the slug of the default status.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Default status.
 	 */
@@ -175,7 +169,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Registers default statuses.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected function register_defaults() {
 		/* Default core statuses already exist. */
@@ -185,7 +178,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Registers a new status in Core.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $slug Unique slug for the status.
 	 * @param array  $args Optional. Array of status arguments. Default empty.
@@ -197,7 +189,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Retrieves a status object from Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return object|null Status object, or null it it does not exist.
@@ -211,7 +202,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * However, the result can be modified by specifying arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param array|string $args     Optional. An array of key => value arguments
 	 *                               to match against the status objects. Default
@@ -230,7 +220,6 @@ abstract class Core_Model_Status_Manager extends Model_Status_Manager {
 	 * Unregisters an existing status in Core.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $slug Unique slug of the status.
 	 * @return bool True on success, false on failure.

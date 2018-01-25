@@ -22,7 +22,6 @@ trait Date_Manager_Trait {
 	 * The date property of the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $date_property = 'date';
@@ -31,7 +30,6 @@ trait Date_Manager_Trait {
 	 * Array of secondary date properties in the model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $secondary_date_properties = array();
@@ -40,7 +38,6 @@ trait Date_Manager_Trait {
 	 * Returns the name of the date property in a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return string Name of the date property.
 	 */
@@ -52,7 +49,6 @@ trait Date_Manager_Trait {
 	 * Returns the names for any secondary date properties, if any.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of secondary date properties.
 	 */
@@ -64,7 +60,6 @@ trait Date_Manager_Trait {
 	 * Returns the names of both the primary date property and the secondary date properties.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return array Array of date properties.
 	 */
@@ -76,7 +71,6 @@ trait Date_Manager_Trait {
 	 * Sets a date on a model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Model  $model    The model to set a date on.
 	 * @param string $property Name of the date property.
@@ -106,7 +100,6 @@ trait Date_Manager_Trait {
 	 * Sets the date property on a model if it isn't set already.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param null  $ret   Return value from the filter.
 	 * @param Model $model The model to modify.

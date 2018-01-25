@@ -28,7 +28,6 @@ trait Args_Service_Trait {
 	 * The internal arguments, as `$name => $value` pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var array
 	 */
 	protected $args = array();
@@ -39,7 +38,6 @@ trait Args_Service_Trait {
 	 * Supports checking for internal arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property_name Property name. Should be the name of an argument.
 	 * @return bool True if the argument is set, otherwise false.
@@ -58,7 +56,6 @@ trait Args_Service_Trait {
 	 * Supports retrieval of internal arguments.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property_name Property name. Should be the name of an argument.
 	 * @return mixed|null Argument value, or null if it does not exist.
@@ -75,7 +72,6 @@ trait Args_Service_Trait {
 	 * Sets the arguments for this class.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param array $args Array of arguments.
 	 */
@@ -91,7 +87,6 @@ trait Args_Service_Trait {
 	 * Returns the internal argument parsers.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 * @static
 	 *
 	 * @return Array of `$name => $callback` pairs.

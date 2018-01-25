@@ -25,7 +25,6 @@ abstract class Core_Model extends Model {
 	 * The original Core object for this model.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var object
 	 */
 	protected $original;
@@ -35,7 +34,6 @@ abstract class Core_Model extends Model {
 	 * This property can be used to specify the prefix and thus make access easier.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 * @var string
 	 */
 	protected $redundant_prefix = '';
@@ -46,7 +44,6 @@ abstract class Core_Model extends Model {
 	 * Sets the ID and fetches relevant data.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param Manager     $manager The manager instance for the model.
 	 * @param object|null $db_obj  Optional. The database object or null for a new instance.
@@ -65,7 +62,6 @@ abstract class Core_Model extends Model {
 	 * Checks whether a property is set.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to check for.
 	 * @return bool True if the property is set, false otherwise.
@@ -93,7 +89,6 @@ abstract class Core_Model extends Model {
 	 * Returns a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to get.
 	 * @return mixed Property value, or null if property is not set.
@@ -121,7 +116,6 @@ abstract class Core_Model extends Model {
 	 * Sets a property value.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -169,7 +163,6 @@ abstract class Core_Model extends Model {
 	 * Returns the original Core object for this model.
 	 *
 	 * @since 1.0.0
-	 * @access public
 	 *
 	 * @return object WordPress Core object.
 	 */
@@ -181,7 +174,6 @@ abstract class Core_Model extends Model {
 	 * Sets the properties of the model to those of a database row object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param object $db_obj The database object.
 	 */
@@ -193,7 +185,6 @@ abstract class Core_Model extends Model {
 	 * Sets the value of an existing property in a type-safe way.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed  $value    Property value.
@@ -218,7 +209,6 @@ abstract class Core_Model extends Model {
 	 * Sets or gets the value of the primary property.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param int|null $value Integer to set the value, null to retrieve it. Default null.
 	 * @return return int Current value of the primary property.
@@ -239,7 +229,6 @@ abstract class Core_Model extends Model {
 	 * Returns all current values as $property => $value pairs.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @param bool $pending_only Whether to only return pending properties. Default false.
 	 * @return array Array of $property => $value pairs.
@@ -265,7 +254,6 @@ abstract class Core_Model extends Model {
 	 * When overriding this method, always make sure to merge with the parent result.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Property blacklist.
 	 */
@@ -283,7 +271,6 @@ abstract class Core_Model extends Model {
 	 * This method is called if a new object has been instantiated.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 */
 	protected abstract function set_default_object();
 
@@ -291,7 +278,6 @@ abstract class Core_Model extends Model {
 	 * Returns the names of all properties that are part of the database object.
 	 *
 	 * @since 1.0.0
-	 * @access protected
 	 *
 	 * @return array Array of property names.
 	 */
