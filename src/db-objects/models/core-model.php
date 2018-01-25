@@ -227,7 +227,9 @@ abstract class Core_Model extends Model {
 		$primary_property = $this->manager->get_primary_property();
 
 		if ( is_int( $value ) ) {
-			$this->original->$primary_property = $value;
+			if ( $value !== (int) $this->original->$primary_property ) {
+				$this->original = $this->manager->fetch( $value );
+			}
 		}
 
 		return $this->original->$primary_property;
