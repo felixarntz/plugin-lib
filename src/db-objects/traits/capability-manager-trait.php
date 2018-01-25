@@ -12,22 +12,22 @@ use Leaves_And_Love\Plugin_Lib\DB_Objects\Capabilities;
 
 if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Capability_Manager_Trait' ) ) :
 
-/**
- * Trait for managers.
- *
- * Include this trait for managers that support capabilities.
- *
- * @since 1.0.0
- */
-trait Capability_Manager_Trait {
 	/**
-	 * The capabilities service definition.
+	 * Trait for managers.
+	 *
+	 * Include this trait for managers that support capabilities.
 	 *
 	 * @since 1.0.0
-	 * @static
-	 * @var string
 	 */
-	protected static $service_capabilities = Capabilities::class;
-}
+	trait Capability_Manager_Trait {
+		/**
+		 * The capabilities service definition.
+		 *
+		 * @since 1.0.0
+		 * @static
+		 * @var string
+		 */
+		protected static $service_capabilities = Capabilities::class;
+	}
 
 endif;
