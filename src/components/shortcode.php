@@ -2,7 +2,7 @@
 /**
  * Shortcode class
  *
- * @package LeavesAndLovePluginLib
+ * @package Leaves_And_Love\Plugin_Lib
  * @since 1.0.0
  */
 

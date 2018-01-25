@@ -2,7 +2,7 @@
 /**
  * Model status manager class for Core objects
  *
- * @package LeavesAndLovePluginLib
+ * @package Leaves_And_Love\Plugin_Lib
  * @since 1.0.0
  */
 

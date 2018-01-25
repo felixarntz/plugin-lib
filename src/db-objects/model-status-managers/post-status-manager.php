@@ -2,7 +2,7 @@
 /**
  * Manager class for post statuses
  *
- * @package LeavesAndLovePluginLib
+ * @package Leaves_And_Love\Plugin_Lib
  * @since 1.0.0
  */
 
