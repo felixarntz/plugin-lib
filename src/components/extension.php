@@ -43,6 +43,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 		protected $basedir_relative;
 
 		/**
+		 * The extension version.
+		 *
+		 * @since 1.0.0
+		 * @var string
+		 */
+		protected $version;
+
+		/**
 		 * The extension vendor name.
 		 *
 		 * @since 1.0.0
@@ -86,6 +94,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 
 			$this->load_base_properties();
 			$this->load_textdomain();
+		}
+
+		/**
+		 * Returns the plugin version number.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return string Version number.
+		 */
+		public function version() {
+			return $this->version;
 		}
 
 		/**
