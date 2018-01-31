@@ -132,6 +132,23 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 		}
 
 		/**
+		 * Magic caller.
+		 *
+		 * This method ensures that properties that are services can be retrieved by their name.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $method    Method name.
+		 * @param array  $arguments Method arguments.
+		 * @return mixed Service instance if $method applies to a service available in the extension.
+		 */
+		public function __call( $method, $arguments ) {
+			if ( isset( $this->$method ) && $this->$method instanceof Service ) {
+				return $this->$method;
+			}
+		}
+
+		/**
 		 * Loads the plugin by registering the autoloader and instantiating the general classes.
 		 *
 		 * This method can only be executed once.
