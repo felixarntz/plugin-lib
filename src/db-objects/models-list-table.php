@@ -164,7 +164,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 */
 		public function column_title( $model ) {
 			$title_property = $this->manager->get_title_property();
-			$title = $model->$title_property;
+			$title = ! empty( $model->$title_property ) ? $model->$title_property : $this->manager->get_message( 'list_table_no_title' );
 
 			$primary_property = $this->manager->get_primary_property();
 			$model_id = $model->$primary_property;

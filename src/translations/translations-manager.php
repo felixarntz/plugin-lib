@@ -119,6 +119,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Translations\Translations_Manag
 				'list_table_column_label_title'                         => $this->_xtranslate( 'Title', 'model column label', 'textdomain' ),
 				'list_table_column_label_author'                        => $this->_xtranslate( 'Author', 'model column label', 'textdomain' ),
 				'list_table_column_label_date'                          => $this->_xtranslate( 'Date', 'model column label', 'textdomain' ),
+				'list_table_no_title'                                   => $this->_xtranslate( '(no title)', 'model title placeholder', 'textdomain' ),
 				/* translators: %s: formatted model count */
 				'list_table_view_mine'                                  => $this->_nx_nooptranslate( 'Mine <span class="count">(%s)</span>', 'Mine <span class="count">(%s)</span>', 'model view', 'textdomain' ),
 				/* translators: %s: formatted model count */
