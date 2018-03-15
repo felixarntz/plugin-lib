@@ -326,7 +326,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					<span<?php echo $this->get_label_attrs(); ?>>
 						<?php echo $this->label; ?>
 						<?php if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
-							<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
+							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
 					</span>
 					<?php
@@ -335,7 +335,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					<label<?php echo $this->get_label_attrs(); ?>>
 						<?php echo $this->label; ?>
 						<?php if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
-							<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
+							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
 					</label>
 					<?php
