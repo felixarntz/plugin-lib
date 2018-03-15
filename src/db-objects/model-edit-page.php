@@ -75,11 +75,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param string      $slug          Page slug.
-		 * @param Admin_Pages $manager       Admin page manager instance.
-		 * @param Manager     $model_manager Model manager instance.
+		 * @param string      $slug               Page slug.
+		 * @param Admin_Pages $manager            Admin page manager instance.
+		 * @param Manager     $model_manager      Model manager instance.
+		 * @param array       $field_manager_args Optional. Arguments to pass to the field manager used.
+		 *                                        Default empty array.
 		 */
-		public function __construct( $slug, $manager, $model_manager ) {
+		public function __construct( $slug, $manager, $model_manager, $field_manager_args = array() ) {
 			parent::__construct( $slug, $manager, $model_manager );
 
 			if ( empty( $this->title ) ) {
@@ -109,15 +111,16 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				'error_handler' => $this->manager->error_handler(),
 			);
 
-			$manager_args = array(
+			$field_manager_args = wp_parse_args( $field_manager_args, array(
 				'get_value_callback'         => array( $this, 'get_model_field_value' ),
 				'get_value_callback_args'    => array( '{id}' ),
 				'update_value_callback'      => array( $this, 'update_model_field_value' ),
 				'update_value_callback_args' => array( '{id}', '{value}' ),
 				'name_prefix'                => '',
-			);
+				'field_required_markup'      => '',
+			) );
 
-			$this->field_manager = new Field_Manager( $this->manager->get_prefix(), $services, $manager_args );
+			$this->field_manager = new Field_Manager( $this->manager->get_prefix(), $services, $field_manager_args );
 
 			if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 				$this->manager->ajax()->register_action( 'model_generate_slug', array( $this, 'ajax_model_generate_slug' ) );
