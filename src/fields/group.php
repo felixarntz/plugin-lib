@@ -178,6 +178,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 		}
 
 		/**
+		 * Gets the HTML markup to indicate that a field is required.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return string HTML markup.
+		 */
+		public function get_field_required_markup() {
+			return $this->manager->get_field_required_markup();
+		}
+
+		/**
 		 * Returns a specific manager message.
 		 *
 		 * @since 1.0.0

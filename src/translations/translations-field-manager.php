@@ -23,6 +23,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Translations\Translations_Field
 		 */
 		protected function init() {
 			$this->translations = array(
+				'field_required_indicator'               => $this->_xtranslate( '(required)', 'field required indicator', 'textdomain' ),
 				/* translators: %s: field label */
 				'field_empty_required'                   => $this->__translate( 'No value was given for the required field &#8220;%s&#8221;.', 'textdomain' ),
 				/* translators: %s: field label */

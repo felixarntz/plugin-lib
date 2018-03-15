@@ -188,6 +188,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		 *                                                that this argument should be replaced by the field ID.
 		 *     @type string   $name_prefix                The name prefix to create name attributes for fields.
 		 *     @type string   $render_mode                Render mode. Default 'form-table'.
+		 *     @type string   $field_required_markup      HTML markup to render after a label for a required field.
+		 *                                                Default empty string.
 		 *     @type bool     $skip_js_initialization     Whether to skip field initialization in JavaScript.
 		 *                                                Default false.
 		 * }
@@ -676,6 +678,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		}
 
 		/**
+		 * Gets the HTML markup to indicate that a field is required.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return string HTML markup.
+		 */
+		public function get_field_required_markup() {
+			if ( empty( $this->field_required_markup ) ) {
+				return '<em>' . $this->get_message( 'field_required_indicator' ) . '</em>';
+			}
+
+			return $this->field_required_markup;
+		}
+
+		/**
 		 * Returns the ID of this instance.
 		 *
 		 * @since 1.0.0
@@ -1109,6 +1126,23 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 			}
 
 			return $value;
+		}
+
+		/**
+		 * Parses the HTML markup to indicate that a field is required.
+		 *
+		 * @since 1.0.0
+		 * @static
+		 *
+		 * @param  mixed $value The input value.
+		 * @return string The parsed value.
+		 */
+		protected static function parse_arg_field_required_markup( $value ) {
+			if ( ! $value ) {
+				return '';
+			}
+
+			return trim( (string) $value );
 		}
 
 		/**

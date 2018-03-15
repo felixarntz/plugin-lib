@@ -41,6 +41,15 @@ if ( ! interface_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Interfaces\Field_Man
 		public function make_name( $id, $index = null );
 
 		/**
+		 * Gets the HTML markup to indicate that a field is required.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return string HTML markup.
+		 */
+		public function get_field_required_markup();
+
+		/**
 		 * Returns a specific manager message.
 		 *
 		 * @since 1.0.0
