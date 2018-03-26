@@ -1,7 +1,7 @@
 /*!
  * plugin-lib (https://github.com/felixarntz/plugin-lib)
  * By Felix Arntz (https://leaves-and-love.net)
- * Licensed under GPL-3.0
+ * Licensed under GPL-2.0-or-later
  */
 ( function( exports, $, _, Backbone, wp, fieldsAPIData ) {
 	'use strict';
@@ -240,7 +240,7 @@
 			}
 		},
 
-		'get_data_by_named_map': function( prop, values, args, cb ) {
+		'get_data_by_named_map': function( prop, values, args, cb, instanceId ) {
 			var defaultResult = args['default'] || null;
 
 			if ( _.isUndefined( args.named_map ) || _.isEmpty( args.named_map ) ) {
@@ -251,20 +251,24 @@
 			var namedMap = args.named_map;
 			var merge    = !! args.merge;
 			var operator = ( args.operator && args.operator.toUpperCase() === 'OR' ) ? 'OR' : 'AND';
-			var identifier, value, map;
+			var identifier, rawIdentifier, value, map;
 
 			var result = null;
 
 			var usedValues = {};
 			for ( var i in Object.keys( values ) ) {
-				identifier = Object.keys( values )[ i ];
-				value      = values[ identifier ];
+				identifier    = Object.keys( values )[ i ];
+				rawIdentifier = identifier.replace( instanceId + '_', '' );
+				value         = values[ identifier ];
 
 				if ( _.isUndefined( namedMap[ identifier ] ) ) {
-					continue;
+					if ( _.isUndefined( namedMap[ rawIdentifier ] ) ) {
+						continue;
+					}
+					map = namedMap[ rawIdentifier ];
+				} else {
+					map = namedMap[ identifier ];
 				}
-
-				map = namedMap[ identifier ];
 
 				usedValues[ identifier ] = [];
 				if ( _.isUndefined( map[ value ] ) ) {
@@ -302,12 +306,12 @@
 	};
 
 	fieldsAPI.DependencyResolver = {
-		startQueue: function() {
+		startQueue: function( instanceId ) {
 			drPriv.queueCount++;
 			drPriv.queueTotal++;
 
 			var queueIdentifier = 'queue' + drPriv.queueTotal;
-			var queue = new fieldsAPI.DependencyResolverQueue( queueIdentifier );
+			var queue = new fieldsAPI.DependencyResolverQueue( queueIdentifier, instanceId );
 
 			drPriv.queues[ queueIdentifier ] = queue;
 
@@ -347,11 +351,12 @@
 		}
 	};
 
-	fieldsAPI.DependencyResolverQueue = function( queueIdentifier ) {
+	fieldsAPI.DependencyResolverQueue = function( queueIdentifier, instanceId ) {
 		this.queueIdentifier = queueIdentifier;
-		this.queuedItems = [];
-		this.resolvedProps = {};
-		this.busyCount = 0;
+		this.instanceId      = instanceId;
+		this.queuedItems     = [];
+		this.resolvedProps   = {};
+		this.busyCount       = 0;
 		this.finalizeCallback;
 	};
 
@@ -380,7 +385,7 @@
 			for ( var i in this.queuedItems ) {
 				queuedItem = this.queuedItems[ i ];
 
-				queuedItem.callback( queuedItem.prop, queuedItem.values, queuedItem.args, _.bind( this.resolved, this, queuedItem.targetId, queuedItem.prop ) );
+				queuedItem.callback( queuedItem.prop, queuedItem.values, queuedItem.args, _.bind( this.resolved, this, queuedItem.targetId, queuedItem.prop ), this.instanceId );
 			}
 		},
 
@@ -452,7 +457,7 @@
 			options = options || {};
 
 			if ( options.instanceId ) {
-				this.instanceId = options.InstanceId;
+				this.instanceId = options.instanceId;
 			}
 
 			this.dependencyTriggers = {};
@@ -498,7 +503,7 @@
 				return;
 			}
 
-			var dependencyQueue = new fieldsAPI.DependencyResolver.startQueue();
+			var dependencyQueue = new fieldsAPI.DependencyResolver.startQueue( this.instanceId );
 			var dependency;
 			var currentValues;
 
