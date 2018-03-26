@@ -257,15 +257,20 @@
 
 			var usedValues = {};
 			for ( var i in Object.keys( values ) ) {
-				identifier    = Object.keys( values )[ i ];
-				rawIdentifier = identifier.replace( instanceId + '_', '' );
-				value         = values[ identifier ];
+				identifier = Object.keys( values )[ i ];
+				value      = values[ identifier ];
 
 				if ( _.isUndefined( namedMap[ identifier ] ) ) {
+					rawIdentifier = identifier.replace( '-', '_' );
 					if ( _.isUndefined( namedMap[ rawIdentifier ] ) ) {
-						continue;
+						rawIdentifier = rawIdentifier.replace( instanceId + '_', '' );
+						if ( _.isUndefined( namedMap[ rawIdentifier ] ) ) {
+							continue;
+						}
+						map = namedMap[ rawIdentifier ];
+					} else {
+						map = namedMap[ rawIdentifier ];
 					}
-					map = namedMap[ rawIdentifier ];
 				} else {
 					map = namedMap[ identifier ];
 				}
