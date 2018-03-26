@@ -211,6 +211,10 @@
 				identifier = Object.keys( values )[ i ];
 				value      = values[ identifier ];
 
+				if ( _.isBoolean( value ) ) {
+					value = value ? 1 : 0;
+				}
+
 				if ( _.isUndefined( map[ value ] ) ) {
 					continue;
 				}
@@ -268,6 +272,10 @@
 					}
 				} else {
 					map = namedMap[ identifier ];
+				}
+
+				if ( _.isBoolean( value ) ) {
+					value = value ? 1 : 0;
 				}
 
 				usedValues[ identifier ] = [];
