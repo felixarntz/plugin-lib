@@ -325,7 +325,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					?>
 					<span<?php echo $this->get_label_attrs(); ?>>
 						<?php echo $this->label; ?>
-						<?php if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
+						<?php if ( ! $this->is_repeatable() && isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
 							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
 					</span>
@@ -334,7 +334,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					?>
 					<label<?php echo $this->get_label_attrs(); ?>>
 						<?php echo $this->label; ?>
-						<?php if ( isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
+						<?php if ( ! $this->is_repeatable() && isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
 							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
 					</label>
@@ -463,14 +463,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					<# if ( _.contains( [ 'no_assoc', 'aria_hidden' ], data.labelMode ) ) { #>
 						<span{{{ _.attrs( data.labelAttrs ) }}}>
 							{{{ data.label }}}
-							<# if ( data.inputAttrs.required ) { #>
+							<# if ( ! data.repeatable && data.inputAttrs.required ) { #>
 								<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
 							<# } #>
 						</span>
 					<# } else { #>
 						<label{{{ _.attrs( data.labelAttrs ) }}}>
 							{{{ data.label }}}
-							<# if ( data.inputAttrs.required ) { #>
+							<# if ( ! data.repeatable && data.inputAttrs.required ) { #>
 								<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
 							<# } #>
 						</label>
