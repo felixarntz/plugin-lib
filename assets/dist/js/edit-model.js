@@ -30,8 +30,10 @@
     });
 
 	$( '.nav-tab' ).on( 'click', function( e ) {
-		var $this = $( this );
-		var $all  = $this.parent().children( '.nav-tab' );
+		var $this   = $( this );
+		var $target = $( $this.attr( 'href' ) );
+		var $all    = $this.parent().children( '.nav-tab' );
+		var $focusables, $focusable, i;
 
 		e.preventDefault();
 
@@ -45,9 +47,22 @@
 		});
 
 		$this.attr( 'aria-selected', 'true' );
-		$( $this.attr( 'href' ) ).attr( 'aria-hidden', 'false' ).find( '.plugin-lib-map-control' ).each( function() {
+		$target.attr( 'aria-hidden', 'false' ).find( '.plugin-lib-map-control' ).each( function() {
 			$( this ).wpMapPicker( 'refresh' );
 		});
+
+		$focusables = $target.find( 'input,select,textarea,button,a' );
+		for ( i = 0; i < $focusables.length; i++ ) {
+			$focusable = $( $focusables.get( i ) );
+			if ( '-1' !== $focusable.attr( 'tabindex' ) ) {
+				break;
+			}
+
+			$focusable = undefined;
+		}
+		if ( $focusable ) {
+			$focusable.focus();
+		}
 	});
 
 	var $realSlug    = $( '#post_name' );
