@@ -1157,9 +1157,16 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 
 			$all_input_attrs = array_merge( $base_input_attrs, $input_attrs, $this->input_attrs );
 
-			if ( ! $this->display && isset( $all_input_attrs['required'] ) && $all_input_attrs['required'] ) {
-				$all_input_attrs['required'] = false;
+			if ( isset( $all_input_attrs['required'] ) && $all_input_attrs['required'] ) {
 				$all_input_attrs['data-required'] = 'true';
+			}
+
+			if ( ! $this->display ) {
+				$all_input_attrs['tabindex'] = '-1';
+
+				if ( isset( $all_input_attrs['required'] ) && $all_input_attrs['required'] ) {
+					$all_input_attrs['required'] = false;
+				}
 			}
 
 			if ( $as_string ) {

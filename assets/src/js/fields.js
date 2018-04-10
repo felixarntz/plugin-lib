@@ -431,6 +431,27 @@
 	 * @augments Backbone.Model
 	 */
 	fieldsAPI.Field = Backbone.Model.extend({
+		initialize: function() {
+			this.on( 'change:display', this.onDisplayChange, this );
+		},
+
+		onDisplayChange: function( field, display ) {
+			var wrapAttrs  = field.get( 'wrapAttrs' );
+			var inputAttrs = field.get( 'inputAttrs' );
+
+			if ( wrapAttrs ) {
+				wrapAttrs['aria-hidden'] = display ? 'false' : 'true';
+			}
+
+			if ( inputAttrs ) {
+				inputAttrs.tabindex = display ? '0' : '-1';
+
+				if ( inputAttrs['data-required'] ) {
+					inputAttrs.required = display;
+				}
+			}
+		},
+
 		sync: function() {
 			return false;
 		}
@@ -1001,6 +1022,22 @@
 
 		applyDisplay: function( field, display ) {
 			var $wrap = this.$el;
+
+			$wrap.find( '.plugin-lib-control' ).each( function() {
+				var $this    = $( this );
+				var $select2 = $wrap.find( '.select2-selection[aria-labelledby="select2-' + $this.attr( 'id' ) + '-container"]' );
+
+				$this.attr( 'tabindex', display ? '0' : '-1' );
+				if ( $select2 && $select2.length ) {
+					$select2.each( function() {
+						this.tabIndex = display ? '0' : '-1';
+					});
+				}
+
+				if ( $this.data( 'required' ) ) {
+					$( this ).prop( 'required', display );
+				}
+			});
 
 			if ( display ) {
 				$wrap.addClass( 'plugin-lib-toggling' ).removeClass( 'plugin-lib-hidden' ).attr( 'aria-hidden', 'false' );
