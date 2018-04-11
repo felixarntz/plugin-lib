@@ -101,6 +101,12 @@
 			if ( ! _.isUndefined( args.breakpoint ) ) {
 				if ( parseInt( args.breakpoint, 10 ) === args.breakpoint ) {
 					sanitize = _.bind( parseInt, undefined, undefined, 10 );
+				} else if ( 'string' === typeof args.breakpoint && args.breakpoint.match( /^((\d{4}-\d{2}-\d{2})|(\d{2}:\d{2}:\d{2})|(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}))$/ ) ) {
+					sanitize = function( dt ) {
+						var datetime = new Date( dt.replace( ' ', 'T' ) );
+
+						return datetime.getTime() / 1000;
+					};
 				}
 
 				breakpoint = sanitize( args.breakpoint );
@@ -970,6 +976,7 @@
 
 		getInputValue: function( $input ) {
 			var currentValue = null;
+			var dateParts;
 
 			if ( ( $input.is( ':checkbox' ) && '[]' === $input.attr( 'name' ).substr( -2 ) ) ) {
 				currentValue = [];
@@ -991,6 +998,32 @@
 				$input.each( 'option:selected', _.bind( function( index, element ) {
 					currentValue.push( this.$( element ).val() );
 				}, this ) );
+			} else if ( $.fn.datetimepicker && $input.datetimepicker( 'instance' ) ) {
+				currentValue = $input.datetimepicker( 'getValue' );
+
+				if ( currentValue ) {
+					dateParts    = {
+						year:   ( '' + currentValue.getFullYear() ).padStart( 4, '0' ),
+						month:  ( '' + ( currentValue.getMonth() + 1 ) ).padStart( 2, '0' ),
+						day:    ( '' + currentValue.getDate() ).padStart( 2, '0' ),
+						hour:   ( '' + currentValue.getHours() ).padStart( 2, '0' ),
+						minute: ( '' + currentValue.getMinutes() ).padStart( 2, '0' ),
+						second: ( '' + currentValue.getSeconds() ).padStart( 2, '0' )
+					};
+
+					switch ( $input.data( 'store' ) ) {
+						case 'date':
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day;
+							break;
+						case 'time':
+							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							break;
+						default:
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+					}
+				} else {
+					currentValue = null;
+				}
 			} else {
 				currentValue = $input.val();
 			}

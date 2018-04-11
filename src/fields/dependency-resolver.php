@@ -475,6 +475,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) )
 			if ( isset( $args['breakpoint'] ) ) {
 				if ( is_int( $args['breakpoint'] ) ) {
 					$sanitize = 'intval';
+				} elseif ( is_string( $args['breakpoint'] ) && preg_match( '/^((\d{4}-\d{2}-\d{2})|(\d{2}:\d{2}:\d{2})|(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}))$/', $args['breakpoint'] ) ) {
+					$sanitize = 'strtotime';
 				}
 
 				$breakpoint = call_user_func( $sanitize, $args['breakpoint'] );
