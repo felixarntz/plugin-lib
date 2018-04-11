@@ -998,7 +998,7 @@
 				$input.each( 'option:selected', _.bind( function( index, element ) {
 					currentValue.push( this.$( element ).val() );
 				}, this ) );
-			} else if ( $.fn.datetimepicker && $input.datetimepicker( 'instance' ) ) {
+			} else if ( $.fn.datetimepicker && $input.data( 'xdsoft_datetimepicker' ) ) {
 				currentValue = $input.datetimepicker( 'getValue' );
 
 				if ( currentValue ) {
@@ -1063,13 +1063,12 @@
 
 			$wrap.find( '.plugin-lib-control' ).each( function() {
 				var $this    = $( this );
-				var $select2 = $wrap.find( '.select2-selection[aria-labelledby="select2-' + $this.attr( 'id' ) + '-container"]' );
+				var $select2 = $this.data( 'select2' ) ? $this.data( 'select2' ).$selection : undefined;
 
-				$this.attr( 'tabindex', display ? '0' : '-1' );
-				if ( $select2 && $select2.length ) {
-					$select2.each( function() {
-						this.tabIndex = display ? '0' : '-1';
-					});
+				if ( $select2 ) {
+					$select2.attr( 'tabindex', display ? '0' : '-1' );
+				} else {
+					$this.attr( 'tabindex', display ? '0' : '-1' );
 				}
 
 				if ( $this.data( 'required' ) ) {

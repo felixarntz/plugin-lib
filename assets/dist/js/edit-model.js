@@ -51,7 +51,7 @@
 			$( this ).wpMapPicker( 'refresh' );
 		});
 
-		$focusables = $target.find( 'input,select,textarea,button,a' );
+		$focusables = $target.find( 'input,select,textarea,button,a,.select2-selection' );
 		for ( i = 0; i < $focusables.length; i++ ) {
 			$focusable = $( $focusables.get( i ) );
 			if ( '-1' !== $focusable.attr( 'tabindex' ) ) {
