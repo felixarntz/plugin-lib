@@ -2,6 +2,12 @@
 <ruleset name="Leaves And Love Plugin Library PHPCS Rules">
 	<description>A custom set of PHPCS rules for the Leaves And Love Plugin Library.</description>
 
+	<file>./plugin-loader.php</file>
+	<file>./src</file>
+
+	<exclude-pattern>*/src/translations/*</exclude-pattern>
+	<exclude-pattern>*/tests/*</exclude-pattern>
+
 	<rule ref="WordPress">
 		<exclude name="WordPress.Files.FileName"/>
 		<exclude name="WordPress.VIP.SuperGlobalInputUsage"/>
