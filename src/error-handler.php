@@ -53,9 +53,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 
 			if ( WP_DEBUG && apply_filters( 'deprecated_function_trigger_error', true ) ) {
 				if ( ! is_null( $replacement ) ) {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_function' ), $function, $version, $replacement ) );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_function' ), $function, $version, $replacement ) ); // phpcs:ignore
 				} else {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_function_no_alt' ), $function, $version ) );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_function_no_alt' ), $function, $version ) ); // phpcs:ignore
 				}
 			}
 		}
@@ -74,9 +74,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 
 			if ( WP_DEBUG && apply_filters( 'deprecated_argument_trigger_error', true ) ) {
 				if ( ! is_null( $message ) ) {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_argument' ), $function, $version, $message ) );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_argument' ), $function, $version, $message ) ); // phpcs:ignore
 				} else {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_argument_no_alt' ), $function, $version ) );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_argument_no_alt' ), $function, $version ) ); // phpcs:ignore
 				}
 			}
 		}
@@ -98,9 +98,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 				$message = empty( $message ) ? '' : ' ' . $message;
 
 				if ( ! is_null( $replacement ) ) {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_hook' ), $hook, $version, $replacement ) . $message );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_hook' ), $hook, $version, $replacement ) . $message ); // phpcs:ignore
 				} else {
-					trigger_error( sprintf( $this->get_translation( 'deprecated_hook_no_alt' ), $hook, $version ) . $message );
+					trigger_error( sprintf( $this->get_translation( 'deprecated_hook_no_alt' ), $hook, $version ) . $message ); // phpcs:ignore
 				}
 			}
 		}
@@ -124,7 +124,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Error_Handler' ) ) :
 					$version = ' ' . sprintf( $this->get_translation( 'added_in_version' ), $version );
 				}
 
-				trigger_error( sprintf( $this->get_translation( 'called_incorrectly' ), $function, $message . $version ) );
+				trigger_error( sprintf( $this->get_translation( 'called_incorrectly' ), $function, $message . $version ) ); // phpcs:ignore
 			}
 		}
 

@@ -183,7 +183,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager
 		 * @param array  $args Optional. Array of status arguments. Default empty.
 		 * @return bool True on success, false on failure.
 		 */
-		protected abstract function register_in_core( $slug, $args = array() );
+		abstract protected function register_in_core( $slug, $args = array() );
 
 		/**
 		 * Retrieves a status object from Core.
@@ -193,7 +193,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager
 		 * @param string $slug Unique slug of the status.
 		 * @return object|null Status object, or null it it does not exist.
 		 */
-		protected abstract function get_from_core( $slug );
+		abstract protected function get_from_core( $slug );
 
 		/**
 		 * Retrieves a list of status objects.
@@ -214,7 +214,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager
 		 *                               elements may match. Default 'and'.
 		 * @return array A list of status names or objects.
 		 */
-		protected abstract function query_core( $args = array(), $output = 'names', $operator = 'and' );
+		abstract protected function query_core( $args = array(), $output = 'names', $operator = 'and' );
 
 		/**
 		 * Unregisters an existing status in Core.
@@ -224,7 +224,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Status_Manager
 		 * @param string $slug Unique slug of the status.
 		 * @return bool True on success, false on failure.
 		 */
-		protected abstract function unregister_in_core( $slug );
+		abstract protected function unregister_in_core( $slug );
 	}
 
 endif;

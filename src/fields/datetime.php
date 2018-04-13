@@ -141,7 +141,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 			) );
 
 			$ret[0][] = 'datetimepicker';
-			$ret[1] = array_merge( $ret[1], array(
+			$ret[1]   = array_merge( $ret[1], array(
 				'language'       => substr( get_locale(), 0, 2 ),
 				'datetimeFormat' => sprintf( $this->manager->get_message( 'field_datetime_format_concat' ), get_option( 'date_format' ), get_option( 'time_format' ) ),
 				'dateFormat'     => get_option( 'date_format' ),
@@ -188,7 +188,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 				$current_value = $this->format( $current_value );
 			}
 
-			$data = parent::single_to_json( $current_value );
+			$data          = parent::single_to_json( $current_value );
 			$data['store'] = $this->store;
 
 			return $data;
@@ -221,12 +221,18 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 			$timestamp = $this->parse_as_timestamp( $value );
 			$value     = $this->parse( $timestamp );
 
-			if ( ! empty( $this->input_attrs['min'] ) && $timestamp < ( $timestamp_min = $this->parse_as_timestamp( $this->input_attrs['min'] ) ) ) {
-				return new WP_Error( 'field_datetime_lower_than', sprintf( $this->manager->get_message( 'field_datetime_lower_than' ), $this->format( $timestamp ), $this->label, $this->format( $timestamp_min ) ) );
+			if ( ! empty( $this->input_attrs['min'] ) ) {
+				$timestamp_min = $this->parse_as_timestamp( $this->input_attrs['min'] );
+				if ( $timestamp < $timestamp_min ) {
+					return new WP_Error( 'field_datetime_lower_than', sprintf( $this->manager->get_message( 'field_datetime_lower_than' ), $this->format( $timestamp ), $this->label, $this->format( $timestamp_min ) ) );
+				}
 			}
 
-			if ( ! empty( $this->input_attrs['max'] ) && $timestamp > ( $timestamp_max = $this->parse_as_timestamp( $this->input_attrs['max'] ) ) ) {
-				return new WP_Error( 'field_datetime_greater_than', sprintf( $this->manager->get_message( 'field_datetime_greater_than' ), $this->format( $timestamp ), $this->label, $this->format( $timestamp_max ) ) );
+			if ( ! empty( $this->input_attrs['max'] ) ) {
+				$timestamp_max = $this->parse_as_timestamp( $this->input_attrs['max'] );
+				if ( $timestamp > $timestamp_max ) {
+					return new WP_Error( 'field_datetime_greater_than', sprintf( $this->manager->get_message( 'field_datetime_greater_than' ), $this->format( $timestamp ), $this->label, $this->format( $timestamp_max ) ) );
+				}
 			}
 
 			return $value;
@@ -336,29 +342,37 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 		protected function untranslate_replace( $matches ) {
 			$term = $matches[0];
 
-			if ( $key = array_search( $term, self::$locale_data['weekday_initial'], true ) ) {
-				if ( $key = array_search( $key, self::$locale_data['weekday'], true ) ) {
+			$key = array_search( $term, self::$locale_data['weekday_initial'], true );
+			if ( $key ) {
+				$key = array_search( $key, self::$locale_data['weekday'], true );
+				if ( $key ) {
 					return $key;
 				}
 			}
 
-			if ( $key = array_search( $term, self::$locale_data['weekday_abbrev'], true ) ) {
-				if ( $key = array_search( $key, self::$locale_data['weekday'], true ) ) {
+			$key = array_search( $term, self::$locale_data['weekday_abbrev'], true );
+			if ( $key ) {
+				$key = array_search( $key, self::$locale_data['weekday'], true );
+				if ( $key ) {
 					return $key;
 				}
 			}
 
-			if ( $key = array_search( $term, self::$locale_data['weekday'], true ) ) {
+			$key = array_search( $term, self::$locale_data['weekday'], true );
+			if ( $key ) {
 				return $key;
 			}
 
-			if ( $key = array_search( $term, self::$locale_data['month_abbrev'], true ) ) {
-				if ( $key = array_search( $key, self::$locale_data['month'], true ) ) {
+			$key = array_search( $term, self::$locale_data['month_abbrev'], true );
+			if ( $key ) {
+				$key = array_search( $key, self::$locale_data['month'], true );
+				if ( $key ) {
 					return $key;
 				}
 			}
 
-			if ( $key = array_search( $term, self::$locale_data['month'], true ) ) {
+			$key = array_search( $term, self::$locale_data['month'], true );
+			if ( $key ) {
 				return $key;
 			}
 
@@ -393,29 +407,29 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 
 			self::$locale_data = array(
 				'weekday'         => array(
-					'Sunday'          => $wp_locale->weekday[0],
-					'Monday'          => $wp_locale->weekday[1],
-					'Tuesday'         => $wp_locale->weekday[2],
-					'Wednesday'       => $wp_locale->weekday[3],
-					'Thursday'        => $wp_locale->weekday[4],
-					'Friday'          => $wp_locale->weekday[5],
-					'Saturday'        => $wp_locale->weekday[6],
+					'Sunday'    => $wp_locale->weekday[0],
+					'Monday'    => $wp_locale->weekday[1],
+					'Tuesday'   => $wp_locale->weekday[2],
+					'Wednesday' => $wp_locale->weekday[3],
+					'Thursday'  => $wp_locale->weekday[4],
+					'Friday'    => $wp_locale->weekday[5],
+					'Saturday'  => $wp_locale->weekday[6],
 				),
 				'weekday_initial' => $wp_locale->weekday_initial,
 				'weekday_abbrev'  => $wp_locale->weekday_abbrev,
 				'month'           => array(
-					'January'         => $wp_locale->month['01'],
-					'February'        => $wp_locale->month['02'],
-					'March'           => $wp_locale->month['03'],
-					'April'           => $wp_locale->month['04'],
-					'May'             => $wp_locale->month['05'],
-					'June'            => $wp_locale->month['06'],
-					'July'            => $wp_locale->month['07'],
-					'August'          => $wp_locale->month['08'],
-					'September'       => $wp_locale->month['09'],
-					'October'         => $wp_locale->month['10'],
-					'November'        => $wp_locale->month['11'],
-					'December'        => $wp_locale->month['12'],
+					'January'   => $wp_locale->month['01'],
+					'February'  => $wp_locale->month['02'],
+					'March'     => $wp_locale->month['03'],
+					'April'     => $wp_locale->month['04'],
+					'May'       => $wp_locale->month['05'],
+					'June'      => $wp_locale->month['06'],
+					'July'      => $wp_locale->month['07'],
+					'August'    => $wp_locale->month['08'],
+					'September' => $wp_locale->month['09'],
+					'October'   => $wp_locale->month['10'],
+					'November'  => $wp_locale->month['11'],
+					'December'  => $wp_locale->month['12'],
 				),
 				'month_abbrev'    => $wp_locale->month_abbrev,
 			);

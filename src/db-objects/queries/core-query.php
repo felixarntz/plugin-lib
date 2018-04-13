@@ -131,7 +131,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Core_Query' 
 		 *
 		 * @return object Internal Core query object.
 		 */
-		protected abstract function instantiate_query_object();
+		abstract protected function instantiate_query_object();
 
 		/**
 		 * Parses the results of the internal Core query into a collection.
@@ -140,7 +140,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Core_Query' 
 		 *
 		 * @return Collection Results as a collection.
 		 */
-		protected abstract function parse_results_collection();
+		abstract protected function parse_results_collection();
 	}
 
 endif;

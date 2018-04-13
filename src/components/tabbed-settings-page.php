@@ -258,17 +258,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 		 * @param string $current_tab_id Identifier of the current tab.
 		 */
 		protected function render_tab_navigation( $current_tab_id ) {
-			if ( count( $this->tabs ) > 1 ) : ?>
+			if ( count( $this->tabs ) > 1 ) {
+				?>
 				<h2 class="nav-tab-wrapper">
 					<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
-						<a class="nav-tab<?php echo $tab_id === $current_tab_id ? ' nav-tab-active' : ''; ?>" href="<?php echo add_query_arg( 'tab', $tab_id ); ?>">
-							<?php echo $tab_args['title']; ?>
+						<a class="nav-tab<?php echo $tab_id === $current_tab_id ? ' nav-tab-active' : ''; ?>" href="<?php echo esc_attr( add_query_arg( 'tab', $tab_id ) ); ?>">
+							<?php echo wp_kses_data( $tab_args['title'] ); ?>
 						</a>
 					<?php endforeach; ?>
 				</h2>
-			<?php else : ?>
-				<h2 class="screen-reader-text"><?php echo $this->tabs[ $current_tab_id ]['title']; ?></h2>
-			<?php endif;
+				<?php
+			} else {
+				?>
+				<h2 class="screen-reader-text"><?php echo wp_kses_data( $this->tabs[ $current_tab_id ]['title'] ); ?></h2>
+				<?php
+			}
 		}
 
 		/**
@@ -279,11 +283,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 		 * @param string $current_tab_id Identifier of the current tab.
 		 */
 		protected function render_tab_header( $current_tab_id ) {
-			if ( ! empty( $this->tabs[ $current_tab_id ]['description'] ) ) : ?>
+			if ( ! empty( $this->tabs[ $current_tab_id ]['description'] ) ) {
+				?>
 				<p class="description">
-					<?php echo $this->tabs[ $current_tab_id ]['description']; ?>
+					<?php echo wp_kses_data( $this->tabs[ $current_tab_id ]['description'] ); ?>
 				</p>
-			<?php endif;
+				<?php
+			}
 		}
 
 		/**
@@ -294,8 +300,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 		 * @return string Identifier of the current tab.
 		 */
 		protected function get_current_tab() {
-			if ( isset( $_GET['tab'] ) ) {
-				$current_tab_id = wp_unslash( $_GET['tab'] );
+			if ( isset( $_GET['tab'] ) ) { // WPCS: CSRF OK.
+				$current_tab_id = wp_unslash( $_GET['tab'] ); // WPCS: CSRF OK.
 				if ( isset( $this->tabs[ $current_tab_id ] ) ) {
 					return $current_tab_id;
 				}
@@ -327,7 +333,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				if ( $section['title'] ) {
-					echo "<h3>{$section['title']}</h3>\n";
+					echo '<h3>' . wp_kses_data( $section['title'] ) . '</h3>';
+					echo "\n";
 				}
 
 				if ( $section['callback'] ) {

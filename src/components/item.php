@@ -153,7 +153,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Item' ) ) :
 		 *
 		 * @return array Default item arguments.
 		 */
-		protected abstract function get_defaults();
+		abstract protected function get_defaults();
 	}
 
 endif;

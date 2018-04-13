@@ -93,7 +93,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Args_Service_Trait' ) ) 
 		 */
 		public static function get_args_parsers() {
 			$reflection = new ReflectionClass( get_called_class() );
-			$methods = $reflection->getMethods( ReflectionMethod::IS_STATIC );
+			$methods    = $reflection->getMethods( ReflectionMethod::IS_STATIC );
 
 			$parsers = array();
 			foreach ( $methods as $method ) {

@@ -81,7 +81,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcode' ) ) :
 		 * @param Shortcodes   $manager The shortcode manager instance.
 		 */
 		public function __construct( $tag, $func, $args, $manager ) {
-			$this->tag = $tag;
+			$this->tag  = $tag;
 			$this->func = $func;
 			$this->args = wp_parse_args( $args, array(
 				'enqueue_callback' => null,
@@ -89,6 +89,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcode' ) ) :
 				'cache'            => false,
 				'cache_expiration' => DAY_IN_SECONDS,
 			) );
+
 			$this->manager = $manager;
 		}
 
@@ -107,7 +108,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcode' ) ) :
 			if ( $this->args['cache'] ) {
 				$cache_key = $this->get_cache_key( $atts, $content );
 
-				if ( false !== ( $cached = $this->manager->cache()->get( $cache_key, 'shortcodes' ) ) ) {
+				$cached = $this->manager->cache()->get( $cache_key, 'shortcodes' );
+				if ( false !== $cached ) {
 					return $cached;
 				}
 			}
@@ -182,7 +184,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Shortcode' ) ) :
 				$atts['__content'] = $content;
 			}
 
-			return $this->tag . ':' . md5( serialize( $atts ) );
+			return $this->tag . ':' . md5( serialize( $atts ) ); // phpcs:ignore
 		}
 	}
 

@@ -78,7 +78,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Collection' ) ) :
 		 */
 		public function __construct( $manager, $models, $total = 0, $fields = 'ids' ) {
 			$this->manager = $manager;
-			$this->models = $models;
+			$this->models  = $models;
 
 			if ( ! $total ) {
 				$total = count( $models );

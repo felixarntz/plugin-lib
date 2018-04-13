@@ -74,7 +74,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
 		public function add( $meta_type, $object_id, $meta_key, $meta_value, $unique = false ) {
 			if ( is_multisite() && in_array( $meta_type, array( 'site', 'network' ), true ) ) {
 				$callback = 'network' === $meta_type ? 'add_network_option' : 'add_blog_option';
-				$result = call_user_func( $callback, $object_id, $meta_key, $meta_value );
+				$result   = call_user_func( $callback, $object_id, $meta_key, $meta_value );
 				if ( $result ) {
 					return $this->db()->insert_id;
 				}
@@ -99,7 +99,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
 		 * @param string $meta_key   Metadata key.
 		 * @param mixed  $meta_value Metadata value. Must be serializable if non-scalar.
 		 * @param mixed  $prev_value Optional. If specified, only update existing metadata entries with
-		 * 		                     the specified value. Otherwise, update all entries.
+		 *                           the specified value. Otherwise, update all entries.
 		 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 		 */
 		public function update( $meta_type, $object_id, $meta_key, $meta_value, $prev_value = '' ) {
@@ -164,7 +164,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Meta' ) ) :
 		 * @param string $meta_type Type of object metadata is for (e.g. row, column or module).
 		 * @param int    $object_id ID of the object metadata is for.
 		 * @param string $meta_key  Optional. Metadata key. If not specified, retrieve all metadata for
-		 * 		                    the specified object.
+		 *                          the specified object.
 		 * @param bool   $single    Optional, default is false.
 		 *                          If true, return only the first value of the specified meta_key.
 		 *                          This parameter has no effect if meta_key is not specified.

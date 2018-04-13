@@ -57,11 +57,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Site_Query' 
 		 * @return Site_Collection Results as a collection.
 		 */
 		protected function parse_results_collection() {
-			$ids = $this->original->sites;
+			$ids    = $this->original->sites;
 			$fields = $this->original->query_vars['fields'];
 
 			if ( 'ids' !== $fields ) {
-				$ids = wp_list_pluck( $ids, 'blog_id' );
+				$ids    = wp_list_pluck( $ids, 'blog_id' );
 				$fields = 'objects';
 			}
 

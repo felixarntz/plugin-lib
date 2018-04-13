@@ -133,17 +133,18 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\User' ) ) :
 		 * @since 1.0.0
 		 */
 		protected function set_default_object() {
-			$db_obj = new \stdClass();
-			$db_obj->ID                   = 0;
-			$db_obj->user_login           = '';
-			$db_obj->user_pass            = '';
-			$db_obj->user_nicename        = '';
-			$db_obj->user_email           = '';
-			$db_obj->user_url             = '';
-			$db_obj->user_registered      = '';
-			$db_obj->user_activation_key  = '';
-			$db_obj->user_status          = 0;
-			$db_obj->display_name         = '';
+			$db_obj                      = new \stdClass();
+			$db_obj->ID                  = 0;
+			$db_obj->user_login          = '';
+			$db_obj->user_pass           = '';
+			$db_obj->user_nicename       = '';
+			$db_obj->user_email          = '';
+			$db_obj->user_url            = '';
+			$db_obj->user_registered     = '';
+			$db_obj->user_activation_key = '';
+			$db_obj->user_status         = 0;
+			$db_obj->display_name        = '';
+
 			// The following are actually meta keys, but need to be set on the object.
 			$db_obj->nickname             = '';
 			$db_obj->first_name           = '';

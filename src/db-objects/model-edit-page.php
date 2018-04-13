@@ -228,7 +228,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * @param mixed  $value      Field value to set.
 		 */
 		public function update_model_field_value( $field_slug, $value ) {
-			$this->model->$field_slug = $value;
+			$this->model->{$field_slug} = $value;
 		}
 
 		/**
@@ -239,38 +239,38 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		public function handle_request() {
 			$this->add_page_content();
 
-			$capabilities = $this->model_manager->capabilities();
+			$capabilities     = $this->model_manager->capabilities();
 			$primary_property = $this->model_manager->get_primary_property();
 
 			$id = null;
-			if ( isset( $_REQUEST[ $primary_property ] ) ) {
-				$id = absint( $_REQUEST[ $primary_property ] );
+			if ( isset( $_REQUEST[ $primary_property ] ) ) { // WPCS: CSRF OK.
+				$id = absint( $_REQUEST[ $primary_property ] ); // WPCS: CSRF OK.
 
 				$this->model = $this->model_manager->get( $id );
 				if ( null === $this->model ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_invalid_id' ), 400 );
+					wp_die( $this->model_manager->get_message( 'edit_page_invalid_id' ), 400 ); // WPCS: XSS OK.
 				}
 
 				if ( ! $capabilities || ! $capabilities->user_can_edit( null, $id ) ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_cannot_edit_item' ), 403 );
+					wp_die( $this->model_manager->get_message( 'edit_page_cannot_edit_item' ), 403 ); // WPCS: XSS OK.
 				}
 
 				$this->is_update = true;
 			} else {
 				if ( ! $this->current_user_can() ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_cannot_create_item' ), 403 );
+					wp_die( $this->model_manager->get_message( 'edit_page_cannot_create_item' ), 403 ); // WPCS: XSS OK.
 				}
 
 				$this->model = $this->model_manager->create();
 
 				if ( method_exists( $this->model_manager, 'get_type_property' ) ) {
-					$type_property = $this->model_manager->get_type_property();
-					$this->model->$type_property = $this->model_manager->types()->get_default();
+					$type_property                 = $this->model_manager->get_type_property();
+					$this->model->{$type_property} = $this->model_manager->types()->get_default();
 				}
 
 				if ( method_exists( $this->model_manager, 'get_status_property' ) ) {
-					$status_property = $this->model_manager->get_status_property();
-					$this->model->$status_property = $this->model_manager->statuses()->get_default();
+					$status_property                 = $this->model_manager->get_status_property();
+					$this->model->{$status_property} = $this->model_manager->statuses()->get_default();
 				}
 
 				$this->title = $this->model_manager->get_message( 'edit_page_add_new_item' );
@@ -467,7 +467,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$id = null;
 			if ( $this->is_update ) {
 				$primary_property = $this->model_manager->get_primary_property();
-				$id = $this->model->$primary_property;
+				$id               = $this->model->$primary_property;
 			}
 
 			$prefix        = $this->model_manager->get_prefix();
@@ -491,11 +491,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 			?>
 			<h1 class="wp-heading-inline">
-				<?php echo $this->title; ?>
+				<?php echo wp_kses_data( $this->title ); ?>
 			</h1>
 
 			<?php if ( ! empty( $new_page_url ) && $capabilities && $capabilities->user_can_create() ) : ?>
-				<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo $this->model_manager->get_message( 'edit_page_add_new' ); ?></a>
+				<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo esc_html( $this->model_manager->get_message( 'edit_page_add_new' ) ); ?></a>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -529,18 +529,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$id = null;
 			if ( $this->is_update ) {
 				$primary_property = $this->model_manager->get_primary_property();
-				$id = $this->model->$primary_property;
+				$id               = $this->model->$primary_property;
 			}
 
 			?>
 			<form id="post" action="<?php echo esc_url( $this->get_model_edit_url() ); ?>" method="post" novalidate>
 				<?php wp_nonce_field( $this->get_nonce_action( 'action', $id ) ); ?>
 				<input type="hidden" id="post_action" name="action" value="edit" />
-				<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
+				<?php
+				if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 					$slug_property = $this->model_manager->get_slug_property();
 					?>
 					<input type="hidden" id="post_name" name="<?php echo esc_attr( $slug_property ); ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
-				<?php endif; ?>
+					<?php
+				}
+				?>
 
 				<div id="poststuff">
 					<div id="post-body" class="metabox-holder columns-<?php echo 1 === (int) get_current_screen()->get_columns() ? '1' : '2'; ?>">
@@ -573,15 +576,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				?>
 				<div id="titlediv">
 					<div id="titlewrap">
-						<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); ?></label>
+						<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); /* WPCS: XSS OK. */ ?></label>
 						<input type="text" id="title" name="<?php echo esc_attr( $title_property ); ?>" value="<?php echo esc_attr( $this->model->$title_property ); ?>" placeholder="<?php echo esc_attr( $this->model_manager->get_message( 'edit_page_title_placeholder' ) ); ?>" size="30" />
 					</div>
-					<?php if ( method_exists( $this->model_manager, 'get_slug_property' ) ) :
+					<?php
+					if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 						$slug_property = $this->model_manager->get_slug_property();
-						$style = $this->model->$slug_property ? '' : ' style="display:none;"';
+						$style         = $this->model->$slug_property ? '' : ' style="display:none;"';
 
-						$label = $this->model_manager->get_message( 'edit_page_slug_label' );
-						$before_slug = $after_slug = '';
+						$label       = $this->model_manager->get_message( 'edit_page_slug_label' );
+						$before_slug = '';
+						$after_slug  = '';
 
 						$view_routing = $this->model_manager->view_routing();
 						if ( $view_routing && '' !== (string) get_option( 'permalink_structure' ) ) {
@@ -596,17 +601,19 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 						?>
 						<div class="inside">
-							<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; ?>>
-								<strong><?php printf( '%s:', $label ); ?></strong>
-								<?php echo $before_slug; ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo $after_slug; ?>
+							<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; /* WPCS: XSS OK. */ ?>>
+								<strong><?php printf( '%s:', wp_kses_data( $label ) ); ?></strong>
+								<?php echo esc_html( $before_slug ); ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo esc_html( $after_slug ); ?>
 								<span id="edit-slug-buttons">
 									<button type="button" class="edit-slug button button-small hide-if-no-js">
-										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); ?>
+										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); /* WPCS: XSS OK. */ ?>
 									</button>
 								</span>
 							</div>
 						</div>
-					<?php endif; ?>
+						<?php
+					}
+					?>
 				</div>
 				<?php
 			}
@@ -625,7 +632,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$id = null;
 			if ( $this->is_update ) {
 				$primary_property = $this->model_manager->get_primary_property();
-				$id = $this->model->$primary_property;
+				$id               = $this->model->$primary_property;
 			}
 
 			$prefix        = $this->model_manager->get_prefix();
@@ -643,20 +650,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 					<h2 class="nav-tab-wrapper" role="tablist">
 						<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
 							<a id="<?php echo esc_attr( 'tab-label-' . $tab_id ); ?>" class="nav-tab" href="<?php echo esc_attr( '#tab-' . $tab_id ); ?>" aria-controls="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" aria-selected="<?php echo $tab_id === $current_tab_id ? 'true' : 'false'; ?>" role="tab">
-								<?php echo $tab_args['title']; ?>
+								<?php echo wp_kses_data( $tab_args['title'] ); ?>
 							</a>
 						<?php endforeach; ?>
 					</h2>
 				<?php else : ?>
-					<h2 class="screen-reader-text"><?php echo $this->tabs[ $current_tab_id ]['title']; ?></h2>
+					<h2 class="screen-reader-text"><?php echo wp_kses_data( $this->tabs[ $current_tab_id ]['title'] ); ?></h2>
 				<?php endif; ?>
 
-				<?php foreach ( $this->tabs as $tab_id => $tab_args ) :
+				<?php foreach ( $this->tabs as $tab_id => $tab_args ) : ?>
+					<?php
 					$atts = $use_tabs ? ' aria-labelledby="' . esc_attr( 'tab-label-' . $tab_id ) . '" aria-hidden="' . ( $tab_id === $current_tab_id ? 'false' : 'true' ) . '" role="tabpanel"' : '';
 
 					$tab_args['sections'] = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
 					?>
-					<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; ?>>
+					<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; /* WPCS: XSS OK. */ ?>>
 
 						<?php
 						/**
@@ -675,7 +683,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 						 */
 						do_action( "{$prefix}edit_{$singular_slug}_before_tab_{$tab_id}", $id, $this->model, $this->model_manager, $edit_url, $tab_args );
 
-						if ( has_action( "{$prefix}edit_{$singular_slug}_tab_{$tab_id}" ) ) :
+						if ( has_action( "{$prefix}edit_{$singular_slug}_tab_{$tab_id}" ) ) {
 							/**
 							 * Fires to render content that replaces an edit model page tab's original content.
 							 *
@@ -694,27 +702,29 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 							 * @param Field_Manager $field_manager Model edit page field manager instance.
 							 */
 							do_action( "{$prefix}edit_{$singular_slug}_tab_{$tab_id}", $id, $this->model, $this->model_manager, $edit_url, $tab_args, $this->field_manager );
-						else : ?>
+						} else {
+							if ( ! empty( $tab_args['description'] ) ) {
+								?>
+								<p class="description"><?php echo wp_kses_data( $tab_args['description'] ); ?></p>
+								<?php
+							}
 
-							<?php if ( ! empty( $tab_args['description'] ) ) : ?>
-								<p class="description"><?php echo $tab_args['description']; ?></p>
-							<?php endif; ?>
-
-							<?php foreach ( $tab_args['sections'] as $section_id => $section_args ) : ?>
+							foreach ( $tab_args['sections'] as $section_id => $section_args ) {
+								?>
 								<div class="section">
-									<h3><?php echo $section_args['title']; ?></h3>
+									<h3><?php echo wp_kses_data( $section_args['title'] ); ?></h3>
 
 									<?php if ( ! empty( $section_args['description'] ) ) : ?>
-										<p class="description"><?php echo $section_args['description']; ?></p>
+										<p class="description"><?php echo wp_kses_data( $section_args['description'] ); ?></p>
 									<?php endif; ?>
 
 									<table class="form-table">
 										<?php $this->field_manager->render( $tab_id . '-' . $section_id ); ?>
 									</table>
 								</div>
-							<?php endforeach; ?>
-
-						<?php endif;
+								<?php
+							}
+						}
 
 						/**
 						 * Fires to render additional content after an edit model page tab's content.
@@ -749,7 +759,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$id = null;
 			if ( $this->is_update ) {
 				$primary_property = $this->model_manager->get_primary_property();
-				$id = $this->model->$primary_property;
+				$id               = $this->model->$primary_property;
 			}
 
 			$prefix        = $this->model_manager->get_prefix();
@@ -781,7 +791,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$id = null;
 			if ( $this->is_update ) {
 				$primary_property = $this->model_manager->get_primary_property();
-				$id = $this->model->$primary_property;
+				$id               = $this->model->$primary_property;
 			}
 
 			$prefix        = $this->model_manager->get_prefix();
@@ -791,7 +801,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			?>
 			<div id="submitdiv" class="postbox">
 				<h2 class="hndle">
-					<span><?php echo $this->model_manager->get_message( 'edit_page_submit_box_title' ); ?></span>
+					<span><?php echo $this->model_manager->get_message( 'edit_page_submit_box_title' ); /* WPCS: XSS OK. */ ?></span>
 				</h2>
 				<div class="inside">
 					<div id="submitpost" class="submitbox">
@@ -868,14 +878,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * @since 1.0.0
 		 */
 		protected function handle_actions() {
-			if ( ! isset( $_REQUEST['action'] ) ) {
+			if ( ! isset( $_REQUEST['action'] ) ) { // WPCS: CSRF OK.
 				return;
 			}
 
-			$doaction = wp_unslash( $_REQUEST['action'] );
+			$doaction = wp_unslash( $_REQUEST['action'] ); // WPCS: CSRF OK.
 
 			$primary_property = $this->model_manager->get_primary_property();
-			$id = $this->model->$primary_property;
+			$id               = $this->model->$primary_property;
 			if ( ! $id ) {
 				$id = null;
 			}
@@ -933,7 +943,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 					$sendback = add_query_arg( $primary_property, $id, $sendback );
 				} else {
 					$action_type = 'row_action';
-					$sendback = add_query_arg( 'page', $this->list_page_slug, $this->url );
+					$sendback    = add_query_arg( 'page', $this->list_page_slug, $this->url );
 				}
 			}
 
@@ -996,7 +1006,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$id = null;
 			}
 
-			$prefix = $this->model_manager->get_prefix();
+			$prefix        = $this->model_manager->get_prefix();
 			$singular_slug = $this->model_manager->get_singular_slug();
 
 			/**
@@ -1017,7 +1027,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				return $short_circuit;
 			}
 
-			$form_data = wp_unslash( $_POST );
+			$form_data = wp_unslash( $_POST ); // WPCS: CSRF OK.
 
 			$result = $this->field_manager->update_values( $form_data );
 			if ( ! is_wp_error( $result ) ) {
@@ -1081,7 +1091,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			do_action( "{$prefix}edit_{$singular_slug}_after_update", $result, $id, $this->model, $this->model_manager );
 
 			if ( ! empty( $result->errors ) ) {
-				$message = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
+				$message  = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
 				$message .= '<ul>';
 				foreach ( $result->get_error_messages() as $error_message ) {
 					$message .= '<li>' . $error_message . '</li>';
@@ -1110,7 +1120,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$id = null;
 			}
 
-			$form_data = wp_unslash( $_POST );
+			$form_data = wp_unslash( $_POST ); // WPCS: CSRF OK.
 
 			$result = $this->field_manager->update_values( $form_data );
 			if ( ! is_wp_error( $result ) ) {
@@ -1121,12 +1131,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 			$view_routing = $this->model_manager->view_routing();
 			if ( ! $view_routing ) {
-				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) );
+				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // WPCS: XSS OK.
 			}
 
 			$preview_url = $view_routing->get_model_preview_permalink( $this->model );
 			if ( empty( $preview_url ) ) {
-				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) );
+				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // WPCS: XSS OK.
 			}
 
 			wp_redirect( $preview_url );
@@ -1151,7 +1161,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 					if ( ! in_array( $form_data[ $type_property ], array_keys( $this->model_manager->types()->query() ), true ) ) {
 						$error->add( 'action_edit_item_invalid_type', $this->model_manager->get_message( 'action_edit_item_invalid_type' ) );
 					} else {
-						$this->model->$type_property = $form_data[ $type_property ];
+						$this->model->{$type_property} = $form_data[ $type_property ];
 					}
 				}
 			}
@@ -1169,7 +1179,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 						if ( in_array( $form_data[ $status_property ], $public_statuses, true ) && ( ! $capabilities || ! $capabilities->user_can_publish( null, $id ) ) ) {
 							$error->add( 'action_edit_item_cannot_publish', $this->model_manager->get_message( 'action_edit_item_cannot_publish' ) );
 						} else {
-							$this->model->$status_property = $form_data[ $status_property ];
+							$this->model->{$status_property} = $form_data[ $status_property ];
 						}
 					}
 				}
@@ -1179,7 +1189,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$title_property = $this->model_manager->get_title_property();
 
 				if ( isset( $form_data[ $title_property ] ) ) {
-					$this->model->$title_property = strip_tags( $form_data[ $title_property ] );
+					$this->model->{$title_property} = strip_tags( $form_data[ $title_property ] );
 				}
 			}
 
@@ -1187,7 +1197,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$slug_property = $this->model_manager->get_slug_property();
 
 				if ( isset( $form_data[ $slug_property ] ) ) {
-					$this->model->$slug_property = sanitize_title( $form_data[ $slug_property ] );
+					$this->model->{$slug_property} = sanitize_title( $form_data[ $slug_property ] );
 				}
 			}
 		}
@@ -1205,7 +1215,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$model_name = $id;
 			if ( method_exists( $this->model_manager, 'get_title_property' ) ) {
 				$title_property = $this->model_manager->get_title_property();
-				$model_name = $this->model->$title_property;
+				$model_name     = $this->model->$title_property;
 			}
 
 			$capabilities = $this->model_manager->capabilities();
@@ -1241,7 +1251,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function add_page_content();
+		abstract protected function add_page_content();
 	}
 
 endif;

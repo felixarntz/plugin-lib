@@ -361,8 +361,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) )
 			$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
 
 			if ( $reverse ) {
-				$result_false  = isset( $args['result_true'] ) ? $args['result_true'] : true;
-				$result_true = isset( $args['result_false'] ) ? $args['result_false'] : false;
+				$result_false = isset( $args['result_true'] ) ? $args['result_true'] : true;
+				$result_true  = isset( $args['result_false'] ) ? $args['result_false'] : false;
 			} else {
 				$result_false = isset( $args['result_false'] ) ? $args['result_false'] : false;
 				$result_true  = isset( $args['result_true'] ) ? $args['result_true'] : true;
@@ -463,15 +463,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) )
 			$operator = ( isset( $args['operator'] ) && strtoupper( $args['operator'] ) === 'OR' ) ? 'OR' : 'AND';
 
 			if ( $reverse ) {
-				$result_false  = isset( $args['result_true'] ) ? $args['result_true'] : true;
-				$result_true = isset( $args['result_false'] ) ? $args['result_false'] : false;
+				$result_false = isset( $args['result_true'] ) ? $args['result_true'] : true;
+				$result_true  = isset( $args['result_false'] ) ? $args['result_false'] : false;
 			} else {
 				$result_false = isset( $args['result_false'] ) ? $args['result_false'] : false;
 				$result_true  = isset( $args['result_true'] ) ? $args['result_true'] : true;
 			}
 
 			$breakpoint = 0.0;
-			$sanitize = 'floatval';
+			$sanitize   = 'floatval';
 			if ( isset( $args['breakpoint'] ) ) {
 				if ( is_int( $args['breakpoint'] ) ) {
 					$sanitize = 'intval';
@@ -552,10 +552,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) )
 
 				if ( $merge && ! in_array( $value, $used_values, true ) ) {
 					$used_values[] = $value;
-					$result = $this->merge_into_result( $result, $map[ $value ], $operator );
+					$result        = $this->merge_into_result( $result, $map[ $value ], $operator );
 				} else {
 					$used_values[] = $value;
-					$result = $map[ $value ];
+					$result        = $map[ $value ];
 				}
 			}
 
@@ -616,10 +616,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Dependency_Resolver' ) )
 
 				if ( $merge && ! in_array( $value, $used_values[ $identifier ], true ) ) {
 					$used_values[ $identifier ][] = $value;
-					$result = $this->merge_into_result( $result, $map[ $value ], $operator );
+					$result                       = $this->merge_into_result( $result, $map[ $value ], $operator );
 				} else {
 					$used_values[ $identifier ][] = $value;
-					$result = $map[ $value ];
+					$result                       = $map[ $value ];
 				}
 			}
 

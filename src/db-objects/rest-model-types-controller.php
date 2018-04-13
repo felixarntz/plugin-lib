@@ -66,7 +66,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Con
 			) );
 
 			register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<slug>[\w-]+)', array(
-				'args' => array(
+				'args'   => array(
 					'slug' => array(
 						'description' => $this->manager->get_message( 'rest_type_slug_description' ),
 						'type'        => 'string',
@@ -217,11 +217,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Con
 			$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
 
 			$links = array(
-				'self' => array(
-					'href'   => rest_url( trailingslashit( $base ) . $model_type->slug ),
+				'self'                    => array(
+					'href' => rest_url( trailingslashit( $base ) . $model_type->slug ),
 				),
-				'collection' => array(
-					'href'   => rest_url( $base ),
+				'collection'              => array(
+					'href' => rest_url( $base ),
 				),
 				'https://api.w.org/items' => array(
 					'href' => rest_url( substr( $base, 0, -6 ) . '?' . $this->manager->get_type_property() . '=' . $model_type->slug ),

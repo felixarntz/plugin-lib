@@ -85,7 +85,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 		 */
 		public function handle_request() {
 			if ( ! $this->current_user_can() ) {
-				wp_die( __( 'Cheatin&#8217; uh?' ), 403 );
+				wp_die( __( 'Cheatin&#8217; uh?' ), '', 403 ); // WPCS: XSS OK.
 			}
 		}
 
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 
 			?>
 			<p class="description">
-				<?php echo $this->sections[ $section_args['id'] ]['description']; ?>
+				<?php echo wp_kses_data( $this->sections[ $section_args['id'] ]['description'] ); ?>
 			</p>
 			<?php
 		}
@@ -262,12 +262,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 		protected function render_header() {
 			?>
 			<h1>
-				<?php echo $this->title; ?>
+				<?php echo wp_kses_data( $this->title ); ?>
 			</h1>
 
 			<?php if ( ! empty( $this->description ) ) : ?>
 				<p class="description">
-					<?php echo $this->description; ?>
+					<?php echo wp_kses_data( $this->description ); ?>
 				</p>
 			<?php endif; ?>
 			<?php
@@ -340,7 +340,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 
 			foreach ( (array) $wp_settings_sections[ $page ] as $section ) {
 				if ( $section['title'] ) {
-					echo "<h2>{$section['title']}</h2>\n";
+					echo '<h2>' . wp_kses_data( $section['title'] ) . '</h2>';
+					echo "\n";
 				}
 
 				if ( $section['callback'] ) {
@@ -386,15 +387,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 					$class = ' class="' . esc_attr( $field['args']['class'] ) . '"';
 				}
 
-				echo "<tr{$class}>";
+				echo "<tr{$class}>"; // WPCS: XSS OK.
 				if ( ! empty( $field['args']['field_instance'] ) ) {
 					echo '<th scope="row">';
 					$field['args']['field_instance']->render_label();
 					echo '</th>';
 				} elseif ( ! empty( $field['args']['label_for'] ) ) {
-					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . $field['title'] . '</label></th>';
+					echo '<th scope="row"><label for="' . esc_attr( $field['args']['label_for'] ) . '">' . wp_kses_data( $field['title'] ) . '</label></th>';
 				} else {
-					echo '<th scope="row">' . $field['title'] . '</th>';
+					echo '<th scope="row">' . wp_kses_data( $field['title'] ) . '</th>';
 				}
 
 				echo '<td>';
@@ -411,7 +412,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function add_page_content();
+		abstract protected function add_page_content();
 	}
 
 endif;

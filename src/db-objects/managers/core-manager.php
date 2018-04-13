@@ -130,11 +130,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Core_Manage
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param int|string  $key   The key under which the cache contents are stored.
-		 * @param bool        $force Optional. Whether to force an update of the local cache from the
-		 *                           persistent cache. Default false.
-		 * @param bool        $found Optional. Whether the key was found in the cache. Disambiguates a
-		 *                           return of false, a storable value. Passed by reference. Default null.
+		 * @param int|string $key   The key under which the cache contents are stored.
+		 * @param bool       $force Optional. Whether to force an update of the local cache from the
+		 *                          persistent cache. Default false.
+		 * @param bool       $found Optional. Whether the key was found in the cache. Disambiguates a
+		 *                          return of false, a storable value. Passed by reference. Default null.
 		 * @return bool|mixed False on failure to retrieve contents, or the cache contents on success.
 		 */
 		public function get_from_cache( $key, $force = false, &$found = null ) {
@@ -205,7 +205,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Core_Manage
 		 * @param array $args Array of column => value pairs for the new database row.
 		 * @return int|false The ID of the new model, or false on failure.
 		 */
-		protected abstract function insert_into_db( $args );
+		abstract protected function insert_into_db( $args );
 
 		/**
 		 * Internal method to update an existing model in the database.
@@ -216,7 +216,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Core_Manage
 		 * @param array $args     Array of column => value pairs to update in the database row.
 		 * @return bool True on success, or false on failure.
 		 */
-		protected abstract function update_in_db( $model_id, $args );
+		abstract protected function update_in_db( $model_id, $args );
 
 		/**
 		 * Internal method to delete a model from the database.
@@ -226,7 +226,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Managers\Core_Manage
 		 * @param int $model_id ID of the model to delete.
 		 * @return bool True on success, or false on failure.
 		 */
-		protected abstract function delete_from_db( $model_id );
+		abstract protected function delete_from_db( $model_id );
 	}
 
 endif;

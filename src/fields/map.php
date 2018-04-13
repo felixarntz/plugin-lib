@@ -107,11 +107,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Map' ) ) :
 			$locale = explode( '_', get_locale() );
 			$locale = $locale[0] . '-' . $locale[1];
 
-			$gmaps_url = 'https://maps.google.com/maps/api/js';
+			$gmaps_url  = 'https://maps.google.com/maps/api/js';
 			$gmaps_args = array(
 				'language' => $locale,
 			);
-			if ( ( $api_key = self::get_api_key() ) ) {
+
+			$api_key = self::get_api_key();
+			if ( $api_key ) {
 				$gmaps_args['key'] = $api_key;
 			}
 
@@ -130,10 +132,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Map' ) ) :
 			) );
 
 			$assets->register_script( 'wp-map-picker', 'node_modules/wp-map-picker/wp-map-picker.js', array(
-				'deps'          => array( 'jquery', 'jquery-ui-widget', 'jquery-ui-autocomplete', 'google-maps' ),
-				'ver'           => $mappicker_version,
-				'in_footer'     => true,
-				'enqueue'       => true,
+				'deps'      => array( 'jquery', 'jquery-ui-widget', 'jquery-ui-autocomplete', 'google-maps' ),
+				'ver'       => $mappicker_version,
+				'in_footer' => true,
+				'enqueue'   => true,
 			) );
 
 			$ret[0][] = 'wp-map-picker';
@@ -150,7 +152,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Map' ) ) :
 		 * @return array Field data to be JSON-encoded.
 		 */
 		protected function single_to_json( $current_value ) {
-			$data = parent::single_to_json( $current_value );
+			$data          = parent::single_to_json( $current_value );
 			$data['store'] = $this->store;
 
 			return $data;

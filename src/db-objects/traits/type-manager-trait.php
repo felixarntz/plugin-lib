@@ -144,7 +144,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Type_Manager_
 			}
 
 			$primary_property = $this->get_primary_property();
-			$type_property = $this->get_type_property();
+			$type_property    = $this->get_type_property();
 
 			$old_type = '';
 			if ( false !== strpos( current_filter(), '_add_' ) ) {

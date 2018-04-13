@@ -325,19 +325,19 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Capabilities' ) ) :
 			);
 
 			$this->meta_capabilities = array(
-				'read_item'    => sprintf( 'read_%s', $prefix . $singular_slug ),
-				'edit_item'    => sprintf( 'edit_%s', $prefix . $singular_slug ),
-				'delete_item'  => sprintf( 'delete_%s', $prefix . $singular_slug ),
+				'read_item'   => sprintf( 'read_%s', $prefix . $singular_slug ),
+				'edit_item'   => sprintf( 'edit_%s', $prefix . $singular_slug ),
+				'delete_item' => sprintf( 'delete_%s', $prefix . $singular_slug ),
 			);
 
 			if ( method_exists( $this->manager, 'get_status_property' ) ) {
 				$this->base_capabilities['publish_items'] = sprintf( 'publish_%s', $prefix . $plural_slug );
-				$this->meta_capabilities['publish_item'] = sprintf( 'publish_%s', $prefix . $singular_slug );
+				$this->meta_capabilities['publish_item']  = sprintf( 'publish_%s', $prefix . $singular_slug );
 			}
 
 			if ( method_exists( $this->manager, 'get_author_property' ) ) {
-				$this->base_capabilities['read_others_items'] = sprintf( 'read_others_%s', $prefix . $plural_slug );
-				$this->base_capabilities['edit_others_items'] = sprintf( 'edit_others_%s', $prefix . $plural_slug );
+				$this->base_capabilities['read_others_items']   = sprintf( 'read_others_%s', $prefix . $plural_slug );
+				$this->base_capabilities['edit_others_items']   = sprintf( 'edit_others_%s', $prefix . $plural_slug );
 				$this->base_capabilities['delete_others_items'] = sprintf( 'delete_others_%s', $prefix . $plural_slug );
 			}
 		}

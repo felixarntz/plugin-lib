@@ -43,7 +43,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Core_Mod
 		public function __construct( $owner, $slug, $args = array() ) {
 			if ( is_object( $args ) ) {
 				$this->original = $args;
-				$args = array();
+				$args           = array();
 			}
 
 			parent::__construct( $owner, $slug, $args );
@@ -126,7 +126,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Types\Core_Mod
 			}
 
 			if ( null !== $this->original ) {
-				$this->original->$property = $value;
+				$this->original->{$property} = $value;
 				return;
 			}
 

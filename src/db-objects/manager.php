@@ -395,12 +395,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 				return $counts;
 			}
 
-			$where = '';
+			$where      = '';
 			$where_args = array();
 			if ( method_exists( $this, 'get_author_property' ) && $user_id > 0 ) {
 				$author_property = $this->get_author_property();
 
-				$where = " WHERE $author_property = %d";
+				$where        = " WHERE $author_property = %d";
 				$where_args[] = $user_id;
 			}
 
@@ -409,11 +409,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 
 				$results = $this->db()->get_results( "SELECT $status_property, COUNT( * ) AS num_models FROM %{$this->table_name}% $where GROUP BY $status_property", $where_args );
 
-				$total = 0;
+				$total  = 0;
 				$counts = array_fill_keys( array_keys( $this->statuses()->query() ), 0 );
 				foreach ( $results as $row ) {
 					$counts[ $row->$status_property ] = $row->num_models;
-					$total += $row->num_models;
+					$total                           += $row->num_models;
 				}
 
 				$counts['_total'] = $total;
@@ -595,7 +595,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 				return 'bulk-' . $prefix . $this->get_plural_slug();
 			}
 
-			$base = 'row_action' === $action_type ? 'row-' : 'edit-';
+			$base     = 'row_action' === $action_type ? 'row-' : 'edit-';
 			$model_id = ! empty( $model_id ) ? '-' . absint( $model_id ) : '';
 
 			return $base . $prefix . $this->get_singular_slug() . $model_id;
@@ -717,7 +717,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function add_database_table();
+		abstract protected function add_database_table();
 
 		/**
 		 * Sets up all action and filter hooks for the service.
@@ -887,7 +887,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager' ) ) :
 
 			?>
 			<div id="delete-action">
-				<a class="submitdelete deletion" href="<?php echo esc_url( $delete_url ); ?>"><?php echo $this->get_message( 'edit_page_delete' ); ?></a>
+				<a class="submitdelete deletion" href="<?php echo esc_url( $delete_url ); ?>"><?php echo esc_html( $this->get_message( 'edit_page_delete' ) ); ?></a>
 			</div>
 			<?php
 		}

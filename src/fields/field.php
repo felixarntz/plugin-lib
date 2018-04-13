@@ -210,7 +210,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 */
 		public function __construct( $manager, $id, $args = array() ) {
 			$this->manager = $manager;
-			$this->id = $id;
+			$this->id      = $id;
 
 			$forbidden_keys = $this->get_forbidden_keys();
 
@@ -323,8 +323,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 			if ( ! empty( $this->label ) && 'skip' !== $this->label_mode ) {
 				if ( in_array( $this->label_mode, array( 'no_assoc', 'aria_hidden' ), true ) ) {
 					?>
-					<span<?php echo $this->get_label_attrs(); ?>>
-						<?php echo $this->label; ?>
+					<span<?php echo $this->get_label_attrs(); /* WPCS: XSS OK. */ ?>>
+						<?php echo wp_kses_data( $this->label ); ?>
 						<?php if ( ! $this->is_repeatable() && isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
 							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
@@ -332,8 +332,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 					<?php
 				} else {
 					?>
-					<label<?php echo $this->get_label_attrs(); ?>>
-						<?php echo $this->label; ?>
+					<label<?php echo $this->get_label_attrs(); /* WPCS: XSS OK. */ ?>>
+						<?php echo wp_kses_data( $this->label ); ?>
 						<?php if ( ! $this->is_repeatable() && isset( $this->input_attrs['required'] ) && $this->input_attrs['required'] ) : ?>
 							<?php echo $this->manager->get_field_required_markup(); // WPCS: XSS OK. ?>
 						<?php endif; ?>
@@ -361,23 +361,25 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				if ( is_callable( $this->before ) ) {
 					call_user_func( $this->before );
 				} elseif ( is_string( $this->before ) ) {
-					echo $this->before;
+					echo $this->before; // WPCS: XSS OK.
 				}
 			}
 
 			$this->render_input( $current_value );
 
-			if ( ! empty( $this->description ) ) : ?>
+			if ( ! empty( $this->description ) ) {
+				?>
 				<p id="<?php echo esc_attr( $this->get_id_attribute() . '-description' ); ?>" class="description">
-					<?php echo $this->description; ?>
+					<?php echo wp_kses_data( $this->description ); ?>
 				</p>
-			<?php endif;
+				<?php
+			}
 
 			if ( ! empty( $this->after ) ) {
 				if ( is_callable( $this->after ) ) {
 					call_user_func( $this->after );
 				} elseif ( is_string( $this->after ) ) {
-					echo $this->after;
+					echo $this->after; // WPCS: XSS OK.
 				}
 			}
 
@@ -397,7 +399,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 			if ( $this->is_repeatable() ) {
 				$current_value = (array) $current_value;
 
-				$limit = $this->get_repeatable_limit();
+				$limit       = $this->get_repeatable_limit();
 				$hide_button = $limit && count( $current_value ) === $limit;
 
 				$this->open_repeatable_wrap();
@@ -405,7 +407,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				$srt_added = false;
 				if ( ! in_array( 'screen-reader-text', $this->label_classes, true ) ) {
 					$this->label_classes[] = 'screen-reader-text';
-					$srt_added = true;
+					$srt_added             = true;
 				}
 
 				$this->label_mode = 'explicit';
@@ -571,12 +573,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				$srt_added = false;
 				if ( ! in_array( 'screen-reader-text', $this->label_classes, true ) ) {
 					$this->label_classes[] = 'screen-reader-text';
-					$srt_added = true;
+					$srt_added             = true;
 				}
 
 				$this->label_mode = 'explicit';
 
-				$this->index = '%index%';
+				$this->index         = '%index%';
 				$data['itemInitial'] = $this->single_to_json( $this->default );
 
 				$this->index = 0;
@@ -654,7 +656,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				}
 
 				$validated = array();
-				$errors = new WP_Error();
+				$errors    = new WP_Error();
 				foreach ( $value as $single_value ) {
 					$single_value = $this->pre_validate_single( $single_value );
 					if ( is_wp_error( $single_value ) ) {
@@ -709,14 +711,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 *
 		 * @param mixed $current_value Current field value.
 		 */
-		protected abstract function render_single_input( $current_value );
+		abstract protected function render_single_input( $current_value );
 
 		/**
 		 * Prints a single input template.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function print_single_input_template();
+		abstract protected function print_single_input_template();
 
 		/**
 		 * Transforms single field data into an array to be passed to JavaScript applications.
@@ -743,7 +745,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 			);
 
 			if ( $this->is_repeatable() ) {
-				$data['repeatable'] = true;
+				$data['repeatable']      = true;
 				$data['repeatableLimit'] = $this->get_repeatable_limit();
 			}
 
@@ -760,7 +762,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 * @return mixed|WP_Error The validated value on success, or an error
 		 *                        object on failure.
 		 */
-		protected abstract function validate_single( $value = null );
+		abstract protected function validate_single( $value = null );
 
 		/**
 		 * Handles pre-validation of a single value.
@@ -845,7 +847,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				'class' => 'plugin-lib-repeatable-wrap plugin-lib-repeatable-' . $this->slug . '-wrap',
 			);
 
-			echo '<span' . $this->attrs( $wrap_attrs ) . '>';
+			echo '<span' . $this->attrs( $wrap_attrs ) . '>'; // WPCS: XSS OK.
 		}
 
 		/**
@@ -866,11 +868,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 			$id = $this->get_id_attribute();
 
 			$wrap_attrs = array(
-				'id'           => $id . '-repeatable-item',
-				'class'        => 'plugin-lib-repeatable-item',
+				'id'    => $id . '-repeatable-item',
+				'class' => 'plugin-lib-repeatable-item',
 			);
 
-			echo '<span' . $this->attrs( $wrap_attrs ) . '>';
+			echo '<span' . $this->attrs( $wrap_attrs ) . '>'; // WPCS: XSS OK.
 		}
 
 		/**
@@ -939,7 +941,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				$button_attrs['style'] = 'display:none;';
 			}
 
-			echo '<button' . $this->attrs( $button_attrs ) . '>' . $message . '</button>';
+			echo '<button' . $this->attrs( $button_attrs ) . '>' . $message . '</button>'; // WPCS: XSS OK.
 		}
 
 		/**
@@ -1027,8 +1029,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 
 			?>
 			<# if ( data.repeatable ) { #>
-				<button type="button" id="{{ data.id }}-repeatable-<?php echo $mode; ?>-button" class="plugin-lib-repeatable-<?php echo $mode; ?>-button <?php echo $core_class; ?>" data-target="#{{ data.id }}-repeatable-<?php echo $target_mode; ?>" style="<?php echo $style; ?>">
-					<?php echo $message; ?>
+				<button type="button" id="<?php echo esc_attr( '{{ data.id }}-repeatable-' . $mode . '-button' ); ?>" class="<?php echo esc_attr( 'plugin-lib-repeatable-' . $mode . '-button ' . $core_class ); ?>" data-target="<?php echo esc_attr( '#{{ data.id }}-repeatable-' . $target_mode ); ?>" style="<?php echo esc_attr( $style ); ?>">
+					<?php echo $message; /* WPCS: XSS OK. */ ?>
 				</button>
 			<# } #>
 			<?php
@@ -1082,7 +1084,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 			);
 
 			if ( ! $this->display ) {
-				$wrap_attrs['class'] .= ' plugin-lib-hidden';
+				$wrap_attrs['class']      .= ' plugin-lib-hidden';
 				$wrap_attrs['aria-hidden'] = 'true';
 			}
 
@@ -1110,7 +1112,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 */
 		protected function get_label_attrs( $label_attrs = array(), $as_string = true ) {
 			$base_label_attrs = array(
-				'id'    => $this->get_id_attribute() . '-label',
+				'id' => $this->get_id_attribute() . '-label',
 			);
 
 			if ( 'explicit' === $this->label_mode ) {

@@ -102,8 +102,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 
 			$ret[0][] = 'select2';
 
-			$locale = explode( '_', get_locale() );
-			$locale = $locale[0] . '-' . $locale[1];
+			$locale   = explode( '_', get_locale() );
+			$locale   = $locale[0] . '-' . $locale[1];
 			$language = substr( $locale, 0, 2 );
 
 			if ( $assets->file_exists( 'node_modules/select2/dist/js/i18n/' . $locale . '.js' ) ) {
@@ -142,20 +142,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 			$input_attrs = array( 'multiple' => $this->multi );
 
 			?>
-			<select<?php echo $this->get_input_attrs( $input_attrs ); ?>>
+			<select<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
 				<?php if ( ! empty( $this->optgroups ) ) : ?>
 					<?php foreach ( $this->optgroups as $optgroup ) : ?>
 						<?php if ( ! empty( $optgroup['label'] ) ) : ?>
 							<optgroup label="<?php echo esc_attr( $optgroup['label'] ); ?>">
 						<?php endif; ?>
 
-						<?php foreach ( $optgroup['choices'] as $value => $label ) :
+						<?php foreach ( $optgroup['choices'] as $value => $label ) : ?>
+							<?php
 							$option_attrs = array(
 								'value'    => $value,
 								'selected' => in_array( (string) $value, $current_value, true ),
 							);
 							?>
-							<option<?php echo $this->attrs( $option_attrs ); ?>><?php echo esc_html( $label ); ?></option>
+							<option<?php echo $this->attrs( $option_attrs ); /* WPCS: XSS OK. */ ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 
 						<?php if ( ! empty( $optgroup['label'] ) ) : ?>
@@ -163,13 +164,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 						<?php endif; ?>
 					<?php endforeach; ?>
 				<?php else : ?>
-					<?php foreach ( $this->choices as $value => $label ) :
+					<?php foreach ( $this->choices as $value => $label ) : ?>
+						<?php
 						$option_attrs = array(
 							'value'    => $value,
 							'selected' => in_array( (string) $value, $current_value, true ),
 						);
 						?>
-						<option<?php echo $this->attrs( $option_attrs ); ?>><?php echo esc_html( $label ); ?></option>
+						<option<?php echo $this->attrs( $option_attrs ); /* WPCS: XSS OK. */ ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</select>
@@ -192,7 +194,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 			}
 
 			?>
-			<select{{{ _.attrs( data.inputAttrs ) }}}<?php echo $multiple; ?>>
+			<select{{{ _.attrs( data.inputAttrs ) }}}<?php echo $multiple; /* WPCS: XSS OK. */ ?>>
 				<# if ( ! _.isEmpty( data.optgroups ) ) { #>
 					<# _.each( data.optgroups, function( optgroup ) { #>
 						<# if ( ! _.isEmpty( optgroup.label ) ) { #>
@@ -200,7 +202,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 						<# } #>
 
 						<# _.each( optgroup.choices, function( label, value ) { #>
-							<option value="{{ value }}"<?php echo $selected; ?>>{{ label }}</option>
+							<option value="{{ value }}"<?php echo $selected; /* WPCS: XSS OK. */ ?>>{{ label }}</option>
 						<# } ) #>
 
 						<# if ( ! _.isEmpty( optgroup.label ) ) { #>
@@ -209,7 +211,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 					<# }) #>
 				<# } else { #>
 					<# _.each( data.choices, function( label, value ) { #>
-						<option value="{{ value }}"<?php echo $selected; ?>>{{ label }}</option>
+						<option value="{{ value }}"<?php echo $selected; /* WPCS: XSS OK. */ ?>>{{ label }}</option>
 					<# } ) #>
 				<# } #>
 			</select>
@@ -226,7 +228,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 		 * @return array Field data to be JSON-encoded.
 		 */
 		protected function single_to_json( $current_value ) {
-			$data = parent::single_to_json( $current_value );
+			$data              = parent::single_to_json( $current_value );
 			$data['optgroups'] = $this->optgroups;
 
 			return $data;

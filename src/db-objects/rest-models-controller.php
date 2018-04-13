@@ -118,7 +118,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 			$primary_property = $this->manager->get_primary_property();
 
 			register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<' . $primary_property . '>[\d]+)', array(
-				'args' => array(
+				'args'   => array(
 					$primary_property => array(
 						'description' => $this->manager->get_message( 'rest_item_id_description' ),
 						'type'        => 'integer',
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 				'order'    => 'asc',
 			);
 
-			$date_query = array();
+			$date_query     = array();
 			$date_query_map = array();
 
 			if ( method_exists( $this->manager, 'get_all_date_properties' ) ) {
@@ -246,19 +246,19 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 
 				if ( isset( $date_properties ) && isset( $params['format'] ) && 'date-time' === $params['format'] ) {
 					$date_column = '';
-					$mode = '';
+					$mode        = '';
 
 					if ( '_before' === substr( $property, -7 ) ) {
 						$date_column = substr( $property, 0, -7 );
-						$mode = 'before';
+						$mode        = 'before';
 					} elseif ( '_after' === substr( $property, -6 ) ) {
 						$date_column = substr( $property, -6 );
-						$mode = 'after';
+						$mode        = 'after';
 					}
 
 					if ( ! empty( $date_column ) && ! empty( $mode ) && in_array( $date_column, $date_properties, true ) ) {
 						if ( ! isset( $date_query_map[ $date_column ] ) ) {
-							$date_query_map[ $date_column ] = count( $date_query );
+							$date_query_map[ $date_column ]                          = count( $date_query );
 							$date_query[ $date_query_map[ $date_column ] ]['column'] = $date_column;
 						}
 
@@ -278,8 +278,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 				$args['date_query'] = $date_query;
 			}
 
-			$args['number'] = $special_args['per_page'];
-			$args['offset'] = ( $special_args['page'] - 1 ) * $special_args['per_page'];
+			$args['number']  = $special_args['per_page'];
+			$args['offset']  = ( $special_args['page'] - 1 ) * $special_args['per_page'];
 			$args['orderby'] = array( $special_args['orderby'] => $special_args['order'] );
 
 			if ( ! $this->manager->is_public() && method_exists( $this->manager, 'get_author_property' ) ) {
@@ -605,7 +605,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 			}
 
 			$response = new WP_REST_Response();
-			$response->set_data( array( 'deleted' => true, 'previous' => $previous->get_data() ) );
+			$response->set_data( array(
+				'deleted'  => true,
+				'previous' => $previous->get_data(),
+			) );
 
 			return $response;
 		}
@@ -734,11 +737,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 			$primary_property = $this->manager->get_primary_property();
 
 			$links = array(
-				'self' => array(
-					'href'   => rest_url( trailingslashit( $base ) . $model->$primary_property ),
+				'self'       => array(
+					'href' => rest_url( trailingslashit( $base ) . $model->$primary_property ),
 				),
 				'collection' => array(
-					'href'   => rest_url( $base ),
+					'href' => rest_url( $base ),
 				),
 			);
 
@@ -939,17 +942,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 			);
 
 			$query_params['orderby'] = array(
-				'description'        => $this->manager->get_message( 'rest_collection_orderby_description' ),
-				'type'               => 'string',
-				'default'            => $primary_property,
-				'enum'               => $query_object->get_valid_orderby_fields(),
+				'description' => $this->manager->get_message( 'rest_collection_orderby_description' ),
+				'type'        => 'string',
+				'default'     => $primary_property,
+				'enum'        => $query_object->get_valid_orderby_fields(),
 			);
 
 			$query_params['order'] = array(
-				'description'        => $this->manager->get_message( 'rest_collection_order_description' ),
-				'type'               => 'string',
-				'default'            => 'asc',
-				'enum'               => array( 'asc', 'desc' ),
+				'description' => $this->manager->get_message( 'rest_collection_order_description' ),
+				'type'        => 'string',
+				'default'     => 'asc',
+				'enum'        => array( 'asc', 'desc' ),
 			);
 
 			if ( method_exists( $this->manager, 'get_slug_property' ) ) {

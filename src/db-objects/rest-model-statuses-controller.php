@@ -66,7 +66,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_
 			) );
 
 			register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<slug>[\w-]+)', array(
-				'args' => array(
+				'args'   => array(
 					'slug' => array(
 						'description' => $this->manager->get_message( 'rest_status_slug_description' ),
 						'type'        => 'string',
@@ -217,11 +217,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Statuses_
 			$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
 
 			$links = array(
-				'self' => array(
-					'href'   => rest_url( trailingslashit( $base ) . $model_status->slug ),
+				'self'                    => array(
+					'href' => rest_url( trailingslashit( $base ) . $model_status->slug ),
 				),
-				'collection' => array(
-					'href'   => rest_url( $base ),
+				'collection'              => array(
+					'href' => rest_url( $base ),
 				),
 				'https://api.w.org/items' => array(
 					'href' => rest_url( substr( $base, 0, -9 ) . '?' . $this->manager->get_status_property() . '=' . $model_status->slug ),

@@ -95,13 +95,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 
 				// Sub-fields have some additional argument restrictions.
 				$field_args['repeatable'] = false;
-				$field_args['before'] = null;
-				$field_args['after'] = null;
+				$field_args['before']     = null;
+				$field_args['after']      = null;
 				if ( isset( $field_args['dependencies'] ) ) {
 					unset( $field_args['dependencies'] );
 				}
 
-				$class_name = Field_Manager::get_registered_field_type( $type );
+				$class_name                = Field_Manager::get_registered_field_type( $type );
 				$this->fields[ $field_id ] = new $class_name( $this, $field_id, $field_args );
 			}
 
@@ -247,16 +247,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 
 			$class = '';
 			if ( ! empty( $this->input_classes ) ) {
-				$class = ' class="' . implode( ' ', $this->input_classes ) . '"';
+				$class = ' class="' . esc_attr( implode( ' ', $this->input_classes ) ) . '"';
 			}
 
 			?>
-			<div id="<?php echo esc_attr( $group_id ); ?>"<?php echo $class; ?>>
+			<div id="<?php echo esc_attr( $group_id ); ?>"<?php echo $class; /* WPCS: XSS OK. */ ?>>
 				<?php $this->render_repeatable_remove_button(); ?>
-				<?php foreach ( $this->fields as $id => $field_instance ) :
+				<?php foreach ( $this->fields as $id => $field_instance ) : ?>
+					<?php
 					$partial_value = isset( $current_value[ $id ] ) ? $current_value[ $id ] : $field_instance->default;
 					?>
-					<div<?php echo $field_instance->get_wrap_attrs(); ?>>
+					<div<?php echo $field_instance->get_wrap_attrs(); /* WPCS: XSS OK. */ ?>>
 						<?php $field_instance->render_label(); ?>
 						<?php $field_instance->render_content( $partial_value ); ?>
 					</div>
@@ -275,7 +276,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 			<div id="{{ data.id }}"<# if ( data.inputAttrs.class ) { #> class="{{ data.inputAttrs.class }}"<# } #>>
 				<?php $this->print_repeatable_remove_button_template(); ?>
 				<?php foreach ( $this->fields as $id => $field_instance ) : ?>
-					<# _.alias( data.fields.<?php echo $id; ?>, function( data ) { #>
+					<# _.alias( data.fields.<?php echo esc_attr( $id ); ?>, function( data ) { #>
 						<div{{{ _.attrs( data.wrapAttrs ) }}}>
 							<?php $field_instance->print_label_template(); ?>
 							<?php $field_instance->print_content_template(); ?>
@@ -299,7 +300,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 				$current_value = (array) $current_value;
 			}
 
-			$data = parent::single_to_json( $current_value );
+			$data           = parent::single_to_json( $current_value );
 			$data['fields'] = array();
 
 			foreach ( $this->fields as $id => $field_instance ) {
@@ -334,7 +335,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 
 				$validated_value = $field_instance->validate( $partial_value );
 				if ( is_wp_error( $validated_value ) ) {
-					$error = $validated_value;
+					$error      = $validated_value;
 					$error_data = $error->get_error_data();
 					if ( isset( $error_data['validated'] ) ) {
 						$result[ $id ] = $error_data['validated'];
@@ -349,7 +350,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Group' ) ) :
 
 			if ( ! empty( $errors->errors ) ) {
 				if ( ! empty( $result ) ) {
-					$main_code = $errors->get_error_code();
+					$main_code                        = $errors->get_error_code();
 					$errors->error_data[ $main_code ] = array( 'validated' => $result );
 				}
 

@@ -86,8 +86,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 		 *                                                 files of this extension. Default empty.
 		 */
 		public function __construct( $name, $plugin, $main_file, $basedir_relative = '' ) {
-			$this->parent_plugin = $plugin;
-			$this->main_file = $main_file;
+			$this->parent_plugin    = $plugin;
+			$this->main_file        = $main_file;
 			$this->basedir_relative = $basedir_relative;
 
 			$this->set_prefix( $name . '_' );
@@ -199,21 +199,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Extension' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function load_base_properties();
+		abstract protected function load_base_properties();
 
 		/**
 		 * Loads the extension's textdomain.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function load_textdomain();
+		abstract protected function load_textdomain();
 
 		/**
 		 * Instantiates the extension services.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function instantiate_services();
+		abstract protected function instantiate_services();
 
 		/**
 		 * Checks whether the dependencies have been loaded.

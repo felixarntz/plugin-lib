@@ -58,9 +58,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 
 			?>
 			<fieldset>
-				<legend class="screen-reader-text"><?php echo $this->label; ?></legend>
+				<legend class="screen-reader-text"><?php echo wp_kses_data( $this->label ); ?></legend>
 
-				<?php foreach ( $this->choices as $value => $label ) :
+				<?php foreach ( $this->choices as $value => $label ) : ?>
+					<?php
 					$count++;
 
 					$input_attrs['id']      = $base_id . '-' . $count;
@@ -68,8 +69,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 					$input_attrs['checked'] = in_array( (string) $value, $current_value, true );
 					?>
 					<div class="plugin-lib-input-choice-wrap">
-						<input<?php echo $this->attrs( $input_attrs ); ?>>
-						<label for="<?php echo esc_attr( $input_attrs['id'] ); ?>"><?php echo $label; ?></label>
+						<input<?php echo $this->attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
+						<label for="<?php echo esc_attr( $input_attrs['id'] ); ?>"><?php echo wp_kses_data( $label ); ?></label>
 					</div>
 				<?php endforeach; ?>
 			</fieldset>
@@ -83,10 +84,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 		 */
 		protected function print_single_input_template() {
 			if ( $this->multi ) {
-				$type = 'checkbox';
+				$type    = 'checkbox';
 				$checked = '<# if ( _.isArray( data.currentValue ) && _.contains( data.currentValue, String( value ) ) ) { #> checked<# } #>';
 			} else {
-				$type = 'radio';
+				$type    = 'radio';
 				$checked = '<# if ( data.currentValue === String( value ) ) { #> checked<# } #>';
 			}
 
@@ -96,10 +97,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 
 				<# _.each( data.choices, function( label, value, obj ) { #>
 					<div class="plugin-lib-input-choice-wrap">
-						<input type="<?php echo $type; ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
+						<input type="<?php echo esc_attr( $type ); ?>"{{{ _.attrs( _.extend( {}, data.inputAttrs, {
 							id: data.inputAttrs.id + _.indexOf( _.keys( obj ), value ),
 							name: data.inputAttrs.name
-						} ) ) }}} value="{{ value }}"<?php echo $checked; ?>>
+						} ) ) }}} value="{{ value }}"<?php echo $checked; /* WPCS: XSS OK. */ ?>>
 						<label for="{{ data.inputAttrs.id + _.indexOf( _.keys( obj ), value ) }}">{{ label }}</label>
 					</div>
 				<# } ) #>

@@ -398,8 +398,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 
 			$prefixed_table_name = $this->get_prefix() . $table;
 
-			$this->wpdb->tables[] = $prefixed_table_name;
-			$this->wpdb->$prefixed_table_name = $this->wpdb->prefix . $prefixed_table_name;
+			$this->wpdb->tables[]               = $prefixed_table_name;
+			$this->wpdb->{$prefixed_table_name} = $this->wpdb->prefix . $prefixed_table_name;
 
 			$this->tables[ $table ] = $prefixed_table_name;
 
@@ -461,7 +461,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 			$query = $this->replace_table_placeholders( $query );
 
 			if ( ! empty( $args ) ) {
-				$query = $this->wpdb->prepare( $query, $args );
+				$query = $this->wpdb->prepare( $query, $args ); // phpcs:ignore
 			}
 
 			$result = call_user_func( array( $this->wpdb, $method_name ), $query );
@@ -524,7 +524,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 				$table = $this->table_to_db_table( $this->tables[ $table ] );
 			}
 
-			$data = $this->prepare_data_for_database( $data );
+			$data  = $this->prepare_data_for_database( $data );
 			$where = $this->prepare_data_for_database( $where );
 
 			return $this->wpdb->update( $table, $data, $where, $this->create_format_from_data( $data ), $this->create_format_from_data( $where ) );
@@ -598,7 +598,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 		protected function uninstall_single() {
 			foreach ( $this->tables as $prefixed_table_name ) {
 				$db_table_name = $this->table_to_db_table( $prefixed_table_name );
-				$this->wpdb->query( "DROP TABLE $db_table_name" );
+				$this->wpdb->query( "DROP TABLE $db_table_name" ); // WPCS: Unprepared SQL OK.
 			}
 
 			/**
@@ -665,7 +665,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB' ) ) :
 		 * @return string Valid SQL query with fully qualified table names.
 		 */
 		protected function replace_table_placeholders( $query ) {
-			$search = array_map( array( $this, 'table_to_placeholder' ), array_keys( $this->tables ) );
+			$search  = array_map( array( $this, 'table_to_placeholder' ), array_keys( $this->tables ) );
 			$replace = array_map( array( $this, 'table_to_db_table' ), $this->tables );
 
 			return str_replace( $search, $replace, $query );

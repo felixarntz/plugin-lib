@@ -191,17 +191,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Core_Model' )
 		 */
 		protected function set_value_type_safe( $property, $value ) {
 			if ( $property === $this->manager->get_primary_property() ) {
-				$this->original->$property = intval( $value );
+				$this->original->{$property} = intval( $value );
 			} elseif ( is_int( $this->original->$property ) ) {
-				$this->original->$property = intval( $value );
+				$this->original->{$property} = intval( $value );
 			} elseif ( is_float( $this->original->$property ) ) {
-				$this->original->$property = floatval( $value );
+				$this->original->{$property} = floatval( $value );
 			} elseif ( is_string( $this->original->$property ) ) {
-				$this->original->$property = strval( $value );
+				$this->original->{$property} = strval( $value );
 			} elseif ( is_bool( $this->original->$property ) ) {
-				$this->original->$property = (bool) $value;
+				$this->original->{$property} = (bool) $value;
 			} else {
-				$this->original->$property = $value;
+				$this->original->{$property} = $value;
 			}
 		}
 
@@ -272,7 +272,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Core_Model' )
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function set_default_object();
+		abstract protected function set_default_object();
 
 		/**
 		 * Returns the names of all properties that are part of the database object.
@@ -281,7 +281,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models\Core_Model' )
 		 *
 		 * @return array Array of property names.
 		 */
-		protected abstract function get_db_fields();
+		abstract protected function get_db_fields();
 	}
 
 endif;

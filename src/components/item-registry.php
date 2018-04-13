@@ -133,11 +133,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Item_Registry' ) ) :
 				$operator = 'and';
 			}
 
-			$items = $this->items;
+			$items                = $this->items;
 			$transformed_to_array = false;
 			if ( ! empty( $args ) || ! empty( $orderby ) || ! empty( $order ) ) {
 				/* `WP_List_Util::filter()` and `WP_List_Util::sort()` can't handle objects with magic properties. */
-				$items = $this->objects_to_arrays( $items );
+				$items                = $this->objects_to_arrays( $items );
 				$transformed_to_array = true;
 			}
 
@@ -225,7 +225,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Item_Registry' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function register_defaults();
+		abstract protected function register_defaults();
 	}
 
 endif;

@@ -80,7 +80,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		 * @since 1.0.0
 		 */
 		protected function clean_referer() {
-			if ( empty( $_REQUEST['_wp_http_referer'] ) ) {
+			if ( empty( $_REQUEST['_wp_http_referer'] ) ) { // WPCS: CSRF OK.
 				return;
 			}
 
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		protected function redirect_with_message( $redirect_url, $message, $action_type = 'action' ) {
 			$result = 'true';
 			if ( is_wp_error( $message ) ) {
-				$result = 'false';
+				$result  = 'false';
 				$message = $message->get_error_message();
 			}
 
@@ -123,7 +123,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		 * @param string $action_type Optional. The action type. Default 'action'.
 		 */
 		protected function print_current_message( $action_type = 'action' ) {
-			if ( ! isset( $_REQUEST[ $action_type . '_result' ] ) ) {
+			if ( ! isset( $_REQUEST[ $action_type . '_result' ] ) ) { // WPCS: CSRF OK.
 				return;
 			}
 
@@ -136,9 +136,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 			if ( false !== $message ) {
 				delete_transient( $transient_name );
 
-				$class = 'true' === $_REQUEST[ $action_type . '_result' ] ? 'notice-success' : 'notice-error';
+				$class = 'true' === $_REQUEST[ $action_type . '_result' ] ? 'notice-success' : 'notice-error'; // WPCS: CSRF OK.
 
-				echo '<div id="message" class="notice ' . $class . ' is-dismissible">' . wpautop( $message ) . '</div>';
+				echo '<div id="message" class="' . esc_attr( 'notice ' . $class . ' is-dismissible' ) . '">' . wp_kses_post( wpautop( $message ) ) . '</div>';
 			}
 
 			$_SERVER['REQUEST_URI'] = remove_query_arg( array( $action_type . '_result' ), $_SERVER['REQUEST_URI'] );
@@ -163,14 +163,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function render_header();
+		abstract protected function render_header();
 
 		/**
 		 * Renders the page form.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function render_form();
+		abstract protected function render_form();
 	}
 
 endif;

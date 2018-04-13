@@ -57,11 +57,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Queries\Term_Query' 
 		 * @return Term_Collection Results as a collection.
 		 */
 		protected function parse_results_collection() {
-			$ids = null !== $this->original->terms ? $this->original->terms : array();
+			$ids    = null !== $this->original->terms ? $this->original->terms : array();
 			$fields = $this->original->query_vars['fields'];
 
 			if ( 'ids' !== $fields ) {
-				$ids = wp_list_pluck( $ids, 'term_id' );
+				$ids    = wp_list_pluck( $ids, 'term_id' );
 				$fields = 'objects';
 			}
 

@@ -238,7 +238,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 
 			$section = isset( $args['section'] ) ? $args['section'] : '';
 
-			$class_name = self::get_registered_field_type( $type );
+			$class_name     = self::get_registered_field_type( $type );
 			$field_instance = new $class_name( $this, $id, $args );
 
 			$this->section_lookup[ $id ] = $section;
@@ -316,10 +316,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 				) );
 
 				$this->library_assets()->register_script( 'fields', 'assets/dist/js/fields.js', array(
-					'deps'          => array( 'jquery', 'underscore', 'backbone', 'wp-util' ),
-					'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
-					'in_footer'     => true,
-					'enqueue'       => true,
+					'deps'      => array( 'jquery', 'underscore', 'backbone', 'wp-util' ),
+					'ver'       => \Leaves_And_Love_Plugin_Loader::VERSION,
+					'in_footer' => true,
+					'enqueue'   => true,
 				) );
 
 				$this->enqueued( '_core', true );
@@ -346,7 +346,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 			/** This is run to verify there are no circular dependencies. */
 			$this->resolve_dependency_order( $field_instances );
 
-			$field_data = array();
+			$field_data     = array();
 			$type_templates = array();
 			foreach ( $field_instances as $id => $field_instance ) {
 				$type = $field_instance->slug;
@@ -412,14 +412,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 				add_action( $templates_hook_name, function() use ( &$script ) {
 					foreach ( $script->extra['plugin_lib_templates'] as $type => $templates ) {
 						?>
-						<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-label">
-							<?php echo $templates['label']; ?>
+						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-label' ); ?>">
+							<?php echo $templates['label']; /* WPCS: XSS OK. */ ?>
 						</script>
-						<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-content">
-							<?php echo $templates['content']; ?>
+						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-content' ); ?>">
+							<?php echo $templates['content']; /* WPCS: XSS OK. */ ?>
 						</script>
-						<script type="text/html" id="tmpl-plugin-lib-field-<?php echo $type; ?>-repeatable-item">
-							<?php echo $templates['repeatable_item']; ?>
+						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-repeatable-item' ); ?>">
+							<?php echo $templates['repeatable_item']; /* WPCS: XSS OK. */ ?>
 						</script>
 						<?php
 					}
@@ -518,7 +518,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 					$values = array();
 
 					foreach ( $field_instances as $id => $field_instance ) {
-						$args = $this->get_value_callback_args;
+						$args            = $this->get_value_callback_args;
 						$args[ $id_key ] = $id;
 
 						$values[ $id ] = call_user_func_array( $this->get_value_callback, $args );
@@ -564,8 +564,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 
 					$this->current_values[ $id ] = $validated_value;
 
-					$args = $this->update_value_callback_args;
-					$args[ $id_key ] = $id;
+					$args               = $this->update_value_callback_args;
+					$args[ $id_key ]    = $id;
 					$args[ $value_key ] = $validated_value;
 
 					call_user_func_array( $this->update_value_callback, $args );
@@ -582,7 +582,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 					$validated_values[ $id ] = $validated_value;
 				}
 
-				$args = $this->update_value_callback_args;
+				$args               = $this->update_value_callback_args;
 				$args[ $value_key ] = $validated_values;
 
 				call_user_func_array( $this->update_value_callback, $args );
@@ -727,7 +727,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		 */
 		protected function render_form_table_row( $field, $value ) {
 			?>
-			<tr<?php echo $field->get_wrap_attrs(); ?>>
+			<tr<?php echo $field->get_wrap_attrs(); /* WPCS: XSS OK. */ ?>>
 				<th scope="row">
 					<?php $field->render_label(); ?>
 				</th>
@@ -748,7 +748,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		 */
 		protected function render_divs_row( $field, $value ) {
 			?>
-			<div<?php echo $field->get_wrap_attrs(); ?>>
+			<div<?php echo $field->get_wrap_attrs(); /* WPCS: XSS OK. */ ?>>
 				<div class="plugin-lib-label-wrap">
 					<?php $field->render_label(); ?>
 				</div>
@@ -776,7 +776,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 
 			$validated_value = $field->validate( $value );
 			if ( is_wp_error( $validated_value ) ) {
-				$error = $validated_value;
+				$error      = $validated_value;
 				$error_data = $error->get_error_data();
 				if ( isset( $error_data['validated'] ) ) {
 					$validated_value = $error_data['validated'];

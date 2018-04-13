@@ -43,7 +43,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select_Base' ) ) :
 		 * @return array Field data to be JSON-encoded.
 		 */
 		protected function single_to_json( $current_value ) {
-			$data = parent::single_to_json( $current_value );
+			$data            = parent::single_to_json( $current_value );
 			$data['choices'] = $this->choices;
 
 			if ( $this->multi ) {
@@ -130,7 +130,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select_Base' ) ) :
 		 * @return array Array of forbidden properties.
 		 */
 		protected function get_forbidden_keys() {
-			$keys = parent::get_forbidden_keys();
+			$keys   = parent::get_forbidden_keys();
 			$keys[] = 'multi';
 
 			return $keys;

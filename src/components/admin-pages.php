@@ -226,7 +226,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Pages' ) ) :
 
 			foreach ( $this->pages[ $administration_panel ] as $slug => $page ) {
 				$callback = 'add_menu_page';
-				$args = array(
+				$args     = array(
 					$page->title,
 					$page->menu_title,
 					$page->capability,

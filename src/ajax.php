@@ -87,7 +87,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\AJAX' ) ) :
 		 * @since 1.0.0
 		 */
 		public function request() {
-			$request_data = wp_unslash( $_REQUEST );
+			$request_data = wp_unslash( $_REQUEST ); // WPCS: CSRF OK.
 
 			$name = str_replace( $this->get_prefix(), '', $request_data['action'] );
 

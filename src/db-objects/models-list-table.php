@@ -50,7 +50,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			}
 
 			if ( ! isset( $args['models_page'] ) ) {
-				$args['models_page'] = add_query_arg( 'page', $_GET['page'], self_admin_url( $this->screen->parent_file ) );
+				$args['models_page'] = add_query_arg( 'page', wp_unslash( $_GET['page'] ), self_admin_url( $this->screen->parent_file ) ); // WPCS: CSRF OK.
 			}
 
 			if ( ! isset( $args['model_page'] ) ) {
@@ -84,7 +84,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 */
 		public function prepare_items() {
 			$per_page = $this->get_items_per_page( 'list_' . $this->_args['plural'] . '_per_page' );
-			$paged = $this->get_pagenum();
+			$paged    = $this->get_pagenum();
 
 			$query_params = $this->build_query_params( $per_page, ( $paged - 1 ) * $per_page );
 
@@ -106,7 +106,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 * @since 1.0.0
 		 */
 		public function no_items() {
-			echo $this->manager->get_message( 'list_table_no_items' );
+			echo esc_html( $this->manager->get_message( 'list_table_no_items' ) );
 		}
 
 		/**
@@ -118,7 +118,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 * @param string $input_id ID attribute value for the search input field.
 		 */
 		public function search_box( $text, $input_id ) {
-			$query_object = $this->manager->create_query_object();
+			$query_object  = $this->manager->create_query_object();
 			$search_fields = $query_object->get_search_fields();
 
 			if ( empty( $search_fields ) ) {
@@ -137,7 +137,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 */
 		public function column_cb( $model ) {
 			$primary_property = $this->manager->get_primary_property();
-			$model_id = $model->$primary_property;
+			$model_id         = $model->$primary_property;
 
 			$capabilities = $this->manager->capabilities();
 
@@ -147,12 +147,12 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 			$screen_reader_label = $this->manager->get_message( 'list_table_cb_select_label' );
 			if ( method_exists( $this->manager, 'get_title_property' ) ) {
-				$title_property = $this->manager->get_title_property();
+				$title_property      = $this->manager->get_title_property();
 				$screen_reader_label = sprintf( $this->manager->get_message( 'list_table_cb_select_item_label' ), $model->$title_property );
 			}
 
-			echo '<label for="cb-select-' . $model_id . '" class="screen-reader-text">' . $screen_reader_label . '</label>';
-			echo '<input type="checkbox" id="cb-select-' . $model_id . '" name="' . $this->manager->get_plural_slug() . '[]" value="' . $model_id . '" />';
+			echo '<label for="' . esc_attr( 'cb-select-' . $model_id ) . '" class="screen-reader-text">' . wp_kses_data( $screen_reader_label ) . '</label>';
+			echo '<input type="checkbox" id="' . esc_attr( 'cb-select-' . $model_id ) . '" name="' . esc_attr( $this->manager->get_plural_slug() . '[]' ) . '" value="' . esc_attr( $model_id ) . '" />';
 		}
 
 		/**
@@ -164,10 +164,10 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 */
 		public function column_title( $model ) {
 			$title_property = $this->manager->get_title_property();
-			$title = ! empty( $model->$title_property ) ? $model->$title_property : $this->manager->get_message( 'list_table_no_title' );
+			$title          = ! empty( $model->$title_property ) ? $model->$title_property : $this->manager->get_message( 'list_table_no_title' );
 
 			$primary_property = $this->manager->get_primary_property();
-			$model_id = $model->$primary_property;
+			$model_id         = $model->$primary_property;
 
 			$capabilities = $this->manager->capabilities();
 
@@ -178,7 +178,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$title = sprintf( '<a href="%1$s" class="row-title" aria-label="%2$s">%3$s</a>', esc_url( $edit_url ), esc_attr( $aria_label ), $title );
 			}
 
-			echo '<strong>' . $title . '</strong>';
+			echo '<strong>' . $title . '</strong>'; // WPCS: XSS OK.
 		}
 
 		/**
@@ -196,7 +196,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				return;
 			}
 
-			printf( '<a href="%1$s">%2$s</a>', esc_url( add_query_arg( $author_property, $user->ID, $this->_args['models_page'] ) ), $user->display_name );
+			printf( '<a href="%1$s">%2$s</a>', esc_url( add_query_arg( $author_property, $user->ID, $this->_args['models_page'] ) ), $user->display_name ); // WPCS: XSS OK.
 		}
 
 		/**
@@ -208,13 +208,13 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 */
 		public function column_date( $model ) {
 			$date_property = $this->manager->get_date_property();
-			$date = $model->$date_property;
+			$date          = $model->$date_property;
 
 			if ( empty( $date ) || '0000-00-00 00:00:00' === $date ) {
 				return;
 			}
 
-			echo mysql2date( get_option( 'date_format' ), $date );
+			echo esc_html( mysql2date( get_option( 'date_format' ), $date ) );
 		}
 
 		/**
@@ -266,7 +266,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$value = $value ? $this->manager->get_message( 'list_table_yes' ) : $this->manager->get_message( 'list_table_no' );
 			}
 
-			echo $value;
+			echo esc_html( $value );
 		}
 
 		/**
@@ -334,7 +334,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			}
 
 			$primary_property = $this->manager->get_primary_property();
-			$model_id = $model->$primary_property;
+			$model_id         = $model->$primary_property;
 
 			$view_url = $model->get_permalink();
 
@@ -366,7 +366,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			$nonce = wp_create_nonce( 'row-' . $this->_args['singular'] . '-' . $model_id );
 
 			foreach ( $actions as $slug => $data ) {
-				$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
+				$class      = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
 				$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
 
 				$action_url = $data['url'];
@@ -420,7 +420,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 					}
 				}
 
-				$class = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
+				$class      = ! empty( $data['class'] ) ? ' class="' . esc_attr( $data['class'] ) . '"' : '';
 				$aria_label = ! empty( $data['aria_label'] ) ? ' aria-label="' . esc_attr( $data['aria_label'] ) . '"' : '';
 
 				$links[ $slug ] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $data['url'] ), $class, $aria_label, $data['label'] );
@@ -476,6 +476,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				'offset' => $offset,
 			);
 
+			$request_data = $_REQUEST; // WPCS: CSRF OK.
+
 			$default_orderby = $this->manager->get_primary_property();
 			$default_order   = 'ASC';
 
@@ -487,8 +489,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			if ( method_exists( $this->manager, 'get_type_property' ) ) {
 				$type_property = $this->manager->get_type_property();
 
-				if ( isset( $_REQUEST[ $type_property ] ) ) {
-					$query_params[ $type_property ] = $_REQUEST[ $type_property ];
+				if ( isset( $request_data[ $type_property ] ) ) {
+					$query_params[ $type_property ] = $request_data[ $type_property ];
 				}
 			}
 
@@ -497,8 +499,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 				$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
 
-				if ( isset( $_REQUEST[ $status_property ] ) ) {
-					$query_params[ $status_property ] = (array) $_REQUEST[ $status_property ];
+				if ( isset( $request_data[ $status_property ] ) ) {
+					$query_params[ $status_property ] = (array) $request_data[ $status_property ];
 				}
 
 				if ( ! empty( $internal_statuses ) ) {
@@ -517,8 +519,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 				if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
 					$query_params[ $author_property ] = get_current_user_id();
-				} elseif ( isset( $_REQUEST[ $author_property ] ) ) {
-					$query_params[ $author_property ] = $_REQUEST[ $author_property ];
+				} elseif ( isset( $request_data[ $author_property ] ) ) {
+					$query_params[ $author_property ] = $request_data[ $author_property ];
 				}
 			}
 
@@ -528,22 +530,22 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$default_orderby = $date_property;
 				$default_order   = 'DESC';
 
-				if ( ! empty( $_REQUEST['m'] ) ) {
+				if ( ! empty( $request_data['m'] ) ) {
 					$query_params['date_query'] = array(
 						array(
-							'year'   => substr( $_REQUEST['m'], 0, 4 ),
-							'month'  => substr( $_REQUEST['m'], 4, 2 ),
+							'year'  => substr( $request_data['m'], 0, 4 ),
+							'month' => substr( $request_data['m'], 4, 2 ),
 						),
 					);
 				}
 			}
 
-			if ( isset( $_REQUEST['orderby'] ) && isset( $_REQUEST['order'] ) ) {
-				$query_params['orderby'] = array( $_REQUEST['orderby'] => $_REQUEST['order'] );
-			} elseif ( isset( $_REQUEST['orderby'] ) ) {
-				$query_params['orderby'] = array( $_REQUEST['orderby'] => $default_order );
-			} elseif ( isset( $_REQUEST['order'] ) ) {
-				$query_params['orderby'] = array( $default_orderby => $_REQUEST['order'] );
+			if ( isset( $request_data['orderby'] ) && isset( $request_data['order'] ) ) {
+				$query_params['orderby'] = array( $request_data['orderby'] => $request_data['order'] );
+			} elseif ( isset( $request_data['orderby'] ) ) {
+				$query_params['orderby'] = array( $request_data['orderby'] => $default_order );
+			} elseif ( isset( $request_data['order'] ) ) {
+				$query_params['orderby'] = array( $default_orderby => $request_data['order'] );
 			} else {
 				$query_params['orderby'] = array( $default_orderby => $default_order );
 			}
@@ -551,8 +553,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			$query_object = $this->manager->create_query_object();
 
 			$search_fields = $query_object->get_search_fields();
-			if ( ! empty( $search_fields ) && isset( $_REQUEST['s'] ) ) {
-				$query_params['search'] = wp_unslash( trim( $_REQUEST['s'] ) );
+			if ( ! empty( $search_fields ) && isset( $request_data['s'] ) ) {
+				$query_params['search'] = wp_unslash( trim( $request_data['s'] ) );
 			}
 
 			/**
@@ -586,7 +588,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$output = ob_get_clean();
 
 				if ( ! empty( $output ) ) {
-					echo $output;
+					echo $output; // WPCS: XSS OK.
 					submit_button( $this->manager->get_message( 'list_table_filter_button_label' ), '', 'filter_action', false, array( 'id' => $this->_args['singular'] . '-query-submit' ) );
 				}
 			}
@@ -628,7 +630,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		protected function months_dropdown( $date_property ) {
 			global $wp_locale;
 
-			$where = '';
+			$where      = '';
 			$where_args = array();
 
 			if ( method_exists( $this->manager, 'get_author_property' ) ) {
@@ -636,17 +638,17 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 				$capabilities = $this->manager->capabilities();
 				if ( ! $capabilities || ! $capabilities->current_user_can( 'edit_others_items' ) ) {
-					$where .= " AND $author_property = %d";
+					$where       .= " AND $author_property = %d";
 					$where_args[] = get_current_user_id();
 				}
 			}
 
 			if ( method_exists( $this->manager, 'get_status_property' ) ) {
-				$status_property = $this->manager->get_status_property();
+				$status_property   = $this->manager->get_status_property();
 				$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
 
 				if ( ! empty( $internal_statuses ) ) {
-					$where .= " AND $status_property NOT IN (" . implode( ',', array_fill( 0, count( $internal_statuses ), '%s' ) ) . ')';
+					$where     .= " AND $status_property NOT IN (" . implode( ',', array_fill( 0, count( $internal_statuses ), '%s' ) ) . ')';
 					$where_args = array_merge( $where_args, $internal_statuses );
 				}
 			}
@@ -661,11 +663,11 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				return;
 			}
 
-			$m = isset( $_REQUEST['m'] ) ? (int) $_REQUEST['m'] : 0;
+			$m = isset( $_REQUEST['m'] ) ? (int) $_REQUEST['m'] : 0; // WPCS: CSRF OK.
 
-			echo '<label for="filter-by-date" class="screen-reader-text">' . $this->manager->get_message( 'list_table_filter_by_date_label' ) . '</label>';
+			echo '<label for="filter-by-date" class="screen-reader-text">' . esc_html( $this->manager->get_message( 'list_table_filter_by_date_label' ) ) . '</label>';
 			echo '<select id="filter-by-date" name="m">';
-			echo '<option value="0"' . selected( $m, 0, false ) . '>' . $this->manager->get_message( 'list_table_all_dates' ) . '</option>';
+			echo '<option value="0"' . selected( $m, 0, false ) . '>' . esc_html( $this->manager->get_message( 'list_table_all_dates' ) ) . '</option>';
 
 			foreach ( $months as $row ) {
 				if ( 0 === (int) $row->year ) {
@@ -675,7 +677,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$month = zeroise( $row->month, 2 );
 				$year  = $row->year;
 
-				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $year . $month ), selected( $m, $year . $month, false ), sprintf( $this->manager->get_message( 'list_table_month_year' ), $wp_locale->get_month( $month ), $year ) );
+				printf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $year . $month ), selected( $m, $year . $month, false ), esc_html( sprintf( $this->manager->get_message( 'list_table_month_year' ), $wp_locale->get_month( $month ), $year ) ) );
 			}
 
 			echo '</select>';
@@ -689,7 +691,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 		 * @return array Columns as `$slug => $label` pairs.
 		 */
 		protected function build_columns() {
-			$columns = array();
+			$columns       = array();
 			$columns['cb'] = '<input type="checkbox" />';
 
 			if ( method_exists( $this->manager, 'get_title_property' ) ) {
@@ -746,7 +748,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			$capabilities = $this->manager->capabilities();
 
 			$current = 'all';
-			$total = 0;
+			$total   = 0;
 
 			$views = array();
 
@@ -759,7 +761,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				} else {
 					$user_counts = $this->manager->count( get_current_user_id() );
 
-					if ( isset( $_REQUEST[ $author_property ] ) && get_current_user_id() === absint( $_REQUEST[ $author_property ] ) ) {
+					if ( isset( $_REQUEST[ $author_property ] ) && get_current_user_id() === absint( $_REQUEST[ $author_property ] ) ) { // WPCS: CSRF OK.
 						$current = 'mine';
 					}
 
@@ -801,8 +803,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 					);
 				}
 
-				if ( isset( $_REQUEST[ $status_property ] ) ) {
-					$current = $_REQUEST[ $status_property ];
+				if ( isset( $_REQUEST[ $status_property ] ) ) { // WPCS: CSRF OK.
+					$current = $_REQUEST[ $status_property ]; // WPCS: CSRF OK.
 				}
 			} else {
 				$total = $counts['_total'];
@@ -863,7 +865,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			$title = null;
 			if ( method_exists( $this->manager, 'get_title_property' ) ) {
 				$title_property = $this->manager->get_title_property();
-				$title = $model->$title_property;
+				$title          = $model->$title_property;
 			}
 
 			$capabilities = $this->manager->capabilities();

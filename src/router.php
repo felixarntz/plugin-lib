@@ -76,7 +76,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 		 */
 		public function get_current_request_url() {
 			$current_url = trim( esc_url_raw( add_query_arg( array() ) ), '/' );
-			$home_path = trim( wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
+			$home_path   = trim( wp_parse_url( home_url(), PHP_URL_PATH ), '/' );
 
 			if ( $home_path && 0 === strpos( $current_url, $home_path ) ) {
 				$current_url = trim( substr( $current_url, strlen( $home_path ) ), '/' );
@@ -102,14 +102,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 
 			if ( ! is_array( $extra_query_vars ) && ! empty( $extra_query_vars ) ) {
 				$extra_query_vars_str = $extra_query_vars;
-				$extra_query_vars = array();
+				$extra_query_vars     = array();
 				parse_str( $extra_query_vars_str, $extra_query_vars );
 			}
 
-			$routes = $this->routes;
-			$query_vars = null;
+			$routes          = $this->routes;
+			$query_vars      = null;
 			$handle_callback = null;
-			$url_path = '';
+			$url_path        = '';
 
 			if ( '' !== (string) get_option( 'permalink_structure' ) ) {
 				uasort( $routes, array( $this, 'sort_callback_pattern_length' ) );
@@ -117,7 +117,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 				$current_url = $this->get_current_request_url();
 
 				$url_parts = explode( '?', $current_url, 2 );
-				$url_path = trim( $url_parts[0], '/' );
+				$url_path  = trim( $url_parts[0], '/' );
 
 				foreach ( $routes as $route ) {
 					if ( empty( $route['pattern'] ) || empty( $route['map_callback'] ) ) {
@@ -131,10 +131,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 							foreach ( $route['query_vars'] as $query_var ) {
 								if ( isset( $extra_query_vars[ $query_var ] ) ) {
 									$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-								} elseif ( isset( $_POST[ $query_var ] ) ) {
-									$query_vars[ $query_var ] = $_POST[ $query_var ];
-								} elseif ( isset( $_GET[ $query_var ] ) ) {
-									$query_vars[ $query_var ] = $_GET[ $query_var ];
+								} elseif ( isset( $_POST[ $query_var ] ) ) { // WPCS: CSRF OK.
+									$query_vars[ $query_var ] = $_POST[ $query_var ]; // WPCS: CSRF OK.
+								} elseif ( isset( $_GET[ $query_var ] ) ) { // WPCS: CSRF OK.
+									$query_vars[ $query_var ] = $_GET[ $query_var ]; // WPCS: CSRF OK.
 								}
 							}
 						}
@@ -156,10 +156,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 					foreach ( $route['query_vars'] as $query_var ) {
 						if ( isset( $extra_query_vars[ $query_var ] ) ) {
 							$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-						} elseif ( isset( $_POST[ $query_var ] ) ) {
-							$query_vars[ $query_var ] = $_POST[ $query_var ];
-						} elseif ( isset( $_GET[ $query_var ] ) ) {
-							$query_vars[ $query_var ] = $_GET[ $query_var ];
+						} elseif ( isset( $_POST[ $query_var ] ) ) { // WPCS: CSRF OK.
+							$query_vars[ $query_var ] = $_POST[ $query_var ]; // WPCS: CSRF OK.
+						} elseif ( isset( $_GET[ $query_var ] ) ) { // WPCS: CSRF OK.
+							$query_vars[ $query_var ] = $_GET[ $query_var ]; // WPCS: CSRF OK.
 						} else {
 							$query_vars = null;
 							break;

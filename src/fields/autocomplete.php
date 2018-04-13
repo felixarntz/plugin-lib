@@ -91,7 +91,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 			) );
 
 			$args['autocomplete']['rest_placeholder_search_route'] = ltrim( $args['autocomplete']['rest_placeholder_search_route'], '/' );
-			$args['autocomplete']['rest_placeholder_label_route'] = ltrim( $args['autocomplete']['rest_placeholder_label_route'], '/' );
+			$args['autocomplete']['rest_placeholder_label_route']  = ltrim( $args['autocomplete']['rest_placeholder_label_route'], '/' );
 
 			parent::__construct( $manager, $id, $args );
 		}
@@ -107,8 +107,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 		public function enqueue() {
 			$ret = parent::enqueue();
 
-			$ret[0][] = 'jquery-ui-autocomplete';
-			$ret[1]['restUrl'] = rest_url( '/' );
+			$ret[0][]            = 'jquery-ui-autocomplete';
+			$ret[1]['restUrl']   = rest_url( '/' );
 			$ret[1]['restNonce'] = wp_create_nonce( 'wp_rest' );
 
 			return $ret;
@@ -126,7 +126,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 
 			if ( ! empty( $current_value ) && ! empty( $this->autocomplete['rest_placeholder_label_route'] ) ) {
 				$rest_url = rest_url( str_replace( '%value%', $current_value, $this->autocomplete['rest_placeholder_label_route'] ) );
-				$request = WP_REST_Request::from_url( $rest_url );
+				$request  = WP_REST_Request::from_url( $rest_url );
 				if ( $request ) {
 					$response = rest_do_request( $request );
 					if ( ! is_wp_error( $response ) ) {
@@ -146,8 +146,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 				'value' => $current_value,
 			);
 			?>
-			<input<?php echo $this->get_input_attrs( $input_attrs ); ?>>
-			<input<?php echo $this->attrs( $hidden_attrs ); ?>>
+			<input<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
+			<input<?php echo $this->attrs( $hidden_attrs ); /* WPCS: XSS OK. */ ?>>
 			<?php
 			$this->render_repeatable_remove_button();
 		}
@@ -208,7 +208,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 				}
 
 				$rest_url = rest_url( str_replace( '%value%', $value, $this->autocomplete['rest_placeholder_label_route'] ) );
-				$request = WP_REST_Request::from_url( $rest_url );
+				$request  = WP_REST_Request::from_url( $rest_url );
 				if ( ! $request ) {
 					return new WP_Error( 'field_autocomplete_missing_label_route', sprintf( $this->manager->get_message( 'field_autocomplete_missing_label_route' ), $this->label ) );
 				}

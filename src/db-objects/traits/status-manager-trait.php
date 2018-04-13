@@ -144,7 +144,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manage
 			}
 
 			$primary_property = $this->get_primary_property();
-			$status_property = $this->get_status_property();
+			$status_property  = $this->get_status_property();
 
 			$old_status = '';
 			if ( false !== strpos( current_filter(), '_add_' ) ) {
@@ -189,7 +189,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manage
 			$capabilities = $this->capabilities();
 
 			$status_property = $this->get_status_property();
-			$current_status = $model->$status_property;
+			$current_status  = $model->$status_property;
 
 			if ( $capabilities && $capabilities->user_can_publish( null, $id ) ) {
 				$statuses = $this->statuses()->query();
@@ -208,7 +208,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Status_Manage
 			?>
 			<div class="misc-pub-section">
 				<div id="post-status-select">
-					<label for="post-status"><?php echo $this->get_message( 'edit_page_status_label' ); ?></label>
+					<label for="post-status"><?php echo esc_html( $this->get_message( 'edit_page_status_label' ) ); ?></label>
 					<select id="post-status" name="<?php echo esc_attr( $status_property ); ?>">
 						<?php foreach ( $statuses as $status ) : ?>
 							<option value="<?php echo esc_attr( $status->slug ); ?>"<?php selected( $current_status, $status->slug ); ?>><?php echo esc_html( $status->label ); ?></option>

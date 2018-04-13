@@ -55,10 +55,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 				'value' => $current_value,
 			);
 			?>
-			<input<?php echo $this->get_input_attrs( $input_attrs ); ?>>
-			<?php if ( ! empty( $this->unit ) ) : ?>
-				<span class="plugin-lib-unit"><?php echo $this->unit; ?></span>
-			<?php endif;
+			<input<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
+			<?php
+			if ( ! empty( $this->unit ) ) {
+				?>
+				<span class="plugin-lib-unit"><?php echo wp_kses_data( $this->unit ); ?></span>
+				<?php
+			}
 
 			$this->render_repeatable_remove_button();
 		}
@@ -88,7 +91,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 		 * @return array Field data to be JSON-encoded.
 		 */
 		protected function single_to_json( $current_value ) {
-			$data = parent::single_to_json( $current_value );
+			$data         = parent::single_to_json( $current_value );
 			$data['unit'] = $this->unit;
 
 			return $data;
@@ -182,7 +185,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 		 * @return array Array of forbidden properties.
 		 */
 		protected function get_forbidden_keys() {
-			$keys = parent::get_forbidden_keys();
+			$keys   = parent::get_forbidden_keys();
 			$keys[] = 'type';
 
 			return $keys;

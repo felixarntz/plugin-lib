@@ -116,7 +116,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Assets' ) ) :
 		 * @param string $handle Script handle.
 		 */
 		public function enqueue_script( $handle ) {
-			if ( ! in_array( $handle, $this->third_party_scripts ) ) {
+			if ( ! in_array( $handle, $this->third_party_scripts, true ) ) {
 				$handle = $this->prefix_handle( $handle );
 			}
 
@@ -143,10 +143,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Assets' ) ) :
 		 */
 		public function register_style( $handle, $src, $args = array() ) {
 			$args = wp_parse_args( $args, array(
-				'deps'          => array(),
-				'ver'           => false,
-				'media'         => 'all',
-				'enqueue'       => false,
+				'deps'    => array(),
+				'ver'     => false,
+				'media'   => 'all',
+				'enqueue' => false,
 			) );
 
 			$handle = $this->check_handle( $handle, $src );
@@ -167,7 +167,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Assets' ) ) :
 		 * @param string $handle Stylesheet handle.
 		 */
 		public function enqueue_style( $handle ) {
-			if ( ! in_array( $handle, $this->third_party_styles ) ) {
+			if ( ! in_array( $handle, $this->third_party_styles, true ) ) {
 				$handle = $this->prefix_handle( $handle );
 			}
 
@@ -276,21 +276,21 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Assets' ) ) :
 
 			$extension = '';
 			if ( false !== strpos( $src, '.' ) ) {
-				$parts = explode( '.', $src );
+				$parts     = explode( '.', $src );
 				$extension = '.' . $parts[ count( $parts ) - 1 ];
 			}
 
 			$min_extension = '.min' . $extension;
 
-			$extension_length = strlen( $extension );
+			$extension_length     = strlen( $extension );
 			$min_extension_length = $extension_length + 4;
 
-			if ( $min_extension === substr( $src, - $min_extension_length ) && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+			if ( substr( $src, - $min_extension_length ) === $min_extension && defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
 				$uncompressed = substr( $src, 0, - $min_extension_length ) . $extension;
 				if ( file_exists( call_user_func( $this->path_callback, $uncompressed ) ) ) {
 					$src = $uncompressed;
 				}
-			} elseif ( $min_extension !== substr( $src, - $min_extension_length ) && ( ! defined( 'SCRIPT_DEBUG' ) || ! SCRIPT_DEBUG ) ) {
+			} elseif ( substr( $src, - $min_extension_length ) !== $min_extension && ( ! defined( 'SCRIPT_DEBUG' ) || ! SCRIPT_DEBUG ) ) {
 				$compressed = substr( $src, 0, - $extension_length ) . $min_extension;
 				if ( file_exists( call_user_func( $this->path_callback, $compressed ) ) ) {
 					$src = $compressed;
@@ -315,8 +315,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Assets' ) ) :
 		public static function get_library_instance() {
 			if ( null === self::$library_instance ) {
 				self::$library_instance = new Assets( 'plugin_lib_', array(
-					'path_callback' => function( $rel_path ) { return plugin_dir_path( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
-					'url_callback'  => function( $rel_path ) { return plugin_dir_url( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' ); },
+					'path_callback' => function( $rel_path ) {
+						return plugin_dir_path( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' );
+					},
+					'url_callback'  => function( $rel_path ) {
+						return plugin_dir_url( dirname( __FILE__ ) ) . ltrim( $rel_path, '/' );
+					},
 				) );
 			}
 

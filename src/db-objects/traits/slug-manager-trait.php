@@ -60,10 +60,10 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Slug_Manager_
 			$id = $model->$primary_property;
 
 			$id_check = '';
-			$args = array( $slug );
+			$args     = array( $slug );
 			if ( $id ) {
 				$id_check = " AND $primary_property != %d";
-				$args[] = $id;
+				$args[]   = $id;
 			}
 			$query = "SELECT $slug_property FROM %{$this->table_name}% WHERE $slug_property = %s $id_check LIMIT 1";
 
@@ -73,8 +73,8 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Slug_Manager_
 
 				do {
 					$alt_slug = _truncate_post_slug( $slug, 200 - ( strlen( $suffix ) + 1 ) ) . "-$suffix";
-					$args[0] = $alt_slug;
-					$result = $this->db()->get_var( $query, $args );
+					$args[0]  = $alt_slug;
+					$result   = $this->db()->get_var( $query, $args );
 					$suffix++;
 				} while ( $result );
 
@@ -137,7 +137,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\Slug_Manager_
 		 * @return null The unmodified pre-filter value.
 		 */
 		public function maybe_set_slug_property( $ret, $model ) {
-			$slug_property  = $this->get_slug_property();
+			$slug_property = $this->get_slug_property();
 
 			if ( empty( $model->$slug_property ) ) {
 				$generated_slug = $this->generate_slug( $model );

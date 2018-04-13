@@ -118,7 +118,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin_Loader' ) ) :
 
 				?>
 				<div class="notice notice-error">
-					<p><?php echo $plugin->error()->get_error_message(); ?></p>
+					<p><?php echo wp_kses_data( $plugin->error()->get_error_message() ); ?></p>
 				</div>
 				<?php
 			}

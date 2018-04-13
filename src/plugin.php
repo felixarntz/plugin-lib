@@ -107,10 +107,10 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @codeCoverageIgnore
 		 */
 		public function __construct( $main_file, $basedir_relative = '' ) {
-			$this->main_file = $main_file;
+			$this->main_file        = $main_file;
 			$this->basedir_relative = $basedir_relative;
-			$this->minimum_php = '5.5';
-			$this->minimum_wp = '4.7';
+			$this->minimum_php      = '5.5';
+			$this->minimum_wp       = '4.7';
 
 			$this->load_base_properties();
 			$this->load_textdomain();
@@ -127,7 +127,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @codeCoverageIgnore
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // WPCS: XSS OK.
 		}
 
 		/**
@@ -138,7 +138,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @codeCoverageIgnore
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // WPCS: XSS OK.
 		}
 
 		/**
@@ -361,35 +361,35 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function load_base_properties();
+		abstract protected function load_base_properties();
 
 		/**
 		 * Loads the plugin's textdomain.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function load_textdomain();
+		abstract protected function load_textdomain();
 
 		/**
 		 * Loads the class messages.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function load_messages();
+		abstract protected function load_messages();
 
 		/**
 		 * Instantiates the plugin services.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function instantiate_services();
+		abstract protected function instantiate_services();
 
 		/**
 		 * Adds the necessary plugin hooks.
 		 *
 		 * @since 1.0.0
 		 */
-		protected abstract function add_hooks();
+		abstract protected function add_hooks();
 
 		/**
 		 * Loads the plugin textdomain file.

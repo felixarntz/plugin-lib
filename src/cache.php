@@ -66,12 +66,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Cache' ) ) :
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param int|string  $key   The key under which the cache contents are stored.
-		 * @param string      $group Optional. Where the cache contents are grouped. Default 'general'.
-		 * @param bool        $force Optional. Whether to force an update of the local cache from the
-		 *                           persistent cache. Default false.
-		 * @param bool        $found Optional. Whether the key was found in the cache. Disambiguates a
-		 *                           return of false, a storable value. Passed by reference. Default null.
+		 * @param int|string $key   The key under which the cache contents are stored.
+		 * @param string     $group Optional. Where the cache contents are grouped. Default 'general'.
+		 * @param bool       $force Optional. Whether to force an update of the local cache from the
+		 *                          persistent cache. Default false.
+		 * @param bool       $found Optional. Whether the key was found in the cache. Disambiguates a
+		 *                          return of false, a storable value. Passed by reference. Default null.
 		 * @return bool|mixed False on failure to retrieve contents, or the cache contents on success.
 		 */
 		public function get( $key, $group = 'general', $force = false, &$found = null ) {

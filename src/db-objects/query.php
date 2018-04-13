@@ -172,9 +172,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 			}
 
 			if ( method_exists( $this->manager, 'get_meta_type' ) ) {
-				$this->query_var_defaults['meta_key']   = '';
-				$this->query_var_defaults['meta_value'] = '';
-				$this->query_var_defaults['meta_query'] = '';
+				$this->query_var_defaults['meta_key']   = ''; // WPCS: Slow query OK.
+				$this->query_var_defaults['meta_value'] = ''; // WPCS: Slow query OK.
+				$this->query_var_defaults['meta_query'] = ''; // WPCS: Slow query OK.
 
 				if ( method_exists( $this->manager, 'update_meta_cache' ) ) {
 					$this->query_var_defaults['update_meta_cache'] = true;
@@ -306,7 +306,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 			if ( method_exists( $this->manager, 'get_date_property' ) && ! empty( $this->query_vars['date_query'] ) && is_array( $this->query_vars['date_query'] ) ) {
 				$full_table_name = $this->manager->db()->get_table( $this->manager->get_table_name(), 'full' );
 
-				$this->date_query = new WP_Date_Query( $this->query_vars['date_query'], $full_table_name . '.' . $this->manager->get_date_property() );
+				$this->date_query         = new WP_Date_Query( $this->query_vars['date_query'], $full_table_name . '.' . $this->manager->get_date_property() );
 				$this->date_query->column = $full_table_name . '.' . $this->manager->get_date_property();
 			}
 
@@ -333,22 +333,22 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 		 * @return Collection Collection of models.
 		 */
 		protected function get_results() {
-			$key = $this->get_cache_key( $this->query_vars );
+			$key          = $this->get_cache_key( $this->query_vars );
 			$last_changed = $this->manager->get_from_cache( 'last_changed' );
 			if ( ! $last_changed ) {
 				$last_changed = microtime();
 				$this->manager->set_in_cache( 'last_changed', $last_changed );
 			}
 
-			$cache_key = "get_results:$key:$last_changed";
+			$cache_key   = "get_results:$key:$last_changed";
 			$cache_value = $this->manager->get_from_cache( $cache_key );
 
 			if ( false === $cache_value ) {
-				$total = 0;
+				$total     = 0;
 				$model_ids = $this->query_results();
 				if ( $model_ids && ! $this->query_vars['no_found_rows'] ) {
-					$total_models_query = "SELECT FOUND_ROWS()";
-					$total = (int) $this->manager->db()->get_var( $total_models_query );
+					$total_models_query = 'SELECT FOUND_ROWS()';
+					$total              = (int) $this->manager->db()->get_var( $total_models_query );
 				}
 
 				$cache_value = array(
@@ -359,7 +359,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 				$this->manager->add_to_cache( $cache_key, $cache_value );
 			} else {
 				$model_ids = $cache_value['model_ids'];
-				$total = $cache_value['total'];
+				$total     = $cache_value['total'];
 			}
 
 			if ( $this->query_vars['update_cache'] ) {
@@ -395,7 +395,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 				}
 			}
 
-			return md5( serialize( $args ) );
+			return md5( serialize( $args ) ); // phpcs:ignore
 		}
 
 		/**
@@ -430,7 +430,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 			$table_name       = $this->manager->get_table_name();
 			$primary_property = $this->manager->get_primary_property();
 
-			$fresh_models = $this->manager->db()->get_results( sprintf( "SELECT %%{$table_name}%%.* FROM %%{$table_name}%% WHERE {$primary_property} IN (%s)", join( ",", array_map( 'intval', $non_cached_ids ) ) ) );
+			$fresh_models = $this->manager->db()->get_results( sprintf( "SELECT %%{$table_name}%%.* FROM %%{$table_name}%% WHERE {$primary_property} IN (%s)", join( ',', array_map( 'intval', $non_cached_ids ) ) ) );
 			foreach ( (array) $fresh_models as $model ) {
 				$this->manager->add_to_cache( $model->$primary_property, $model );
 			}
@@ -504,11 +504,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 
 			$clauses = compact( $pieces );
 
-			$fields = isset( $clauses['fields'] ) ? $clauses['fields'] : '';
-			$join = isset( $clauses['join'] ) ? $clauses['join'] : '';
-			$where = isset( $clauses['where'] ) ? $clauses['where'] : '';
+			$fields  = isset( $clauses['fields'] ) ? $clauses['fields'] : '';
+			$join    = isset( $clauses['join'] ) ? $clauses['join'] : '';
+			$where   = isset( $clauses['where'] ) ? $clauses['where'] : '';
 			$orderby = isset( $clauses['orderby'] ) ? $clauses['orderby'] : '';
-			$limits = isset( $clauses['limits'] ) ? $clauses['limits'] : '';
+			$limits  = isset( $clauses['limits'] ) ? $clauses['limits'] : '';
 			$groupby = isset( $clauses['groupby'] ) ? $clauses['groupby'] : '';
 
 			if ( $where ) {
@@ -574,7 +574,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 		 */
 		protected function parse_where() {
 			$where = array();
-			$args = array();
+			$args  = array();
 
 			list( $where, $args ) = $this->parse_list_where_field( $where, $args, $this->manager->get_primary_property(), 'include', 'exclude', '%d', 'absint' );
 
@@ -618,7 +618,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 			}
 
 			if ( ! empty( $this->meta_query_clauses ) ) {
-				$where['meta_query'] = preg_replace( '/^\s*AND\s*/', '', $this->meta_query_clauses['where'] );
+				$where['meta_query'] = preg_replace( '/^\s*AND\s*/', '', $this->meta_query_clauses['where'] ); // WPCS: Slow query OK.
 			}
 
 			return array( $where, $args );
@@ -766,7 +766,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 					}
 
 					$where[ $query_var ] = "%{$table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
-					$args = array_merge( $args, $values );
+					$args                = array_merge( $args, $values );
 				} else {
 					$value = $this->query_vars[ $query_var ];
 					if ( $sanitize_callback ) {
@@ -774,7 +774,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 					}
 
 					$where[ $query_var ] = "%{$table_name}%.{$property} = {$placeholder}";
-					$args[] = $value;
+					$args[]              = $value;
 				}
 			}
 
@@ -814,7 +814,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 				}
 
 				$where[ $include_query_var ] = "%{$table_name}%.{$property} IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
-				$args = array_merge( $args, $values );
+				$args                        = array_merge( $args, $values );
 			}
 
 			if ( ! empty( $this->query_vars[ $exclude_query_var ] ) ) {
@@ -824,7 +824,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 				}
 
 				$where[ $exclude_query_var ] = "%{$table_name}%.{$property} NOT IN ( " . implode( ',', array_fill( 0, count( $values ), $placeholder ) ) . ' )';
-				$args = array_merge( $args, $values );
+				$args                        = array_merge( $args, $values );
 			}
 
 			return array( $where, $args );
@@ -916,7 +916,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 
 			$searches = array();
 			foreach ( $fields as $field ) {
-				$searches[] = "%{$table_name}%." . $wpdb->prepare( "{$field} LIKE %s", $like );
+				$searches[] = "%{$table_name}%." . $wpdb->prepare( "{$field} LIKE %s", $like ); // WPCS: Unprepared SQL OK.
 			}
 
 			return '(' . implode( ' OR ', $searches ) . ')';

@@ -195,7 +195,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model' ) ) :
 					$old_value = $this->manager->get_meta( $this->primary_property_value(), $property, true );
 					if ( false === $old_value && array_key_exists( $property, $this->pending_meta ) && null === $value ) {
 						unset( $this->pending_meta[ $property ] );
-					} elseif ( $value != $old_value ) {
+					} elseif ( $value != $old_value ) { // phpcs:ignore
 						$this->pending_meta[ $property ] = $value;
 					}
 

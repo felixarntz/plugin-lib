@@ -47,7 +47,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' 
 
 			$this->fetcher = new CLI_Model_Fetcher( $this->manager );
 
-			$this->obj_type = $this->manager->get_singular_slug();
+			$this->obj_type        = $this->manager->get_singular_slug();
 			$this->obj_type_plural = $this->manager->get_plural_slug();
 
 			$this->obj_id_key = $this->manager->get_primary_property();
@@ -111,9 +111,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' 
 				}
 
 				if ( \WP_CLI\Utils\get_flag_value( $assoc_args, 'edit' ) ) {
-					$input = \WP_CLI\Utils\get_flag_value( $assoc_args, $content_property, '' );
+					$input  = \WP_CLI\Utils\get_flag_value( $assoc_args, $content_property, '' );
+					$output = $this->_edit( $input, 'WP-CLI: New ' . $singular_name );
 
-					if ( $output = $this->_edit( $input, 'WP-CLI: New ' . $singular_name ) ) {
+					if ( $output ) {
 						$assoc_args[ $content_property ] = $output;
 					} else {
 						$assoc_args[ $content_property ] = $input;
@@ -262,7 +263,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' 
 			$collection = $this->manager->query( $query_args );
 
 			if ( 'ids' === $formatter->format ) {
-				echo implode( ' ', $collection->get_raw() );
+				echo implode( ' ', $collection->get_raw() ); // WPCS: XSS OK.
 			} else {
 				$data = $collection->to_json( false );
 				$formatter->display_items( $data['models'] );
@@ -631,7 +632,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' 
 		 * @param string $title   Title.
 		 * @return string Content after editing.
 		 */
-		protected function _edit( $content, $title ) {
+		protected function _edit( $content, $title ) { // phpcs:ignore
 			return \WP_CLI\Utils\launch_editor_for_input( $content, $title );
 		}
 
@@ -653,7 +654,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\CLI_Models_Command' 
 				$readfile = 'php://stdin';
 			}
 
-			return file_get_contents( $readfile );
+			return file_get_contents( $readfile ); // phpcs:ignore
 		}
 	}
 

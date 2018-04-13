@@ -177,7 +177,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 				}
 
 				$ret[0][] = 'editor';
-				$ret[1] = array_merge( $ret[1], array(
+				$ret[1]   = array_merge( $ret[1], array(
 					'i18nWYSIWYGAddMediaButton' => __( 'Add Media' ),
 				) );
 			}
@@ -199,11 +199,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 			}
 
 			$input_attrs = $this->get_input_attrs( array(), false );
-			$editor_id = $input_attrs['id'];
+			$editor_id   = $input_attrs['id'];
 
 			$this->setup_editor( $current_value );
 
-			echo $this->editor_markup[ $editor_id ];
+			echo $this->editor_markup[ $editor_id ]; // WPCS: XSS OK.
 
 			$this->render_repeatable_remove_button();
 		}
@@ -228,20 +228,20 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 			}
 
 			?>
-			<div id="wp-{{data.inputAttrs.id}}-wrap" class="wp-core-ui wp-editor-wrap <?php echo $switch_class; ?>">
+			<div id="wp-{{data.inputAttrs.id}}-wrap" class="<?php echo esc_attr( 'wp-core-ui wp-editor-wrap ' . $switch_class ); ?>">
 				<?php if ( user_can_richedit() ) : ?>
 					<div id="wp-{{data.inputAttrs.id}}-editor-tools" class="wp-editor-tools hide-if-no-js">
 						<# if ( data.editorSettings.media_buttons ) { #>
 							<div id="wp-{{data.inputAttrs.id}}-media-buttons" class="wp-media-buttons">
 								<button type="button"%s class="button insert-media add_media" data-editor="{{data.inputAttrs.id}}">
 									<span class="wp-media-buttons-icon"></span>
-									<?php _e( 'Add Media' ); ?>
+									<?php esc_html_e( 'Add Media' ); ?>
 								</button>
 							</div>
 						<# } #>
 						<div class="wp-editor-tabs">
-							<button type="button" id="{{data.inputAttrs.id}}-tmce" class="wp-switch-editor switch-tmce" data-wp-editor-id="{{data.inputAttrs.id}}"><?php _e( 'Visual' ); ?></button>
-							<button type="button" id="{{data.inputAttrs.id}}-html" class="wp-switch-editor switch-html" data-wp-editor-id="{{data.inputAttrs.id}}"><?php _x( 'Text', 'Name for the Text editor tab (formerly HTML)' ); ?></button>
+							<button type="button" id="{{data.inputAttrs.id}}-tmce" class="wp-switch-editor switch-tmce" data-wp-editor-id="{{data.inputAttrs.id}}"><?php esc_html_e( 'Visual' ); ?></button>
+							<button type="button" id="{{data.inputAttrs.id}}-html" class="wp-switch-editor switch-html" data-wp-editor-id="{{data.inputAttrs.id}}"><?php echo esc_html( _x( 'Text', 'Name for the Text editor tab (formerly HTML)' ) ); ?></button>
 						</div>
 					</div>
 				<?php else : ?>
@@ -250,7 +250,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 							<div id="wp-{{data.inputAttrs.id}}-media-buttons" class="wp-media-buttons">
 								<button type="button"%s class="button insert-media add_media" data-editor="{{data.inputAttrs.id}}">
 									<span class="wp-media-buttons-icon"></span>
-									<?php _e( 'Add Media' ); ?>
+									<?php esc_html_e( 'Add Media' ); ?>
 								</button>
 							</div>
 						</div>
@@ -259,7 +259,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 
 				<div id="wp-{{data.inputAttrs.id}}-editor-container" class="wp-editor-container">
 					<div id="qt_{{data.inputAttrs.id}}_toolbar" class="quicktags-toolbar"></div>
-					<textarea class="{{data.editorSettings.editor_class}} wp-editor-area" rows="{{data.editorSettings.textarea_rows}}"<?php echo $autocomplete; ?> cols="40" name="{{data.editorSettings.textarea_name}}" id="{{data.inputAttrs.id}}">{{ data.currentValue }}</textarea>
+					<textarea class="{{data.editorSettings.editor_class}} wp-editor-area" rows="{{data.editorSettings.textarea_rows}}"<?php echo $autocomplete; /* WPCS: XSS OK. */ ?> cols="40" name="{{data.editorSettings.textarea_name}}" id="{{data.inputAttrs.id}}">{{ data.currentValue }}</textarea>
 				</div>
 			</div>
 
@@ -290,8 +290,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 
 			$data = parent::single_to_json( $current_value );
 
-			$data['editorSettings'] = $this->editor_settings;
-			$data['tinyMCESettings'] = $this->tinymce_settings;
+			$data['editorSettings']    = $this->editor_settings;
+			$data['tinyMCESettings']   = $this->tinymce_settings;
 			$data['quickTagsSettings'] = $this->quicktags_settings;
 
 			return $data;
@@ -306,7 +306,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 		 */
 		protected function setup_editor( $current_value ) {
 			$input_attrs = $this->get_input_attrs( array(), false );
-			$editor_id = $input_attrs['id'];
+			$editor_id   = $input_attrs['id'];
 
 			if ( ! isset( $this->editor_settings[ $editor_id ] ) ) {
 				$this->editor_settings[ $editor_id ] = array(
@@ -317,10 +317,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 					'wpautop'        => $this->wpautop,
 					'media_buttons'  => $this->media_buttons,
 					'quicktags'      => array(
-						'buttons'        => 'strong,em,link,block,del,ins,img,ul,ol,li,code,close',
+						'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,close',
 					),
 					'tinymce'        => array(
-						'toolbar1'       => 'bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,spellchecker,wp_adv',
+						'toolbar1' => 'bold,italic,strikethrough,bullist,numlist,blockquote,hr,alignleft,aligncenter,alignright,link,unlink,spellchecker,wp_adv',
 					),
 				);
 			}
@@ -334,6 +334,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 				$tinymce_filter = function() use ( $tinymce_function, $accepted_args ) {
 					return call_user_func_array( $tinymce_function, array_slice( func_get_args(), 0, $accepted_args ) );
 				};
+
 				$quicktags_filter = function() use ( $quicktags_function, $accepted_args ) {
 					return call_user_func_array( $quicktags_function, array_slice( func_get_args(), 0, $accepted_args ) );
 				};

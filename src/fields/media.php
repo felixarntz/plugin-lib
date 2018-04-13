@@ -131,14 +131,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Media' ) ) :
 			) );
 
 			$assets->register_script( 'wp-media-picker', 'node_modules/wp-media-picker/wp-media-picker.js', array(
-				'deps'          => array( 'jquery', 'jquery-ui-widget', 'media-editor' ),
-				'ver'           => $mediapicker_version,
-				'in_footer'     => true,
-				'enqueue'       => true,
+				'deps'      => array( 'jquery', 'jquery-ui-widget', 'media-editor' ),
+				'ver'       => $mediapicker_version,
+				'in_footer' => true,
+				'enqueue'   => true,
 			) );
 
 			$ret[0][] = 'wp-media-picker';
-			$ret[1] = array_merge( $ret[1], array(
+			$ret[1]   = array_merge( $ret[1], array(
 				'i18nMediaAddButton'     => $this->manager->get_message( 'field_media_add_button' ),
 				'i18nMediaReplaceButton' => $this->manager->get_message( 'field_media_replace_button' ),
 				'i18nMediaRemoveButton'  => $this->manager->get_message( 'field_media_remove_button' ),
@@ -192,7 +192,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Media' ) ) :
 				}
 			} else {
 				$orig_value = absint( $orig_value );
-				$value = $orig_value;
+				$value      = $orig_value;
 			}
 
 			if ( 'attachment' !== get_post_type( $value ) ) {

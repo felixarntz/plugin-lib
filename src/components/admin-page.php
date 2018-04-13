@@ -137,7 +137,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Page' ) ) :
 		 * @param Admin_Pages $manager Admin page manager instance.
 		 */
 		public function __construct( $slug, $manager ) {
-			$this->slug = $slug;
+			$this->slug    = $slug;
 			$this->manager = $manager;
 
 			if ( ! empty( $this->title ) && empty( $this->menu_title ) ) {
@@ -168,7 +168,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Admin_Page' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		public abstract function render();
+		abstract public function render();
 
 		/**
 		 * Magic isset-er.

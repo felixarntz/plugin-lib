@@ -49,11 +49,11 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Traits\View_Routing_
 
 			if ( ! empty( $permalink ) ) : ?>
 				<div id="view-action">
-					<a class="button" href="<?php echo esc_url( $permalink ); ?>" target="_blank"><?php echo $this->get_message( 'edit_page_view' ); ?></a>
+					<a class="button" href="<?php echo esc_url( $permalink ); ?>" target="_blank"><?php echo esc_html( $this->get_message( 'edit_page_view' ) ); ?></a>
 				</div>
 			<?php endif; ?>
 			<div id="preview-action">
-				<button type="button" id="post-preview" class="preview button"><?php echo $preview_text; ?></button>
+				<button type="button" id="post-preview" class="preview button"><?php echo esc_html( $preview_text ); ?></button>
 			</div>
 			<?php
 		}

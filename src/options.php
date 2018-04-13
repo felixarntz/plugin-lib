@@ -114,7 +114,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
 			if ( $this->is_stored_in_network( $option ) && is_multisite() ) {
 				$site_id = get_current_blog_id();
 
-				$options = get_network_option( null, $this->get_prefix() . $option, array() );
+				$options             = get_network_option( null, $this->get_prefix() . $option, array() );
 				$options[ $site_id ] = $value;
 
 				return update_network_option( null, $this->get_prefix() . $option, $options );
@@ -196,7 +196,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Options' ) ) :
 				return array( 1 );
 			}
 
-			return array_map( 'absint', $wpdb->get_col( $wpdb->prepare( "SELECT site_id FROM $wpdb->sitemeta WHERE meta_key = %s", $this->get_prefix() . $option ) ) );
+			return array_map( 'absint', $wpdb->get_col( $wpdb->prepare( "SELECT site_id FROM $wpdb->sitemeta WHERE meta_key = %s", $this->get_prefix() . $option ) ) ); // WPCS: DB call OK. Cache OK.
 		}
 
 		/**

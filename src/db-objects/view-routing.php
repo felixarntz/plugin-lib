@@ -223,7 +223,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			if ( '' !== (string) get_option( 'permalink_structure' ) ) {
 				$permalink = $this->base;
 
-				$date_property = '';
+				$date_property      = '';
 				$special_date_parts = array();
 				if ( method_exists( $this->manager, 'get_date_property' ) ) {
 					$date_property = $this->manager->get_date_property();
@@ -283,7 +283,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 		public function get_model_preview_permalink( $model ) {
 			$preview_data = $model->to_json();
 
-			$preview_key = md5( serialize( $preview_data ) );
+			$preview_key = md5( serialize( $preview_data ) ); // phpcs:ignore
 
 			$transient_name = $this->manager->get_prefix() . $this->manager->get_singular_slug() . '_preview-' . $preview_key;
 
@@ -351,7 +351,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 
 			$permalink = $this->base;
 
-			$date_property = '';
+			$date_property      = '';
 			$special_date_parts = array();
 			if ( method_exists( $this->manager, 'get_date_property' ) ) {
 				$date_property = $this->manager->get_date_property();
@@ -667,7 +667,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			if ( ! empty( $this->preview_query_var ) ) {
 				$slug = $this->get_prefix() . $this->manager->get_singular_slug() . '_preview';
 
-				$pattern = '^' . $this->base . '/preview/(?P<preview>[\w-]+)/?$';
+				$pattern    = '^' . $this->base . '/preview/(?P<preview>[\w-]+)/?$';
 				$query_vars = array( $this->preview_query_var, 'preview' );
 
 				$this->router()->add_route( $slug, $pattern, array( $this, 'map_matches_to_query_vars' ), $query_vars, array( $this, 'handle_preview_request' ) );
@@ -775,7 +775,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 					$title['title'] = $this->current_model->$title_property;
 				} else {
 					$primary_property = $this->manager->get_primary_property();
-					$title['title'] = sprintf( $this->manager->get_message( 'view_routing_singular_fallback_title' ), number_format_i18n( $this->current_model->$primary_property ) );
+					$title['title']   = sprintf( $this->manager->get_message( 'view_routing_singular_fallback_title' ), number_format_i18n( $this->current_model->$primary_property ) );
 				}
 			}
 

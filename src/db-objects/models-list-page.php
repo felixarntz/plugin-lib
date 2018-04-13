@@ -86,7 +86,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 		 */
 		public function handle_request() {
 			if ( ! $this->current_user_can() ) {
-				wp_die( $this->model_manager->get_message( 'list_page_cannot_edit_items' ), 403 );
+				wp_die( wp_kses_data( $this->model_manager->get_message( 'list_page_cannot_edit_items' ) ), '', 403 );
 			}
 
 			$this->setup_list_table();
@@ -148,15 +148,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 
 			?>
 			<h1 class="wp-heading-inline">
-				<?php echo $this->title; ?>
+				<?php echo esc_html( $this->title ); ?>
 			</h1>
 
 			<?php if ( ! empty( $new_page_url ) && $capabilities && $capabilities->user_can_create() ) : ?>
-				<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo $this->model_manager->get_message( 'list_page_add_new' ); ?></a>
+				<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo esc_html( $this->model_manager->get_message( 'list_page_add_new' ) ); ?></a>
 			<?php endif; ?>
 
-			<?php if ( isset( $_REQUEST['s'] ) && strlen( $_REQUEST['s'] ) ) : ?>
-				<span class="subtitle"><?php printf( $this->model_manager->get_message( 'list_page_search_results_for' ), esc_attr( wp_unslash( $_REQUEST['s'] ) ) ); ?></span>
+			<?php if ( isset( $_REQUEST['s'] ) && strlen( $_REQUEST['s'] ) ) : /* WPCS: CSRF OK. */ ?>
+				<span class="subtitle"><?php printf( $this->model_manager->get_message( 'list_page_search_results_for' ), esc_attr( wp_unslash( $_REQUEST['s'] ) ) ); /* WPCS: XSS OK. CSRF OK. */ ?></span>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -176,7 +176,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 			$this->list_table->views();
 
 			?>
-			<form id="<?php echo $this->model_manager->get_plural_slug(); ?>-filter" method="get">
+			<form id="<?php echo esc_attr( $this->model_manager->get_plural_slug() + '-filter' ); ?>" method="get">
 
 				<?php $this->list_table->search_box( $this->model_manager->get_message( 'list_page_search_items' ), $this->model_manager->get_singular_slug() ); ?>
 
@@ -194,11 +194,18 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 				}
 				?>
 
-				<input type="hidden" name="page" value="<?php echo $this->slug; ?>" />
+				<input type="hidden" name="page" value="<?php echo esc_attr( $this->slug ); ?>" />
 
-				<?php if ( method_exists( $this->model_manager, 'get_author_property' ) && ( $author_property = $this->model_manager->get_author_property() ) && ! empty( $_REQUEST[ $author_property ] ) ) : ?>
-					<input type="hidden" name="<?php echo $author_property; ?>" value="<?php echo esc_attr( $_REQUEST[ $author_property ] ); ?>" />
-				<?php endif; ?>
+				<?php
+				if ( method_exists( $this->model_manager, 'get_author_property' ) ) {
+					$author_property = $this->model_manager->get_author_property();
+					if ( $author_property && ! empty( $_REQUEST[ $author_property ] ) ) { // WPCS: CSRF OK.
+						?>
+						<input type="hidden" name="<?php echo esc_attr( $author_property ); ?>" value="<?php echo esc_attr( $_REQUEST[ $author_property ] ); /* WPCS: CSRF OK. */ ?>" />
+						<?php
+					}
+				}
+				?>
 
 				<?php $this->list_table->display(); ?>
 			</form>
@@ -250,7 +257,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 			}
 
 			if ( empty( $ids ) ) {
-				wp_redirect( $sendback );
+				wp_safe_redirect( $sendback );
 				exit;
 			}
 
@@ -284,7 +291,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 				$sendback = $this->redirect_with_message( $sendback, $message, 'bulk_action' );
 			}
 
-			wp_redirect( $sendback );
+			wp_safe_redirect( $sendback );
 			exit;
 		}
 
@@ -328,7 +335,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 		protected function bulk_action_delete( $ids ) {
 			$errors = new WP_Error();
 
-			$capabilities = $this->model_manager->capabilities();
+			$capabilities   = $this->model_manager->capabilities();
 			$title_property = method_exists( $this->model_manager, 'get_title_property' ) ? $this->model_manager->get_title_property() : '';
 
 			foreach ( $ids as $id ) {
@@ -358,7 +365,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 			if ( ! empty( $errors->errors ) ) {
 				$error_count = count( $errors->errors );
 
-				$message = '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_has_errors', true ), $error_count ), number_format_i18n( $error_count ) ) . '</p>';
+				$message  = '<p>' . sprintf( translate_nooped_plural( $this->model_manager->get_message( 'bulk_action_delete_has_errors', true ), $error_count ), number_format_i18n( $error_count ) ) . '</p>';
 				$message .= '<ul>';
 				foreach ( $errors->get_error_messages() as $error_message ) {
 					$message .= '<li>' . $error_message . '</li>';
