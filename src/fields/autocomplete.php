@@ -135,21 +135,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 				}
 			}
 
-			$input_attrs = array(
-				'type'  => $this->type,
-				'value' => $current_label,
-			);
-
 			$hidden_attrs = array(
 				'type'  => 'hidden',
 				'name'  => $this->get_name_attribute(),
 				'value' => $current_value,
 			);
 			?>
-			<input<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
 			<input<?php echo $this->attrs( $hidden_attrs ); /* WPCS: XSS OK. */ ?>>
 			<?php
-			$this->render_repeatable_remove_button();
+			parent::render_single_input( $current_label );
 		}
 
 		/**
@@ -159,10 +153,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 		 */
 		protected function print_single_input_template() {
 			?>
-			<input type="<?php echo esc_attr( $this->type ); ?>"{{{ _.attrs( data.inputAttrs ) }}} value="{{ data.currentLabel }}">
 			<input type="hidden" name="{{ data.name }}" value="{{ data.currentValue }}">
 			<?php
-			$this->print_repeatable_remove_button_template();
+			ob_start();
+			parent::print_single_input_template();
+			echo str_replace( '"{{ data.currentValue }}"', '"{{ data.currentLabel }}"', ob_get_clean() ); // WPCS: XSS OK.
 		}
 
 		/**
