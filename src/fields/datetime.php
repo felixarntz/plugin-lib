@@ -53,15 +53,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 		protected $backbone_view = 'DatetimeFieldView';
 
 		/**
-		 * Locale data.
-		 *
-		 * @since 1.0.0
-		 * @static
-		 * @var array
-		 */
-		protected static $locale_data = array();
-
-		/**
 		 * Constructor.
 		 *
 		 * @since 1.0.0
@@ -164,11 +155,34 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 				$current_value = '';
 			}
 
+			$formatted_value = '';
 			if ( ! empty( $current_value ) ) {
-				$current_value = $this->format( $current_value );
+				$formatted_value = $this->format( $current_value );
 			}
 
-			parent::render_single_input( $current_value );
+			$hidden_attrs = array(
+				'type'  => 'hidden',
+				'name'  => $this->get_name_attribute(),
+				'value' => $current_value,
+			);
+			?>
+			<input<?php echo $this->attrs( $hidden_attrs ); /* WPCS: XSS OK. */ ?>>
+			<?php
+			parent::render_single_input( $formatted_value );
+		}
+
+		/**
+		 * Prints a single input template.
+		 *
+		 * @since 1.0.0
+		 */
+		protected function print_single_input_template() {
+			?>
+			<input type="hidden" name="{{ data.name }}" value="{{ data.currentValue }}">
+			<?php
+			ob_start();
+			parent::print_single_input_template();
+			echo str_replace( '"{{ data.currentValue }}"', '"{{ data.formattedValue }}"', ob_get_clean() ); // WPCS: XSS OK.
 		}
 
 		/**
@@ -184,12 +198,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 				$current_value = '';
 			}
 
+			$formatted_value = '';
 			if ( ! empty( $current_value ) ) {
-				$current_value = $this->format( $current_value );
+				$formatted_value = $this->format( $current_value );
 			}
 
-			$data          = parent::single_to_json( $current_value );
-			$data['store'] = $this->store;
+			$data                   = parent::single_to_json( $current_value );
+			$data['formattedValue'] = $formatted_value;
+			$data['store']          = $this->store;
 
 			return $data;
 		}
@@ -236,6 +252,28 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 			}
 
 			return $value;
+		}
+
+		/**
+		 * Returns the attributes for the field's input.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $input_attrs Array of custom input attributes.
+		 * @param bool  $as_string   Optional. Whether to return them as an attribute
+		 *                           string. Default true.
+		 * @return array|string Either an array of `$key => $value` pairs, or an
+		 *                      attribute string if `$as_string` is true.
+		 */
+		protected function get_input_attrs( $input_attrs = array(), $as_string = true ) {
+			$input_attrs = parent::get_input_attrs( $input_attrs, false );
+			unset( $input_attrs['name'] );
+
+			if ( $as_string ) {
+				return $this->attrs( $input_attrs );
+			}
+
+			return $input_attrs;
 		}
 
 		/**
@@ -305,78 +343,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 				return (int) $value;
 			}
 
-			if ( 'time' !== $this->store ) {
-				$value = $this->untranslate( $value );
-			}
-
 			return strtotime( $value );
-		}
-
-		/**
-		 * Untranslates a date format string.
-		 *
-		 * WordPress localizes date format strings. This method translates such a formatted string
-		 * back to English so that it can be used by PHP's date functions.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param string $value Date format string to untranslate into an English date format string.
-		 * @return string Untranslated date format string.
-		 */
-		protected function untranslate( $value ) {
-			self::maybe_init_locale_data();
-
-			return preg_replace_callback( '/[A-Za-zÄäÖöÜüßÁáÀàÉéÈèÍíÌìÓóÒòÚúÙùÃãÕõ]+/', array( $this, 'untranslate_replace' ), $value );
-		}
-
-		/**
-		 * Callback for preg_replace() used by the untranslate() method.
-		 *
-		 * It looks at the localized parts of the date format string and replaces them by their English equivalents.
-		 *
-		 * @since 1.0.0
-		 *
-		 * @param array $matches Regular expression matches.
-		 * @return string Replacement.
-		 */
-		protected function untranslate_replace( $matches ) {
-			$term = $matches[0];
-
-			$key = array_search( $term, self::$locale_data['weekday_initial'], true );
-			if ( $key ) {
-				$key = array_search( $key, self::$locale_data['weekday'], true );
-				if ( $key ) {
-					return $key;
-				}
-			}
-
-			$key = array_search( $term, self::$locale_data['weekday_abbrev'], true );
-			if ( $key ) {
-				$key = array_search( $key, self::$locale_data['weekday'], true );
-				if ( $key ) {
-					return $key;
-				}
-			}
-
-			$key = array_search( $term, self::$locale_data['weekday'], true );
-			if ( $key ) {
-				return $key;
-			}
-
-			$key = array_search( $term, self::$locale_data['month_abbrev'], true );
-			if ( $key ) {
-				$key = array_search( $key, self::$locale_data['month'], true );
-				if ( $key ) {
-					return $key;
-				}
-			}
-
-			$key = array_search( $term, self::$locale_data['month'], true );
-			if ( $key ) {
-				return $key;
-			}
-
-			return $term;
 		}
 
 		/**
@@ -388,51 +355,6 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 		 */
 		protected function get_emptyish_values() {
 			return array( '0000-00-00 00:00:00', '0000-00-00', '00:00:00', '00:00' );
-		}
-
-		/**
-		 * Sets up the $locale_data property if it has not been setup prior.
-		 *
-		 * @since 1.0.0
-		 * @static
-		 *
-		 * @global WP_Locale $wp_locale WordPress locale object.
-		 */
-		protected static function maybe_init_locale_data() {
-			global $wp_locale;
-
-			if ( ! empty( self::$locale_data ) ) {
-				return;
-			}
-
-			self::$locale_data = array(
-				'weekday'         => array(
-					'Sunday'    => $wp_locale->weekday[0],
-					'Monday'    => $wp_locale->weekday[1],
-					'Tuesday'   => $wp_locale->weekday[2],
-					'Wednesday' => $wp_locale->weekday[3],
-					'Thursday'  => $wp_locale->weekday[4],
-					'Friday'    => $wp_locale->weekday[5],
-					'Saturday'  => $wp_locale->weekday[6],
-				),
-				'weekday_initial' => $wp_locale->weekday_initial,
-				'weekday_abbrev'  => $wp_locale->weekday_abbrev,
-				'month'           => array(
-					'January'   => $wp_locale->month['01'],
-					'February'  => $wp_locale->month['02'],
-					'March'     => $wp_locale->month['03'],
-					'April'     => $wp_locale->month['04'],
-					'May'       => $wp_locale->month['05'],
-					'June'      => $wp_locale->month['06'],
-					'July'      => $wp_locale->month['07'],
-					'August'    => $wp_locale->month['08'],
-					'September' => $wp_locale->month['09'],
-					'October'   => $wp_locale->month['10'],
-					'November'  => $wp_locale->month['11'],
-					'December'  => $wp_locale->month['12'],
-				),
-				'month_abbrev'    => $wp_locale->month_abbrev,
-			);
 		}
 	}
 

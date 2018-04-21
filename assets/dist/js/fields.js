@@ -1330,7 +1330,10 @@
 		},
 
 		postRender: function( $el ) {
+			var $hidden = $el.find( '.plugin-lib-control' ).prev();
+			var store   = $el.find( '.plugin-lib-control' ).data( 'store' );
 			var options = {
+				closeOnDateSelect: true,
 				formatDate: 'Y-m-d',
 				formatTime: 'H:i',
 				dayOfWeekStart: fieldsAPIData.startOfWeek,
@@ -1340,94 +1343,107 @@
 				validateOnBlur: false
 			};
 
-			switch ( $el.find( '.plugin-lib-control' ).data( 'store' ) ) {
+			switch ( store ) {
 				case 'time':
-					options.format = fieldsAPIData.timeFormat;
+					options.format     = fieldsAPIData.timeFormat;
 					options.datepicker = false;
-					options.onShow = this._timeOnShow;
 					break;
 				case 'date':
-					options.format = fieldsAPIData.dateFormat;
+					options.format     = fieldsAPIData.dateFormat;
 					options.timepicker = false;
-					options.onShow = this._dateOnShow;
 					break;
 				default:
 					options.format = fieldsAPIData.datetimeFormat;
-					options.onShow = this._datetimeOnShow;
 			}
 
-			$el.find( '.plugin-lib-control' ).datetimepicker( options );
-		},
+			function parseDateTimeDefault( dateInstance ) {
+				var currentValue = '';
+				var dateParts;
 
-		_datetimeOnShow: function( ct, $input ) {
-			var helper = '';
-			if ( $input.attr( 'min' ) ) {
-				helper = $input.attr( 'min' ).split( ' ' );
-				if ( helper.length === 2 ) {
-					this.setOptions({
-						minDate: helper[0],
-						minTime: helper[1]
-					});
-				} else if( helper.length === 1 ) {
-					this.setOptions({
-						minDate: helper[0]
-					});
+				if ( dateInstance ) {
+					dateParts    = {
+						year:   ( '' + dateInstance.getFullYear() ).padStart( 4, '0' ),
+						month:  ( '' + ( dateInstance.getMonth() + 1 ) ).padStart( 2, '0' ),
+						day:    ( '' + dateInstance.getDate() ).padStart( 2, '0' ),
+						hour:   ( '' + dateInstance.getHours() ).padStart( 2, '0' ),
+						minute: ( '' + dateInstance.getMinutes() ).padStart( 2, '0' ),
+						second: ( '' + dateInstance.getSeconds() ).padStart( 2, '0' )
+					};
+
+					switch ( store ) {
+						case 'date':
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day;
+							break;
+						case 'time':
+							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							break;
+						default:
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+					}
 				}
+
+				return currentValue;
 			}
 
-			if ( $input.attr( 'max' ) ) {
-				helper = $input.attr( 'max' ).split( ' ' );
-				if ( helper.length === 2 ) {
-					this.setOptions({
-						maxDate: helper[0],
-						maxTime: helper[1]
-					});
-				} else if( helper.length === 1 ) {
-					this.setOptions({
-						maxDate: helper[0]
-					});
+			options.onShow = function( ct, $input ) {
+				var newOptions = {};
+				var value      = $hidden.val();
+				var helper;
+
+				if ( value ) {
+					newOptions.value = new Date( value );
 				}
-			}
 
-			if ( $input.attr( 'step' ) ) {
-				this.setOptions({
-					step: parseInt( $input.attr( 'step' ), 10 )
-				});
-			}
-		},
+				if ( $input.attr( 'min' ) ) {
+					helper = $input.attr( 'min' ).split( ' ' );
+					if ( helper.length === 2 ) {
+						newOptions.minDate = helper[0];
+						newOptions.minTime = helper[1];
+					} else if( helper.length === 1 ) {
+						if ( 'time' === store ) {
+							newOptions.minTime = helper[0];
+						} else {
+							newOptions.minDate = helper[0];
+						}
+					}
+				}
 
-		_dateOnShow: function( ct, $input ) {
-			if ( $input.attr( 'min' ) ) {
-				this.setOptions({
-					minDate: $input.attr( 'min' )
-				});
-			}
+				if ( $input.attr( 'max' ) ) {
+					helper = $input.attr( 'max' ).split( ' ' );
+					if ( helper.length === 2 ) {
+						newOptions.maxDate = helper[0];
+						newOptions.maxTime = helper[1];
+					} else if( helper.length === 1 ) {
+						if ( 'time' === store ) {
+							newOptions.maxTime = helper[0];
+						} else {
+							newOptions.maxDate = helper[0];
+						}
+					}
+				}
 
-			if ( $input.attr( 'max' ) ) {
-				this.setOptions({
-					maxDate: $input.attr( 'max' )
-				});
-			}
-		},
+				if ( 'date' !== store && $input.attr( 'step' ) ) {
+					newOptions.step = parseInt( $input.attr( 'step' ), 10 );
+				}
 
-		_timeOnShow: function( ct, $input ) {
-			if ( $input.attr( 'min' ) ) {
-				this.setOptions({
-					minTime: $input.attr( 'min' )
-				});
-			}
+				this.setOptions( newOptions );
+			};
 
-			if ( $input.attr( 'max' ) ) {
-				this.setOptions({
-					maxTime: $input.attr( 'max' )
-				});
-			}
+			options.onChangeDateTime = function( currentValue ) {
+				currentValue = parseDateTimeDefault( currentValue );
+				$hidden.val( currentValue ).trigger( 'change' );
+			};
 
-			if ( $input.attr( 'step' ) ) {
-				this.setOptions({
-					step: parseInt( $input.attr( 'step' ), 10 )
+			$el.find( '.plugin-lib-control' )
+				.datetimepicker( options )
+				.on( 'change', function( e ) {
+					var currentValue = new Date( this.value );
+
+					if ( ! isNaN( currentValue.valueOf() ) ) {
+						currentValue = parseDateTimeDefault( currentValue );
+						$hidden.val( currentValue ).trigger( 'change' );
+					}
 				});
-			}
 		}
 	});
 
