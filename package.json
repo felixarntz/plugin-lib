@@ -1,6 +1,6 @@
 {
   "name": "plugin-lib",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Reusable library for all kinds of WordPress plugins.",
   "keywords": [
     "wordpress",
