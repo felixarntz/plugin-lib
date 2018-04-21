@@ -639,7 +639,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$singular_slug = $this->model_manager->get_singular_slug();
 			$edit_url      = $this->get_model_edit_url();
 
-			$current_tab_id = key( $this->tabs );
+			$tab_keys       = array_keys( $this->tabs );
+			$current_tab_id = $tab_keys[0];
 
 			$use_tabs = count( $this->tabs ) > 1;
 			?>

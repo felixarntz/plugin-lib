@@ -307,7 +307,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 				}
 			}
 
-			return key( $this->tabs );
+			$tab_keys = array_keys( $this->tabs );
+
+			return $tab_keys[0];
 		}
 
 		/**
