@@ -1011,10 +1011,10 @@
 							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day;
 							break;
 						case 'time':
-							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.second;
 							break;
 						default:
-							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.second;
 					}
 				} else {
 					currentValue = null;
@@ -1370,10 +1370,10 @@
 							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day;
 							break;
 						case 'time':
-							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							currentValue = dateParts.hour + ':' + dateParts.minute + ':' + dateParts.second;
 							break;
 						default:
-							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.seconds;
+							currentValue = dateParts.year + '-' + dateParts.month + '-' + dateParts.day + ' ' + dateParts.hour + ':' + dateParts.minute + ':' + dateParts.second;
 					}
 				}
 
