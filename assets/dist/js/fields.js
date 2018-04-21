@@ -1437,10 +1437,25 @@
 			$el.find( '.plugin-lib-control' )
 				.datetimepicker( options )
 				.on( 'change', function( e ) {
-					var currentValue = new Date( this.value );
+					var formattedValue = this.value;
+					var currentValue;
 
-					if ( ! isNaN( currentValue.valueOf() ) ) {
-						currentValue = parseDateTimeDefault( currentValue );
+					if ( ! formattedValue ) {
+						currentValue = '';
+					} else {
+						formattedValue = formattedValue.trim();
+
+						if ( ! formattedValue.length ) {
+							currentValue = '';
+						} else {
+							formattedValue = new Date( formattedValue );
+							if ( ! isNaN( formattedValue.valueOf() ) ) {
+								currentValue = parseDateTimeDefault( formattedValue );
+							}
+						}
+					}
+
+					if ( 'undefined' !== typeof currentValue ) {
 						$hidden.val( currentValue ).trigger( 'change' );
 					}
 				});
