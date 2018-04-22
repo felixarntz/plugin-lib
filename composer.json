@@ -2,7 +2,7 @@
   "name": "felixarntz/plugin-lib",
   "type": "wordpress-muplugin",
   "description": "Reusable library for all kinds of WordPress plugins.",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "license": "GPL-2.0-or-later",
   "keywords": [
     "wordpress",

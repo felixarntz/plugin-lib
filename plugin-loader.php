@@ -21,7 +21,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin_Loader' ) ) :
 		 *
 		 * @since 1.0.0
 		 */
-		const VERSION = '1.0.0-beta.2';
+		const VERSION = '1.0.0-beta.3';
 
 		/**
 		 * Whether the loader has been initialized.
