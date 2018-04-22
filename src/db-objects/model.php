@@ -205,6 +205,38 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model' ) ) :
 		}
 
 		/**
+		 * Gets values for multiple properties.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $props List of properties to get.
+		 * @return array Array of $property => $value pairs. Properties not found
+		 *               will have null as value.
+		 */
+		public function get_props( $props ) {
+			$values = array();
+
+			foreach ( $props as $property ) {
+				$values[ $property ] = $this->__get( $property );
+			}
+
+			return $values;
+		}
+
+		/**
+		 * Sets values for multiple properties.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $props Array of $property => $value pairs.
+		 */
+		public function set_props( $props ) {
+			foreach ( $props as $property => $value ) {
+				$this->__set( $property, $value );
+			}
+		}
+
+		/**
 		 * Synchronizes the model with the database by storing the currently pending values.
 		 *
 		 * If the model is new (i.e. does not have an ID yet), it will be inserted to the database.
