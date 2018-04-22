@@ -772,14 +772,21 @@
 		},
 
 		initialize: function() {
+			var view         = this;
 			var $contentWrap = this.$( '.content-wrap' );
-			var content = $contentWrap.html();
+			var content      = $contentWrap.html();
 
 			if ( _.isString( content ) && ! content.trim().length || ! content ) {
 				return;
 			}
 
-			this.trigger( 'postRender', $contentWrap );
+			if ( this.model.get( 'repeatable' ) && $contentWrap.find( '.plugin-lib-repeatable-wrap' ).length ) {
+				$contentWrap.find( '.plugin-lib-repeatable-item' ).each( function() {
+					view.trigger( 'postRender', $( this ) );
+				});
+			} else {
+				this.trigger( 'postRender', $contentWrap );
+			}
 		},
 
 		renderLabel: function() {
@@ -793,12 +800,19 @@
 		},
 
 		renderContent: function() {
+			var view = this;
 			var $contentWrap;
 
 			if ( this.contentTemplate ) {
 				$contentWrap = this.$( '#' + this.model.get( 'id' ) + '-content-wrap' );
 
-				this.trigger( 'preRender', $contentWrap );
+				if ( this.model.get( 'repeatable' ) && $contentWrap.find( '.plugin-lib-repeatable-wrap' ).length ) {
+					$contentWrap.find( '.plugin-lib-repeatable-item' ).each( function() {
+						view.trigger( 'preRender', $( this ) );
+					});
+				} else {
+					this.trigger( 'preRender', $contentWrap );
+				}
 				this.undelegateEvents();
 
 				$contentWrap.replaceWith( this.contentTemplate( this.model.toJSON() ) );
@@ -806,7 +820,13 @@
 				$contentWrap = this.$( '#' + this.model.get( 'id' ) + '-content-wrap' );
 
 				this.delegateEvents();
-				this.trigger( 'postRender', $contentWrap );
+				if ( this.model.get( 'repeatable' ) && $contentWrap.find( '.plugin-lib-repeatable-wrap' ).length ) {
+					$contentWrap.find( '.plugin-lib-repeatable-item' ).each( function() {
+						view.trigger( 'postRender', $( this ) );
+					});
+				} else {
+					this.trigger( 'postRender', $contentWrap );
+				}
 			}
 		},
 
