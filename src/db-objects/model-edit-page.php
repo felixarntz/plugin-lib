@@ -55,6 +55,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		protected $tabs = array();
 
 		/**
+		 * Active tab slug, or false if default should be used.
+		 *
+		 * @since 1.0.0
+		 * @var string|bool
+		 */
+		protected $current_tab = false;
+
+		/**
 		 * Array of sections as `$id => $args` pairs.
 		 *
 		 * @since 1.0.0
@@ -296,6 +304,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$this->handle_actions();
 			$this->clean_referer();
 			$this->setup_screen( get_current_screen() );
+			$this->detect_current_tab();
 
 			/**
 			 * Fires after the current edit page request has been handled.
@@ -322,10 +331,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 			$assets = Assets::get_library_instance();
 
+			$prefix           = $this->model_manager->get_prefix();
+			$singular_slug    = $this->model_manager->get_singular_slug();
 			$primary_property = $this->model_manager->get_primary_property();
 
 			$data = array(
 				'ajax_prefix'            => $this->manager->ajax()->get_prefix(),
+				'prefix'                 => $prefix,
+				'singular_slug'          => $singular_slug,
 				'primary_property'       => $primary_property,
 				'primary_property_value' => $this->model->$primary_property,
 				'i18n'                   => array(
@@ -347,7 +360,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			) );
 
 			$assets->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
-				'deps'          => array( 'jquery' ),
+				'deps'          => array( 'jquery', 'utils' ),
 				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
 				'in_footer'     => true,
 				'enqueue'       => true,
@@ -355,9 +368,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				'localize_data' => $data,
 			) );
 
-			$prefix        = $this->model_manager->get_prefix();
-			$singular_slug = $this->model_manager->get_singular_slug();
-			$id            = ! empty( $this->model->$primary_property ) ? (int) $this->model->$primary_property : null;
+			$id = ! empty( $this->model->$primary_property ) ? (int) $this->model->$primary_property : null;
 
 			/**
 			 * Fires when model edit page assets should be enqueued.
@@ -640,7 +651,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$edit_url      = $this->get_model_edit_url();
 
 			$tab_keys       = array_keys( $this->tabs );
-			$current_tab_id = $tab_keys[0];
+			$current_tab_id = $this->current_tab;
+			if ( ! $current_tab_id || ! in_array( $current_tab_id, $tab_keys, true ) ) {
+				$current_tab_id = $tab_keys[0];
+			}
 
 			$use_tabs = count( $this->tabs ) > 1;
 			?>
@@ -990,6 +1004,42 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			}
 
 			return $this->url;
+		}
+
+		/**
+		 * Detects the active set tab from the current user's settings.
+		 *
+		 * Since user settings are also stored as cookies, this method must be called
+		 * before headers are sent.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return string|bool Active tab slug, or false if nothing set. The slug is not yet
+		 *                     verified against the available tabs.
+		 */
+		protected function detect_current_tab() {
+			$setting  = $this->model_manager->get_prefix() . $this->model_manager->get_singular_slug();
+			$value    = false;
+			$fallback = false;
+
+			$id = null;
+			if ( $this->is_update ) {
+				$primary_property = $this->model_manager->get_primary_property();
+				$id               = $this->model->$primary_property;
+			}
+
+			if ( $id ) {
+				$fallback = get_user_setting( $setting, false );
+				if ( $fallback ) {
+					delete_user_setting( $setting );
+				}
+
+				$setting .= '_' . $id;
+			}
+
+			$this->current_tab = get_user_setting( $setting, $fallback );
+
+			return $this->current_tab;
 		}
 
 		/**

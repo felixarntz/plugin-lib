@@ -24,6 +24,11 @@
       window.onbeforeunload = null;
     });
 
+	var activeTabSetting = pluginLibData.prefix + pluginLibData.singular_slug;
+	if ( pluginLibData.primary_property_value ) {
+		activeTabSetting += '_' + pluginLibData.primary_property_value;
+	}
+
 	$( '.nav-tab' ).on( 'click', function( e ) {
 		var $this   = $( this );
 		var $target = $( $this.attr( 'href' ) );
@@ -58,6 +63,8 @@
 		if ( $focusable ) {
 			$focusable.focus();
 		}
+
+		window.setUserSetting( activeTabSetting, $this.attr( 'id' ).replace( 'tab-label-', '' ) );
 	});
 
 	var $realSlug    = $( '#post_name' );
