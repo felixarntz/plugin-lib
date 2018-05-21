@@ -176,7 +176,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 			$this->list_table->views();
 
 			?>
-			<form id="<?php echo esc_attr( $this->model_manager->get_plural_slug() + '-filter' ); ?>" method="get">
+			<form id="<?php echo esc_attr( $this->model_manager->get_plural_slug() . '-filter' ); ?>" method="get">
 
 				<?php $this->list_table->search_box( $this->model_manager->get_message( 'list_page_search_items' ), $this->model_manager->get_singular_slug() ); ?>
 
