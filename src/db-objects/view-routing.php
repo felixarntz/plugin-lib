@@ -161,6 +161,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 		protected $paged = 1;
 
 		/**
+		 * The number of models to show per page.
+		 *
+		 * @since 1.0.0
+		 * @var int
+		 */
+		protected $per_page = 1;
+
+		/**
 		 * Router service definition.
 		 *
 		 * @since 1.0.0
@@ -457,6 +465,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			}
 
 			$this->is_singular = true;
+			$this->paged       = 1;
+			$this->per_page    = 1;
 
 			if ( isset( $query_vars[ $this->singular_query_var ] ) ) {
 				$primary_property_value = absint( $query_vars[ $this->singular_query_var ] );
@@ -497,6 +507,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 
 			$this->is_preview  = true;
 			$this->is_singular = true;
+			$this->paged       = 1;
+			$this->per_page    = 1;
 
 			if ( ! is_user_logged_in() ) {
 				return false;
@@ -549,6 +561,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			}
 
 			$this->is_archive = true;
+			$this->paged       = 1;
+			$this->per_page    = absint( get_option( 'posts_per_page' ) );
 
 			if ( isset( $query_vars[ $this->archive_query_var ] ) ) {
 				unset( $query_vars[ $this->archive_query_var ] );
@@ -693,7 +707,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 		 * @return array Query parameters for the model query.
 		 */
 		protected function get_query_params( $query_vars ) {
-			$number        = $this->is_singular() ? 1 : absint( get_option( 'posts_per_page' ) );
+			$number        = $this->per_page;
 			$offset        = ( $this->paged - 1 ) * $number;
 			$no_found_rows = $this->is_singular() ? true : false;
 
@@ -832,6 +846,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 				$this->template()->get_partial( $this->archive_template_name, array(
 					$this->collection_var_name => $this->current_collection,
 					'manager'                  => $this->manager,
+					'page'                     => $this->paged,
+					'per_page'                 => $this->per_page,
+					'max_pages'                => ceil( $this->current_collection->get_total() / $this->per_page ),
+					'page_link_template'       => $this->get_archive_permalink( '%d' ),
+					'pagenum_link'             => '' !== (string) get_option( 'permalink_structure' ) ? home_url( $this->base . '%_%' ) : home_url( '%_%&' . $this->archive_query_var . '=1' ),
+					'pagenum_format'           => '' !== (string) get_option( 'permalink_structure' ) ? '/page/%#%/' : '?paged=%#%',
 					'template'                 => $this->template(),
 				) );
 			} else {
