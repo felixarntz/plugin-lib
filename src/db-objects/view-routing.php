@@ -579,6 +579,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 
 			$query_params = $this->get_query_params( $query_vars );
 
+			if ( method_exists( $this->manager, 'get_date_property' ) ) {
+				$date_property = $this->manager->get_date_property();
+
+				$query_params['orderby'] = array( $date_property => 'DESC' );
+			}
+
 			/**
 			 * Filters the query parameters to use for an archive request.
 			 *
