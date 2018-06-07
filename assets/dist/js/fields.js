@@ -946,7 +946,7 @@
 					}
 
 					var $itemToAdjust = $( this );
-					var $newItem      = self.repeatableItemTemplate( items[ index ] );
+					var $newItem      = $( self.repeatableItemTemplate( items[ index ] ) );
 
 					self.trigger( 'preRender', $itemToAdjust );
 					self.undelegateEvents();
