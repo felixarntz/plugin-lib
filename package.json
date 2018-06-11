@@ -28,7 +28,7 @@
     "jquery-datetimepicker": "^2.5.20",
     "select2": "^4.0.5",
     "wp-map-picker": "^0.7.1",
-    "wp-media-picker": "^0.7.1"
+    "wp-media-picker": "^0.7.2"
   },
   "devDependencies": {
     "gulp": "~3.9.1",
