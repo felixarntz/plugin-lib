@@ -756,7 +756,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 		 *               being the array of arguments for those where clauses.
 		 */
 		protected function parse_default_where_field( $where, $args, $property, $query_var, $placeholder = '%s', $sanitize_callback = null, $support_array = false ) {
-			if ( ! empty( $this->query_vars[ $query_var ] ) ) {
+			if ( $this->query_vars[ $query_var ] !== $this->query_var_defaults[ $query_var ] ) {
 				$table_name = $this->manager->get_table_name();
 
 				if ( $support_array && is_array( $this->query_vars[ $query_var ] ) ) {
