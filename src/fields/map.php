@@ -124,7 +124,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Map' ) ) :
 				'enqueue'   => true,
 			) );
 
-			$mappicker_version = '0.6.0';
+			$mappicker_version = '0.7.1';
 
 			$assets->register_style( 'wp-map-picker', 'node_modules/wp-map-picker/wp-map-picker.css', array(
 				'ver'     => $mappicker_version,

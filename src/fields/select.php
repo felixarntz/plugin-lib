@@ -86,7 +86,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 
 			$assets = $this->manager->library_assets();
 
-			$select2_version = '4.0.3';
+			$select2_version = '4.0.5';
 
 			$assets->register_style( 'select2', 'node_modules/select2/dist/css/select2.css', array(
 				'ver'     => $select2_version,

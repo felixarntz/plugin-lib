@@ -112,7 +112,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Datetime' ) ) :
 
 			$assets = $this->manager->library_assets();
 
-			$datetimepicker_version = '2.5.4';
+			$datetimepicker_version = '2.5.20';
 
 			$css_path = 'node_modules/jquery-datetimepicker/build/jquery.datetimepicker.min.css';
 			if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {

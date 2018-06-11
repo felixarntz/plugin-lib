@@ -123,7 +123,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Media' ) ) :
 				wp_enqueue_media();
 			}
 
-			$mediapicker_version = '0.5.1';
+			$mediapicker_version = '0.7.1';
 
 			$assets->register_style( 'wp-media-picker', 'node_modules/wp-media-picker/wp-media-picker.css', array(
 				'ver'     => $mediapicker_version,
