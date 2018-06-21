@@ -438,6 +438,39 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 		}
 
 		/**
+		 * Gets the page for the current request.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return int Current page.
+		 */
+		public function get_paged() {
+			return $this->paged;
+		}
+
+		/**
+		 * Gets the current model if the current request is for a singular or a preview.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return Model|null Model instance, or null if none detected.
+		 */
+		public function get_current_model() {
+			return $this->current_model;
+		}
+
+		/**
+		 * Gets the current collection if the current request is for an archive.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return Collection|null Collection instance, or null if none detected.
+		 */
+		public function get_current_collection() {
+			return $this->current_collection;
+		}
+
+		/**
 		 * Sets the manager instance.
 		 *
 		 * @since 1.0.0
