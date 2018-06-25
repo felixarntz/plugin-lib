@@ -862,6 +862,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Query' ) ) :
 
 			if ( method_exists( $this->manager, 'get_date_property' ) ) {
 				$orderby_fields[] = $this->manager->get_date_property();
+				$orderby_fields   = array_merge( $orderby_fields, $this->manager->get_secondary_date_properties() );
 			}
 
 			if ( method_exists( $this->manager, 'get_meta_type' ) ) {
