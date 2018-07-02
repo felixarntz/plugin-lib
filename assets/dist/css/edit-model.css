@@ -40,3 +40,8 @@
 #view-action {
 	float: left;
 }
+
+.notice ul ul {
+	margin-left: 20px;
+	list-style: disc;
+}
