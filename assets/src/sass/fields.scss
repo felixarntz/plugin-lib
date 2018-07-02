@@ -82,6 +82,7 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	> .plugin-lib-wrap {
 		margin-bottom: 12px;
 
+		&.plugin-lib-hidden,
 		&:last-child {
 			margin-bottom: 0;
 		}

@@ -87,6 +87,7 @@ tr.plugin-lib-wrap.plugin-lib-hidden {
 	margin-bottom: 12px;
 }
 
+.plugin-lib-group-control > .plugin-lib-wrap.plugin-lib-hidden,
 .plugin-lib-group-control > .plugin-lib-wrap:last-child {
 	margin-bottom: 0;
 }
