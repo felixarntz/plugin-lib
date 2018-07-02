@@ -1144,8 +1144,22 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			if ( ! empty( $result->errors ) ) {
 				$message  = '<p>' . $this->model_manager->get_message( 'action_edit_item_has_errors' ) . '</p>';
 				$message .= '<ul>';
-				foreach ( $result->get_error_messages() as $error_message ) {
-					$message .= '<li>' . $error_message . '</li>';
+				foreach ( $result->errors as $error_code => $error_messages ) {
+					$error_message_count = count( $error_messages );
+					foreach ( $error_messages as $index => $error_message ) {
+						$message .= '<li>';
+						$message .= $error_message;
+						if ( $index === $error_message_count - 1 && isset( $result->error_data[ $error_code ]['errors'] ) ) {
+							$message .= '<ul>';
+							foreach ( $result->error_data[ $error_code ]['errors'] as $sub_error_code => $sub_error_messages ) {
+								foreach ( $sub_error_messages as $sub_error_message ) {
+									$message .= '<li>' . $sub_error_message . '</li>';
+								}
+							}
+							$message .= '</ul>';
+						}
+						$message .= '</li>';
+					}
 				}
 				$message .= '</ul>';
 				$message .= '<p>' . $this->model_manager->get_message( 'action_edit_item_other_fields_success' ) . '</p>';
