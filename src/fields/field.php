@@ -662,19 +662,31 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 
 					$single_value = $this->pre_validate_single( $single_value );
 					if ( is_wp_error( $single_value ) ) {
-						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
+						$error_data = $single_value->get_error_data();
+						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $error_data );
+						if ( isset( $error_data['validated'] ) ) {
+							$validated[] = $error_data['validated'];
+						}
 						continue;
 					}
 
 					$single_value = $this->validate_single( $single_value );
 					if ( is_wp_error( $single_value ) ) {
-						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
+						$error_data = $single_value->get_error_data();
+						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $error_data );
+						if ( isset( $error_data['validated'] ) ) {
+							$validated[] = $error_data['validated'];
+						}
 						continue;
 					}
 
 					$single_value = $this->post_validate_single( $single_value, $original );
 					if ( is_wp_error( $single_value ) ) {
-						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
+						$error_data = $single_value->get_error_data();
+						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $error_data );
+						if ( isset( $error_data['validated'] ) ) {
+							$validated[] = $error_data['validated'];
+						}
 						continue;
 					}
 
