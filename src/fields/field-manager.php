@@ -782,7 +782,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 					$validated_value = $error_data['validated'];
 				}
 
-				$errors->add( $error->get_error_code(), $error->get_error_message() );
+				$errors->add( $error->get_error_code(), $error->get_error_message(), $error->get_error_data() );
 			}
 
 			return $validated_value;
