@@ -50,6 +50,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 		 * @param mixed $current_value Current field value.
 		 */
 		protected function render_single_input( $current_value ) {
+			if ( in_array( $current_value, $this->get_emptyish_values(), true ) ) {
+				$current_value = '';
+			}
+
 			$input_attrs = array(
 				'type'  => $this->type,
 				'value' => $current_value,
@@ -91,6 +95,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 		 * @return array Field data to be JSON-encoded.
 		 */
 		protected function single_to_json( $current_value ) {
+			if ( in_array( $current_value, $this->get_emptyish_values(), true ) ) {
+				$current_value = '';
+			}
+
 			$data         = parent::single_to_json( $current_value );
 			$data['unit'] = $this->unit;
 
@@ -108,6 +116,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 		 *                        object on failure.
 		 */
 		protected function validate_single( $value = null ) {
+			if ( in_array( $value, $this->get_emptyish_values(), true ) ) {
+				$value = '';
+			}
+
 			$format_as_int = ! empty( $this->input_attrs['step'] ) && is_int( $this->input_attrs['step'] );
 
 			if ( empty( $value ) ) {
@@ -125,6 +137,29 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 
 			if ( ! empty( $this->input_attrs['max'] ) && $value > $this->parse( $this->input_attrs['max'], $format_as_int ) ) {
 				return new WP_Error( 'field_number_greater_than', sprintf( $this->manager->get_message( 'field_number_greater_than' ), $this->format( $value, $format_as_int ), $this->label, $this->format( $this->input_attrs['max'], $format_as_int ) ) );
+			}
+
+			return $value;
+		}
+
+		/**
+		 * Handles post-validation of a value.
+		 *
+		 * This method checks whether a custom validation callback is set and executes it.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param mixed $value          Value to handle post-validation for.
+		 * @param mixed $original_value Optional. Original value before any validation occurred. Default null.
+		 * @return mixed|WP_Error The value on success, or an error object on failure.
+		 */
+		protected function post_validate_single( $value, $original_value = null ) {
+			$value = parent::post_validate_single( $value, $original_value );
+
+			if ( ! empty( $this->input_attrs['min'] ) ) {
+				if ( empty( $original_value ) && $value === $this->input_attrs['min'] && is_string( $original_value ) && ! is_numeric( $original_value ) ) {
+					$value = $original_value;
+				}
 			}
 
 			return $value;
@@ -189,6 +224,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 			$keys[] = 'type';
 
 			return $keys;
+		}
+
+		/**
+		 * Returns values to be considered as empty.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @return array Array of empty-ish values.
+		 */
+		protected function get_emptyish_values() {
+			return array( '00', '0000' );
 		}
 	}
 

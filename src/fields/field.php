@@ -22,7 +22,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 * Field manager instance.
 		 *
 		 * @since 1.0.0
-		 * @var  Field_Manager
+		 * @var Field_Manager
 		 */
 		protected $manager = null;
 
@@ -658,6 +658,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				$validated = array();
 				$errors    = new WP_Error();
 				foreach ( $value as $single_value ) {
+					$original = $single_value;
+
 					$single_value = $this->pre_validate_single( $single_value );
 					if ( is_wp_error( $single_value ) ) {
 						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
@@ -670,7 +672,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 						continue;
 					}
 
-					$single_value = $this->post_validate_single( $single_value );
+					$single_value = $this->post_validate_single( $single_value, $original );
 					if ( is_wp_error( $single_value ) ) {
 						$errors->add( $single_value->get_error_code(), $single_value->get_error_message(), $single_value->get_error_data() );
 						continue;
@@ -691,6 +693,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				return $validated;
 			}
 
+			$original = $value;
+
 			$value = $this->pre_validate_single( $value );
 			if ( is_wp_error( $value ) ) {
 				return $value;
@@ -701,7 +705,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 				return $value;
 			}
 
-			return $this->post_validate_single( $value );
+			return $this->post_validate_single( $value, $original );
 		}
 
 		/**
@@ -789,12 +793,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 *
 		 * @since 1.0.0
 		 *
-		 * @param mixed $value Vaule to handle post-validation for.
+		 * @param mixed $value          Value to handle post-validation for.
+		 * @param mixed $original_value Optional. Original value before any validation occurred. Default null.
 		 * @return mixed|WP_Error The value on success, or an error object on failure.
 		 */
-		protected function post_validate_single( $value ) {
+		protected function post_validate_single( $value, $original_value = null ) {
 			if ( $this->validate && is_callable( $this->validate ) ) {
-				return call_user_func( $this->validate, $value );
+				$value = call_user_func( $this->validate, $value, $original_value );
+			}
+
+			if ( empty( $original_value ) && empty( $value ) && is_string( $original_value ) && ! is_numeric( $original_value ) ) {
+				$value = $original_value;
 			}
 
 			return $value;
