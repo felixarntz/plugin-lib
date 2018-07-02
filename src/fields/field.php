@@ -809,6 +809,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 		 * @return bool True if the value is considered empty, false otherwise.
 		 */
 		protected function is_value_empty( $value ) {
+
+			// 0 being entered into a field means that it is not empty.
+			if ( is_numeric( $value ) ) {
+				return false;
+			}
+
 			return empty( $value );
 		}
 
