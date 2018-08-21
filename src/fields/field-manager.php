@@ -568,7 +568,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 					$args[ $id_key ]    = $id;
 					$args[ $value_key ] = $validated_value;
 
-					call_user_func_array( $this->update_value_callback, $args );
+					$update_result = call_user_func_array( $this->update_value_callback, $args );
+					$this->process_update_result( $update_result, $errors );
 				}
 			} else {
 				foreach ( $field_instances as $id => $field_instance ) {
@@ -585,7 +586,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 				$args               = $this->update_value_callback_args;
 				$args[ $value_key ] = $validated_values;
 
-				call_user_func_array( $this->update_value_callback, $args );
+				$update_result = call_user_func_array( $this->update_value_callback, $args );
+				$this->process_update_result( $update_result, $errors );
 			}
 
 			if ( ! empty( $errors->errors ) ) {
@@ -786,6 +788,29 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 			}
 
 			return $validated_value;
+		}
+
+		/**
+		 * Processes a callback result, merging into an existing WP_Error as necessary.
+		 *
+		 * @since 1.0.2
+		 *
+		 * @param mixed    $result Callback result. Is only treated if it is a WP_Error or a boolean.
+		 * @param WP_Error $errors Error object to merge errors into.
+		 */
+		protected function process_update_result( $result, WP_Error $errors ) {
+			if ( is_wp_error( $result ) ) {
+				foreach ( $result->errors as $error_code => $error_messages ) {
+					foreach ( $error_messages as $error_message ) {
+						$errors->add( $error_code, $error_message );
+					}
+				}
+				return;
+			}
+
+			if ( is_bool( $result ) && ! $result ) {
+				$errors->add( 'values_cannot_update', $this->get_message( 'field_cannot_update' ) );
+			}
 		}
 
 		/**

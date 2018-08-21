@@ -62,6 +62,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Translations\Translations_Field
 				'field_datetime_greater_than'            => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is greater than the required maximum of %3$s.', 'textdomain' ),
 				/* translators: 1: incorrect value, 2: field label */
 				'field_color_invalid_format'             => $this->__translate( 'The value %1$s for the field &#8220;%2$s&#8221; is not a valid color format.', 'textdomain' ),
+				'field_cannot_update'                    => $this->__translate( 'Could not update the value/s in the database.', 'textdomain' ),
 				'field_media_add_button'                 => $this->_xtranslate( 'Choose a File', 'media button', 'textdomain' ),
 				'field_media_replace_button'             => $this->_xtranslate( 'Choose another File', 'media button', 'textdomain' ),
 				'field_media_remove_button'              => $this->_xtranslate( 'Remove', 'media button', 'textdomain' ),
