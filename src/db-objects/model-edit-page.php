@@ -250,9 +250,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$capabilities     = $this->model_manager->capabilities();
 			$primary_property = $this->model_manager->get_primary_property();
 
-			$id = null;
-			if ( isset( $_REQUEST[ $primary_property ] ) ) { // WPCS: CSRF OK.
-				$id = absint( $_REQUEST[ $primary_property ] ); // WPCS: CSRF OK.
+			$id = filter_input( INPUT_GET, $primary_property );
+			if ( ! empty( $id ) ) {
+				$id = absint( $id );
 
 				$this->model = $this->model_manager->get( $id );
 				if ( null === $this->model ) {
@@ -893,11 +893,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * @since 1.0.0
 		 */
 		protected function handle_actions() {
-			if ( ! isset( $_REQUEST['action'] ) ) { // WPCS: CSRF OK.
-				return;
+			$doaction = filter_input( INPUT_GET, 'action' );
+			if ( ! $doaction ) {
+				$doaction = filter_input( INPUT_POST, 'action' );
+				if ( ! $doaction ) {
+					return;
+				}
 			}
-
-			$doaction = wp_unslash( $_REQUEST['action'] ); // WPCS: CSRF OK.
 
 			$primary_property = $this->model_manager->get_primary_property();
 			$id               = $this->model->$primary_property;
@@ -968,7 +970,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$sendback = $this->redirect_with_message( $sendback, $message, $action_type );
 			}
 
-			wp_redirect( $sendback );
+			wp_safe_redirect( $sendback );
 			exit;
 		}
 
@@ -1078,7 +1080,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				return $short_circuit;
 			}
 
-			$form_data = wp_unslash( $_POST ); // WPCS: CSRF OK.
+			$form_data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 
 			$result = $this->field_manager->update_values( $form_data );
 			if ( ! is_wp_error( $result ) ) {
@@ -1185,7 +1187,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$id = null;
 			}
 
-			$form_data = wp_unslash( $_POST ); // WPCS: CSRF OK.
+			$form_data = wp_unslash( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 
 			$result = $this->field_manager->update_values( $form_data );
 			if ( ! is_wp_error( $result ) ) {
@@ -1204,7 +1206,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // WPCS: XSS OK.
 			}
 
-			wp_redirect( $preview_url );
+			wp_safe_redirect( $preview_url );
 			exit;
 		}
 
@@ -1254,7 +1256,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$title_property = $this->model_manager->get_title_property();
 
 				if ( isset( $form_data[ $title_property ] ) ) {
-					$this->model->{$title_property} = strip_tags( $form_data[ $title_property ] );
+					$this->model->{$title_property} = wp_strip_all_tags( $form_data[ $title_property ] );
 				}
 			}
 

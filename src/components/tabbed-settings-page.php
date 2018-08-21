@@ -300,11 +300,9 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Tabbed_Settings_Page
 		 * @return string Identifier of the current tab.
 		 */
 		protected function get_current_tab() {
-			if ( isset( $_GET['tab'] ) ) { // WPCS: CSRF OK.
-				$current_tab_id = wp_unslash( $_GET['tab'] ); // WPCS: CSRF OK.
-				if ( isset( $this->tabs[ $current_tab_id ] ) ) {
-					return $current_tab_id;
-				}
+			$current_tab_id = filter_input( INPUT_GET, 'tab' );
+			if ( ! empty( $current_tab_id ) && isset( $this->tabs[ $current_tab_id ] ) ) {
+				return $current_tab_id;
 			}
 
 			$tab_keys = array_keys( $this->tabs );

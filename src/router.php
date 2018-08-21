@@ -131,10 +131,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 							foreach ( $route['query_vars'] as $query_var ) {
 								if ( isset( $extra_query_vars[ $query_var ] ) ) {
 									$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-								} elseif ( isset( $_POST[ $query_var ] ) ) { // WPCS: CSRF OK.
-									$query_vars[ $query_var ] = $_POST[ $query_var ]; // WPCS: CSRF OK.
-								} elseif ( isset( $_GET[ $query_var ] ) ) { // WPCS: CSRF OK.
-									$query_vars[ $query_var ] = $_GET[ $query_var ]; // WPCS: CSRF OK.
+								} elseif ( filter_has_var( INPUT_POST, $query_var ) ) {
+									$query_vars[ $query_var ] = filter_input( INPUT_POST, $query_var );
+								} elseif ( filter_has_var( INPUT_GET, $query_var ) ) {
+									$query_vars[ $query_var ] = filter_input( INPUT_GET, $query_var );
 								}
 							}
 						}
@@ -156,10 +156,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 					foreach ( $route['query_vars'] as $query_var ) {
 						if ( isset( $extra_query_vars[ $query_var ] ) ) {
 							$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-						} elseif ( isset( $_POST[ $query_var ] ) ) { // WPCS: CSRF OK.
-							$query_vars[ $query_var ] = $_POST[ $query_var ]; // WPCS: CSRF OK.
-						} elseif ( isset( $_GET[ $query_var ] ) ) { // WPCS: CSRF OK.
-							$query_vars[ $query_var ] = $_GET[ $query_var ]; // WPCS: CSRF OK.
+						} elseif ( filter_has_var( INPUT_POST, $query_var ) ) {
+							$query_vars[ $query_var ] = filter_input( INPUT_POST, $query_var );
+						} elseif ( filter_has_var( INPUT_GET, $query_var ) ) {
+							$query_vars[ $query_var ] = filter_input( INPUT_GET, $query_var );
 						} else {
 							$query_vars = null;
 							break;

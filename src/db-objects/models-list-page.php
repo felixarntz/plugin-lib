@@ -146,6 +146,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 				$new_page_url = add_query_arg( 'page', $this->edit_page_slug, $this->url );
 			}
 
+			$search = filter_input( INPUT_GET, 's' );
+
 			?>
 			<h1 class="wp-heading-inline">
 				<?php echo esc_html( $this->title ); ?>
@@ -155,8 +157,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 				<a href="<?php echo esc_url( $new_page_url ); ?>" class="page-title-action"><?php echo esc_html( $this->model_manager->get_message( 'list_page_add_new' ) ); ?></a>
 			<?php endif; ?>
 
-			<?php if ( isset( $_REQUEST['s'] ) && strlen( $_REQUEST['s'] ) ) : /* WPCS: CSRF OK. */ ?>
-				<span class="subtitle"><?php printf( $this->model_manager->get_message( 'list_page_search_results_for' ), esc_attr( wp_unslash( $_REQUEST['s'] ) ) ); /* WPCS: XSS OK. CSRF OK. */ ?></span>
+			<?php if ( ! empty( $search ) ) : ?>
+				<span class="subtitle"><?php printf( $this->model_manager->get_message( 'list_page_search_results_for' ), esc_html( $search ) ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></span>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -199,9 +201,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Models_List_Page' ) 
 				<?php
 				if ( method_exists( $this->model_manager, 'get_author_property' ) ) {
 					$author_property = $this->model_manager->get_author_property();
-					if ( $author_property && ! empty( $_REQUEST[ $author_property ] ) ) { // WPCS: CSRF OK.
+					$author          = filter_input( INPUT_GET, $author_property );
+					if ( ! empty( $author ) ) {
 						?>
-						<input type="hidden" name="<?php echo esc_attr( $author_property ); ?>" value="<?php echo esc_attr( $_REQUEST[ $author_property ] ); /* WPCS: CSRF OK. */ ?>" />
+						<input type="hidden" name="<?php echo esc_attr( $author_property ); ?>" value="<?php echo esc_attr( $author ); ?>" />
 						<?php
 					}
 				}

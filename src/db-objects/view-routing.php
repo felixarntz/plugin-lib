@@ -594,8 +594,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			}
 
 			$this->is_archive = true;
-			$this->paged       = 1;
-			$this->per_page    = absint( get_option( 'posts_per_page' ) );
+			$this->paged      = 1;
+			$this->per_page   = absint( get_option( 'posts_per_page' ) );
 
 			if ( isset( $query_vars[ $this->archive_query_var ] ) ) {
 				unset( $query_vars[ $this->archive_query_var ] );
@@ -876,8 +876,10 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 		 * @since 1.0.0
 		 */
 		protected function load_template() {
+			$request_method = filter_input( INPUT_SERVER, 'REQUEST_METHOD' );
+
 			/** This filter is documented in wp-includes/template-loader.php */
-			if ( 'HEAD' === $_SERVER['REQUEST_METHOD'] && apply_filters( 'exit_on_http_head', true ) ) {
+			if ( 'HEAD' === $request_method && apply_filters( 'exit_on_http_head', true ) ) {
 				exit;
 			}
 

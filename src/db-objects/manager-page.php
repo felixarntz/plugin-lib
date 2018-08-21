@@ -80,11 +80,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		 * @since 1.0.0
 		 */
 		protected function clean_referer() {
-			if ( empty( $_REQUEST['_wp_http_referer'] ) ) { // WPCS: CSRF OK.
+			if ( empty( $_REQUEST['_wp_http_referer'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
 				return;
 			}
 
-			wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+			wp_safe_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), filter_input( INPUT_SERVER, 'REQUEST_URI' ) ) );
 			exit;
 		}
 
@@ -123,7 +123,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 		 * @param string $action_type Optional. The action type. Default 'action'.
 		 */
 		protected function print_current_message( $action_type = 'action' ) {
-			if ( ! isset( $_REQUEST[ $action_type . '_result' ] ) ) { // WPCS: CSRF OK.
+			$action_result = filter_input( INPUT_GET, $action_type . '_result' );
+			if ( empty( $action_result ) ) {
 				return;
 			}
 
@@ -136,12 +137,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Manager_Page' ) ) :
 			if ( false !== $message ) {
 				delete_transient( $transient_name );
 
-				$class = 'true' === $_REQUEST[ $action_type . '_result' ] ? 'notice-success' : 'notice-error'; // WPCS: CSRF OK.
+				$class = 'true' === $action_result ? 'notice-success' : 'notice-error';
 
 				echo '<div id="message" class="' . esc_attr( 'notice ' . $class . ' is-dismissible' ) . '">' . wp_kses_post( wpautop( $message ) ) . '</div>';
 			}
 
-			$_SERVER['REQUEST_URI'] = remove_query_arg( array( $action_type . '_result' ), $_SERVER['REQUEST_URI'] );
+			$_SERVER['REQUEST_URI'] = remove_query_arg( array( $action_type . '_result' ), $_SERVER['REQUEST_URI'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
 		}
 
 		/**

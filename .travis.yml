@@ -81,7 +81,7 @@ script:
   fi
 - |
   if [[ "$PHPCS" == "1" ]]; then
-    vendor/bin/phpcs -v --runtime-set ignore_warnings_on_exit 1
+    vendor/bin/phpcs -vs --runtime-set ignore_warnings_on_exit 1
   fi
 - |
   if [[ -z "$CODECLIMATE_REPO_TOKEN" ]]; then
