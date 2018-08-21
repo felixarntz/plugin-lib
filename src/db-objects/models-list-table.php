@@ -50,7 +50,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 			}
 
 			if ( ! isset( $args['models_page'] ) ) {
-				$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_NUMBER_INT );
+				$page = filter_input( INPUT_GET, 'page' );
 				if ( ! empty( $page ) ) {
 					$args['models_page'] = add_query_arg( 'page', $page, self_admin_url( $this->screen->parent_file ) );
 				}
