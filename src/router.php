@@ -131,10 +131,15 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 							foreach ( $route['query_vars'] as $query_var ) {
 								if ( isset( $extra_query_vars[ $query_var ] ) ) {
 									$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-								} elseif ( filter_has_var( INPUT_POST, $query_var ) ) {
-									$query_vars[ $query_var ] = filter_input( INPUT_POST, $query_var );
-								} elseif ( filter_has_var( INPUT_GET, $query_var ) ) {
-									$query_vars[ $query_var ] = filter_input( INPUT_GET, $query_var );
+								} else {
+									$query_var_value = filter_input( INPUT_POST, $query_var );
+									if ( empty( $query_var_value ) ) {
+										$query_var_value = filter_input( INPUT_GET, $query_var );
+									}
+
+									if ( ! empty( $query_var_value ) ) {
+										$query_vars[ $query_var ] = $query_var_value;
+									}
 								}
 							}
 						}
@@ -156,13 +161,18 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Router' ) ) :
 					foreach ( $route['query_vars'] as $query_var ) {
 						if ( isset( $extra_query_vars[ $query_var ] ) ) {
 							$query_vars[ $query_var ] = $extra_query_vars[ $query_var ];
-						} elseif ( filter_has_var( INPUT_POST, $query_var ) ) {
-							$query_vars[ $query_var ] = filter_input( INPUT_POST, $query_var );
-						} elseif ( filter_has_var( INPUT_GET, $query_var ) ) {
-							$query_vars[ $query_var ] = filter_input( INPUT_GET, $query_var );
 						} else {
-							$query_vars = null;
-							break;
+							$query_var_value = filter_input( INPUT_POST, $query_var );
+							if ( empty( $query_var_value ) ) {
+								$query_var_value = filter_input( INPUT_GET, $query_var );
+							}
+
+							if ( ! empty( $query_var_value ) ) {
+								$query_vars[ $query_var ] = $query_var_value;
+							} else {
+								$query_vars = null;
+								break;
+							}
 						}
 					}
 

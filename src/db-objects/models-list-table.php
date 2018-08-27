@@ -501,7 +501,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$internal_statuses = array_keys( $this->manager->statuses()->query( array( 'internal' => true ) ) );
 
 				if ( filter_has_var( INPUT_GET, $status_property ) ) {
-					$query_params[ $status_property ] = (array) filter_input( INPUT_GET, $status_property, FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+					$query_params[ $status_property ] = filter_input( INPUT_GET, $status_property, FILTER_DEFAULT, FILTER_FORCE_ARRAY );
 				}
 
 				if ( ! empty( $internal_statuses ) ) {
@@ -532,13 +532,15 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 				$default_order   = 'DESC';
 
 				if ( filter_has_var( INPUT_GET, 'm' ) ) {
-					$yearmonth                  = filter_input( INPUT_GET, 'm' );
-					$query_params['date_query'] = array(
-						array(
-							'year'  => substr( $yearmonth, 0, 4 ),
-							'month' => substr( $yearmonth, 4, 2 ),
-						),
-					);
+					$yearmonth = filter_input( INPUT_GET, 'm' );
+					if ( ! empty( $yearmonth ) ) {
+						$query_params['date_query'] = array(
+							array(
+								'year'  => substr( $yearmonth, 0, 4 ),
+								'month' => substr( $yearmonth, 4, 2 ),
+							),
+						);
+					}
 				}
 			}
 
