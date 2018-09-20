@@ -70,11 +70,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\AJAX' ) ) :
 
 			$nonce = function_exists( 'wp_create_nonce' ) ? wp_create_nonce( $this->get_nonce_action( $name ) ) : '';
 
-			$args = wp_parse_args( $args, array(
-				'callback' => $callback,
-				'nopriv'   => false,
-				'nonce'    => $nonce,
-			) );
+			$args = wp_parse_args(
+				$args,
+				array(
+					'callback' => $callback,
+					'nopriv'   => false,
+					'nonce'    => $nonce,
+				)
+			);
 
 			$this->ajax_actions[ $name ] = $args;
 

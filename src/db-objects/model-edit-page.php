@@ -119,14 +119,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				'error_handler' => $this->manager->error_handler(),
 			);
 
-			$field_manager_args = wp_parse_args( $field_manager_args, array(
-				'get_value_callback'         => array( $this, 'get_model_field_value' ),
-				'get_value_callback_args'    => array( '{id}' ),
-				'update_value_callback'      => array( $this, 'update_model_field_value' ),
-				'update_value_callback_args' => array( '{id}', '{value}' ),
-				'name_prefix'                => '',
-				'field_required_markup'      => '',
-			) );
+			$field_manager_args = wp_parse_args(
+				$field_manager_args,
+				array(
+					'get_value_callback'         => array( $this, 'get_model_field_value' ),
+					'get_value_callback_args'    => array( '{id}' ),
+					'update_value_callback'      => array( $this, 'update_model_field_value' ),
+					'update_value_callback_args' => array( '{id}', '{value}' ),
+					'name_prefix'                => '',
+					'field_required_markup'      => '',
+				)
+			);
 
 			$this->field_manager = new Field_Manager( $this->manager->get_prefix(), $services, $field_manager_args );
 
@@ -150,10 +153,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * }
 		 */
 		public function add_tab( $id, $args = array() ) {
-			$this->tabs[ $id ] = wp_parse_args( $args, array(
-				'title'       => '',
-				'description' => '',
-			) );
+			$this->tabs[ $id ] = wp_parse_args(
+				$args,
+				array(
+					'title'       => '',
+					'description' => '',
+				)
+			);
 		}
 
 		/**
@@ -171,11 +177,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * }
 		 */
 		public function add_section( $id, $args = array() ) {
-			$this->sections[ $id ] = wp_parse_args( $args, array(
-				'tab'         => '',
-				'title'       => '',
-				'description' => '',
-			) );
+			$this->sections[ $id ] = wp_parse_args(
+				$args,
+				array(
+					'tab'         => '',
+					'title'       => '',
+					'description' => '',
+				)
+			);
 		}
 
 		/**
@@ -354,19 +363,27 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				$data['slug_dependencies']   = $this->model_manager->get_slug_generator_dependencies();
 			}
 
-			$assets->register_style( 'edit-model', 'assets/dist/css/edit-model.css', array(
-				'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
-				'enqueue' => true,
-			) );
+			$assets->register_style(
+				'edit-model',
+				'assets/dist/css/edit-model.css',
+				array(
+					'ver'     => \Leaves_And_Love_Plugin_Loader::VERSION,
+					'enqueue' => true,
+				)
+			);
 
-			$assets->register_script( 'edit-model', 'assets/dist/js/edit-model.js', array(
-				'deps'          => array( 'jquery', 'utils' ),
-				'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
-				'in_footer'     => true,
-				'enqueue'       => true,
-				'localize_name' => 'pluginLibEditModelData',
-				'localize_data' => $data,
-			) );
+			$assets->register_script(
+				'edit-model',
+				'assets/dist/js/edit-model.js',
+				array(
+					'deps'          => array( 'jquery', 'utils' ),
+					'ver'           => \Leaves_And_Love_Plugin_Loader::VERSION,
+					'in_footer'     => true,
+					'enqueue'       => true,
+					'localize_name' => 'pluginLibEditModelData',
+					'localize_data' => $data,
+				)
+			);
 
 			$id = ! empty( $this->model->$primary_property ) ? (int) $this->model->$primary_property : null;
 
@@ -982,10 +999,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 		 * @param WP_Screen $screen Current screen.
 		 */
 		protected function setup_screen( $screen ) {
-			add_screen_option( 'layout_columns', array(
-				'max'     => 2,
-				'default' => 2,
-			) );
+			add_screen_option(
+				'layout_columns',
+				array(
+					'max'     => 2,
+					'default' => 2,
+				)
+			);
 		}
 
 		/**

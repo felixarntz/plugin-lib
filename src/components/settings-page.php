@@ -103,10 +103,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 		 * }
 		 */
 		public function add_section( $id, $args = array() ) {
-			$this->sections[ $id ] = wp_parse_args( $args, array(
-				'title'       => '',
-				'description' => '',
-			) );
+			$this->sections[ $id ] = wp_parse_args(
+				$args,
+				array(
+					'title'       => '',
+					'description' => '',
+				)
+			);
 		}
 
 		/**
@@ -185,10 +188,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Components\Settings_Page' ) ) :
 			}
 
 			foreach ( $this->field_manager->get_fields() as $id => $field ) {
-				add_settings_field( $id, $field->label, array( $this, 'render_field' ), $this->slug, $field->section, array(
-					'label_for'      => $this->field_manager->make_id( $id ),
-					'field_instance' => $field,
-				) );
+				add_settings_field(
+					$id,
+					$field->label,
+					array( $this, 'render_field' ),
+					$this->slug,
+					$field->section,
+					array(
+						'label_for'      => $this->field_manager->make_id( $id ),
+						'field_instance' => $field,
+					)
+				);
 			}
 		}
 

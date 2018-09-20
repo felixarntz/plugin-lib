@@ -177,9 +177,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\WYSIWYG' ) ) :
 				}
 
 				$ret[0][] = 'editor';
-				$ret[1]   = array_merge( $ret[1], array(
-					'i18nWYSIWYGAddMediaButton' => __( 'Add Media' ),
-				) );
+				$ret[1]   = array_merge(
+					$ret[1],
+					array(
+						'i18nWYSIWYGAddMediaButton' => __( 'Add Media' ),
+					)
+				);
 			}
 
 			return $ret;

@@ -154,11 +154,15 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @return object|null Either the class instance denoted by the method name, or null if it doesn't exist.
 		 */
 		public function __call( $method_name, $args ) {
-			if ( in_array( $method_name, array(
-				'get_activation_hook',
-				'get_deactivation_hook',
-				'get_uninstall_hook',
-			), true ) ) {
+			if ( in_array(
+				$method_name,
+				array(
+					'get_activation_hook',
+					'get_deactivation_hook',
+					'get_uninstall_hook',
+				),
+				true
+			) ) {
 				return false;
 			}
 

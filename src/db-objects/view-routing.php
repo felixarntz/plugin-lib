@@ -884,17 +884,20 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 			}
 
 			if ( $this->is_archive() ) {
-				$this->template()->get_partial( $this->archive_template_name, array(
-					$this->collection_var_name => $this->current_collection,
-					'manager'                  => $this->manager,
-					'page'                     => $this->paged,
-					'per_page'                 => $this->per_page,
-					'max_pages'                => ceil( $this->current_collection->get_total() / $this->per_page ),
-					'page_link_template'       => $this->get_archive_permalink( '%d' ),
-					'pagenum_link'             => '' !== (string) get_option( 'permalink_structure' ) ? home_url( $this->base . '%_%' ) : home_url( '%_%&' . $this->archive_query_var . '=1' ),
-					'pagenum_format'           => '' !== (string) get_option( 'permalink_structure' ) ? '/page/%#%' . ( $wp_rewrite->use_trailing_slashes ? '/' : '' ) : '?paged=%#%',
-					'template'                 => $this->template(),
-				) );
+				$this->template()->get_partial(
+					$this->archive_template_name,
+					array(
+						$this->collection_var_name => $this->current_collection,
+						'manager'                  => $this->manager,
+						'page'                     => $this->paged,
+						'per_page'                 => $this->per_page,
+						'max_pages'                => ceil( $this->current_collection->get_total() / $this->per_page ),
+						'page_link_template'       => $this->get_archive_permalink( '%d' ),
+						'pagenum_link'             => '' !== (string) get_option( 'permalink_structure' ) ? home_url( $this->base . '%_%' ) : home_url( '%_%&' . $this->archive_query_var . '=1' ),
+						'pagenum_format'           => '' !== (string) get_option( 'permalink_structure' ) ? '/page/%#%' . ( $wp_rewrite->use_trailing_slashes ? '/' : '' ) : '?paged=%#%',
+						'template'                 => $this->template(),
+					)
+				);
 			} else {
 				$data = array(
 					$this->model_var_name => $this->current_model,

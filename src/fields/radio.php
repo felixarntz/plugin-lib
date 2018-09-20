@@ -44,9 +44,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Radio' ) ) :
 		protected function render_single_input( $current_value ) {
 			$current_value = array_map( 'strval', (array) $current_value );
 
-			$input_attrs = $this->get_input_attrs( array(
-				'type' => 'radio',
-			), false );
+			$input_attrs = $this->get_input_attrs(
+				array(
+					'type' => 'radio',
+				),
+				false
+			);
 
 			if ( $this->multi ) {
 				$input_attrs['type'] = 'checkbox';
