@@ -144,7 +144,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 				'value' => $current_value,
 			);
 			?>
-			<input<?php echo $this->attrs( $hidden_attrs ); /* WPCS: XSS OK. */ ?>>
+			<input<?php echo $this->attrs( $hidden_attrs ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 			<?php
 			parent::render_single_input( $current_label );
 		}
@@ -160,7 +160,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Autocomplete' ) ) :
 			<?php
 			ob_start();
 			parent::print_single_input_template();
-			echo str_replace( '"{{ data.currentValue }}"', '"{{ data.currentLabel }}"', ob_get_clean() ); // WPCS: XSS OK.
+			echo str_replace( '"{{ data.currentValue }}"', '"{{ data.currentLabel }}"', ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**

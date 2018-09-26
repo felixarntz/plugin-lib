@@ -265,17 +265,17 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 				$this->model = $this->model_manager->get( $id );
 				if ( null === $this->model ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_invalid_id' ), 400 ); // WPCS: XSS OK.
+					wp_die( $this->model_manager->get_message( 'edit_page_invalid_id' ), 400 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 
 				if ( ! $capabilities || ! $capabilities->user_can_edit( null, $id ) ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_cannot_edit_item' ), 403 ); // WPCS: XSS OK.
+					wp_die( $this->model_manager->get_message( 'edit_page_cannot_edit_item' ), 403 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 
 				$this->is_update = true;
 			} else {
 				if ( ! $this->current_user_can() ) {
-					wp_die( $this->model_manager->get_message( 'edit_page_cannot_create_item' ), 403 ); // WPCS: XSS OK.
+					wp_die( $this->model_manager->get_message( 'edit_page_cannot_create_item' ), 403 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				}
 
 				$this->model = $this->model_manager->create();
@@ -568,7 +568,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 					$slug_property = $this->model_manager->get_slug_property();
 					?>
-					<input type="hidden" id="post_name" name="<?php echo $this->model_manager->escape_slug( $slug_property ); ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
+					<input type="hidden" id="post_name" name="<?php echo $this->model_manager->escape_slug( $slug_property ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
 					<?php
 				}
 				?>
@@ -604,7 +604,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				?>
 				<div id="titlediv">
 					<div id="titlewrap">
-						<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); /* WPCS: XSS OK. */ ?></label>
+						<label id="title-prompt-text" class="screen-reader-text" for="title"><?php echo $this->model_manager->get_message( 'edit_page_title_label' ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></label>
 						<input type="text" id="title" name="<?php echo esc_attr( $title_property ); ?>" value="<?php echo esc_attr( $this->model->$title_property ); ?>" placeholder="<?php echo esc_attr( $this->model_manager->get_message( 'edit_page_title_placeholder' ) ); ?>" size="30" />
 					</div>
 					<?php
@@ -629,12 +629,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 						?>
 						<div class="inside">
-							<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; /* WPCS: XSS OK. */ ?>>
+							<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 								<strong><?php printf( '%s:', wp_kses_data( $label ) ); ?></strong>
-								<?php echo esc_html( $before_slug ); ?><span id="editable-post-name"><?php echo $this->model_manager->escape_slug( $this->model->$slug_property ); ?></span><?php echo esc_html( $after_slug ); ?>
+								<?php echo esc_html( $before_slug ); ?><span id="editable-post-name"><?php echo $this->model_manager->escape_slug( $this->model->$slug_property ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></span><?php echo esc_html( $after_slug ); ?>
 								<span id="edit-slug-buttons">
 									<button type="button" class="edit-slug button button-small hide-if-no-js">
-										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); /* WPCS: XSS OK. */ ?>
+										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 									</button>
 								</span>
 							</div>
@@ -696,7 +696,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 					$tab_args['sections'] = wp_list_filter( $this->sections, array( 'tab' => $tab_id ) );
 					?>
-					<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; /* WPCS: XSS OK. */ ?>>
+					<div id="<?php echo esc_attr( 'tab-' . $tab_id ); ?>" class="nav-tab-panel"<?php echo $atts; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 
 						<?php
 						/**
@@ -833,7 +833,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			?>
 			<div id="submitdiv" class="postbox">
 				<h2 class="hndle">
-					<span><?php echo $this->model_manager->get_message( 'edit_page_submit_box_title' ); /* WPCS: XSS OK. */ ?></span>
+					<span><?php echo $this->model_manager->get_message( 'edit_page_submit_box_title' ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></span>
 				</h2>
 				<div class="inside">
 					<div id="submitpost" class="submitbox">
@@ -1218,12 +1218,12 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 
 			$view_routing = $this->model_manager->view_routing();
 			if ( ! $view_routing ) {
-				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // WPCS: XSS OK.
+				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			$preview_url = $view_routing->get_model_preview_permalink( $this->model );
 			if ( empty( $preview_url ) ) {
-				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // WPCS: XSS OK.
+				wp_die( $this->model_manager->get_message( 'action_preview_item_internal_error' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 
 			wp_safe_redirect( $preview_url );

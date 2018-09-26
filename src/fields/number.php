@@ -59,7 +59,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 				'value' => $current_value,
 			);
 			?>
-			<input<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
+			<input<?php echo $this->get_input_attrs( $input_attrs ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 			<?php
 			if ( ! empty( $this->unit ) ) {
 				?>

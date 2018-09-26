@@ -127,7 +127,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @codeCoverageIgnore
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // WPCS: XSS OK.
+			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**
@@ -138,7 +138,7 @@ if ( ! class_exists( 'Leaves_And_Love_Plugin' ) ) :
 		 * @codeCoverageIgnore
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // WPCS: XSS OK.
+			_doing_it_wrong( __FUNCTION__, $this->messages['cheatin_huh'], '1.0.0' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
 		/**

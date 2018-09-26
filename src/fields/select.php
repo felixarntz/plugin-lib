@@ -158,7 +158,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 			$input_attrs = array( 'multiple' => $this->multi );
 
 			?>
-			<select<?php echo $this->get_input_attrs( $input_attrs ); /* WPCS: XSS OK. */ ?>>
+			<select<?php echo $this->get_input_attrs( $input_attrs ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 				<?php if ( ! empty( $this->optgroups ) ) : ?>
 					<?php foreach ( $this->optgroups as $optgroup ) : ?>
 						<?php if ( ! empty( $optgroup['label'] ) ) : ?>
@@ -172,7 +172,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 								'selected' => in_array( (string) $value, $current_value, true ),
 							);
 							?>
-							<option<?php echo $this->attrs( $option_attrs ); /* WPCS: XSS OK. */ ?>><?php echo esc_html( $label ); ?></option>
+							<option<?php echo $this->attrs( $option_attrs ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>><?php echo esc_html( $label ); ?></option>
 						<?php endforeach; ?>
 
 						<?php if ( ! empty( $optgroup['label'] ) ) : ?>
@@ -187,7 +187,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 							'selected' => in_array( (string) $value, $current_value, true ),
 						);
 						?>
-						<option<?php echo $this->attrs( $option_attrs ); /* WPCS: XSS OK. */ ?>><?php echo esc_html( $label ); ?></option>
+						<option<?php echo $this->attrs( $option_attrs ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>><?php echo esc_html( $label ); ?></option>
 					<?php endforeach; ?>
 				<?php endif; ?>
 			</select>
@@ -210,7 +210,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 			}
 
 			?>
-			<select{{{ _.attrs( data.inputAttrs ) }}}<?php echo $multiple; /* WPCS: XSS OK. */ ?>>
+			<select{{{ _.attrs( data.inputAttrs ) }}}<?php echo $multiple; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 				<# if ( ! _.isEmpty( data.optgroups ) ) { #>
 					<# _.each( data.optgroups, function( optgroup ) { #>
 						<# if ( ! _.isEmpty( optgroup.label ) ) { #>
@@ -218,7 +218,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 						<# } #>
 
 						<# _.each( optgroup.choices, function( label, value ) { #>
-							<option value="{{ value }}"<?php echo $selected; /* WPCS: XSS OK. */ ?>>{{ label }}</option>
+							<option value="{{ value }}"<?php echo $selected; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>{{ label }}</option>
 						<# } ) #>
 
 						<# if ( ! _.isEmpty( optgroup.label ) ) { #>
@@ -227,7 +227,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Select' ) ) :
 					<# }) #>
 				<# } else { #>
 					<# _.each( data.choices, function( label, value ) { #>
-						<option value="{{ value }}"<?php echo $selected; /* WPCS: XSS OK. */ ?>>{{ label }}</option>
+						<option value="{{ value }}"<?php echo $selected; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>{{ label }}</option>
 					<# } ) #>
 				<# } #>
 			</select>

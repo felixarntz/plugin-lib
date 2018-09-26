@@ -428,13 +428,13 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 					foreach ( $script->extra['plugin_lib_templates'] as $type => $templates ) {
 						?>
 						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-label' ); ?>">
-							<?php echo $templates['label']; /* WPCS: XSS OK. */ ?>
+							<?php echo $templates['label']; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 						</script>
 						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-content' ); ?>">
-							<?php echo $templates['content']; /* WPCS: XSS OK. */ ?>
+							<?php echo $templates['content']; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 						</script>
 						<script type="text/html" id="<?php echo esc_attr( 'tmpl-plugin-lib-field-' . $type . '-repeatable-item' ); ?>">
-							<?php echo $templates['repeatable_item']; /* WPCS: XSS OK. */ ?>
+							<?php echo $templates['repeatable_item']; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 						</script>
 						<?php
 					}
@@ -747,7 +747,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		 */
 		protected function render_form_table_row( $field, $value ) {
 			?>
-			<tr<?php echo $field->get_wrap_attrs(); /* WPCS: XSS OK. */ ?>>
+			<tr<?php echo $field->get_wrap_attrs(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 				<th scope="row">
 					<?php $field->render_label(); ?>
 				</th>
@@ -768,7 +768,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field_Manager' ) ) :
 		 */
 		protected function render_divs_row( $field, $value ) {
 			?>
-			<div<?php echo $field->get_wrap_attrs(); /* WPCS: XSS OK. */ ?>>
+			<div<?php echo $field->get_wrap_attrs(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>>
 				<div class="plugin-lib-label-wrap">
 					<?php $field->render_label(); ?>
 				</div>
