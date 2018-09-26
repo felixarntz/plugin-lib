@@ -700,7 +700,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\View_Routing' ) ) :
 				$permalink_parts = explode( '/', $this->permalink );
 				foreach ( $permalink_parts as $permalink_part ) {
 					if ( preg_match( '/^%([a-z0-9_]+)%$/', $permalink_part, $matches ) ) {
-						$pattern .= '/(?P<' . $matches[1] . '>[\w-]+)';
+						$pattern .= '/(?P<' . $matches[1] . '>[^/]+)';
 					} else {
 						$pattern .= '/' . $permalink_part;
 					}

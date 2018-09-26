@@ -441,8 +441,8 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$this->model_manager->set_unique_slug( $model, $generated_slug );
 
 			return array(
-				'generated' => $generated_slug,
-				'verified'  => $model->$slug_property,
+				'generated' => $this->model_manager->escape_slug( $generated_slug ),
+				'verified'  => $this->model_manager->escape_slug( $model->$slug_property ),
 			);
 		}
 
@@ -475,7 +475,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 			$this->model_manager->set_unique_slug( $model, $request_data[ $slug_property ] );
 
 			return array(
-				'verified' => $model->$slug_property,
+				'verified' => $this->model_manager->escape_slug( $model->$slug_property ),
 			);
 		}
 
@@ -568,7 +568,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 				if ( method_exists( $this->model_manager, 'get_slug_property' ) ) {
 					$slug_property = $this->model_manager->get_slug_property();
 					?>
-					<input type="hidden" id="post_name" name="<?php echo esc_attr( $slug_property ); ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
+					<input type="hidden" id="post_name" name="<?php echo $this->model_manager->escape_slug( $slug_property ); ?>" value="<?php echo esc_attr( $this->model->$slug_property ); ?>" />
 					<?php
 				}
 				?>
@@ -631,7 +631,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\Model_Edit_Page' ) )
 						<div class="inside">
 							<div id="edit-slug-box" class="hide-if-no-js"<?php echo $style; /* WPCS: XSS OK. */ ?>>
 								<strong><?php printf( '%s:', wp_kses_data( $label ) ); ?></strong>
-								<?php echo esc_html( $before_slug ); ?><span id="editable-post-name"><?php echo esc_html( $this->model->$slug_property ); ?></span><?php echo esc_html( $after_slug ); ?>
+								<?php echo esc_html( $before_slug ); ?><span id="editable-post-name"><?php echo $this->model_manager->escape_slug( $this->model->$slug_property ); ?></span><?php echo esc_html( $after_slug ); ?>
 								<span id="edit-slug-buttons">
 									<button type="button" class="edit-slug button button-small hide-if-no-js">
 										<?php echo $this->model_manager->get_message( 'edit_page_slug_button_label' ); /* WPCS: XSS OK. */ ?>
