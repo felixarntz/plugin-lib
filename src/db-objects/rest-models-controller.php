@@ -696,9 +696,16 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Models_Controll
 		public function prepare_item_for_response( $model, $request ) {
 			$schema = $this->get_item_schema();
 
+			if ( method_exists( $this, 'get_fields_for_response' ) ) {
+				$fields = $this->get_fields_for_response( $request );
+			} else {
+				$fields = array_keys( $schema['properties'] );
+			}
+
 			$data = array();
 
-			foreach ( $schema['properties'] as $property => $params ) {
+			foreach ( $fields as $property ) {
+				$params = $schema['properties'][ $property ];
 				if ( isset( $params['format'] ) && 'date-time' === $params['format'] ) {
 					$data[ $property ] = $this->prepare_date_for_response( $model->$property );
 				} else {

@@ -194,11 +194,16 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\DB_Objects\REST_Model_Types_Con
 		 * @return WP_REST_Response Response object.
 		 */
 		public function prepare_item_for_response( $model_type, $request ) {
-			$schema = $this->get_item_schema();
+			if ( method_exists( $this, 'get_fields_for_response' ) ) {
+				$fields = $this->get_fields_for_response( $request );
+			} else {
+				$schema = $this->get_item_schema();
+				$fields = array_keys( $schema['properties'] );
+			}
 
 			$data = array();
 
-			foreach ( $schema['properties'] as $property => $params ) {
+			foreach ( $fields as $property ) {
 				$data[ $property ] = $model_type->$property;
 			}
 
