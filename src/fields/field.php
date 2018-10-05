@@ -466,14 +466,14 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Field' ) ) :
 						<span{{{ _.attrs( data.labelAttrs ) }}}>
 							{{{ data.label }}}
 							<# if ( ! data.repeatable && data.inputAttrs.required ) { #>
-								<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
+								<?php echo $this->manager->get_field_required_markup(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 							<# } #>
 						</span>
 					<# } else { #>
 						<label{{{ _.attrs( data.labelAttrs ) }}}>
 							{{{ data.label }}}
 							<# if ( ! data.repeatable && data.inputAttrs.required ) { #>
-								<?php echo wp_kses_data( $this->manager->get_field_required_markup() ); ?>
+								<?php echo $this->manager->get_field_required_markup(); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 							<# } #>
 						</label>
 					<# } #>
