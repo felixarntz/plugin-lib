@@ -1607,6 +1607,10 @@
 					return;
 				}
 
+				if ( ! fieldsAPI.FieldView[ data.backboneView ].prototype.preRender ) {
+					return;
+				}
+
 				var $subel = $el.find( '#' + data.wrapAttrs.id );
 
 				fieldsAPI.FieldView[ data.backboneView ].prototype.preRender.apply( this, [ $subel ] );
@@ -1636,6 +1640,10 @@
 				}
 
 				if ( ! fieldsAPI.FieldView[ data.backboneView ] ) {
+					return;
+				}
+
+				if ( ! fieldsAPI.FieldView[ data.backboneView ].prototype.postRender ) {
 					return;
 				}
 
