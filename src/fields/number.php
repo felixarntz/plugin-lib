@@ -122,7 +122,7 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Number' ) ) :
 
 			$format_as_int = ! empty( $this->input_attrs['step'] ) && is_int( $this->input_attrs['step'] );
 
-			if ( empty( $value ) ) {
+			if ( ! is_numeric( $value ) ) {
 				if ( ! empty( $this->input_attrs['min'] ) ) {
 					return $this->parse( $this->input_attrs['min'], $format_as_int );
 				}
