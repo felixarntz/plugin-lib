@@ -40,11 +40,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Text_Base' ) ) :
 			);
 
 			if( ! empty( $this->input_attrs['minlength'] ) ) {
-				$input_attrs['minlength'] = $this->input_attrs['minlength'];
+				$input_attrs['minlength'] = absint( $this->input_attrs['minlength'] );
 			}
 
 			if( ! empty( $this->input_attrs['maxlength'] ) ) {
-				$input_attrs['maxlength'] = $this->input_attrs['maxlength'];
+				$input_attrs['maxlength'] = absint( $this->input_attrs['maxlength'] );
 			}
 
 			?>
