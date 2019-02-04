@@ -39,11 +39,11 @@ if ( ! class_exists( 'Leaves_And_Love\Plugin_Lib\Fields\Text_Base' ) ) :
 				'value' => $current_value,
 			);
 
-			if( ! empty( $this->input_attrs['minlength'] ) ) {
+			if ( ! empty( $this->input_attrs['minlength'] ) ) {
 				$input_attrs['minlength'] = absint( $this->input_attrs['minlength'] );
 			}
 
-			if( ! empty( $this->input_attrs['maxlength'] ) ) {
+			if ( ! empty( $this->input_attrs['maxlength'] ) ) {
 				$input_attrs['maxlength'] = absint( $this->input_attrs['maxlength'] );
 			}
 
