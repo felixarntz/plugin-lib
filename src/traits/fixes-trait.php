@@ -31,7 +31,7 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Fixes_Trait' ) ) :
 		 * @param int    $filter        The ID of the filter to apply.
 		 * @param mixed  $options       Associative array of options or bitwise disjunction of flags. 
 		 * 
-		 * @return mixed $value         alue of the requested variable on success, FALSE if the filter fails, or NULL if the variable_name variable is not set.
+		 * @return mixed $value         Value of the requested variable on success, FALSE if the filter fails, or NULL if the variable_name variable is not set.
 		 */
 		public static function php_filter_input( $type, $variable_name, $filter = FILTER_DEFAULT, $options = null  ) {
 			$value = filter_input( $type, $variable_name, $filter, $options );
