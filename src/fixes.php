@@ -40,18 +40,15 @@ if ( ! trait_exists( 'Leaves_And_Love\Plugin_Lib\Traits\Fixes_Trait' ) ) :
 				return $value;
 			}
 
-			if ( ! filter_has_var( $type, $variable_name ) ) {
-				return $value;
+			if ( INPUT_SERVER === $type && array_key_exists( $variable_name, $_SERVER ) ) {
+				return filter_var( wp_unslash( $_SERVER[ $variable_name ] ), $filter, $options );
 			}
 
-			switch( $type ) {
-				case INPUT_SERVER:
-					return filter_var( wp_unslash( $_SERVER[ $variable_name ] ), $filter, $options );
-				case INPUT_ENV:
-					return filter_var( $_ENV[ $variable_name ], $filter, $options );
-				default:
-					return $value;
+			if ( INPUT_ENV === $type && array_key_exists( $variable_name, $_SERVER ) ) {
+				return filter_var( wp_unslash( $_ENV[ $variable_name ] ), $filter, $options );
 			}
+
+			return $value;
 		}
 	}
 
