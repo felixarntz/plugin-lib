@@ -1,4 +1,4 @@
-'{
+{
   "name": "felixarntz/plugin-lib",
   "type": "wordpress-muplugin",
   "description": "Reusable library for all kinds of WordPress plugins.",
