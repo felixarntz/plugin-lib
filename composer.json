@@ -1,4 +1,4 @@
-{
+'{
   "name": "felixarntz/plugin-lib",
   "type": "wordpress-muplugin",
   "description": "Reusable library for all kinds of WordPress plugins.",
@@ -27,7 +27,7 @@
   },
   "require": {
     "php": ">=5.5.0",
-    "composer/installers": "~1.0"
+    "composer/installers": "^2.0.1"
   },
   "require-dev": {
     "phpunit/phpunit": ">4.8.20 <6.0",
